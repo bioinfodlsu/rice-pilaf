@@ -8,7 +8,7 @@ st.title("Rice Pilaf")
 st.markdown(
 "Welcome ! Rice Pilaf is short for Rice Post-GWAS Dashboard. "
 "Ok, we are not good at abbreviations, but like a good pilaf, this dashboard combines many ingredients. "
-"With this tool, you can do amazing things like ..."
+"With this tool, you can do amazing things like ... (write me)"
 )
 
 #globally defined classes
@@ -70,12 +70,16 @@ def get_genes_from_other_ref(ref,Nb_intervals):
 
 #for user input
 with st.form("gwas_loci_input"):
-    Nb_intervals_str = st.text_input("Provide a genomic interval")
+    Nb_intervals_str = st.text_input("Provide genomic interval(s) from your GWAS:",
+                       value='Chr01:10000-20000;Chr01:22000-25000'
+                       )
     #N22 = st.checkbox("N22")
     #MH63 = st.checkbox("MH63"})
+    other_ref_genomes = ['N22','MH63']
     other_refs = st.multiselect(
         'Search homologous regions of the following genomes:',
-        ['N22','MH63']
+        other_ref_genomes,
+        default = other_ref_genomes
     )
 
     submitted = st.form_submit_button("Submit")
@@ -85,7 +89,7 @@ with st.form("gwas_loci_input"):
 if submitted:
 
     st.text("You submitted the Nipponbare genomic interval(s) {}".format(Nb_intervals_str))
-    st.text("The tabs below show a list of genes in this loci in the different references")
+    st.text("The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose")
 
     #parse input interval string
     Nb_intervals = []
