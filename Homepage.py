@@ -11,10 +11,26 @@ st.markdown(
 "With this tool, you can do amazing things like ... (write me)"
 )
 
-#globally defined classes
+
+#globally defined classes and variables
 Genomic_interval = namedtuple('Genomic_interval',['chrom','start','stop'])
+other_ref_genomes = ['N22','MH63']
+
+#Session states (remember user inputs)
+if "Nb_intervals_str" not in st.session_state:
+    st.session_state["Nb_intervals_str"] =  'Chr01:10000-20000;Chr01:22000-25000'
+if "other_ref_genomes" not in st.session_state:
+    st.session_state["other_ref_genomes"] = other_ref_genomes
+if "submitted" not in st.session_state:
+    st.session_state["submitted"] = False
+
+#not sure why, but can't be updated just using the return value of the submit button
+def submit_update():
+    st.session_state["submitted"] = True
+
 
 #convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
+@st.cache_data
 def to_genomic_interval(interval_str):
     chrom,interval=interval_str.split(":")
     start,stop = interval.split("-")
@@ -24,6 +40,7 @@ def to_genomic_interval(interval_str):
 
 #helper functions
 ##getting genes from Nipponbare
+@st.cache_data
 def get_genes_from_Nb(Nb_intervals):
 
     dfs = []
@@ -41,7 +58,7 @@ def get_genes_from_Nb(Nb_intervals):
             'end':[gene.end for gene in genes_in_interval]
         })
         dfs.append(df)
-    return pd.concat(dfs)
+    return pd.concat(dfs,ignore_index=True)
 
 ##get intervals from other refs that align to (parts) of the input loci
 def get_genes_from_other_ref(ref,Nb_intervals):
@@ -63,32 +80,36 @@ def get_genes_from_other_ref(ref,Nb_intervals):
                 'end':[gene.end for gene in genes_in_interval]
             })
             dfs.append(df)
-    return pd.concat(dfs)
-
+    return pd.concat(dfs,ignore_index=True)
 
 
 
 #for user input
 with st.form("gwas_loci_input"):
     Nb_intervals_str = st.text_input("Provide genomic interval(s) from your GWAS:",
-                       value='Chr01:10000-20000;Chr01:22000-25000'
+                       value=st.session_state["Nb_intervals_str"]
                        )
     #N22 = st.checkbox("N22")
     #MH63 = st.checkbox("MH63"})
-    other_ref_genomes = ['N22','MH63']
     other_refs = st.multiselect(
         'Search homologous regions of the following genomes:',
         other_ref_genomes,
-        default = other_ref_genomes
+        default = st.session_state["other_ref_genomes"]
     )
 
-    submitted = st.form_submit_button("Submit")
+    submitted = st.form_submit_button("Submit", on_click=submit_update)
+    #st.session_state["submitted"] = submitted
 
+st.session_state
 #action begins here
 #keep all layout related code here(?)
-if submitted:
+if st.session_state["submitted"]:
 
-    st.text("You submitted the Nipponbare genomic interval(s) {}".format(Nb_intervals_str))
+    #remember inputs
+    st.session_state["other_ref_genomes"] = other_refs
+    st.session_state["Nb_intervals_str"] = Nb_intervals_str
+
+    #st.text("You submitted the Nipponbare genomic interval(s) {}".format(Nb_intervals_str))
     st.text("The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose")
 
     #parse input interval string
