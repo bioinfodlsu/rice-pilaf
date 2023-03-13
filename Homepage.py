@@ -100,7 +100,6 @@ with st.form("gwas_loci_input"):
     submitted = st.form_submit_button("Submit", on_click=submit_update)
     #st.session_state["submitted"] = submitted
 
-st.session_state
 #action begins here
 #keep all layout related code here(?)
 if st.session_state["submitted"]:
