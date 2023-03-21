@@ -1,8 +1,9 @@
 import dash
-from dash import dcc, html
+from dash import dcc, html, Input, Output, State
 import gffutils
 import pandas as pd
 from collections import namedtuple
+import dash_bootstrap_components as dbc
 
 Genomic_interval = namedtuple('Genomic_interval',['chrom','start','stop'])
 other_ref_genomes = ['N22','MH63']
@@ -64,13 +65,12 @@ dash.register_page(__name__, path ="/", name="Input and Lift-over")
 layout = html.Div(
     [
         dcc.Markdown('Provide genomic interval(s) from your GWAS:'),
-        dcc.Input(
+        dbc.Input(
             type = 'text',
             style = {'width': '100%'},
             value = genomic_interval
         ),
 
-        html.Br(),
         html.Br(),
 
         dcc.Markdown('Search homologous regions of the following genomes:'),
@@ -78,8 +78,12 @@ layout = html.Div(
 
         html.Br(),
 
-        html.Button('Submit', id='submit-val', n_clicks=0),
+        html.Div(dcc.Input(id='input-on-submit', type='text')),
+        dbc.Button('Submit', id='submit-val', n_clicks=0),
+        html.Div(id='container-button-basic')
     ]
 )
+
+
 
 

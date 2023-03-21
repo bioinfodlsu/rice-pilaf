@@ -2,6 +2,10 @@ import dash
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 
+import callbacks.lift_over
+
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
 welcome = dcc.Markdown(
     """
     Welcome ! Rice Pilaf is short for Rice Post-GWAS Dashboard.
@@ -10,29 +14,28 @@ welcome = dcc.Markdown(
     """
 )
 
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 sidebar = dbc.Nav(
-    [
-        dbc.NavLink(
-           [
-               html.Div(page["name"], className="ms-2"),
-           ],
-           href = page["path"],
-           active="exact",
-        )
-        for page in dash.page_registry.values()
-    ],
-    vertical = True,
-    pills = True,
-    className = "bg-light"
-)
+        [
+            dbc.NavLink(
+            [
+                html.Div(page["name"], className="ms-2"),
+            ],
+            href = page["path"],
+            active="exact",
+            )
+            for page in dash.page_registry.values()
+        ],
+        vertical = True,
+        pills = True,
+        className = "bg-light"
+    )
 
 app.layout = dbc.Container(
     [
         dbc.Row(
             [
                 dbc.Col(html.Div("Rice-Pilaf",
-                                  style={'fontSize':50, 'textAlign':'center'})),
+                                style={'fontSize':50, 'textAlign':'center'})),
                 welcome
             ]
         ),
@@ -51,4 +54,5 @@ app.layout = dbc.Container(
 )
 
 if __name__ == '__main__':
+    callbacks.lift_over.init_callback(app)
     app.run_server(debug=True)
