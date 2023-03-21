@@ -64,31 +64,43 @@ def init_callback(app):
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
         Input('lift-over-submit', 'n_clicks'),
-        Input('lift-over-other-refs', 'value')
+        Input('lift-over-other-refs', 'value'),
+        Input('lift-over-genomic-intervals', 'value')
     )
-
-    def update_output(n_clicks, value):
+    def display_gene_tables(n_clicks, other_refs, nb_intervals_str):
         if n_clicks >= 1:
-            tabs = ['NB'] + value
-            tabs_children = [dcc.Tab(label=tab) for tab in tabs]
+            tabs = ['NB']
+            if other_refs:
+                tabs = tabs + other_refs
 
-            # Nb_intervals = []
-            # for interval_str in Nb_intervals_str.split(";"):
-            #     Nb_intervals.append(to_genomic_interval(interval_str))
+            tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
 
-            # df_Nb = get_genes_from_Nb(Nb_intervals)
+            nb_intervals = []
+            for interval_str in nb_intervals_str.split(";"):
+                nb_intervals.append(to_genomic_interval(interval_str))
+
+            df_nb = get_genes_from_Nb(nb_intervals)
             # tabs[0].text("Genes overlapping the site in the Nipponbare reference")
-            # tabs[0].dataframe(df_Nb)
+            # tabs[0].dataframe(df_nb)
 
 
             # for i,other_ref in enumerate(other_refs):
             #     tabs[i+1].text("Genes from homologous regions in {}".format(other_ref))
-            #     tabs[i+1].dataframe(get_genes_from_other_ref(other_ref,Nb_intervals))
+            #     tabs[i+1].dataframe(get_genes_from_other_ref(other_ref,nb_intervals))
 
 
             return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
                 tabs_children
-                
         
         raise PreventUpdate
     
+    # Chain callback for active tab
+    @app.callback(
+        Output('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-submit', 'n_clicks'),
+    )
+    def display_tab(n_clicks):
+        if n_clicks >= 1:
+            return 'tab-0'
+        
+        raise PreventUpdate
