@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html
+from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
 other_ref_genomes = ['N22','MH63']
@@ -35,7 +35,15 @@ layout = html.Div(
 
         dbc.Tabs(id='lift-over-results-tabs', active_tab='', children=[]),
 
-        html.Div(id='lift-over-results-boop', children=''),
+        html.Br(),
+
+        html.Div(id='lift-over-results-gene-intro', children=''),
+
+        html.Br(),
+
+        dash_table.DataTable(id='lift-over-results-table'),
+
+        html.Br()
     ]
 )
 
