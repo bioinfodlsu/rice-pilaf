@@ -55,8 +55,6 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 def get_genes_from_Nb(Nb_intervals):
 
     dfs = []
-    if is_error(Nb_intervals):
-        Nb_intervals = []
 
     for Nb_interval in Nb_intervals:
         #load and search GFF_DB of Nipponbare
@@ -73,11 +71,7 @@ def get_genes_from_Nb(Nb_intervals):
         })
         dfs.append(df)
 
-    # Return empty dataframe if there are no results to concatenate
-    try:
-        return pd.concat(dfs,ignore_index=True)
-    except ValueError:
-        return pd.DataFrame()
+    return pd.concat(dfs,ignore_index=True)
 
 ##get intervals from other refs that align to (parts) of the input loci
 def get_genes_from_other_ref(ref,Nb_intervals):
@@ -85,8 +79,6 @@ def get_genes_from_other_ref(ref,Nb_intervals):
     db_annotation = gffutils.FeatureDB("data/annotations/{0}/{0}.gff.db".format(ref))
     #get corresponding intervals on ref
     dfs = []
-    if is_error(Nb_intervals):
-        Nb_intervals = []
         
     for Nb_interval in Nb_intervals:
         gff_intersections = list(db_align.region(region=(Nb_interval.chrom,Nb_interval.start,Nb_interval.stop),
@@ -103,8 +95,4 @@ def get_genes_from_other_ref(ref,Nb_intervals):
             })
             dfs.append(df)
 
-    # Return empty dataframe if there are no results to concatenate
-    try:
-        return pd.concat(dfs,ignore_index=True)
-    except ValueError:
-        return pd.DataFrame()
+    return pd.concat(dfs,ignore_index=True)

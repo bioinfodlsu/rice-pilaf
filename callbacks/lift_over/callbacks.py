@@ -22,18 +22,23 @@ def init_callback(app):
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
         Input('lift-over-submit', 'n_clicks'),
-        State('lift-over-other-refs', 'value')
+        State('lift-over-other-refs', 'value'),
+        State('lift-over-genomic-intervals', 'value')
     )
-    def display_gene_tabs(n_clicks, other_refs):
+    def display_gene_tabs(n_clicks, other_refs, nb_intervals_str):
         if n_clicks >= 1:
-            tabs = ['NB']
-            if other_refs:
-                tabs = tabs + other_refs
+            if not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
+                tabs = ['NB']
+                if other_refs:
+                    tabs = tabs + other_refs
 
-            tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
+                tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
 
-            return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                tabs_children
+                return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
+                    tabs_children
+            
+            else:
+                return None, None
         
         raise PreventUpdate
     
@@ -71,18 +76,9 @@ def init_callback(app):
                     df_nb = get_genes_from_other_ref(other_ref, nb_intervals).to_dict('records')
 
                     return f'Genes from homologous regions in {other_ref}', df_nb
-
-            else:
-                if active_tab == 'tab-0':
-                    df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
-                    return 'Genes overlapping the site in the Nipponbare reference', df_nb
                 
-                else:
-                    tab_number = int(active_tab[len('tab-'):])
-                    other_ref = children[tab_number]["props"]["value"]
-                    df_nb = get_genes_from_other_ref(other_ref, nb_intervals).to_dict('records')
-
-                    return f'Genes from homologous regions in {other_ref}', df_nb
+            else:
+                return None, None
             
         raise PreventUpdate
 
