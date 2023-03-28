@@ -87,4 +87,9 @@ def get_genes_from_other_ref(ref,Nb_intervals):
                 'end':[gene.end for gene in genes_in_interval]
             })
             dfs.append(df)
-    return pd.concat(dfs,ignore_index=True)
+
+    # Return empty dataframe if there are no results to concatenate
+    try:
+        return pd.concat(dfs,ignore_index=True)
+    except ValueError:
+        return pd.DataFrame()
