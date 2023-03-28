@@ -9,7 +9,18 @@ dash.register_page(__name__, path ="/", name="Input and Lift-over")
 
 layout = html.Div(
     [
+        dcc.ConfirmDialog(
+            id='input-error',
+            message='',
+        ),
+
         dcc.Markdown('Provide genomic interval(s) from your GWAS:'),
+        dbc.Alert(
+            id = 'input-error',
+            children = '',
+            color = 'danger',
+            style = {'display': 'none'}
+        ),
         dbc.Input(
             id='lift-over-genomic-intervals',
             type = 'text',
