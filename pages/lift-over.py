@@ -15,6 +15,12 @@ layout = html.Div(
         ),
 
         dcc.Markdown('Provide genomic interval(s) from your GWAS:'),
+        dbc.Alert(
+            id = 'input-error',
+            children = '',
+            color = 'danger',
+            style = {'display': 'none'}
+        ),
         dbc.Input(
             id='lift-over-genomic-intervals',
             type = 'text',

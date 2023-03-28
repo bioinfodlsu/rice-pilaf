@@ -1,12 +1,12 @@
-from dash import dcc, Input, Output, State
+from dash import dcc, Input, Output, State, html
 from dash.exceptions import PreventUpdate
 
 from .util import *
 
 def init_callback(app):
     @app.callback(
-        Output('input-error', 'message'),
-        Output('input-error', 'displayed'),
+        Output('input-error', 'children'),
+        Output('input-error', 'style'),
         Input('lift-over-submit', 'n_clicks'),
         State('lift-over-genomic-intervals', 'value')
     )
@@ -14,7 +14,10 @@ def init_callback(app):
         if n_clicks >= 1:
             intervals = get_genomic_intervals_from_input(nb_intervals_str)
             if is_error(intervals):    
-                return str(intervals), True
+                return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), get_error_message(intervals[0])], \
+                    {'display': 'block'}
+            else:
+                return None, {'display': 'none'}
             
         raise PreventUpdate
 
