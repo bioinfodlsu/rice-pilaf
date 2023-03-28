@@ -8,12 +8,20 @@ from collections import namedtuple
 
 Genomic_interval = namedtuple('Genomic_interval',['chrom','start','stop'])
 
+
+
 #convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
 def to_genomic_interval(interval_str):
-    chrom,interval=interval_str.split(":")
+    try:
+        chrom,interval=interval_str.split(":")
+    except ValueError:
+        # return NO_CHROM_INTERVAL_SEP
+        pass
+
     start,stop = interval.split("-")
     start = int(start)
-    stop = int(stop)
+    stop = int(stop)        
+
     return Genomic_interval(chrom,start,stop)
 
 ##getting genes from Nipponbare
