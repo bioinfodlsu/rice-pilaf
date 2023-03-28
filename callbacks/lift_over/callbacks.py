@@ -20,7 +20,7 @@ def init_callback(app):
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
         Input('lift-over-submit', 'n_clicks'),
-        Input('lift-over-other-refs', 'value')
+        State('lift-over-other-refs', 'value')
     )
     def display_gene_tabs(n_clicks, other_refs):
         if n_clicks >= 1:
@@ -51,8 +51,8 @@ def init_callback(app):
         Output('lift-over-results-table', 'data'),
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-results-tabs', 'children'),
-        Input('lift-over-genomic-intervals', 'value')
+        State('lift-over-results-tabs', 'children'),
+        State('lift-over-genomic-intervals', 'value')
     )
     def display_gene_tables(n_clicks, active_tab, children, nb_intervals_str):
         if n_clicks >= 1:
@@ -63,9 +63,7 @@ def init_callback(app):
                 return 'Genes overlapping the site in the Nipponbare reference', df_nb
             
             else:
-                Nb_intervals = []
-                for interval_str in nb_intervals_str.split(";"):
-                    Nb_intervals.append(to_genomic_interval(interval_str))
+                Nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
 
                 tab_number = int(active_tab[len('tab-'):])
                 other_ref = children[tab_number]["props"]["value"]
