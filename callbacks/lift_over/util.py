@@ -79,9 +79,24 @@ def get_genes_from_Nb(Nb_intervals):
 
     # Return empty dataframe if there are no results to concatenate
     try:
-        return pd.concat(dfs,ignore_index=True)
+        table = pd.concat(dfs,ignore_index=True)
+        if table.shape[0] == 0:
+            return pd.DataFrame({
+                'name': ['-'],
+                'chrom': ['-'],
+                'start': ['-'],
+                'end': ['-']
+            })
+        
+        return table
+
     except ValueError:
-        return pd.DataFrame()
+        return pd.DataFrame({
+            'name': ['-'],
+            'chrom': ['-'],
+            'start': ['-'],
+            'end': ['-']
+        })
 
 ##get intervals from other refs that align to (parts) of the input loci
 def get_genes_from_other_ref(ref,Nb_intervals):
@@ -109,6 +124,21 @@ def get_genes_from_other_ref(ref,Nb_intervals):
 
     # Return empty dataframe if there are no results to concatenate
     try:
-        return pd.concat(dfs,ignore_index=True)
+        table = pd.concat(dfs,ignore_index=True)
+        if table.shape[0] == 0:
+            return pd.DataFrame({
+                'name': ['-'],
+                'chrom': ['-'],
+                'start': ['-'],
+                'end': ['-']
+            })
+        
+        return table
+    
     except ValueError:
-        return pd.DataFrame()
+        return pd.DataFrame({
+            'name': ['-'],
+            'chrom': ['-'],
+            'start': ['-'],
+            'end': ['-']
+        })
