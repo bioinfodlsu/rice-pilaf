@@ -12,8 +12,10 @@ def init_callback(app):
     )
     def parse_input(n_clicks, nb_intervals_str):
         if n_clicks >= 1:
-            return str(get_genomic_intervals_from_input(nb_intervals_str)), True
-
+            intervals = get_genomic_intervals_from_input(nb_intervals_str)
+            if is_error(intervals):    
+                return str(intervals), True
+            
         raise PreventUpdate
 
     @app.callback(
@@ -58,18 +60,29 @@ def init_callback(app):
         if n_clicks >= 1:
             nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
 
-            if active_tab == 'tab-0':
-                df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
-                return 'Genes overlapping the site in the Nipponbare reference', df_nb
-            
+            if not is_error(nb_intervals):
+                if active_tab == 'tab-0':
+                    df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
+                    return 'Genes overlapping the site in the Nipponbare reference', df_nb
+                
+                else:
+                    tab_number = int(active_tab[len('tab-'):])
+                    other_ref = children[tab_number]["props"]["value"]
+                    df_nb = get_genes_from_other_ref(other_ref, nb_intervals).to_dict('records')
+
+                    return f'Genes from homologous regions in {other_ref}', df_nb
+
             else:
-                Nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
+                if active_tab == 'tab-0':
+                    df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
+                    return 'Genes overlapping the site in the Nipponbare reference', df_nb
+                
+                else:
+                    tab_number = int(active_tab[len('tab-'):])
+                    other_ref = children[tab_number]["props"]["value"]
+                    df_nb = get_genes_from_other_ref(other_ref, nb_intervals).to_dict('records')
 
-                tab_number = int(active_tab[len('tab-'):])
-                other_ref = children[tab_number]["props"]["value"]
-                df_nb = get_genes_from_other_ref(other_ref, Nb_intervals).to_dict('records')
-
-                return f'Genes from homologous regions in {other_ref}', df_nb
+                    return f'Genes from homologous regions in {other_ref}', df_nb
             
         raise PreventUpdate
 
