@@ -5,19 +5,47 @@ from collections import namedtuple
 
 Genomic_interval = namedtuple('Genomic_interval',['chrom','start','stop'])
 
+# Error codes for genomic interval input
+NO_CHROM_INTERVAL_SEP = 1
+NO_START_STOP_SEP = 2
+START_STOP_NOT_INT = 3
+
 #convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
 def to_genomic_interval(interval_str):
     try:
         chrom,interval=interval_str.split(":")
     except ValueError:
-        # return NO_CHROM_INTERVAL_SEP
-        pass
+        return NO_CHROM_INTERVAL_SEP
 
-    start,stop = interval.split("-")
-    start = int(start)
-    stop = int(stop)        
+    try:    
+        start,stop = interval.split("-")
+    except ValueError:
+        return NO_START_STOP_SEP
+
+    try:
+        start = int(start)
+        stop = int(stop)        
+    except ValueError:
+        return START_STOP_NOT_INT
 
     return Genomic_interval(chrom,start,stop)
+
+# Split 'Chr01:10000-25000;;Chr01:22000-25000'
+def get_genomic_intervals_from_input(nb_intervals_str):
+    nb_intervals = []
+    
+    nb_intervals_split = nb_intervals_str.split(";")
+
+    for interval_str in nb_intervals_split:
+        interval = to_genomic_interval(interval_str)
+
+        # Check if interval is equal to one of the error codes
+        if isinstance(interval, int):
+            return interval
+        else:
+            nb_intervals.append(interval)
+
+    return nb_intervals
 
 ##getting genes from Nipponbare
 def get_genes_from_Nb(Nb_intervals):

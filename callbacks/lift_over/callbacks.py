@@ -1,9 +1,21 @@
-from dash import dcc, Input, Output
+from dash import dcc, Input, Output, State
 from dash.exceptions import PreventUpdate
 
-from .util import to_genomic_interval, get_genes_from_Nb, get_genes_from_other_ref
+from .util import *
 
 def init_callback(app):
+    @app.callback(
+        Output('input-error', 'message'),
+        Output('input-error', 'displayed'),
+        Input('lift-over-submit', 'n_clicks'),
+        State('lift-over-genomic-intervals', 'value')
+    )
+    def parse_input(n_clicks, nb_intervals_str):
+        if n_clicks >= 1:
+            return str(get_genomic_intervals_from_input(nb_intervals_str)), True
+
+        raise PreventUpdate
+
     @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
@@ -44,9 +56,7 @@ def init_callback(app):
     )
     def display_gene_tables(n_clicks, active_tab, children, nb_intervals_str):
         if n_clicks >= 1:
-            nb_intervals = []
-            for interval_str in nb_intervals_str.split(";"):
-                nb_intervals.append(to_genomic_interval(interval_str))
+            nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
 
             if active_tab == 'tab-0':
                 df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
