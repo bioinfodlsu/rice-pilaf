@@ -11,18 +11,26 @@ NO_START_STOP_SEP = 2
 START_STOP_NOT_INT = 3
 START_GREATER_THAN_STOP = 4
 
+error_messages = {
+    NO_CHROM_INTERVAL_SEP: 'A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals',
+    NO_START_STOP_SEP: 'Specify a valid start and end for the genomic interval',
+    START_STOP_NOT_INT: 'The start and end of a genomic interval should be integers',
+    START_GREATER_THAN_STOP: 'The start of a genomic interval should not be past the end'
+}
+
+def create_empty_df():
+    return pd.DataFrame({
+            'name': ['-'],
+            'chrom': ['-'],
+            'start': ['-'],
+            'end': ['-']
+           })
+
 # The first element is the error code and the second element is the malformed interval
 def is_error(intervals):
     return isinstance(intervals[0], int)
 
 def get_error_message(error_code):
-    error_messages = {
-        NO_CHROM_INTERVAL_SEP: 'A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals',
-        NO_START_STOP_SEP: 'Specify a valid start and end for the genomic interval',
-        START_STOP_NOT_INT: 'The start and end of a genomic interval should be integers',
-        START_GREATER_THAN_STOP: 'The start of a genomic interval should not be past the end'
-    }
-
     return error_messages[error_code]
 
 def sanitize_nb_intervals_str(nb_intervals_str):
@@ -33,7 +41,6 @@ def sanitize_nb_intervals_str(nb_intervals_str):
     nb_intervals_str = nb_intervals_str.rstrip(';')
 
     return nb_intervals_str
-
 
 #convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
 def to_genomic_interval(interval_str):
@@ -78,7 +85,6 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 
 ##getting genes from Nipponbare
 def get_genes_from_Nb(Nb_intervals):
-
     dfs = []
     if is_error(Nb_intervals):
         Nb_intervals = []
@@ -102,22 +108,12 @@ def get_genes_from_Nb(Nb_intervals):
     try:
         table = pd.concat(dfs,ignore_index=True)
         if table.shape[0] == 0:
-            return pd.DataFrame({
-                'name': ['-'],
-                'chrom': ['-'],
-                'start': ['-'],
-                'end': ['-']
-            })
+            return create_empty_df()
         
         return table
 
     except ValueError:
-        return pd.DataFrame({
-            'name': ['-'],
-            'chrom': ['-'],
-            'start': ['-'],
-            'end': ['-']
-        })
+        return create_empty_df()
 
 ##get intervals from other refs that align to (parts) of the input loci
 def get_genes_from_other_ref(ref,Nb_intervals):
@@ -147,19 +143,9 @@ def get_genes_from_other_ref(ref,Nb_intervals):
     try:
         table = pd.concat(dfs,ignore_index=True)
         if table.shape[0] == 0:
-            return pd.DataFrame({
-                'name': ['-'],
-                'chrom': ['-'],
-                'start': ['-'],
-                'end': ['-']
-            })
+            return create_empty_df()
         
         return table
     
     except ValueError:
-        return pd.DataFrame({
-            'name': ['-'],
-            'chrom': ['-'],
-            'start': ['-'],
-            'end': ['-']
-        })
+        return create_empty_df()
