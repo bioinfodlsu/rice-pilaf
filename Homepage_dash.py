@@ -9,11 +9,7 @@ from flask import Flask, session
 
 import os
 
-server = Flask(__name__)
-
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
-server.secret_key = os.urandom(24)
-#server.permanent = False
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 welcome = dcc.Markdown(
     """
