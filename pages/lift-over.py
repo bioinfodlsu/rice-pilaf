@@ -27,13 +27,18 @@ layout = html.Div(
             style = {'width': '100%'},
             value = genomic_interval,
             persistence = True,
-            persistence_type = 'session'
+            persistence_type = 'memory'
         ),
 
         html.Br(),
 
         dcc.Markdown('Search homologous regions of the following genomes:'),
-        dcc.Dropdown(other_ref_genomes, id='lift-over-other-refs', multi=True, persistence = True, persistence_type = 'session'),
+        dcc.Dropdown(other_ref_genomes, 
+            id='lift-over-other-refs', 
+            multi=True, 
+            persistence = True, 
+            persistence_type = 'memory'
+        ),
 
         html.Br(),
 
@@ -54,9 +59,20 @@ layout = html.Div(
 
         html.Br(),
 
-        dash_table.DataTable(id='lift-over-results-table'),
+        dash_table.DataTable(
+            id='lift-over-results-table',
+            persistence=True,
+            persistence_type = 'memory'
+        ),
 
-        html.Br()
+        html.Br(),
+
+        # dbc.Input(
+        #     id='lift-over-genomic-intervals',
+        #     type = 'text',
+        #     persistence = True,
+        #     persistence_type = 'memory'
+        # ),
     ]
 )
 
