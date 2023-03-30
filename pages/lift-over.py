@@ -67,12 +67,16 @@ layout = html.Div(
 
         html.Br(),
 
-        # dbc.Input(
-        #     id='lift-over-genomic-intervals',
-        #     type = 'text',
-        #     persistence = True,
-        #     persistence_type = 'memory'
-        # ),
+        # Session storage
+        dcc.Store(
+            id = 'lift-over-is-submitted',
+            storage_type = 'session',
+        ),
+
+        dcc.Store(
+            id = 'lift-over-active-tab',
+            storage_type = 'session'
+        )
     ]
 )
 

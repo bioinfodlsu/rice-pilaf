@@ -11,6 +11,9 @@ NO_START_STOP_SEP = 2
 START_STOP_NOT_INT = 3
 START_GREATER_THAN_STOP = 4
 
+def has_user_submitted(is_submitted, nb_intervals_str):
+    return is_submitted and nb_intervals_str
+
 # The first element is the error code and the second element is the malformed interval
 def is_error(intervals):
     return isinstance(intervals[0], int)
