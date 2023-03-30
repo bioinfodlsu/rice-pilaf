@@ -18,6 +18,9 @@ error_messages = {
     START_GREATER_THAN_STOP: 'The start of a genomic interval should not be past the end'
 }
 
+def has_user_submitted(is_submitted, nb_intervals_str):
+    return is_submitted and nb_intervals_str
+
 def create_empty_df():
     return pd.DataFrame({
             'name': ['-'],
