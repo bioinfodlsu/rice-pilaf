@@ -1,10 +1,19 @@
+import os
+
 import dash
 from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
 
 import callbacks.lift_over.callbacks
+from flask import Flask, session
 
-app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP])
+import os
+
+server = Flask(__name__)
+
+app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
+server.secret_key = os.urandom(24)
+#server.permanent = False
 
 welcome = dcc.Markdown(
     """

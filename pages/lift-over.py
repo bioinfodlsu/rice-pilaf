@@ -3,7 +3,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 
 other_ref_genomes = ['N22','MH63']
-genomic_interval = 'Chr01:10000-20000;Chr01:22000-25000'
+genomic_interval = '' #'Chr01:10000-20000;Chr01:22000-25000'
 
 dash.register_page(__name__, path ="/", name="Input and Lift-over")
 
@@ -54,7 +54,19 @@ layout = html.Div(
 
         dash_table.DataTable(id='lift-over-results-table'),
 
-        html.Br()
+        html.Br(),
+        
+        dbc.Input(
+            id='saved-submit-n-clicks',
+            type = 'number',
+            style = {'display': 'none'},
+        ),
+
+        dbc.Input(
+            id='saved-active-tab',
+            type='text',
+            style = {'display': 'none'},
+        )
     ]
 )
 

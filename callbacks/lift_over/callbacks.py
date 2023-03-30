@@ -3,6 +3,8 @@ from dash.exceptions import PreventUpdate
 
 from .util import *
 
+from flask import Flask, session
+
 def init_callback(app):
     @app.callback(
         Output('input-error', 'children'),
@@ -34,9 +36,10 @@ def init_callback(app):
                 tabs = ['NB']
                 if other_refs:
                     tabs = tabs + other_refs
-
+                    session['other_refs'] = other_refs
+                
                 tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
-
+                
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
                     tabs_children
             
@@ -52,7 +55,12 @@ def init_callback(app):
     )
     def switch_active_tab(n_clicks):
         if n_clicks >= 1:
-            return 'tab-0'
+            if 'active_tab' in session:
+                active_tab = session['active_tab']
+            else:
+                active_tab = 'tab-0'
+                
+            return active_tab
         
         raise PreventUpdate
     
@@ -66,11 +74,17 @@ def init_callback(app):
     )
     def display_gene_tables(n_clicks, active_tab, children, nb_intervals_str):
         if n_clicks >= 1:
+            session['submitted'] = 'true'
+            session['nb_intervals_str'] = nb_intervals_str
+            session['n_clicks'] = n_clicks
+            session['active_tab'] = active_tab
+
             nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
 
             if not is_error(nb_intervals):
                 if active_tab == 'tab-0':
                     df_nb = get_genes_from_Nb(nb_intervals).to_dict('records')
+
                     return 'Genes overlapping the site in the Nipponbare reference', df_nb
                 
                 else:
@@ -84,4 +98,42 @@ def init_callback(app):
                 return None, None
             
         raise PreventUpdate
+  
+    @app.callback(
+        Output('lift-over-genomic-intervals', 'value'),
+        Output('lift-over-other-refs', 'value'),
+        Output('lift-over-submit', 'n_clicks'),
+
+        Input('lift-over-submit', 'value'),
+    )
+    def load_liftover_session(n_clicks):
+        if 'submitted' in session: 
+            if 'nb_intervals_str' in session:
+                nb_intervals_str = session['nb_intervals_str']
+                print(nb_intervals_str)
+            else:
+                nb_intervals_str = ''
+
+            if 'other_refs' in session:
+                other_refs = session['other_refs']
+                print(other_refs)
+            else:
+                other_refs  = ['']
+
+            if 'n_clicks' in session:
+                n_clicks = session['n_clicks']
+            else:
+                n_clicks = 0
+
+            return nb_intervals_str, other_refs, n_clicks
+
+        else:
+            session['submitted'] = False
+
+        raise PreventUpdate
+
+        
+    
+    
+        
 
