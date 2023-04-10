@@ -22,3 +22,6 @@ although a segment in the other reference is aligned to at most one segment in N
 `last-split` computes takes the alignments from above and finds one best alignment for each segment of Nipponbare,
 resulting in a 1-to-1 alignments between the reference pairs.
 Finally, `maf-convert` converts the maf alignments into GFF format.
+
+## Co-expression network
+Rice gene co-expression network was obtained from [RiceNet](https://www.inetbio.org/ricenet/dl.php?f=OS-CX)
