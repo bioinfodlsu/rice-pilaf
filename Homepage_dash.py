@@ -57,7 +57,6 @@ app.layout = dbc.Container(
     fluid = True
 
 )
-
+callbacks.lift_over.callbacks.init_callback(app)
 if __name__ == '__main__':
-    callbacks.lift_over.callbacks.init_callback(app)
-    app.run_server(debug=True)
+   app.run_server(debug=True)
