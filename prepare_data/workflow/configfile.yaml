@@ -1,0 +1,5 @@
+input_data_dir: "../../data"
+processed_data_dir: "../../snakemaketest_data"
+other_refs:
+  ["N22","MH63"]
+threads: 1

@@ -1,0 +1,8 @@
+include: "rules/last_whole_genome_alignment.smk"
+
+rule whole_genome_alignment:
+    #input: "{0}/last_index/index.done".format(config["data_dir"])
+    input:
+        expand("{0}/alignments/{{other_ref}}/Nb_{{other_ref}}.gff.db".format(config["processed_data_dir"]), other_ref = config["other_refs"])
+
+#rule download_ref_genomes:
