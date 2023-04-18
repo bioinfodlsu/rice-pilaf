@@ -1,5 +1,7 @@
 import gffutils
 import pandas as pd
+import csv
+import os
 
 from collections import namedtuple
 
@@ -118,6 +120,12 @@ def get_genes_from_Nb(Nb_intervals):
     except ValueError:
         return create_empty_df()
 
+def sanitize_gene_id(gene_id):
+    if gene_id[:len('gene:')] == 'gene:':
+        return gene_id[len('gene:'):]
+    
+    return gene_id
+
 ##get intervals from other refs that align to (parts) of the input loci
 def get_genes_from_other_ref(ref,Nb_intervals):
     db_align = gffutils.FeatureDB("data/alignments/{0}/{0}.1to1.gff.db".format("Nb_"+str(ref)))
@@ -134,7 +142,12 @@ def get_genes_from_other_ref(ref,Nb_intervals):
             ref_interval = to_genomic_interval(intersection.attributes['Name'][0])
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom,ref_interval.start,ref_interval.stop),
                                                    completely_within=False,featuretype='gene'))
+            
+            
+            ogi_list = get_ogi([sanitize_gene_id(gene.id) for gene in genes_in_interval], ref)
+
             df = pd.DataFrame({
+                'ogi': ogi_list,
                 'name': [gene.id for gene in genes_in_interval],
                 'chrom':[gene.chrom for gene in genes_in_interval],
                 'start':[gene.start for gene in genes_in_interval],
@@ -152,3 +165,44 @@ def get_genes_from_other_ref(ref,Nb_intervals):
     
     except ValueError:
         return create_empty_df()
+
+
+def get_ogi_from_file(file, rice_variants, accession_id, rice_variant):
+    # Nipponbare is NP in RGI database
+    if rice_variant == 'NB':
+        rice_variant = 'Nip'
+
+    idx = rice_variants.index(f'Os{rice_variant}') + 1
+
+    with open(file, 'r') as f:
+        csv_reader = csv.reader(f, delimiter = '\t')
+
+        for row in csv_reader:
+            if row[idx].strip() == accession_id.strip():
+                return row[0]
+    
+    # Not in RGI database
+    return None
+
+def get_ogi(accession_ids, rice_variant):
+    path = 'data/gene_ID_mapping_fromRGI'
+
+    rice_variants = None
+    with open(f'{path}/core.ogi', 'r') as f:
+        # Fetch the list of rice variants (first row) in the RGI database
+        if not rice_variants:
+            csv_reader = csv.reader(f, delimiter = '\t')
+            for row in csv_reader:
+                rice_variants = row
+                break
+
+    ogi_list = []
+    for accession_id in accession_ids:
+        for file in os.listdir(path):
+            ogi = get_ogi_from_file(f'{path}/{file}', rice_variants, accession_id, rice_variant)
+            if ogi:
+                break
+
+        ogi_list.append(ogi) 
+        
+    return ogi_list
