@@ -55,24 +55,31 @@ def generate_dict(ogi_file, mapping_dicts):
         next(csv_reader, None)
 
         for row in csv_reader:
-            NB_ACCESSION = 3
+            NB_ACCESSION = 1
+            mapping_dict_idx = 0
             for idx in range(NB_ACCESSION, len(row)):
-                try:
-                    gene_str = row[idx].strip()
 
-                    if gene_str != '.':
-                        genes = separate_paralogs(row[idx].strip())
-                        for gene in genes:
-                            if gene != '':
-                                mapping_dicts[idx -
-                                              NB_ACCESSION][gene] = row[0].strip()
+                # Skip indidces 2 and 3. They are also Nipponbare accession numbers.
+                # But the app uses the Nipponbare accession at index 1
+                if not (2 <= idx and idx <= 3):
+                    try:
+                        gene_str = row[idx].strip()
 
-                except IndexError:
-                    break
+                        if gene_str != '.':
+                            genes = separate_paralogs(row[idx].strip())
+                            for gene in genes:
+                                if gene != '':
+                                    mapping_dicts[mapping_dict_idx][gene] = row[0].strip(
+                                    )
+
+                    except IndexError:
+                        break
+
+                    mapping_dict_idx += 1
 
 
 def pickle_mapping_dicts(path, mapping_dicts):
-    path_mapping_dicts = f'{path}/mapping_dicts'
+    path_mapping_dicts = f'{path}/ogi_mapping'
     if not os.path.exists(path_mapping_dicts):
         os.makedirs(path_mapping_dicts)
 
@@ -84,13 +91,14 @@ def pickle_mapping_dicts(path, mapping_dicts):
 
 
 if __name__ == '__main__':
-    path = 'data/gene_ID_mapping_fromRGI'
+    data_path = 'data'
+    ogi_path = f'{data_path}/gene_ID_mapping_fromRGI'
 
-    rice_variants = get_rice_variants(path)
+    rice_variants = get_rice_variants(ogi_path)
     mapping_dicts = make_mapping_dicts(rice_variants)
 
-    for file in os.listdir(path):
-        generate_dict(f'{path}/{file}', mapping_dicts)
-        print(f'Generated dictionary for {path}/{file}')
+    for file in os.listdir(ogi_path):
+        generate_dict(f'{ogi_path}/{file}', mapping_dicts)
+        print(f'Generated dictionary for {ogi_path}/{file}')
 
-    pickle_mapping_dicts(path, mapping_dicts)
+    pickle_mapping_dicts(data_path, mapping_dicts)

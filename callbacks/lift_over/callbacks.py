@@ -97,3 +97,13 @@ def init_callback(app):
                 return None, None, None
 
         raise PreventUpdate
+    
+    @app.callback(
+        Output('lift-over-results-table', 'css'),
+        Input('lift-over-results-table', 'derived_virtual_data')
+    )
+    def display_export_button(data):
+        if data == []:
+            return [{"selector": ".export", "rule": "display:none"}]
+        else:
+            return [{"selector": ".export", "rule": "display:block"}]
