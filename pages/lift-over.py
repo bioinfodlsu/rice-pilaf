@@ -62,7 +62,8 @@ layout = html.Div(
         dash_table.DataTable(
             id='lift-over-results-table',
             persistence=True,
-            persistence_type='memory'
+            persistence_type='memory',
+            export_format='csv'
         ),
 
         html.Br(),
