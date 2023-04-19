@@ -1,5 +1,7 @@
 import os
 import csv
+import pickle
+from pathlib import Path
 
 
 def get_rice_variants(path):
@@ -51,7 +53,7 @@ def generate_dict(ogi_file, mapping_dicts):
         csv_reader = csv.reader(f, delimiter='\t')
 
         # Skip header row
-        next(csv_reader)
+        next(csv_reader, None)
 
         for row in csv_reader:
             NB_ACCESSION = 3
@@ -62,14 +64,24 @@ def generate_dict(ogi_file, mapping_dicts):
                     if gene_str != '.':
                         genes = separate_paralogs(row[idx].strip())
                         for gene in genes:
-                            mapping_dicts[idx -
-                                          NB_ACCESSION][gene] = row[0].strip()
+                            if gene != '':
+                                mapping_dicts[idx -
+                                              NB_ACCESSION][gene] = row[0].strip()
 
                 except IndexError:
                     break
 
-            print(mapping_dicts[-1])
-            break
+
+def pickle_mapping_dicts(path, mapping_dicts):
+    path_mapping_dicts = f'{path}/mapping_dicts'
+    if not os.path.exists(path_mapping_dicts):
+        os.makedirs(path_mapping_dicts)
+
+    for rice_variant, mapping_dict in zip(rice_variants, mapping_dicts):
+        pickle_path = f'{path_mapping_dicts}/{rice_variant}_to_ogi.pickle'
+        with open(pickle_path, 'wb') as f:
+            pickle.dump(mapping_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
+            print(f'Generated {path}/{rice_variant}_to_ogi.pickle')
 
 
 if __name__ == '__main__':
@@ -80,3 +92,6 @@ if __name__ == '__main__':
 
     for file in os.listdir(path):
         generate_dict(f'{path}/{file}', mapping_dicts)
+        print(f'Generated dictionary for {path}/{file}')
+
+    pickle_mapping_dicts(path, mapping_dicts)
