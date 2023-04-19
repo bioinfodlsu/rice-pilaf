@@ -20,8 +20,8 @@ error_messages = {
 }
 
 
-def has_user_submitted(is_submitted, nb_intervals_str):
-    return is_submitted and nb_intervals_str
+def has_user_submitted(is_submitted):
+    return is_submitted
 
 
 def create_empty_df():
