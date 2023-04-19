@@ -1,9 +1,9 @@
-import gffutils
-import pandas as pd
 import csv
 import os
-
 from collections import namedtuple
+
+import gffutils
+import pandas as pd
 
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
 

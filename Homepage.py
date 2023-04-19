@@ -1,8 +1,9 @@
-import streamlit as st
-import gffutils
-import pandas as pd
 import subprocess
 from collections import namedtuple
+
+import gffutils
+import pandas as pd
+import streamlit as st
 
 st.title("Rice Pilaf")
 st.markdown(

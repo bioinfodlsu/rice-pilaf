@@ -1,13 +1,11 @@
 import os
 
 import dash
-from dash import Dash, html, dcc
 import dash_bootstrap_components as dbc
-
-import callbacks.lift_over.callbacks
+from dash import Dash, dcc, html
 from flask import Flask, session
 
-import os
+import callbacks.lift_over.callbacks
 
 app = dash.Dash(__name__, use_pages=True,
                 external_stylesheets=[dbc.themes.BOOTSTRAP])

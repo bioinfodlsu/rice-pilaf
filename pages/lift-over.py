@@ -1,6 +1,6 @@
 import dash
-from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
+from dash import dash_table, dcc, html
 
 other_ref_genomes = ['N22', 'MH63']
 genomic_interval = ''  # 'Chr01:10000-20000;Chr01:22000-25000'

@@ -1,4 +1,4 @@
-from dash import dcc, Input, Output, State, html
+from dash import Input, Output, State, dcc, html
 from dash.exceptions import PreventUpdate
 
 from .util import *

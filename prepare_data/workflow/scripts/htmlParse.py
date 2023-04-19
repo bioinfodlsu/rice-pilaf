@@ -1,8 +1,9 @@
-from bs4 import BeautifulSoup
-import re
-import _pickle as cPickle
-import sys
 import argparse
+import re
+import sys
+
+import _pickle as cPickle
+from bs4 import BeautifulSoup
 
 
 def main(input):

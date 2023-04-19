@@ -1,8 +1,7 @@
 import dash
-from dash import dcc, html
-
 import dash_cytoscape as cyto
 import networkx as nx
+from dash import dcc, html
 
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
