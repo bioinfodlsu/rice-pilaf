@@ -64,7 +64,7 @@ rule convert_gff:
     conda:
         "../env/lastal.yaml"
     shell:
-        "maf-convert {input.one_to_one_alignment} > {output.gff}"
+        "maf-convert gff {input.one_to_one_alignment} > {output.gff}"
 
 rule build_gff_db:
     input:
@@ -73,7 +73,7 @@ rule build_gff_db:
         gff_db = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}.gff.db".format(config["processed_data_dir"])
     conda:
         "../env/gffutils.yaml"
-    script:
-        "scripts/gff_db.py"
+    shell:
+        "python scripts/gff_db.py {input.gff} {output.gff_db}"
 
 
