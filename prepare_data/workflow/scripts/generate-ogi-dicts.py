@@ -55,20 +55,27 @@ def generate_dict(ogi_file, mapping_dicts):
         next(csv_reader, None)
 
         for row in csv_reader:
-            NB_ACCESSION = 3
+            NB_ACCESSION = 1
+            mapping_dict_idx = 0
             for idx in range(NB_ACCESSION, len(row)):
-                try:
-                    gene_str = row[idx].strip()
 
-                    if gene_str != '.':
-                        genes = separate_paralogs(row[idx].strip())
-                        for gene in genes:
-                            if gene != '':
-                                mapping_dicts[idx -
-                                              NB_ACCESSION][gene] = row[0].strip()
+                # Skip indidces 2 and 3. They are also Nipponbare accession numbers.
+                # But the app uses the Nipponbare accession at index 1
+                if not (2 <= idx and idx <= 3):
+                    try:
+                        gene_str = row[idx].strip()
 
-                except IndexError:
-                    break
+                        if gene_str != '.':
+                            genes = separate_paralogs(row[idx].strip())
+                            for gene in genes:
+                                if gene != '':
+                                    mapping_dicts[mapping_dict_idx][gene] = row[0].strip(
+                                    )
+
+                    except IndexError:
+                        break
+
+                    mapping_dict_idx += 1
 
 
 def pickle_mapping_dicts(path, mapping_dicts):
