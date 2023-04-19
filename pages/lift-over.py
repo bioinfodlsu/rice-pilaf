@@ -46,6 +46,10 @@ layout = html.Div(
 
         html.Br(),
         html.Br(),
+        
+        html.Div(id='lift-over-results-genomic-intervals-input', children=''),
+
+        html.Div(id='lift-over-results-other-refs-input', children=''),
 
         html.Div(id='lift-over-results-intro', children=''),
 

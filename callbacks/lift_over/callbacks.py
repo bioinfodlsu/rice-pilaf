@@ -32,6 +32,10 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
+
+        Output('lift-over-results-genomic-intervals-input', 'children'),
+        Output('lift-over-results-other-refs-input', 'children'),
+
         Input('lift-over-submit', 'n_clicks'),
         State('lift-over-is-submitted', 'data'),
         State('lift-over-other-refs', 'value'),
@@ -52,6 +56,7 @@ def init_callback(app):
                 if orig_other_refs or other_refs:
                     if n_clicks == 0 and orig_other_refs != other_refs:
                         tabs = tabs + orig_other_refs
+                        other_refs = orig_other_refs
                     else:
                         tabs = tabs + other_refs
                 #if other_refs:
@@ -60,10 +65,10 @@ def init_callback(app):
                 tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
 
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                    tabs_children
+                    tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + str(other_refs)[1:-1]
 
             else:
-                return None, None
+                return None, None, None, None
 
         raise PreventUpdate
 
