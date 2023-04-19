@@ -1,5 +1,4 @@
-import csv
-import os
+import pickle
 from collections import namedtuple
 
 import gffutils
@@ -134,6 +133,8 @@ def get_genes_from_Nb(Nb_intervals):
         return create_empty_df()
 
 
+# Remove 'gene' prefix from gene IDs (e.g., from N22)
+
 def sanitize_gene_id(gene_id):
     if gene_id[:len('gene:')] == 'gene:':
         return gene_id[len('gene:'):]
@@ -162,8 +163,12 @@ def get_genes_from_other_ref(ref, Nb_intervals):
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
-            ogi_list = get_ogi([sanitize_gene_id(gene.id)
-                               for gene in genes_in_interval], ref)
+            ogi_mapping_path = f'data/ogi_mapping/{ref}_to_ogi.pickle'
+            ogi_list = []
+            with open(ogi_mapping_path, 'rb') as f:
+                ogi_mapping = pickle.load(f)
+                ogi_list = get_ogi([sanitize_gene_id(gene.id)
+                                    for gene in genes_in_interval], ogi_mapping)
 
             df = pd.DataFrame({
                 'ogi': ogi_list,
@@ -186,44 +191,9 @@ def get_genes_from_other_ref(ref, Nb_intervals):
         return create_empty_df()
 
 
-def get_ogi_from_file(file, rice_variants, accession_id, rice_variant):
-    # Nipponbare is NP in RGI database
-    if rice_variant == 'NB':
-        rice_variant = 'Nip'
-
-    idx = rice_variants.index(f'Os{rice_variant}') + 1
-
-    with open(file, 'r') as f:
-        csv_reader = csv.reader(f, delimiter='\t')
-
-        for row in csv_reader:
-            if row[idx].strip() == accession_id.strip():
-                return row[0]
-
-    # Not in RGI database
-    return None
-
-
-def get_ogi(accession_ids, rice_variant):
-    path = 'data/gene_ID_mapping_fromRGI'
-
-    rice_variants = None
-    with open(f'{path}/core.ogi', 'r') as f:
-        # Fetch the list of rice variants (first row) in the RGI database
-        if not rice_variants:
-            csv_reader = csv.reader(f, delimiter='\t')
-            for row in csv_reader:
-                rice_variants = row
-                break
-
+def get_ogi(accession_ids, ogi_mapping):
     ogi_list = []
     for accession_id in accession_ids:
-        for file in os.listdir(path):
-            ogi = get_ogi_from_file(
-                f'{path}/{file}', rice_variants, accession_id, rice_variant)
-            if ogi:
-                break
-
-        ogi_list.append(ogi)
+        ogi_list.append(ogi_mapping[accession_id])
 
     return ogi_list
