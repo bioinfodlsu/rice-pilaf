@@ -1,7 +1,6 @@
 import csv
 import os
 import pickle
-from pathlib import Path
 
 
 def get_rice_variants(path):

@@ -1,9 +1,7 @@
-import os
 
 import dash
 import dash_bootstrap_components as dbc
-from dash import Dash, dcc, html
-from flask import Flask, session
+from dash import dcc, html
 
 import callbacks.lift_over.callbacks
 

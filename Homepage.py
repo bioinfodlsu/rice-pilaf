@@ -1,4 +1,3 @@
-import subprocess
 from collections import namedtuple
 
 import gffutils
