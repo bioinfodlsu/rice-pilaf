@@ -42,12 +42,9 @@ layout = html.Div(
 
         html.Br(),
 
-        dbc.Button('Submit', id='lift-over-submit', n_clicks=0),
-
-        html.Br(),
-        html.Br(),
-
-        dbc.Button('Reset All Display', id='lift-over-reset', n_clicks=0),
+        html.Div(children=[dbc.Button('Submit', id='lift-over-submit', n_clicks=0),
+                           dbc.Button('Reset All Display', color='danger', outline=True,
+                                      id='lift-over-reset', n_clicks=0, style={'margin-left': '1em'}),]),
 
         html.Div(id='lift-over-results-genomic-intervals-input', children=''),
 
