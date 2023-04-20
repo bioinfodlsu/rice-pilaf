@@ -36,6 +36,9 @@ def init_callback(app):
         Output('lift-over-results-genomic-intervals-input', 'children'),
         Output('lift-over-results-other-refs-input', 'children'),
 
+        Output('lift-over-genomic-intervals', 'value'),
+        Output('lift-over-other-refs', 'value'),
+
         Input('lift-over-submit', 'n_clicks'),
         State('lift-over-is-submitted', 'data'),
         State('lift-over-other-refs', 'value'),
@@ -46,29 +49,24 @@ def init_callback(app):
     )
     def display_gene_tabs(n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-
-            if n_clicks == 0 and orig_nb_intervals_str != nb_intervals_str:
-                nb_intervals_str = orig_nb_intervals_str
+            
+            nb_intervals_str = get_user_genomic_intervals_str_input(is_submitted, nb_intervals_str, orig_nb_intervals_str)
             
             if not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = ['NB']
-                    
-                if orig_other_refs or other_refs:
-                    if n_clicks == 0 and orig_other_refs != other_refs:
-                        tabs = tabs + orig_other_refs
-                        other_refs = orig_other_refs
-                    else:
-                        tabs = tabs + other_refs
-                #if other_refs:
-                #    tabs = tabs + other_refs
+            
+                other_refs = get_user_other_refs_input(is_submitted, other_refs, orig_other_refs)
+
+                if other_refs:
+                    tabs = tabs + other_refs
 
                 tabs_children = [dcc.Tab(label=tab, value=tab) for tab in tabs]
 
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                    tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + str(other_refs)[1:-1]
+                    tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + str(other_refs)[1:-1], nb_intervals_str, other_refs
 
             else:
-                return None, None, None, None
+                return None, None, None, None, None, None
 
         raise PreventUpdate
 
@@ -104,11 +102,8 @@ def init_callback(app):
     def display_gene_tables(n_clicks, active_tab, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
             
-            if n_clicks == 0 and orig_nb_intervals_str != nb_intervals_str:
-               nb_intervals = get_genomic_intervals_from_input(orig_nb_intervals_str)
-
-            else:
-               nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
+            nb_intervals_str = get_user_genomic_intervals_str_input(is_submitted, nb_intervals_str, orig_nb_intervals_str)
+            nb_intervals = get_genomic_intervals_from_input(nb_intervals_str)
                
             if not is_error(nb_intervals):
                 if active_tab == 'tab-0':
