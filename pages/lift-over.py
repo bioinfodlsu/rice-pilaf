@@ -46,6 +46,8 @@ layout = html.Div(
 
         html.Br(),
         html.Br(),
+
+        dbc.Button('Reset All Display', id='lift-over-reset', n_clicks=0),
         
         html.Div(id='lift-over-results-genomic-intervals-input', children=''),
 
