@@ -46,7 +46,7 @@ layout = html.Div(
 
         html.Br(),
         html.Br(),
-        
+
         html.Div(id='lift-over-results-genomic-intervals-input', children=''),
 
         html.Div(id='lift-over-results-other-refs-input', children=''),
@@ -60,6 +60,10 @@ layout = html.Div(
         html.Br(),
 
         html.Div(id='lift-over-results-gene-intro', children=''),
+
+        html.Br(),
+
+        dcc.Checklist(id='lift-over-overlap-table-filter', inline=True),
 
         html.Br(),
 
@@ -84,13 +88,13 @@ layout = html.Div(
         ),
 
         dcc.Store(
-            id = 'lift-over-genomic-intervals-saved-input',
-            storage_type = 'session',
+            id='lift-over-genomic-intervals-saved-input',
+            storage_type='session',
         ),
 
         dcc.Store(
-            id = 'lift-over-other-refs-saved-input',
-            storage_type = 'session',
-        ), 
+            id='lift-over-other-refs-saved-input',
+            storage_type='session',
+        ),
     ]
 )
