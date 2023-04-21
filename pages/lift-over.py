@@ -42,16 +42,23 @@ layout = html.Div(
 
         html.Br(),
 
-        dbc.Button('Submit', id='lift-over-submit', n_clicks=0),
+        html.Div(children=[dbc.Button('Submit', id='lift-over-submit',
+                                      n_clicks=0),
+                           dbc.Button('Reset All Display',
+                                      color='danger',
+                                      outline=True,
+                                      id='lift-over-reset',
+                                      n_clicks=0,
+                                      style={'margin-left': '1em'})]
+                 ),
 
         html.Br(),
-        html.Br(),
 
-        dbc.Button('Reset All Display', id='lift-over-reset', n_clicks=0),
-        
-        html.Div(id='lift-over-results-genomic-intervals-input', children=''),
+        html.Div(id='lift-over-results-genomic-intervals-input',
+                 children='', hidden=True),
 
-        html.Div(id='lift-over-results-other-refs-input', children=''),
+        html.Div(id='lift-over-results-other-refs-input',
+                 children='', hidden=True),
 
         html.Div(id='lift-over-results-intro', children=''),
 
@@ -62,6 +69,13 @@ layout = html.Div(
         html.Br(),
 
         html.Div(id='lift-over-results-gene-intro', children=''),
+
+        html.Br(),
+
+        dbc.Checklist(id='lift-over-overlap-table-filter',
+                      inline=True,
+                      options=[],
+                      style={}),
 
         html.Br(),
 
@@ -86,13 +100,13 @@ layout = html.Div(
         ),
 
         dcc.Store(
-            id = 'lift-over-genomic-intervals-saved-input',
-            storage_type = 'session',
+            id='lift-over-genomic-intervals-saved-input',
+            storage_type='session',
         ),
 
         dcc.Store(
-            id = 'lift-over-other-refs-saved-input',
-            storage_type = 'session',
-        ), 
+            id='lift-over-other-refs-saved-input',
+            storage_type='session',
+        ),
     ]
 )
