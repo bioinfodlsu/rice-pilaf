@@ -75,7 +75,7 @@ def init_callback(app):
                     is_submitted, nb_intervals_str, orig_nb_intervals_str)
 
                 if not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
-                    tabs = ['Summary', 'NB']
+                    tabs = ['Summary', 'Nb']
 
                     other_refs = get_user_other_refs_input(
                         is_submitted, other_refs, orig_other_refs)
@@ -124,6 +124,7 @@ def init_callback(app):
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-reset', 'n_clicks'),
+        Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
         State('lift-over-is-submitted', 'data'),
@@ -131,7 +132,7 @@ def init_callback(app):
 
         State('lift-over-genomic-intervals-saved-input', 'data')
     )
-    def display_gene_tables(n_clicks, active_tab, reset_n_clicks, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
+    def display_gene_tables(n_clicks, active_tab, reset_n_clicks, filter_rice_variants, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
             if reset_n_clicks == 0:
                 nb_intervals_str = get_user_genomic_intervals_str_input(
@@ -145,7 +146,7 @@ def init_callback(app):
 
                     if active_tab == SUMMARY_TAB:
                         df_nb = get_overlapping_ogi(
-                            ['Nb', 'MH63'], nb_intervals).to_dict('records')
+                            filter_rice_variants, nb_intervals).to_dict('records')
                         return 'Genes present in the selected rice varities. Use the checkbox below to filter rice varities:', \
                             df_nb, active_tab, {'display': 'block'}
 
