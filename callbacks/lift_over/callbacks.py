@@ -55,6 +55,9 @@ def init_callback(app):
         Output('lift-over-genomic-intervals', 'value'),
         Output('lift-over-other-refs', 'value'),
 
+        Output('lift-over-overlap-table-filter', 'options'),
+        Output('lift-over-overlap-table-filter', 'value'),
+
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-reset', 'n_clicks'),
 
@@ -85,10 +88,11 @@ def init_callback(app):
 
                     return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
                         tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + \
-                        str(other_refs)[1:-1], nb_intervals_str, other_refs
+                        str(other_refs)[1:-1], nb_intervals_str, other_refs, \
+                        tabs[1:], tabs[1:]
 
             else:
-                return None, None, None, None, None, None
+                return None, None, None, None, None, None, None
 
         raise PreventUpdate
 
