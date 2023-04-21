@@ -161,7 +161,6 @@ def get_ogi_other_ref(ref, Nb_intervals):
                                                           completely_within=False, featuretype='gene'))
 
             ogi_mapping_path = f'data/ogi_mapping/{ref}_to_ogi.pickle'
-            ogi_list = []
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
                 for gene in genes_in_interval:
@@ -194,7 +193,9 @@ def get_overlapping_ogi(refs, Nb_intervals):
 
             idx += 1
 
-    overlapping_ogi = list(set.intersection(*ogi_list))
+    overlapping_ogi = []
+    if ogi_list:
+        overlapping_ogi = list(set.intersection(*ogi_list))
 
     df_matrix = []
     for ogi in overlapping_ogi:
@@ -205,6 +206,9 @@ def get_overlapping_ogi(refs, Nb_intervals):
             idx += 1
 
         df_matrix.append(ogi_row)
+
+    if not df_matrix:
+        df_matrix.append(['-' for _ in range(len(refs) + 1)])
 
     df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
 
