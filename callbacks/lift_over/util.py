@@ -23,17 +23,20 @@ error_messages = {
 def has_user_submitted(is_submitted):
     return is_submitted
 
+
 def get_user_genomic_intervals_str_input(is_submitted, nb_intervals_str, orig_nb_intervals_str):
     if is_submitted and orig_nb_intervals_str != nb_intervals_str:
         return orig_nb_intervals_str
     else:
         return nb_intervals_str
 
+
 def get_user_other_refs_input(is_submitted, other_refs, orig_other_refs):
     if is_submitted and orig_other_refs != other_refs:
         return orig_other_refs
     else:
         return other_refs
+
 
 def create_empty_df():
     return pd.DataFrame({
@@ -108,6 +111,81 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 
     return nb_intervals
 
+
+def get_ogi_nb(Nb_intervals):
+    if is_error(Nb_intervals):
+        Nb_intervals = []
+
+    final_ogi_list = set()
+
+    for Nb_interval in Nb_intervals:
+        # load and search GFF_DB of Nipponbare
+        db = gffutils.FeatureDB(
+            'data/annotations/Nb/IRGSPMSU.gff.db', keep_order=True)
+        genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+                                           completely_within=False, featuretype='gene'))
+        [gene.id for gene in genes_in_interval]
+
+        ogi_mapping_path = f'data/ogi_mapping/NB_to_ogi.pickle'
+        with open(ogi_mapping_path, 'rb') as f:
+            ogi_mapping = pickle.load(f)
+            ogi_list = set(get_ogi([sanitize_gene_id(gene.id)
+                                    for gene in genes_in_interval], ogi_mapping))
+
+        final_ogi_list = final_ogi_list.union(ogi_list)
+
+    return final_ogi_list
+
+
+def get_ogi_other_ref(ref, Nb_intervals):
+    db_align = gffutils.FeatureDB(
+        "data/alignments/{0}/{0}.1to1.gff.db".format("Nb_"+str(ref)))
+    db_annotation = gffutils.FeatureDB(
+        "data/annotations/{0}/{0}.gff.db".format(ref))
+    # get corresponding intervals on ref
+    if is_error(Nb_intervals):
+        Nb_intervals = []
+
+    final_ogi_list = set()
+
+    for Nb_interval in Nb_intervals:
+        gff_intersections = list(db_align.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+                                                 completely_within=False))
+        for intersection in gff_intersections:
+            ref_interval = to_genomic_interval(
+                intersection.attributes['Name'][0])
+            genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
+                                                          completely_within=False, featuretype='gene'))
+
+            ogi_mapping_path = f'data/ogi_mapping/{ref}_to_ogi.pickle'
+            ogi_list = []
+            with open(ogi_mapping_path, 'rb') as f:
+                ogi_mapping = pickle.load(f)
+                ogi_list = set(get_ogi([sanitize_gene_id(gene.id)
+                                        for gene in genes_in_interval], ogi_mapping))
+
+            final_ogi_list = final_ogi_list.union(ogi_list)
+
+    return final_ogi_list
+
+
+def get_overlapping_ogi(refs, Nb_intervals):
+    ogi_list = []
+
+    if 'Nb' in refs:
+        ogi_list.append(get_ogi_nb(Nb_intervals))
+
+    for ref in refs:
+        if ref != 'Nb':
+            ogi_list.append(get_ogi_other_ref(ref, Nb_intervals))
+
+    overlapping_ogi = set.intersection(*ogi_list)
+
+    print(overlapping_ogi)
+
+    return overlapping_ogi
+
+
 # getting genes from Nipponbare
 
 
@@ -153,7 +231,6 @@ def get_genes_from_Nb(Nb_intervals):
 
 
 # Remove 'gene' prefix from gene IDs (e.g., from N22)
-
 def sanitize_gene_id(gene_id):
     if gene_id[:len('gene:')] == 'gene:':
         return gene_id[len('gene:'):]

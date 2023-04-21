@@ -52,9 +52,13 @@ layout = html.Div(
                                       style={'margin-left': '1em'})]
                  ),
 
-        html.Div(id='lift-over-results-genomic-intervals-input', children=''),
+        html.Br(),
 
-        html.Div(id='lift-over-results-other-refs-input', children=''),
+        html.Div(id='lift-over-results-genomic-intervals-input',
+                 children='', hidden=True),
+
+        html.Div(id='lift-over-results-other-refs-input',
+                 children='', hidden=True),
 
         html.Div(id='lift-over-results-intro', children=''),
 
@@ -68,7 +72,10 @@ layout = html.Div(
 
         html.Br(),
 
-        dcc.Checklist(id='lift-over-overlap-table-filter', inline=True),
+        dbc.Checklist(id='lift-over-overlap-table-filter',
+                      inline=True,
+                      options=['Hello'],
+                      style={}),
 
         html.Br(),
 
