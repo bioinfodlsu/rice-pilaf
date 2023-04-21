@@ -1,5 +1,5 @@
 import pickle
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
 import gffutils
 import pandas as pd
@@ -116,7 +116,8 @@ def get_ogi_nb(Nb_intervals):
     if is_error(Nb_intervals):
         Nb_intervals = []
 
-    final_ogi_list = set()
+    final_ogi_set = set()
+    final_ogi_dict = defaultdict(set)
 
     for Nb_interval in Nb_intervals:
         # load and search GFF_DB of Nipponbare
@@ -124,17 +125,18 @@ def get_ogi_nb(Nb_intervals):
             'data/annotations/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
-        [gene.id for gene in genes_in_interval]
 
         ogi_mapping_path = f'data/ogi_mapping/NB_to_ogi.pickle'
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
-            ogi_list = set(get_ogi([sanitize_gene_id(gene.id)
-                                    for gene in genes_in_interval], ogi_mapping))
+            for gene in genes_in_interval:
+                gene_id = sanitize_gene_id(gene.id)
+                ogi = ogi_mapping[gene_id]
 
-        final_ogi_list = final_ogi_list.union(ogi_list)
+                final_ogi_set.add(ogi)
+                final_ogi_dict[ogi].add(gene_id)
 
-    return final_ogi_list
+    return final_ogi_set, final_ogi_dict
 
 
 def get_ogi_other_ref(ref, Nb_intervals):
@@ -146,7 +148,8 @@ def get_ogi_other_ref(ref, Nb_intervals):
     if is_error(Nb_intervals):
         Nb_intervals = []
 
-    final_ogi_list = set()
+    final_ogi_set = set()
+    final_ogi_dict = defaultdict(set)
 
     for Nb_interval in Nb_intervals:
         gff_intersections = list(db_align.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
@@ -161,29 +164,49 @@ def get_ogi_other_ref(ref, Nb_intervals):
             ogi_list = []
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
-                ogi_list = set(get_ogi([sanitize_gene_id(gene.id)
-                                        for gene in genes_in_interval], ogi_mapping))
+                for gene in genes_in_interval:
+                    gene_id = sanitize_gene_id(gene.id)
+                    ogi = ogi_mapping[gene_id]
 
-            final_ogi_list = final_ogi_list.union(ogi_list)
+                    final_ogi_set.add(ogi)
+                    final_ogi_dict[ogi].add(gene_id)
 
-    return final_ogi_list
+    return final_ogi_set, final_ogi_dict
 
 
 def get_overlapping_ogi(refs, Nb_intervals):
     ogi_list = []
+    accession_list = []
+
+    ogi_nb = get_ogi_nb(Nb_intervals)
+    ogi_other_refs = []
 
     if 'Nb' in refs:
-        ogi_list.append(get_ogi_nb(Nb_intervals))
+        ogi_list.append(ogi_nb[0])
+        accession_list.append(ogi_nb[1])
 
+    idx = 0
     for ref in refs:
         if ref != 'Nb':
-            ogi_list.append(get_ogi_other_ref(ref, Nb_intervals))
+            ogi_other_refs.append(get_ogi_other_ref(ref, Nb_intervals))
+            ogi_list.append(ogi_other_refs[idx][0])
+            accession_list.append(ogi_other_refs[idx][1])
+
+            idx += 1
 
     overlapping_ogi = list(set.intersection(*ogi_list))
 
-    df = pd.DataFrame({
-        'ogi': overlapping_ogi
-    })
+    df_matrix = []
+    for ogi in overlapping_ogi:
+        ogi_row = [ogi]
+        idx = 0
+        for ref in refs:
+            ogi_row.append(', '.join(accession_list[idx][ogi]))
+            idx += 1
+
+        df_matrix.append(ogi_row)
+
+    df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
 
     return df
 
