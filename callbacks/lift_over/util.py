@@ -179,11 +179,13 @@ def get_overlapping_ogi(refs, Nb_intervals):
         if ref != 'Nb':
             ogi_list.append(get_ogi_other_ref(ref, Nb_intervals))
 
-    overlapping_ogi = set.intersection(*ogi_list)
+    overlapping_ogi = list(set.intersection(*ogi_list))
 
-    print(overlapping_ogi)
+    df = pd.DataFrame({
+        'ogi': overlapping_ogi
+    })
 
-    return overlapping_ogi
+    return df
 
 
 # getting genes from Nipponbare

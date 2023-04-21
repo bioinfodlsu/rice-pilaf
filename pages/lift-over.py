@@ -74,7 +74,7 @@ layout = html.Div(
 
         dbc.Checklist(id='lift-over-overlap-table-filter',
                       inline=True,
-                      options=['Hello'],
+                      options=[],
                       style={}),
 
         html.Br(),
