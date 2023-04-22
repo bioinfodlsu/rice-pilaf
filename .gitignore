@@ -131,3 +131,7 @@ dmypy.json
 # Data folder
 data/
 data.zip
+
+# Scratch
+scratch.ipynb
+scratch.py
