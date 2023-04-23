@@ -22,27 +22,26 @@ def init_callback(app):
 
         Output('lift-over-genomic-intervals-saved-input', 'data'),
         Output('lift-over-other-refs-saved-input', 'data'),
-        Output('lift-over-reset', 'n_clicks'),
 
         Input('lift-over-submit', 'n_clicks'),
-        Input('lift-over-reset', 'n_clicks'),
 
         State('lift-over-genomic-intervals', 'value'),
         State('lift-over-other-refs', 'value')
     )
-    def parse_input(n_clicks, reset_n_clicks, nb_intervals_str, other_refs):
-        if reset_n_clicks >= 1:
-            return None, {'display': 'none'}, str(False), '', '', 0
-
+    def parse_input(n_clicks, nb_intervals_str, other_refs):
         if n_clicks >= 1:
-            intervals = get_genomic_intervals_from_input(nb_intervals_str)
-            if is_error(intervals):
-                return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), get_error_message(intervals[0])], \
-                    {'display': 'block'}, str(
-                        True), nb_intervals_str, other_refs, 0
+            if nb_intervals_str:
+                intervals = get_genomic_intervals_from_input(nb_intervals_str)
+                if is_error(intervals):
+                    return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), get_error_message(intervals[0])], \
+                        {'display': 'block'}, str(
+                            True), nb_intervals_str, other_refs
+                else:
+                    return None, {'display': 'none'}, str(True), nb_intervals_str, other_refs
             else:
-                return None, {'display': 'none'}, str(True), nb_intervals_str, other_refs, 0
-
+                return [f'Error: Input for genomic interval should not be empty.'], \
+                    {'display': 'block'}, str(
+                        True), nb_intervals_str, other_refs
         raise PreventUpdate
 
     @app.callback(
@@ -52,14 +51,11 @@ def init_callback(app):
         Output('lift-over-results-genomic-intervals-input', 'children'),
         Output('lift-over-results-other-refs-input', 'children'),
 
-        Output('lift-over-genomic-intervals', 'value'),
-        Output('lift-over-other-refs', 'value'),
-
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
         Input('lift-over-submit', 'n_clicks'),
-        Input('lift-over-reset', 'n_clicks'),
+
 
         State('lift-over-is-submitted', 'data'),
         State('lift-over-other-refs', 'value'),
@@ -68,31 +64,29 @@ def init_callback(app):
         State('lift-over-other-refs-saved-input', 'data'),
         State('lift-over-genomic-intervals-saved-input', 'data')
     )
-    def display_gene_tabs(n_clicks, reset_n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str):
+    def display_gene_tabs(n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if reset_n_clicks == 0:
-                nb_intervals_str = get_user_genomic_intervals_str_input(
-                    is_submitted, nb_intervals_str, orig_nb_intervals_str)
+            nb_intervals_str = get_user_genomic_intervals_str_input(
+                n_clicks, nb_intervals_str, orig_nb_intervals_str)
 
-                if not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
-                    tabs = ['Summary', 'Nb']
+            if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
+                tabs = ['Summary', 'Nb']
 
-                    other_refs = get_user_other_refs_input(
-                        is_submitted, other_refs, orig_other_refs)
+                other_refs = get_user_other_refs_input(
+                    n_clicks, other_refs, orig_other_refs)
 
-                    if other_refs:
-                        tabs = tabs + other_refs
+                if other_refs:
+                    tabs = tabs + other_refs
 
-                    tabs_children = [dcc.Tab(label=tab, value=tab)
-                                     for tab in tabs]
+                tabs_children = [dcc.Tab(label=tab, value=tab)
+                                 for tab in tabs]
 
-                    return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                        tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + \
-                        str(other_refs)[1:-1], nb_intervals_str, other_refs, \
-                        tabs[1:], tabs[1:]
-
+                return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
+                    tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + \
+                    str(other_refs)[1:-1], \
+                    tabs[1:], tabs[1:]
             else:
-                return None, None, None, None, None, None, None
+                return None, None, None, None, [], None
 
         raise PreventUpdate
 
@@ -100,15 +94,14 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-submit', 'n_clicks'),
-        Input('lift-over-reset', 'n_clicks'),
 
         State('lift-over-is-submitted', 'data'),
         State('lift-over-genomic-intervals', 'value'),
         State('lift-over-active-tab', 'data')
     )
-    def switch_active_tab(n_clicks, reset_n_clicks, is_submitted, nb_intervals_str, active_tab):
+    def switch_active_tab(n_clicks, is_submitted, nb_intervals_str, active_tab):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if not active_tab or n_clicks >= 1 or reset_n_clicks >= 1:
+            if not active_tab or n_clicks >= 1 or not nb_intervals_str:
                 return 'tab-0'
 
             return active_tab
@@ -123,7 +116,7 @@ def init_callback(app):
 
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-reset', 'n_clicks'),
+
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
@@ -132,11 +125,13 @@ def init_callback(app):
 
         State('lift-over-genomic-intervals-saved-input', 'data')
     )
-    def display_gene_tables(n_clicks, active_tab, reset_n_clicks, filter_rice_variants, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
+    def display_gene_tables(n_clicks, active_tab, filter_rice_variants, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if reset_n_clicks == 0:
-                nb_intervals_str = get_user_genomic_intervals_str_input(
-                    is_submitted, nb_intervals_str, orig_nb_intervals_str)
+
+            nb_intervals_str = get_user_genomic_intervals_str_input(
+                n_clicks, nb_intervals_str, orig_nb_intervals_str)
+
+            if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
 
@@ -163,7 +158,6 @@ def init_callback(app):
                             other_ref, nb_intervals).to_dict('records')
 
                         return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}
-
                 else:
                     return None, None, None, {'display': 'none'}
             else:
