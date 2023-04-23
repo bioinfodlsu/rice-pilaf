@@ -75,10 +75,10 @@ def init_callback(app):
         State('lift-over-genomic-intervals-saved-input', 'data')
     )
     def display_gene_tabs(n_clicks, reset_n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str):
-        if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if reset_n_clicks >= 1:
-                return None, None, None, None, None, None, [], None
+        if reset_n_clicks >= 1:
+            return None, None, None, None, None, None, [], None
 
+        if n_clicks >= 1 or has_user_submitted(is_submitted):
             nb_intervals_str = get_user_genomic_intervals_str_input(
                 n_clicks, nb_intervals_str, orig_nb_intervals_str)
 
@@ -140,9 +140,10 @@ def init_callback(app):
         State('lift-over-genomic-intervals-saved-input', 'data')
     )
     def display_gene_tables(n_clicks, reset_n_clicks, active_tab, filter_rice_variants, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
+        if reset_n_clicks >= 1:
+            return None, None, None, {'display': 'none'}
+
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if reset_n_clicks >= 1:
-                return None, None, None, {'display': 'none'}
 
             nb_intervals_str = get_user_genomic_intervals_str_input(
                 n_clicks, nb_intervals_str, orig_nb_intervals_str)
