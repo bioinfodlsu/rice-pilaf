@@ -24,15 +24,15 @@ def has_user_submitted(is_submitted):
     return is_submitted
 
 
-def get_user_genomic_intervals_str_input(is_submitted, nb_intervals_str, orig_nb_intervals_str):
-    if is_submitted and orig_nb_intervals_str != nb_intervals_str:
+def get_user_genomic_intervals_str_input(n_clicks, nb_intervals_str, orig_nb_intervals_str):
+    if n_clicks == 0 and orig_nb_intervals_str and orig_nb_intervals_str != nb_intervals_str:
         return orig_nb_intervals_str
     else:
         return nb_intervals_str
 
 
-def get_user_other_refs_input(is_submitted, other_refs, orig_other_refs):
-    if is_submitted and orig_other_refs != other_refs:
+def get_user_other_refs_input(n_clicks, other_refs, orig_other_refs):
+    if n_clicks == 0 and orig_other_refs and orig_other_refs != other_refs:
         return orig_other_refs
     else:
         return other_refs
