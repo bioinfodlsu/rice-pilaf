@@ -114,7 +114,7 @@ def init_callback(app):
     )
     def switch_active_tab(n_clicks, is_submitted, nb_intervals_str, active_tab):
         if n_clicks >= 1 or has_user_submitted(is_submitted):
-            if not active_tab or n_clicks >= 1 or not nb_intervals_str:
+            if not active_tab or n_clicks >= 1:
                 return 'tab-0'
 
             return active_tab
@@ -141,7 +141,7 @@ def init_callback(app):
     )
     def display_gene_tables(n_clicks, reset_n_clicks, active_tab, filter_rice_variants, children, is_submitted, nb_intervals_str, orig_nb_intervals_str):
         if reset_n_clicks >= 1:
-            return None, None, None, {'display': 'none'}
+            return None, None, 'tab-0', {'display': 'none'}
 
         if n_clicks >= 1 or has_user_submitted(is_submitted):
 
