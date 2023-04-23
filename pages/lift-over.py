@@ -107,6 +107,11 @@ layout = html.Div(
         dcc.Store(
             id='lift-over-other-refs-saved-input',
             storage_type='session',
+        ),
+
+        dcc.Store(
+            id='lift-over-active-filter',
+            storage_type='session'
         )
     ]
 )
