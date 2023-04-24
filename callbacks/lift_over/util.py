@@ -126,7 +126,7 @@ def get_ogi_nb(Nb_intervals):
         genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
-        ogi_mapping_path = f'data/ogi_mapping/NB_to_ogi.pickle'
+        ogi_mapping_path = f'data/ogi_mapping/Nb_to_ogi.pickle'
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
             for gene in genes_in_interval:
@@ -230,7 +230,7 @@ def get_genes_from_Nb(Nb_intervals):
         genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
-        ogi_mapping_path = f'data/ogi_mapping/NB_to_ogi.pickle'
+        ogi_mapping_path = f'data/ogi_mapping/Nb_to_ogi.pickle'
         ogi_list = []
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
