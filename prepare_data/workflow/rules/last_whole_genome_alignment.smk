@@ -33,7 +33,7 @@ rule last_align_one_to_many:
         other_ref = "{0}/genomes/{{other_ref}}/{{other_ref}}.fasta.gz".format(config["input_data_dir"]),
         score_training_out= "{0}/last_training/Nb_{{other_ref}}".format(config["processed_data_dir"])
     output:
-        one_to_many_alignment = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}_one_to_many.maf".format(config["processed_data_dir"])
+        one_to_many_alignment = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}_one_to_many.maf".format(config["processed_data_dir"])
     params:
         index_basename="{0}/last_index/Nipponbare_db".format(config["processed_data_dir"])
     threads: config["threads"]
@@ -46,9 +46,9 @@ rule last_align_one_to_many:
 
 rule last_align_one_to_one:
     input:
-        one_to_many_alignment = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}_one_to_many.maf".format(config["processed_data_dir"])
+        one_to_many_alignment = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}_one_to_many.maf".format(config["processed_data_dir"])
     output:
-         one_to_one_alignment = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}_one_to_one.maf".format(config["processed_data_dir"])
+         one_to_one_alignment = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}_one_to_one.maf".format(config["processed_data_dir"])
     conda:
         "../env/lastal.yaml"
     shell:
@@ -58,9 +58,9 @@ rule last_align_one_to_one:
 
 rule convert_gff:
     input:
-        one_to_one_alignment="{0}/alignments/{{other_ref}}/Nb_{{other_ref}}_one_to_one.maf".format(config["processed_data_dir"])
+        one_to_one_alignment="{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}_one_to_one.maf".format(config["processed_data_dir"])
     output:
-        gff = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}.gff".format(config["processed_data_dir"])
+        gff = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}.gff".format(config["processed_data_dir"])
     conda:
         "../env/lastal.yaml"
     shell:
@@ -68,9 +68,9 @@ rule convert_gff:
 
 rule build_gff_db:
     input:
-        gff = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}.gff".format(config["processed_data_dir"])
+        gff = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}.gff".format(config["processed_data_dir"])
     output:
-        gff_db = "{0}/alignments/{{other_ref}}/Nb_{{other_ref}}.gff.db".format(config["processed_data_dir"])
+        gff_db = "{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}.gff.db".format(config["processed_data_dir"])
     conda:
         "../env/gffutils.yaml"
     shell:
