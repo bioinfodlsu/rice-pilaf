@@ -57,6 +57,13 @@ def get_error_message(error_code):
     return error_messages[error_code]
 
 
+def sanitize_other_refs(other_refs):
+    if other_refs:
+        print(type(other_refs))
+
+    return other_refs
+
+
 def sanitize_nb_intervals_str(nb_intervals_str):
     # Remove spaces
     nb_intervals_str = nb_intervals_str.replace(' ', '')
@@ -141,7 +148,7 @@ def get_ogi_nb(Nb_intervals):
 
 def get_ogi_other_ref(ref, Nb_intervals):
     db_align = gffutils.FeatureDB(
-        "data/alignments/{0}/{0}.1to1.gff.db".format("Nb_"+str(ref)))
+        "data/alignments/{0}/{0}.gff.db".format("Nb_"+str(ref)))
     db_annotation = gffutils.FeatureDB(
         "data/annotations/{0}/{0}.gff.db".format(ref))
     # get corresponding intervals on ref
@@ -271,7 +278,7 @@ def sanitize_gene_id(gene_id):
 
 def get_genes_from_other_ref(ref, Nb_intervals):
     db_align = gffutils.FeatureDB(
-        "data/alignments/{0}/{0}.1to1.gff.db".format("Nb_"+str(ref)))
+        "data/alignments/{0}/{0}.gff.db".format("Nb_"+str(ref)))
     db_annotation = gffutils.FeatureDB(
         "data/annotations/{0}/{0}.gff.db".format(ref))
     # get corresponding intervals on ref
