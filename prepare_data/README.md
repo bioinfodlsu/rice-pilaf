@@ -2,7 +2,7 @@
 
 ## Mapping OGI and reference-specific accessions
 
-### `generate-ogi-dicts.py`
+### 1. `generate-ogi-dicts.py`
 
 This script generates pickled dictionaries that map reference-specific accessions to their respective ortholog gene indices (OGIs), as obtained from the [Rice Gene Index](https://riceome.hzau.edu.cn/download.html).
 
@@ -25,7 +25,7 @@ python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../dat
 
 ## Coexpression Network
 
-### `convert-to-int-edge-list.py`
+### 2. `convert-to-int-edge-list.py`
 
 This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
 
@@ -45,3 +45,18 @@ Relative to the directory where `generate-ogi-dicts.py` is saved, the command to
 ```
 python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
 ```
+
+### 2. Detecting Modules via FOX
+
+This app uses the overlapping community detection algorithm [FOX](https://dl.acm.org/doi/10.1145/3404970) to detect modules in the coexpression network. To run this algorithm, download the `LazyFox` binary from this [repository](https://github.com/TimGarrels/LazyFox). As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
+
+Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation), the recipe to run it relative to this directory is as follows:
+
+```
+./LazyFox --input-graph ../../../data/networks/OS-CX.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+mkdir -p ../../../data/networks-modules/OS-CX
+mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/int-module-list.txt
+rm -r temp
+```
+
+Note that `LazyFox` requires a Linux operating system.
