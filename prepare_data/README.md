@@ -17,7 +17,7 @@ python generate-ogi-dicts.py input_dir output_dir
     -   Nipponbare is abbreviated as `Nb` (not `Nip`)
     -   CHAO MEO::IRGC 80273-1 is abbreviated as `CHAO` (not `CMeo`)
 
-Relative to the directory where `generate-ogi-dicts.py` is saved, the command to run it is as follows:
+💡 Assuming that the working directory is `workflow/scripts`, the command to run it is as follows:
 
 ```
 python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../data/ogi_mapping
@@ -25,7 +25,7 @@ python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../dat
 
 ## Coexpression Network
 
-### 2. `convert-to-int-edge-list.py`
+### 1. `convert-to-int-edge-list.py`
 
 This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
 
@@ -40,7 +40,7 @@ python convert-to-int-edge-list.py input_edge_list_file output_dir
     -   The edge list with the node labels converted to integers. Note that, if `input_edge_list` contains weights, the weights will not be included in the output
     -   A pickled dictionary mapping the string node labels to their respective integer node labels
 
-Relative to the directory where `generate-ogi-dicts.py` is saved, the command to run it is as follows:
+💡 Assuming that the working directory is `workflow/scripts`, the command to run it is as follows:
 
 ```
 python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
@@ -50,7 +50,7 @@ python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../dat
 
 This app uses the overlapping community detection algorithm [FOX](https://dl.acm.org/doi/10.1145/3404970) to detect modules in the coexpression network. To run this algorithm, download the `LazyFox` binary from this [repository](https://github.com/TimGarrels/LazyFox). As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
-Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation), the recipe to run it relative to this directory is as follows:
+💡 Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation) and `workflow/scripts` is also the working directory, the recipe to run it is as follows:
 
 ```
 ./LazyFox --input-graph ../../../data/networks/OS-CX.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
