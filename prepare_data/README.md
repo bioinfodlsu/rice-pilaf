@@ -25,6 +25,8 @@ python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../dat
 
 ## Coexpression Network
 
+**IMPORTANT**: The recipes here should be executed sequentially.
+
 ### 1. `convert-to-int-edge-list.py`
 
 This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
@@ -53,7 +55,7 @@ This app uses the overlapping community detection algorithm [FOX](https://dl.acm
 💡 Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation) and the working directory is also `workflow/scripts`, the recipe to run it is as follows:
 
 ```
-./LazyFox --input-graph ../../../data/networks/OS-CX.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+./LazyFox --input-graph ../../../data/networks-modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
 mkdir -p ../../../data/networks-modules/OS-CX
 mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/int-module-list.txt
 rm -r temp
