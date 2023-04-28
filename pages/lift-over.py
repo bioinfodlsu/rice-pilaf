@@ -35,7 +35,7 @@ layout = html.Div(
         dcc.Markdown('Search homologous regions of the following genomes:'),
         dcc.Dropdown(other_ref_genomes,
                      id='lift-over-other-refs',
-                     multi=True,
+                     multi=False,
                      persistence=True,
                      persistence_type='memory'
                      ),
@@ -55,10 +55,10 @@ layout = html.Div(
         html.Br(),
 
         html.Div(id='lift-over-results-genomic-intervals-input',
-                 children='', hidden=True),
+                 children=''),
 
         html.Div(id='lift-over-results-other-refs-input',
-                 children='', hidden=True),
+                 children=''),
 
         html.Div(id='lift-over-results-intro', children=''),
 

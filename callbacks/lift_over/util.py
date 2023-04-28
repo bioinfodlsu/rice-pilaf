@@ -59,9 +59,12 @@ def get_error_message(error_code):
 
 def sanitize_other_refs(other_refs):
     if other_refs:
-        print(type(other_refs))
+        if isinstance(other_refs, str):
+            return [other_refs]
+        else:
+            return other_refs
 
-    return other_refs
+    return []
 
 
 def sanitize_nb_intervals_str(nb_intervals_str):
