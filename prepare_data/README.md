@@ -40,7 +40,7 @@ python convert-to-int-edge-list.py input_edge_list_file output_dir
 -   `input_edge_list` is the text file corresponding to the edge list where the node labels are strings. The node labels in each line should be separated by a tab (`\t`).
 -   `output_dir` is the output directory containing the following:
     -   The edge list with the node labels converted to integers. Note that, if `input_edge_list` contains weights, the weights will not be included in the output
-    -   A pickled dictionary mapping the string node labels to their respective integer node labels
+    -   A pickled dictionary mapping the integer node labels to their respective string node labels
 
 💡 Assuming that the working directory is `workflow/scripts`, the command to run it is as follows:
 
@@ -61,3 +61,5 @@ rm -r temp
 ```
 
 Note that `LazyFox` requires a Linux operating system.
+
+### 3.
