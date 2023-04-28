@@ -25,7 +25,7 @@ python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI ../../../data
 
 ## Coexpression Network
 
-**IMPORTANT**: The recipes here should be executed sequentially.
+⚠️ **IMPORTANT**: The recipes here should be executed sequentially.
 
 ### 1. `convert-to-int-edge-list.py`
 
@@ -56,7 +56,6 @@ This app uses the overlapping community detection algorithm [FOX](https://dl.acm
 
 ```
 ./LazyFox --input-graph ../../../data/networks-modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mkdir -p ../../../data/networks-modules/OS-CX
 mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/int-module-list.txt
 rm -r temp
 ```
