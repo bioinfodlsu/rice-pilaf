@@ -20,7 +20,7 @@ python generate-ogi-dicts.py input_dir output_dir
 💡 Assuming that the working directory is `workflow/scripts`, the command to run it is as follows:
 
 ```
-python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../data/ogi_mapping
+python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI ../../../data/ogi_mapping
 ```
 
 ## Coexpression Network
