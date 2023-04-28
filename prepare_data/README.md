@@ -50,7 +50,7 @@ python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../dat
 
 This app uses the overlapping community detection algorithm [FOX](https://dl.acm.org/doi/10.1145/3404970) to detect modules in the coexpression network. To run this algorithm, download the `LazyFox` binary from this [repository](https://github.com/TimGarrels/LazyFox). As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
-💡 Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation) and `workflow/scripts` is also the working directory, the recipe to run it is as follows:
+💡 Assuming that the `LazyFox` binary is saved in `workflow/scripts` (together with the Python scripts for data preparation) and the working directory is also `workflow/scripts`, the recipe to run it is as follows:
 
 ```
 ./LazyFox --input-graph ../../../data/networks/OS-CX.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
