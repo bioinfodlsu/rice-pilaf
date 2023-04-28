@@ -1,0 +1,17 @@
+include: "rules/last_whole_genome_alignment.smk"
+include: "rules/prepare_annotation.smk"
+
+#rule download_ref_genomes:
+    #wget and then make symbolic links
+
+rule all_download_annotation:
+    input:
+        expand("{0}/annotations/{{other_ref}}/{{other_ref}}.gff.db".format(config["processed_data_dir"]),other_ref = config["other_refs"])
+
+rule whole_genome_alignment:
+    #input: "{0}/last_index/index.done".format(config["data_dir"])
+    input:
+        expand("{0}/alignments/Nb_{{other_ref}}/Nb_{{other_ref}}.gff.db".format(config["processed_data_dir"]), other_ref = config["other_refs"])
+
+
+
