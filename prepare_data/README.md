@@ -23,11 +23,11 @@ Relative to the directory where `generate-ogi-dicts.py` is saved, the command to
 python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI  ../../../data/ogi_mapping
 ```
 
-## Coexpression (Network)
+## Coexpression Network
 
 ### `convert-to-int-edge-list.py`
 
-This script converts an edge list where the node labels are strings to an edge list where the node labels are integers.
+This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
 
 The command to run the script is as follows:
 
