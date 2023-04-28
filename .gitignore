@@ -133,5 +133,6 @@ data/
 data.zip
 
 # Scratch
+scratch/
 scratch.ipynb
 scratch.py
