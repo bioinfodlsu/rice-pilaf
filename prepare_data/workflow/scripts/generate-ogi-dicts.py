@@ -18,8 +18,11 @@ def get_rice_variants(path):
             rice_variants[i] = rice_variants[i][len('OS'):]
 
         # Nipponbare is abbreviated as 'Nb' in the app but 'Nip' in RGI
+        # CHAO MEO is abbreviated as 'CHAO' in the app but 'CMeo' in RGI
         if rice_variants[i] == 'Nip':
             rice_variants[i] = 'Nb'
+        elif rice_variants[i] == 'CMeo':
+            rice_variants[i] = 'CHAO'
 
         # Remove LOC
         if rice_variants[i] == 'LOC':
