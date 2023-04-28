@@ -26,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument(
         'mapping_file', help='pickled integer-to-string node label mapping dictionary')
     parser.add_argument(
-        'module_list_dir', help='output directory for the module list where the node labels are strings (i.e., the nodes are labeled with their original labels)')
+        'module_list_dir', help='output directory for the module list where the nodes have been relabeled to their (original) string labels')
 
     args = parser.parse_args()
 
