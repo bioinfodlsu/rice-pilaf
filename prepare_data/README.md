@@ -71,6 +71,7 @@ python restore-node-labels-in-modules.py module_list_file mapping_file module_li
 | `module_list_file` | Text file corresponding to a module list (where the node labels are integers)                              | Each line corresponds to a module, and the node labels in each line are separated by a tab (`\t`). |
 | `mapping_file`     | Pickled dictionary that maps the integer node labels to the (original) string labels                       |
 | `module_list_dir`  | Output directory for the module list where the nodes have been relabeled to their (original) string labels |
+| `algo`             | Name of community detection algorithm used to detect the modules                                           | This will be reflected in the filename of the output file.                                         |
 
 ### Recipes
 
