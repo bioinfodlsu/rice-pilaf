@@ -94,3 +94,18 @@ python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/fo
 ```
 
 Output: `fox-module-list.txt` in `../../../data/networks-modules/OS-CX`
+
+#### 1. Detecting Modules via DEMON
+
+Paper: https://dl.acm.org/doi/10.1145/2339530.2339630
+
+Prerequisites:
+
+-   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
+
+```
+python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
+python detect-modules-via-demon.py ../../../data/networks-modules/OS-CX/int-edge-list.txt ../../../data/networks-modules/OS-CX
+```
+
+Output: `demon-module-list.txt` in `../../../data/networks-modules/OS-CX`
