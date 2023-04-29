@@ -38,6 +38,8 @@ Argument | Description | Note
 python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI ../../../data/ogi_mapping
 ```
 
+Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../data/ogi_mapping`.
+
 ## Coexpression Network
 
 ### Scripts
@@ -86,3 +88,5 @@ mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/int-module-li
 rm -r temp
 python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/int-module-list.txt ../../../data/networks-modules/OS-CX/node-mapping.pickle ../../../data/networks-modules/OS-CX
 ```
+
+Output: `fox-module-list.txt` in `../../../data/networks-modules/OS-CX`
