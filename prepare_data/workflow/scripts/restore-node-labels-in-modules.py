@@ -7,7 +7,8 @@ def restore_node_labels(module_list_file, mapping_file, module_list_dir, algo):
 
         for module in modules:
             nodes = module.split('\t')
-            nodes = nodes[:-1]                         # Ignore newline
+            if nodes[:-1] == '\n':
+                nodes = nodes[:-1]                         # Ignore newline
 
             mapped_nodes = []
             for node in nodes:
