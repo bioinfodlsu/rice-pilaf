@@ -91,6 +91,21 @@ python restore-node-labels-in-modules.py module_list_file mapping_file module_li
 | `module_list_dir`  | Output directory for the module list where the nodes have been relabeled to their (original) string labels |
 | `algo`             | Name of community detection algorithm used to detect the modules                                           | This will be reflected in the filename of the output file.                                         |
 
+#### 4. `detect-modules-via-demon`
+
+This script runs the [DEMON community algorithm](https://dl.acm.org/doi/10.1145/2339530.2339630). 
+
+```
+python restore-node-labels-in-modules.py module_list_file mapping_file module_list_dir
+```
+
+| Argument           | Description                                                                                                | Note                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `edge_list_file` |  Text file corresponding to the edge list | |
+| `module_list_dir`     | Output directory for the module list                       |
+| `epsilon`  | Merging threshold (default = 0.25) | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
+| `min_com_size`             | Minimum size of a module (default = 3)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
+
 ### Recipes
 
 #### 1. Detecting Modules via FOX
