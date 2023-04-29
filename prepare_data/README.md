@@ -12,7 +12,7 @@ Note that all recipes assume that the working directory is `workflow/scripts`.
     -   [Scripts](https://github.com/bioinfodlsu/rice-pilaf/blob/main/prepare_data/README.md#scripts-1)
     -   [Recipes](https://github.com/bioinfodlsu/rice-pilaf/blob/main/prepare_data/README.md#recipes-1)
         -   [Detecting modules via FOX](https://github.com/bioinfodlsu/rice-pilaf/blob/main/prepare_data/README.md#1-detecting-modules-via-fox)
-        -   Detecting modules via DEMON
+        -   [Detecting modules via DEMON](https://github.com/bioinfodlsu/rice-pilaf/blob/main/prepare_data/README.md#2-detecting-modules-via-demon)
 
 ## Mapping OGI and reference-specific accessions
 
@@ -48,6 +48,8 @@ Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../data/ogi_map
 #### 1. `convert-to-int-edge-list.py`
 
 This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
+
+The [recipe for detecting modules via FOX](https://github.com/bioinfodlsu/rice-pilaf/blob/main/prepare_data/README.md#1-detecting-modules-via-fox) requires the edge list to be in this format.
 
 ```
 python convert-to-int-edge-list.py input_edge_list_file output_dir
@@ -95,7 +97,7 @@ python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/fo
 
 Output: `fox-module-list.txt` in `../../../data/networks-modules/OS-CX`
 
-#### 1. Detecting Modules via DEMON
+#### 2. Detecting Modules via DEMON
 
 Paper: https://dl.acm.org/doi/10.1145/2339530.2339630
 
@@ -105,7 +107,9 @@ Prerequisites:
 
 ```
 python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
+python generate-mapping-from-networkx-int-edge-graph.py ../../../data/networks-modules/OS-CX/int-edge-list.txt ../../../data/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../data/networks-modules/OS-CX
 python detect-modules-via-demon.py ../../../data/networks-modules/OS-CX/int-edge-list.txt ../../../data/networks-modules/OS-CX
+python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/demon-int-module-list.csv ../../../data/networks-modules/OS-CX/networkx-node-mapping.pickle ../../../data/networks-modules/OS-CX demon
 ```
 
 Output: `demon-module-list.txt` in `../../../data/networks-modules/OS-CX`
