@@ -30,11 +30,11 @@ def save_node_mapping(int_to_string_mapping, node_mapping_dir):
     if not os.path.exists(node_mapping_dir):
         os.makedirs(node_mapping_dir)
 
-    with open(f'{node_mapping_dir}/node-mapping.pickle', 'wb') as handle:
+    with open(f'{node_mapping_dir}/int-edge-list-node-mapping.pickle', 'wb') as handle:
         pickle.dump(int_to_string_mapping, handle,
                     protocol=pickle.HIGHEST_PROTOCOL)
 
-    print(f'Generated {node_mapping_dir}/node-mapping.pickle')
+    print(f'Generated {node_mapping_dir}/int-edge-list-node-mapping.pickle')
 
 
 if __name__ == '__main__':
