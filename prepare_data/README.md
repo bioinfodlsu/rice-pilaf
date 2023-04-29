@@ -90,7 +90,7 @@ python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../dat
 ./LazyFox --input-graph ../../../data/networks-modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
 mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/fox-int-module-list.txt
 rm -r temp
-python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/fox-int-module-list.txt ../../../data/networks-modules/OS-CX/node-mapping.pickle ../../../data/networks-modules/OS-CX fox
+python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/fox-int-module-list.txt ../../../data/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../data/networks-modules/OS-CX fox
 ```
 
 Output: `fox-module-list.txt` in `../../../data/networks-modules/OS-CX`
