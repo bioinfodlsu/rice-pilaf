@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 import callbacks.lift_over.callbacks
+import callbacks.browse_loci.callbacks
 
 app = dash.Dash(__name__, use_pages=True,
                 external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -57,5 +58,7 @@ app.layout = dbc.Container(
 )
 
 callbacks.lift_over.callbacks.init_callback(app)
+callbacks.browse_loci.callbacks.init_callback(app)
+
 if __name__ == '__main__':
     app.run_server(debug=True)
