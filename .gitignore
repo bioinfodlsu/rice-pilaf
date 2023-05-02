@@ -132,3 +132,12 @@ dmypy.json
 data/
 data.zip
 static/
+
+# Scratch
+scratch/
+scratch.ipynb
+scratch.py
+
+# Binary files
+prepare_data/workflow/scripts/LazyFox
+

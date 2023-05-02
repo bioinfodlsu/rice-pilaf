@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
-other_ref_genomes = ['N22', 'MH63']
+other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = ''  # 'Chr01:10000-20000;Chr01:22000-25000'
 
 dash.register_page(__name__, path="/", name="Input and Lift-over")
@@ -35,7 +35,7 @@ layout = html.Div(
         dcc.Markdown('Search homologous regions of the following genomes:'),
         dcc.Dropdown(other_ref_genomes,
                      id='lift-over-other-refs',
-                     multi=True,
+                     multi=False,
                      persistence=True,
                      persistence_type='memory'
                      ),
@@ -55,10 +55,10 @@ layout = html.Div(
         html.Br(),
 
         html.Div(id='lift-over-results-genomic-intervals-input',
-                 children='', hidden=True),
+                 children=''),
 
         html.Div(id='lift-over-results-other-refs-input',
-                 children='', hidden=True),
+                 children=''),
 
         html.Div(id='lift-over-results-intro', children=''),
 

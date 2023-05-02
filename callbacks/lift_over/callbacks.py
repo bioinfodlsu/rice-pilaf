@@ -38,6 +38,8 @@ def init_callback(app):
         if n_clicks >= 1:
             if nb_intervals_str:
                 intervals = get_genomic_intervals_from_input(nb_intervals_str)
+                other_refs = sanitize_other_refs(other_refs)
+
                 if is_error(intervals):
                     return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), get_error_message(intervals[0])], \
                         {'display': 'block'}, str(
@@ -73,9 +75,11 @@ def init_callback(app):
 
         State('lift-over-other-refs-saved-input', 'data'),
         State('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-active-filter', 'data')
+        State('lift-over-active-filter', 'data'),
+
+        State('lift-over-other-refs', 'multi')
     )
-    def display_gene_tabs(n_clicks, reset_n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str, active_filter):
+    def display_gene_tabs(n_clicks, reset_n_clicks, is_submitted, other_refs, nb_intervals_str, orig_other_refs, orig_nb_intervals_str, active_filter, is_multi_other_refs):
         if reset_n_clicks >= 1:
             return None, None, None, None, None, None, [], None
 
@@ -86,6 +90,7 @@ def init_callback(app):
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = ['Summary', 'Nb']
 
+                other_refs = sanitize_other_refs(other_refs)
                 other_refs = get_user_other_refs_input(
                     n_clicks, other_refs, orig_other_refs)
 
@@ -97,6 +102,9 @@ def init_callback(app):
 
                 if not active_filter:
                     active_filter = tabs[1:]
+
+                if not is_multi_other_refs:
+                    other_refs = other_refs[0]
 
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
                     tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + \
