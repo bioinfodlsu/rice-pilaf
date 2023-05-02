@@ -36,10 +36,10 @@ python generate-ogi-dicts.py input_dir output_dir
 #### 1. Generating the pickled dictionaries mapping the reference-specific accession to their respective OGIs
 
 ```
-python generate-ogi-dicts.py ../../../data/gene_ID_mapping_fromRGI ../../../data/ogi_mapping
+python generate-ogi-dicts.py ../../../static/gene_ID_mapping_fromRGI ../../../static/ogi_mapping
 ```
 
-Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../data/ogi_mapping`.
+Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/ogi_mapping`.
 
 ## Coexpression Network
 
@@ -119,14 +119,14 @@ Prerequisites:
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
 ```
-python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
-./LazyFox --input-graph ../../../data/networks-modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mv temp/CPP*/iterations/*.txt ../../../data/networks-modules/OS-CX/fox-int-module-list.txt
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks-modules/OS-CX
+./LazyFox --input-graph ../../../static/networks-modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+mv temp/CPP*/iterations/*.txt ../../../static/networks-modules/OS-CX/fox-int-module-list.txt
 rm -r temp
-python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/fox-int-module-list.txt ../../../data/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../data/networks-modules/OS-CX fox
+python restore-node-labels-in-modules.py ../../../static/networks-modules/OS-CX/fox-int-module-list.txt ../../../static/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks-modules/OS-CX fox
 ```
 
-Output: `fox-module-list.txt` in `../../../data/networks-modules/OS-CX`
+Output: `fox-module-list.txt` in `../../../static/networks-modules/OS-CX`
 
 #### 2. Detecting Modules via DEMON
 
@@ -137,10 +137,10 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python convert-to-int-edge-list.py ../../../data/networks/OS-CX.txt ../../../data/networks-modules/OS-CX
-python generate-mapping-from-networkx-int-edge-graph.py ../../../data/networks-modules/OS-CX/int-edge-list.txt ../../../data/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../data/networks-modules/OS-CX
-python detect-modules-via-demon.py ../../../data/networks-modules/OS-CX/int-edge-list.txt ../../../data/networks-modules/OS-CX
-python restore-node-labels-in-modules.py ../../../data/networks-modules/OS-CX/demon-int-module-list.csv ../../../data/networks-modules/OS-CX/networkx-node-mapping.pickle ../../../data/networks-modules/OS-CX demon
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks-modules/OS-CX
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks-modules/OS-CX/int-edge-list.txt ../../../static/networks-modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks-modules/OS-CX
+python detect-modules-via-demon.py ../../../static/networks-modules/OS-CX/int-edge-list.txt ../../../static/networks-modules/OS-CX
+python restore-node-labels-in-modules.py ../../../static/networks-modules/OS-CX/demon-int-module-list.csv ../../../static/networks-modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks-modules/OS-CX demon
 ```
 
-Output: `demon-module-list.txt` in `../../../data/networks-modules/OS-CX`
+Output: `demon-module-list.txt` in `../../../static/networks-modules/OS-CX`
