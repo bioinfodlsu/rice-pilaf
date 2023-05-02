@@ -131,3 +131,4 @@ dmypy.json
 # Data folder
 data/
 data.zip
+static/
