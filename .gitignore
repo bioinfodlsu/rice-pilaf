@@ -131,6 +131,7 @@ dmypy.json
 # Data folder
 data/
 data.zip
+static/
 
 # Scratch
 scratch/
@@ -139,3 +140,4 @@ scratch.py
 
 # Binary files
 prepare_data/workflow/scripts/LazyFox
+
