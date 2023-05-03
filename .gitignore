@@ -132,6 +132,7 @@ dmypy.json
 data/
 data.zip
 static/
+enrichment_analysis/data/
 
 # Scratch
 scratch/
