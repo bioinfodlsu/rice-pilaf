@@ -107,7 +107,7 @@ python detect-modules-via-demon.py [-epsilon EPSILON] [-min_com_size MIN_COM_SIZ
 | `epsilon`  | Merging threshold (default = 0.25) | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 | `min_com_size`             | Minimum size of a module (default = 3)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
-#### 4. `detect-modules-via-coach`
+#### 5. `detect-modules-via-coach`
 
 This script runs the [COACH community detection algorithm](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-169). 
 
