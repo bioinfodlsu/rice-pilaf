@@ -144,3 +144,20 @@ python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/
 ```
 
 Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX`
+
+#### 3. Detecting Modules via COACH
+
+Paper: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-169
+
+Prerequisites:
+
+-   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
+
+```
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
+python detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX coach
+```
+
+Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX`
