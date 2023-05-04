@@ -58,6 +58,7 @@ p1 <- dotplot(kegg,
   title = "Top 10 most statistically significant enriched KEGG terms",
   font.size = 10
 )
+
 ggsave(p1,
   filename = "data/kegg_dotplot.png",
   height = 22, width = 22, units = "cm"
