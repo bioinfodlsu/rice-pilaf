@@ -13,6 +13,7 @@ Note that all recipes assume that the working directory is `workflow/scripts`.
     -   [Recipes](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#recipes-1)
         -   [Detecting modules via FOX](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#1-detecting-modules-via-fox)
         -   [Detecting modules via DEMON](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#2-detecting-modules-via-demon)
+        -   [Detecting modules via COACH](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#3-detecting-modules-via-coach)
 
 ## Mapping OGI and reference-specific accessions
 
@@ -93,10 +94,10 @@ python restore-node-labels-in-modules.py module_list_file mapping_file module_li
 
 #### 4. `detect-modules-via-demon`
 
-This script runs the [DEMON community algorithm](https://dl.acm.org/doi/10.1145/2339530.2339630). 
+This script runs the [DEMON community detection algorithm](https://dl.acm.org/doi/10.1145/2339530.2339630). 
 
 ```
-python restore-node-labels-in-modules.py module_list_file mapping_file module_list_dir
+python detect-modules-via-demon.py [-epsilon EPSILON] [-min_com_size MIN_COM_SIZE] edge_list_file module_list_dir 
 ```
 
 | Argument           | Description                                                                                                | Note                                                                                               |
@@ -105,6 +106,22 @@ python restore-node-labels-in-modules.py module_list_file mapping_file module_li
 | `module_list_dir`     | Output directory for the module list                       |
 | `epsilon`  | Merging threshold (default = 0.25) | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 | `min_com_size`             | Minimum size of a module (default = 3)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
+
+#### 4. `detect-modules-via-coach`
+
+This script runs the [COACH community detection algorithm](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-169). 
+
+```
+python detect-modules-via-coach.py [-density_threshold DENSITY_THRESHOLD] [-affinity_threshold AFFINITY_THRESHOLD] [-closeness_threshold CLOSENESS_THRESHOLD] edge_list_file module_list_dir
+```
+
+| Argument           | Description                                                                                                | Note                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `edge_list_file` |  Text file corresponding to the edge list | |
+| `module_list_dir`     | Output directory for the module list                       |
+| `density_threshold`  | Minimum core density (default = 0.7) | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
+| `affinity_threshold`             | Maximum core affinity (default = 0.225)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
+| `closeness_threshold`             | Minimum neighbor closeness (default = 0.5)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
 ### Recipes
 
