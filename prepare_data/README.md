@@ -189,7 +189,7 @@ Prerequisites:
 -   Download the ClusterONE JAR file from this [link](https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar).
 
 ```
-java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > clusterone-results.csv
+java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/clusterone-results.csv
 ```
 
 Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX`
