@@ -6,8 +6,12 @@ from dash import dcc, html
 import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 
+from flask import Flask
+
+server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP])
+                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                server=server)
 
 welcome = dcc.Markdown(
     """

@@ -1,5 +1,5 @@
 from dash import Input, Output, State, dcc, html
-from flask import json
+from flask import json, send_from_directory
 from werkzeug.exceptions import HTTPException
 
 
@@ -18,3 +18,7 @@ def init_callback(app):
         })
         response.content_type = "application/json"
         return response
+
+    @app.server.route('/igv/<path:filename>')
+    def send_igv_url(filename):
+        return send_from_directory('static/igv', filename)
