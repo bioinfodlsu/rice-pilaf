@@ -124,6 +124,20 @@ python detect-modules-via-coach.py [-density_threshold DENSITY_THRESHOLD] [-affi
 | `affinity_threshold`             | Maximum core affinity (default = 0.225)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 | `closeness_threshold`             | Minimum neighbor closeness (default = 0.5)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
+#### 5. `get-modules-from-clusterone-results`
+
+This script gets the modules from the CSV file generated when ClusterONE is run. In other words, the additional information included in this CSV file, such as the cluster ID, size, p-value, and quality scores are excluded from the generated output file.
+
+```
+python get-modules-from-clusterone-results.py clusterone_results output_dir
+```
+
+| Argument           | Description                                                                                                | Note                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `clusterone_results` |  CSV file corresponding to the results of running ClusterONE | This assumes that ClusterONE was run with the `--output-format` parameter set to `csv`. |
+| `output_dir`     | Output directory for the text file containing only the modules found via ClusterONE |
+
+
 ### Recipes
 
 #### 1. Detecting Modules via FOX
@@ -191,6 +205,7 @@ Prerequisites:
 
 ```
 java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/clusterone-results.csv
+python get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/clusterone-results.csv ../../../static/networks_modules/OS-CX
 ```
 
 Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX`
