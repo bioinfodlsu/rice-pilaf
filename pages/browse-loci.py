@@ -12,28 +12,9 @@ layout = html.Div(id='igv-container', children=[
     #      genome="GCF_001433935.1",
     #      minimumBases=100,
     # )
-    dashbio.Igv(
-        id='igv-Nipponbare-local',
-        reference={
-            "id": "GCF_001433935.1",
-            "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
-            "fastaURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz",
-            "indexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.fai",
-            "compressedIndexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.gzi",
-            "aliasURL": "igv/GCF_001433935.1_chromAlias.tab",
-            "tracks": [
-                                  {
-                                      "name": "MSU V7 genes",
-                                      "format": "gff3",
-                                      "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                      "url": "igv/MSU_V7.gff3",
-                                      "displayMode": "EXPANDED",
-                                      "height": 200
-                                  }
-            ]
-        },
-        locus=['chr1:10000-20000']
-    )
-
+    dcc.Dropdown(
+        id='igv-genomic-intervals'
+    ),
+    dcc.Loading(id='igv-container')
 ]
 )
