@@ -12,11 +12,11 @@ option_list <- list(
               type = "character", default = NULL,
               help = "Text file containing the background genes"
        ),
-       make_option(c("-t", "--go_to_gene_mapping"),
+       make_option(c("-m", "--go_to_gene_mapping"),
               type = "character", default = NULL,
               help = "Text file mapping the GO IDs to the genes"
        ),
-       make_option(c("-m", "--go_to_term_mapping"),
+       make_option(c("-t", "--go_to_term_mapping"),
               type = "character", default = NULL,
               help = "Text file mapping the GO IDs to the GO terms"
        ),
