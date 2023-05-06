@@ -194,4 +194,4 @@ scratch.py
 
 # Binary files
 prepare_data/workflow/scripts/LazyFox
-prepare_data/workflow/scripts/clusterone.jar
+*.jar
