@@ -189,8 +189,8 @@ Prerequisites:
 ```
 python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
 python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
-python detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX coach
+python detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list coach
 ```
 
 Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
