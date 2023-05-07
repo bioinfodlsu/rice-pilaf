@@ -4,6 +4,9 @@ from collections import defaultdict, namedtuple
 import gffutils
 import pandas as pd
 
+from ..constants import Constants
+
+const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
 
 # Error codes for genomic interval input
@@ -132,11 +135,11 @@ def get_ogi_nb(Nb_intervals):
     for Nb_interval in Nb_intervals:
         # load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
-            'static/annotations/Nb/IRGSPMSU.gff.db', keep_order=True)
+            f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
-        ogi_mapping_path = f'static/ogi_mapping/Nb_to_ogi.pickle'
+        ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
             for gene in genes_in_interval:
@@ -151,9 +154,9 @@ def get_ogi_nb(Nb_intervals):
 
 def get_ogi_other_ref(ref, Nb_intervals):
     db_align = gffutils.FeatureDB(
-        "static/alignments/{0}/{0}.gff.db".format("Nb_"+str(ref)))
+        f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
     db_annotation = gffutils.FeatureDB(
-        "static/annotations/{0}/{0}.gff.db".format(ref))
+        f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
     # get corresponding intervals on ref
     if is_error(Nb_intervals):
         Nb_intervals = []
@@ -170,7 +173,7 @@ def get_ogi_other_ref(ref, Nb_intervals):
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
-            ogi_mapping_path = f'static/ogi_mapping/{ref}_to_ogi.pickle'
+            ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
                 for gene in genes_in_interval:
@@ -236,11 +239,11 @@ def get_genes_from_Nb(Nb_intervals):
     for Nb_interval in Nb_intervals:
         # load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
-            'static/annotations/Nb/IRGSPMSU.gff.db', keep_order=True)
+            f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
-        ogi_mapping_path = f'static/ogi_mapping/Nb_to_ogi.pickle'
+        ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
         ogi_list = []
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
@@ -281,9 +284,9 @@ def sanitize_gene_id(gene_id):
 
 def get_genes_from_other_ref(ref, Nb_intervals):
     db_align = gffutils.FeatureDB(
-        "static/alignments/{0}/{0}.gff.db".format("Nb_"+str(ref)))
+        f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
     db_annotation = gffutils.FeatureDB(
-        "static/annotations/{0}/{0}.gff.db".format(ref))
+        f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db")
     # get corresponding intervals on ref
     dfs = []
     if is_error(Nb_intervals):
@@ -298,7 +301,7 @@ def get_genes_from_other_ref(ref, Nb_intervals):
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
-            ogi_mapping_path = f'static/ogi_mapping/{ref}_to_ogi.pickle'
+            ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
             ogi_list = []
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)

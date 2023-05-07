@@ -86,32 +86,6 @@ layout = html.Div(
             export_format='csv'
         ),
 
-        html.Br(),
-
-        # Session storage
-        dcc.Store(
-            id='lift-over-is-submitted',
-            storage_type='session',
-        ),
-
-        dcc.Store(
-            id='lift-over-active-tab',
-            storage_type='session'
-        ),
-
-        dcc.Store(
-            id='lift-over-genomic-intervals-saved-input',
-            storage_type='session',
-        ),
-
-        dcc.Store(
-            id='lift-over-other-refs-saved-input',
-            storage_type='session',
-        ),
-
-        dcc.Store(
-            id='lift-over-active-filter',
-            storage_type='session'
-        )
+        html.Br()
     ]
 )
