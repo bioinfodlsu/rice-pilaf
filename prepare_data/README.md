@@ -156,7 +156,6 @@ python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../s
 mkdir -p ../../../static/networks_modules/OS-CX/temp
 mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt
 rm -r temp
-mkdir -p ../../../static/networks_modules/OS-CX/module_list
 python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
 ```
 
