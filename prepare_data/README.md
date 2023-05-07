@@ -153,14 +153,14 @@ As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), runnin
 ```
 python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
 ./LazyFox --input-graph ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mkdir -p ../../../static/networks_modules/OS-CX/temp/
+mkdir -p ../../../static/networks_modules/OS-CX/temp
 mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt
 rm -r temp
 mkdir -p ../../../static/networks_modules/OS-CX/module_list
 python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
 ```
 
-Output: `fox-module-list.txt` in `../../../static/networks_modules/OS-CX`
+Output: `fox-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 2. Detecting Modules via DEMON
 
@@ -172,12 +172,12 @@ Prerequisites:
 
 ```
 python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
-python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
-python detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX demon
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
+python detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list demon
 ```
 
-Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX`
+Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 3. Detecting Modules via COACH
 
@@ -189,12 +189,12 @@ Prerequisites:
 
 ```
 python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
-python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
 python detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
 python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX coach
 ```
 
-Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX`
+Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 4. Detecting Modules via ClusterONE
 
@@ -210,4 +210,4 @@ java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX
 python get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/clusterone-results.csv ../../../static/networks_modules/OS-CX
 ```
 
-Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX`
+Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
