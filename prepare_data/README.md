@@ -18,7 +18,7 @@ Note that all recipes assume that the working directory is `workflow/scripts`.
 
 ## Mapping OGI and reference-specific accessions
 
-### Scripts
+### SCRIPTS
 
 #### 1. `generate-ogi-dicts.py`
 
@@ -33,7 +33,7 @@ python generate-ogi-dicts.py input_dir output_dir
 | `input_dir`  | Directory containing the gene ID mapping from RGI                                                                | The OGI files `core.ogi`, `dispensable.ogi`, and `specific.ogi` should be in this directory.                                                                                                                                                                |
 | `output_dir` | Output directory for the pickled dictionaries mapping the reference-specific accessions to their respective OGIs | The filename convention for the pickled dictionaries is `<reference>_to_ogi.pickle`, where `reference` is the abbreviation of the reference. For consistency with the app, Nipponbare is abbreviated as `Nb` (not `Nip`, which is the abbreviation in RGI). |
 
-### Recipes
+### RECIPES
 
 #### 1. Generating the pickled dictionaries mapping the reference-specific accession to their respective OGIs
 
@@ -45,8 +45,9 @@ Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/ogi_m
 
 ## Coexpression Network
 
-### Scripts
+### SCRIPTS
 
+### A. Network Utility Scripts (`network_util`)
 #### 1. `convert-to-int-edge-list.py`
 
 This script converts an edge list with string node labels to an edge list with integer node labels. The first node in the list is labeled `0` and so on.
@@ -62,7 +63,8 @@ python convert-to-int-edge-list.py input_edge_list_file output_dir
 | `input_edge_list` | Text file corresponding to the edge list where the node labels are strings                                                                                                                   | The node labels in each line should be separated by a tab (`\t`).                      |
 | `output_dir`      | Output directory containing (1) the edge list with the node labels converted to integers and (2) a pickled dictionary mapping the integer node labels to their respective string node labels | If `input_edge_list` contains weights, the weights will not be included in the output. |
 
-#### 2. `generate-mapping-from-networkx-int-edge-graph.py`
+### B. Module Detection Utility Scripts (`module_util`)
+#### 1. `generate-mapping-from-networkx-int-edge-graph.py`
 
 This script generates a pickled dictionary that maps the node labels in the `networkx` integer-indexed graph to their (original) string node labels.
 
@@ -78,7 +80,7 @@ python generate-mapping-from-networkx-int-edge-graph.py edge_list_file int_edge_
 | `int_edge_list_node_mapping_file`     | Pickled dictionary that maps the integer node labels to the (original) string labels                       |
 | `output_dir`  | Output directory for the module list where the nodes have been relabeled to their (original) string labels |
 
-#### 3. `restore-node-labels-in-modules.py`
+#### 2. `restore-node-labels-in-modules.py` 
 
 This script relabels the nodes in a module list such that the (original) string node labels are restored.
 
@@ -93,7 +95,22 @@ python restore-node-labels-in-modules.py module_list_file mapping_file module_li
 | `module_list_dir`  | Output directory for the module list where the nodes have been relabeled to their (original) string labels |
 | `algo`             | Name of community detection algorithm used to detect the modules                                           | This will be reflected in the filename of the output file.                                         |
 
-#### 4. `detect-modules-via-demon`
+#### 3. `get-modules-from-clusterone-results`
+
+This script gets the modules from the CSV file generated when ClusterONE is run. In other words, the additional information included in this CSV file, such as the cluster ID, size, p-value, and quality scores are excluded from the generated output file.
+
+```
+python get-modules-from-clusterone-results.py clusterone_results output_dir
+```
+
+| Argument           | Description                                                                                                | Note                                                                                               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `clusterone_results` |  CSV file corresponding to the results of running ClusterONE | This assumes that ClusterONE was run with the `--output-format` parameter set to `csv`. |
+| `output_dir`     | Output directory for the text file containing only the modules found via ClusterONE |
+
+
+### C. Module Detection Scripts (`module_detection`)
+#### 1. `detect-modules-via-demon`
 
 This script runs the [DEMON community detection algorithm](https://dl.acm.org/doi/10.1145/2339530.2339630). 
 
@@ -108,7 +125,7 @@ python detect-modules-via-demon.py [-epsilon EPSILON] [-min_com_size MIN_COM_SIZ
 | `epsilon`  | Merging threshold (default = 0.25) | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 | `min_com_size`             | Minimum size of a module (default = 3)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
-#### 5. `detect-modules-via-coach`
+#### 2. `detect-modules-via-coach`
 
 This script runs the [COACH community detection algorithm](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-169). 
 
@@ -124,21 +141,8 @@ python detect-modules-via-coach.py [-density_threshold DENSITY_THRESHOLD] [-affi
 | `affinity_threshold`             | Maximum core affinity (default = 0.225)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 | `closeness_threshold`             | Minimum neighbor closeness (default = 0.5)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
-#### 5. `get-modules-from-clusterone-results`
 
-This script gets the modules from the CSV file generated when ClusterONE is run. In other words, the additional information included in this CSV file, such as the cluster ID, size, p-value, and quality scores are excluded from the generated output file.
-
-```
-python get-modules-from-clusterone-results.py clusterone_results output_dir
-```
-
-| Argument           | Description                                                                                                | Note                                                                                               |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `clusterone_results` |  CSV file corresponding to the results of running ClusterONE | This assumes that ClusterONE was run with the `--output-format` parameter set to `csv`. |
-| `output_dir`     | Output directory for the text file containing only the modules found via ClusterONE |
-
-
-### Recipes
+### RECIPES
 
 #### 1. Detecting Modules via FOX
 
