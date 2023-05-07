@@ -142,7 +142,7 @@ python detect-modules-via-coach.py [-density_threshold DENSITY_THRESHOLD] [-affi
 | `closeness_threshold`             | Minimum neighbor closeness (default = 0.5)                                           | The default value is the same as in [CDLib](https://appliednetsci.springeropen.com/articles/10.1007/s41109-019-0165-9).
 
 
-### Recipes
+### RECIPES
 
 #### 1. Detecting Modules via FOX
 
