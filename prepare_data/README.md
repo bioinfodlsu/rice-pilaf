@@ -151,7 +151,7 @@ Paper: https://dl.acm.org/doi/10.1145/3404970
 
 Prerequisites:
 
--   Download the `LazyFox` binary from this [repository](https://github.com/TimGarrels/LazyFox), and save it in the working directory `workflow/scripts`.
+-   Download the `LazyFox` binary from this [repository](https://github.com/TimGarrels/LazyFox), and save it in the directory `workflow/scripts/module_detection`.
 
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
@@ -205,7 +205,7 @@ Paper: https://www.nature.com/articles/nmeth.1938
 
 Prerequisites:
 
--   Download the ClusterONE JAR file from this [link](https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar), and save it in the working directory `workflow/scripts`.
+-   Download the ClusterONE JAR file from this [link](https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar), and save it in the directory `workflow/scripts/module_detection`.
 
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
