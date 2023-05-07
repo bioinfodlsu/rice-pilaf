@@ -193,5 +193,5 @@ scratch.py
 *-bulk.*
 
 # Binary files
-prepare_data/workflow/scripts/LazyFox
+prepare_data/**/LazyFox
 *.jar
