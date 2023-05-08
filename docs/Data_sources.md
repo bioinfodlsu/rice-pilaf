@@ -25,3 +25,20 @@ Finally, `maf-convert` converts the maf alignments into GFF format.
 
 ## Co-expression network
 Rice gene co-expression network was obtained from [RiceNet](https://www.inetbio.org/ricenet/dl.php?f=OS-CX)
+
+## Enrichment Analysis
+
+### Mapping MSU accessions to KEGG Transcript IDs
+
+MSU accessions are mapped to their respective KEGG transcript IDs using the R package [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html).
+
+For MSU accessions that cannot be mapped by `riceidconverter`, a two-step approach of (a) mapping them to their respective RAP-DB accessions and (b) mapping the RAP-DB accessions to their respective KEGG transcript IDs is followed. The pertinent files can be downloaded from the Rice Annotation Project Database (RAP-DB):
+- [Mapping MSU accessions to their respective RAP-DB accessions](https://rapdb.dna.affrc.go.jp/download/archive/RAP-MSU_2023-03-15.txt.gz)
+- [Mapping RAP-DB accessions to their respective KEGG transcript IDs](https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz)
+
+The following recipe may be used to unzip the downloaded files (assume that the working directory is `../enrichment_analysis`):
+
+```
+gzip -dv data/rap_db/RAP-MSU_2023-03-15.txt.gz
+gzip -dv data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz
+```
