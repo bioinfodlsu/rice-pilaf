@@ -6,23 +6,23 @@ library(optparse)
 option_list <- list(
        make_option(c("-g", "--input_genes"),
               type = "character", default = NULL,
-              help = "Text file containing the input genes (MSU ID)"
+              help = "text file containing the input genes (MSU ID)"
        ),
        make_option(c("-b", "--background_genes"),
               type = "character", default = NULL,
-              help = "Text file containing the background genes"
+              help = "text file containing the background genes"
        ),
        make_option(c("-m", "--go_to_gene_mapping"),
               type = "character", default = NULL,
-              help = "Text file mapping the GO IDs to the genes"
+              help = "text file mapping the GO IDs to the genes"
        ),
        make_option(c("-t", "--go_to_term_mapping"),
               type = "character", default = NULL,
-              help = "Text file mapping the GO IDs to the GO terms"
+              help = "text file mapping the GO IDs to the GO terms"
        ),
        make_option(c("-o", "--output_dir"),
               type = "character", default = NULL,
-              help = "Output directory for the data frame and plot showing the enriched GO terms"
+              help = "output directory for the data frame and plot showing the enriched GO terms"
        )
 )
 

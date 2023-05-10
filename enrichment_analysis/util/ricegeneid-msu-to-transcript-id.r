@@ -5,11 +5,11 @@ library(optparse)
 option_list <- list(
   make_option(c("-g", "--msu_genes"),
     type = "character", default = NULL,
-    help = "Text file containing the input genes (MSU ID)"
+    help = "text file containing the input genes (MSU ID)"
   ),
   make_option(c("-o", "--output_dir"),
     type = "character", default = NULL,
-    help = "Output directory for the text file containing the equivalent KEGG transcript IDs and the text file containing the genes without equivalent KEGG transcript IDs"
+    help = "output directory for the text file containing the equivalent KEGG transcript IDs and the text file containing the genes without equivalent KEGG transcript IDs"
   )
 )
 
