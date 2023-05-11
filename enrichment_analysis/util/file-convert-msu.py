@@ -19,7 +19,9 @@ def convert_msu(msu_id_file, mapping_file, output_dir, target_id):
                     output_set = output_set.union(mapping_dict[msu_id])
 
             output.write('\t'.join(list(output_set)))
-            output.write('\n')
+
+            if len(output_set) > 0:
+                output.write('\n')
 
 
 if __name__ == '__main__':
