@@ -1,8 +1,11 @@
 import dash_bio as dashbio
 from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
-from flask import json, send_from_directory
+from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
+
+from ..constants import Constants
+const = Constants()
 
 
 def init_callback(app):
@@ -23,7 +26,10 @@ def init_callback(app):
 
     @app.server.route('/igv/<path:filename>')
     def send_igv_url(filename):
-        return send_from_directory('static/igv', filename)
+        try:
+            return send_from_directory(const.IGV, filename)
+        except FileNotFoundError:
+            abort(404)
 
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
@@ -66,6 +72,6 @@ def init_callback(app):
                             }
                         ]
                     },
-                    locus=['chr1:10000-20000']
+                    locus=[selected_nb_intervals_str]
                 )
             ])
