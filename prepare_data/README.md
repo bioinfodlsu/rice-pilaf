@@ -156,11 +156,12 @@ Prerequisites:
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-./module_detection/LazyFox --input-graph ../../../static/networks_modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/fox-int-module-list.txt
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+./LazyFox --input-graph ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+mkdir -p ../../../static/networks_modules/OS-CX/temp
+mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt
 rm -r temp
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX fox
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
 ```
 
 Output: `fox-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
@@ -174,10 +175,10 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
-python module_detection/detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX demon
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
+python detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list demon
 ```
 
 Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
@@ -191,10 +192,10 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
-python module_detection/detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX coach
+python convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+python generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
+python detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list coach
 ```
 
 Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
@@ -210,8 +211,9 @@ Prerequisites:
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
-java -jar module_detection/cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/clusterone-results.csv
-python module_util/get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/clusterone-results.csv ../../../static/networks_modules/OS-CX
+mkdir -p ../../../static/networks_modules/OS-CX/temp
+java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv
+python get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/networks_modules/OS-CX/module_list
 ```
 
 Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
