@@ -103,7 +103,7 @@ def init_callback(app):
                 if not active_filter:
                     active_filter = tabs[1:]
 
-                if not is_multi_other_refs:
+                if not is_multi_other_refs and other_refs:
                     other_refs = other_refs[0]
 
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \

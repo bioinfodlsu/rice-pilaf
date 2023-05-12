@@ -6,8 +6,12 @@ from dash import dcc, html
 import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 
+from flask import Flask
+
+server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP])
+                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                server=server)
 
 welcome = dcc.Markdown(
     """
@@ -51,6 +55,32 @@ app.layout = dbc.Container(
                 dbc.Col([dash.page_container], xs=8,
                         sm=8, md=10, lg=10, xl=10, xxl=10)
             ]
+        ),
+
+        # Session storage
+        dcc.Store(
+            id='lift-over-is-submitted',
+            storage_type='session',
+        ),
+
+        dcc.Store(
+            id='lift-over-active-tab',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='lift-over-genomic-intervals-saved-input',
+            storage_type='session',
+        ),
+
+        dcc.Store(
+            id='lift-over-other-refs-saved-input',
+            storage_type='session',
+        ),
+
+        dcc.Store(
+            id='lift-over-active-filter',
+            storage_type='session'
         )
     ],
     fluid=True

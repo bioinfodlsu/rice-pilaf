@@ -1,7 +1,11 @@
+import os
 import pickle
 
 
 def restore_node_labels(module_list_file, mapping_file, module_list_dir, algo):
+    if not os.path.exists(module_list_dir):
+        os.makedirs(module_list_dir)
+
     with open(module_list_file, 'r') as modules, open(mapping_file, 'rb') as mapping, open(f'{module_list_dir}/{algo}-module-list.txt', 'w') as output:
         mapping_dict = pickle.load(mapping)
 
