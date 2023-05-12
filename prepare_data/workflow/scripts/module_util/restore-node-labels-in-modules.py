@@ -10,9 +10,8 @@ def restore_node_labels(module_list_file, mapping_file, module_list_dir, algo):
         mapping_dict = pickle.load(mapping)
 
         for module in modules:
+            module = module.rstrip()
             nodes = module.split('\t')
-            if nodes[-1] == '\n':
-                nodes = nodes[:-1]                         # Ignore newline
 
             mapped_nodes = []
             for node in nodes:
