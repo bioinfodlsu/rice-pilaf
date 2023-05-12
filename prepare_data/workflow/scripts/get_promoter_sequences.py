@@ -6,7 +6,7 @@ from Bio.Seq import Seq
 def main(genome,gff_db,upstream_win_len,downstream_win_len,out_fasta):
     records = SeqIO.to_dict(SeqIO.parse(genome,"fasta"))
     db = gffutils.FeatureDB(gff_db,keep_order=True)
-    genes = list(db.features_of_type('gene'))[0:12]
+    genes = list(db.features_of_type('gene'))
     promoters = []
     for gene in genes:
         if gene.strand == '+':
