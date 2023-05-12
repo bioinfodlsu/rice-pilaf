@@ -164,7 +164,7 @@ rm -r temp
 python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
 ```
 
-Output: `fox-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `fox-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 2. Detecting Modules via DEMON
 
@@ -181,7 +181,7 @@ python module_detection/detect-modules-via-demon.py ../../../static/networks_mod
 python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list demon
 ```
 
-Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `demon-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 3. Detecting Modules via COACH
 
@@ -198,7 +198,7 @@ python module_detection/detect-modules-via-coach.py ../../../static/networks_mod
 python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list coach
 ```
 
-Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `coach-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 4. Detecting Modules via ClusterONE
 
@@ -216,4 +216,4 @@ java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX
 python module_util/get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/networks_modules/OS-CX/module_list
 ```
 
-Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `clusterone-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
