@@ -24,10 +24,17 @@ def init_callback(app):
         response.content_type = "application/json"
         return response
 
-    @app.server.route('/igv/<path:filename>')
-    def send_igv_url(filename):
+    @app.server.route('/genomes_nipponbare/<path:filename>')
+    def send_genomes_nipponbare_url(filename):
         try:
-            return send_from_directory(const.IGV, filename)
+            return send_from_directory(const.GENOMES_NIPPONBARE, filename)
+        except FileNotFoundError:
+            abort(404)
+
+    @app.server.route('/annotations_nb/<path:filename>')
+    def send_annotations_nb_url(filename):
+        try:
+            return send_from_directory(const.ANNOTATIONS_NB, filename)
         except FileNotFoundError:
             abort(404)
 
@@ -57,16 +64,14 @@ def init_callback(app):
                     reference={
                         "id": "GCF_001433935.1",
                         "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
-                        "fastaURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz",
-                        "indexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.fai",
-                        "compressedIndexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.gzi",
-                        "aliasURL": "igv/GCF_001433935.1_chromAlias.tab",
+                        "fastaURL": "genomes_nipponbare/Npb.fasta",
+                        "indexURL": "genomes_nipponbare/Npb.fasta.fai",
                         "tracks": [
                             {
                                 "name": "MSU V7 genes",
                                 "format": "gff3",
                                 "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": "igv/MSU_V7.gff3",
+                                "url": "annotations_nb/IRGSPMSU.gff",
                                 "displayMode": "EXPANDED",
                                 "height": 200
                             }
