@@ -15,10 +15,10 @@ def get_nodes(network_file, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open(f'{output_dir}/all_genes.txt', 'w') as f:
+    with open(f'{output_dir}/all-genes.txt', 'w') as f:
         f.write('\n'.join(list(all_nodes)))
 
-    print(f"Wrote {len(all_nodes)} nodes to {output_dir}/all_genes.txt")
+    print(f"Wrote {len(all_nodes)} nodes to {output_dir}/all-genes.txt")
 
 
 if __name__ == '__main__':
