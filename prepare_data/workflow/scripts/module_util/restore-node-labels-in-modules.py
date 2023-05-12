@@ -6,7 +6,7 @@ def restore_node_labels(module_list_file, mapping_file, module_list_dir, algo):
     if not os.path.exists(module_list_dir):
         os.makedirs(module_list_dir)
 
-    with open(module_list_file, 'r') as modules, open(mapping_file, 'rb') as mapping, open(f'{module_list_dir}/{algo}-module-list.txt', 'w') as output:
+    with open(module_list_file, 'r') as modules, open(mapping_file, 'rb') as mapping, open(f'{module_list_dir}/{algo}-module-list.tsv', 'w') as output:
         mapping_dict = pickle.load(mapping)
 
         for module in modules:
@@ -19,7 +19,7 @@ def restore_node_labels(module_list_file, mapping_file, module_list_dir, algo):
 
             output.write('\t'.join(mapped_nodes) + '\n')
 
-    print(f'Generated {module_list_dir}/{algo}-module-list.txt')
+    print(f'Generated {module_list_dir}/{algo}-module-list.tsv')
 
 
 if __name__ == '__main__':
