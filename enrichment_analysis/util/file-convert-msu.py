@@ -8,6 +8,9 @@ def convert_msu(msu_id_file, mapping_file, output_dir, target_id):
         os.makedirs(f'{output_dir}/{target_id}')
 
     output_file_name = msu_id_file.split('/')[-1]
+    # Change file extension to tsv
+    output_file_name = output_file_name[:-len('.txt')] + '.tsv'
+
     with open(msu_id_file) as msu_file, open(mapping_file, 'rb') as mapping, open(f'{output_dir}/{target_id}/{output_file_name}', 'w') as output:
         mapping_dict = pickle.load(mapping)
 
