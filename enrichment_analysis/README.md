@@ -16,7 +16,15 @@ Download all the necessary data following the instructions [here](https://github
 
 ### 1. Data Preparation
 
+Prerequisites:
+
+-   Install the following R libraries:
+    -   [`data.table`](https://cran.r-project.org/web/packages/data.table/)
+    -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
+    -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
+
 This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools:
+
 ```
 Rscript util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
 python util/msu-to-transcript-id.py data/temp/all-transcript-id.txt data/temp/all-na-transcript-id.txt data/rap_db/RAP-MSU_2023-03-15.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
@@ -28,6 +36,7 @@ python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clu
 ```
 
 This recipe prepares the data needed for gene ontology enrichment analysis:
+
 ```
 Rscript util/prepare-go.r -o data/go
 ```
