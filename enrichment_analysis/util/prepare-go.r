@@ -23,4 +23,4 @@ write.table(goterms,
     file = paste0(opt$output_dir, "/go-terms.tsv"), col.names = FALSE, row.names = FALSE
 )
 
-print(paste0("Generated ", opt$output_dir, "/all-na-transcript-id.txt"))
+print(paste0("Generated ", opt$output_dir, "/go-terms.tsv"))
