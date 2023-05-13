@@ -21,9 +21,13 @@ This recipe maps the MSU accessions used in the app to the target IDs required b
 Rscript util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
 python util/msu-to-transcript-id.py data/temp/all-transcript-id.txt data/temp/all-na-transcript-id.txt data/rap_db/RAP-MSU_2023-03-15.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
 python util/msu-to-entrez-id.py data/to_entrez/riceIDtable.csv data/mapping
+python util/file-convert-msu.py ../static/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-entrez-id.pickle data/all_genes entrez
+python util/file-convert-msu.py ../static/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-transcript-id.pickle data/all_genes transcript
+python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-entrez-id.pickle data/modules/clusterone entrez
+python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-transcript-id.pickle data/modules/clusterone transcript
 ```
 
-This recipe maps the gene ontology term IDs to their respective gene ontology term names:
+This recipe prepares the data needed for gene ontology enrichment analysis:
 ```
 Rscript util/prepare-go.r -o data/go
 ```
