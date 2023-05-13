@@ -25,7 +25,7 @@ Prerequisites:
 This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools:
 
 ```
-Rscript util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
+Rscript --vanilla util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
 python util/msu-to-transcript-id.py data/temp/all-transcript-id.txt data/temp/all-na-transcript-id.txt data/rap_db/RAP-MSU_2023-03-15.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
 python util/msu-to-entrez-id.py data/to_entrez/riceIDtable.csv data/mapping
 python util/file-convert-msu.py ../static/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-entrez-id.pickle data/all_genes entrez
@@ -38,7 +38,7 @@ This recipe prepares the data needed for gene ontology enrichment analysis:
 
 ```
 python util/aggregate-go-annotations.py data/go/agrigo.tsv data/go/OryzabaseGeneListAll_20230322010000.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/all_genes/transcript/all-genes.tsv data/mapping/msu-to-transcript-id.pickle
-Rscript util/prepare-go.r -o data/go
+Rscript --vanilla util/prepare-go.r -o data/go
 ```
 
 ### 2. Gene Ontology (GO) Enrichment Analysis
