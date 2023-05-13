@@ -15,6 +15,7 @@ Note that all recipes assume that the working directory is `workflow/scripts`.
         -   [Detecting modules via DEMON](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#2-detecting-modules-via-demon)
         -   [Detecting modules via COACH](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#3-detecting-modules-via-coach)
         -   [Detecting modules via ClusterONE](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#4-detecting-modules-via-clusterone)
+        -   [Getting the Genes in the Coexpression Network](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#5-getting-the-genes-in-the-coexpression-network)
 
 ## Mapping OGI and reference-specific accessions
 
@@ -63,6 +64,19 @@ python network_util/convert-to-int-edge-list.py input_edge_list_file output_dir
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | `input_edge_list` | Text file corresponding to the edge list where the node labels are strings                                                                                                                   | The node labels in each line should be separated by a tab (`\t`).                      |
 | `output_dir`      | Output directory containing (1) the edge list with the node labels converted to integers and (2) a pickled dictionary mapping the integer node labels to their respective string node labels | If `input_edge_list` contains weights, the weights will not be included in the output. |
+
+#### 2. `network_util/get-nodes-from-network.py`
+
+This script gets the nodes given an edge list.
+
+```
+python network_util/get-nodes-from-network.py network_file output_dir
+```
+
+| Argument          | Description                                                                                                                                                                                  | Note                                                                                   |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `network_file` | Text file corresponding to the edge list | The node labels in each line should be separated by a tab (`\t`).                      |
+| `output_dir`      | Output directory for the list of nodes | |
 
 ### B. Module Detection Utility Scripts (`module_util`)
 
@@ -217,3 +231,11 @@ python module_util/get-modules-from-clusterone-results.py ../../../static/networ
 ```
 
 Output: `clusterone-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+
+#### 5. Getting the Genes in the Coexpression Network
+
+```
+python network_util/get-nodes-from-network.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
+```
+
+Output: `all-genes.txt` in `../../../static/networks_modules/OS-CX`
