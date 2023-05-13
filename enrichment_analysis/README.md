@@ -37,6 +37,7 @@ python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clu
 This recipe prepares the data needed for gene ontology enrichment analysis:
 
 ```
+python util/aggregate-go-annotations.py data/go/agrigo.tsv data/go/OryzabaseGeneListAll_20230322010000.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/all_genes/transcript/all-genes.tsv data/mapping/msu-to-transcript-id.pickle
 Rscript util/prepare-go.r -o data/go
 ```
 
