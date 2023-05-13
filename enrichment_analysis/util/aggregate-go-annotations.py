@@ -13,6 +13,9 @@ def from_agrigo(agrigo_file):
         for line in csv_reader:
             id = line[-2]
             go = line[-1]
+
+            # Handle dirty data, like "LOC_ Os07g22494"
+            id = id.replace(" ", "")
             annotations.append([go, id])
 
     return pd.DataFrame(annotations)
@@ -35,6 +38,9 @@ def from_oryzabase(oryzabase_file):
                 go = go.split(' - ')
                 go = go[0].strip()
 
+                # Handle dirty data, like "LOC_ Os07g22494"
+                id = id.replace(" ", "")
+
                 if id and go and re.compile('GO:\d+').match(go):
                     annotations.append([go, id])
 
@@ -50,7 +56,7 @@ def construct_rap_db_mapping(rap_db_file):
 
         for line in csv_reader:
             go_ids = re.findall(r'GO:\d+', line[9])
-            rap_db_mapping[line[0].rstrip()] = go_ids
+            rap_db_mapping[line[0].rstrip().replace(" ", "")] = go_ids
 
     return rap_db_mapping
 
@@ -82,6 +88,7 @@ def from_rap_db(rap_db_file, all_genes_file, msu_to_transcript_file):
     for gene in all_genes_list:
         for go_id in rap_db_mapping[gene]:
             for msu_id in transcript_to_msu_mapping[gene]:
+                msu_id = msu_id.replace(" ", "")
                 annotations.append([go_id, msu_id])
 
     return pd.DataFrame(annotations)
