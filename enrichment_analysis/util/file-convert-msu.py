@@ -26,6 +26,8 @@ def convert_msu(msu_id_file, mapping_file, output_dir, target_id):
             if len(output_set) > 0:
                 output.write('\n')
 
+    print(f'Generated {output_dir}/{target_id}/{output_file_name}')
+
 
 if __name__ == '__main__':
     import argparse
