@@ -25,7 +25,9 @@ def load_msu_to_rap(msu_to_rap_dict, rap_to_msu_file):
 
             for id in msu:
                 # Remove ".1" in "LOC_Os01g01019.1"
-                id = id[:-2]
+                id_components = id.split('.')
+                id = id_components[0]
+
                 if id != "None" and rap != "None":
                     msu_to_rap_dict[id].add(rap)
 
