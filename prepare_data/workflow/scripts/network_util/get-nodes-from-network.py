@@ -17,6 +17,7 @@ def get_nodes(network_file, output_dir):
 
     with open(f'{output_dir}/all-genes.txt', 'w') as f:
         f.write('\n'.join(list(all_nodes)))
+        f.write('\n')
 
     print(f"Wrote {len(all_nodes)} nodes to {output_dir}/all-genes.txt")
 
