@@ -50,7 +50,7 @@ The file for mapping MSU accessions to their respective Entrez IDs was obtained 
 ### Gene Ontology Annotations
 
 Gene ontology annotations were obtained from three sources:
-1. [agriGO v2.0](http://systemsbiology.cau.edu.cn/agriGOv2/download/871_slimGO)
+1. [agriGO v2.0](http://systemsbiology.cau.edu.cn/agriGOv2/download/871_slimGO) - saved as `../enrichment_analysis/data/go/agrigo.tsv`
 2. [RAP-DB](https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz)
 3. [OryzaBase](https://shigen.nig.ac.jp/rice/oryzabase/gene/download?classtag=GENE_LIST)
 
