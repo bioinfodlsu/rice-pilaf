@@ -43,14 +43,18 @@ gzip -dv data/rap_db/RAP-MSU_2023-03-15.txt.gz
 gzip -dv data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz
 ```
 
+### Mapping MSU accessions to Entrez IDs
+
+The file for mapping MSU accessions to their respective Entrez IDs was obtained from the [Bioinformatics Lab of Fujian Agriculture and Forestry University](https://bioinformatics.fafu.edu.cn/riceidtable/).
+
 ### Gene Ontology Annotations
 
 Gene ontology annotations were obtained from three sources:
 1. [agriGO v2.0](http://systemsbiology.cau.edu.cn/agriGOv2/download/871_slimGO)
 2. [RAP-DB](https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz)
-3. [OryzaBase]()
+3. [OryzaBase](https://shigen.nig.ac.jp/rice/oryzabase/gene/download?classtag=GENE_LIST)
 
-The approach of merging the last two data sources (namely RAP-DB and OryzaBase) follows this [protocol](https://bio-protocol.org/exchange/protocoldetail?id=4446&type=1).
+The approach of merging the last two data sources (namely RAP-DB and OryzaBase) follows the idea in this [protocol](https://bio-protocol.org/exchange/protocoldetail?id=4446&type=1).
 
 Except for the gene ontology from RAP-DB (saved in `../enrichment_analysis/data/rap_db`), the files were saved in `../enrichment_analysis/data/go`.
 
