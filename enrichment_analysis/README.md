@@ -19,7 +19,6 @@ Download all the necessary data following the instructions [here](https://github
 Prerequisites:
 
 -   Install the following R libraries:
-    -   [`data.table`](https://cran.r-project.org/web/packages/data.table/)
     -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
     -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
 
