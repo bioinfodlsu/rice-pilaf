@@ -45,7 +45,7 @@ gzip -dv data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz
 
 ### Mapping MSU accessions to Entrez IDs
 
-The file for mapping MSU accessions to their respective Entrez IDs was obtained from the [Bioinformatics Lab of Fujian Agriculture and Forestry University](https://bioinformatics.fafu.edu.cn/riceidtable/).
+The file for mapping MSU accessions to their respective Entrez IDs was obtained from the [Bioinformatics Lab of Fujian Agriculture and Forestry University](https://bioinformatics.fafu.edu.cn/riceidtable/) and saved in `../enrichment_analysis/data/to_entrez`.
 
 ### Gene Ontology Annotations
 
