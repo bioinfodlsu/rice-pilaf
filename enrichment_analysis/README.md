@@ -41,7 +41,23 @@ python util/aggregate-go-annotations.py data/go/agrigo.tsv data/go/OryzabaseGene
 Rscript --vanilla util/prepare-go.r -o data/go
 ```
 
-### 2. Gene Ontology (GO) Enrichment Analysis
+This recipe prepares the data needed for trait ontology enrichment analysis:
+
+```
+```
+
+This recipe prepares the data needed for plant ontology enrichment analysis:
+
+```
+```
+
+### 2. Ontology Enrichment Analysis
+
+#### a. Gene Ontology Enrichment Analysis
+
+#### b. Trait Ontology Enrichment Analysis
+
+#### b. Plant Ontology Enrichment Analysis
 
 ### 3. Pathway Enrichment Analysis
 
