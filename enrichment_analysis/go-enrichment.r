@@ -6,9 +6,13 @@ library(tidyverse)
 library(GO.db)
 
 option_list <- list(
-    make_option(c("-g", "--input_genes"),
+    make_option(c("-g", "--modules"),
         type = "character", default = NULL,
-        help = "text file containing the input genes (MSU ID)"
+        help = "text file containing the modules (gene IDs should be MSU accessions)"
+    ),
+    make_option(c("-i", "--module_index"),
+        type = "integer", default = NULL,
+        help = "index of the module of interest (first module is index 1)"
     ),
     make_option(c("-b", "--background_genes"),
         type = "character", default = NULL,
@@ -17,10 +21,6 @@ option_list <- list(
     make_option(c("-m", "--go_to_gene_mapping"),
         type = "character", default = NULL,
         help = "text file mapping the GO IDs to the genes"
-    ),
-    make_option(c("-t", "--go_to_term_mapping"),
-        type = "character", default = NULL,
-        help = "text file mapping the GO IDs to the GO terms"
     ),
     make_option(c("-o", "--output_dir"),
         type = "character", default = NULL,
@@ -31,22 +31,19 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-module <- readLines(opt$input_genes)
-module <- str_split(module, "\t")
+modules <- readLines(opt$modules)
+modules <- str_split(modules, "\t")
 
-genes <- unlist(module[100])
+genes <- unlist(modules[opt$module_index])
 
 background <- readLines(opt$background_genes)
 background <- str_split(background, "\t")
 background <- unlist(background)
 
-gene_go <- read.table(opt$go_to_gene_mapping, sep = "\t", stringsAsFactors = FALSE)
-go_label <- read.table(opt$go_to_term_mapping, sep = "\t", stringsAsFactors = FALSE)
-
 go <- enricher(
     gene = genes,
     universe = background,
-    TERM2GENE = gene_go,
+    TERM2GENE = read.table(opt$go_to_gene_mapping, sep = "\t", stringsAsFactors = FALSE),
     TERM2NAME = data.frame("GOID" = names(Term(GOTERM)), "term" = Term(GOTERM))
 )
 
@@ -56,18 +53,35 @@ if (!dir.exists(opt$output_dir)) {
     dir.create(opt$output_dir, recursive = TRUE)
 }
 
+if (!dir.exists(paste0(opt$output_dir, "/results"))) {
+    dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
+}
+
+if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
+    dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
+}
+
 go_df <- as.data.frame(go)
-write.table(go_df, paste0(opt$output_dir, "/go-df.csv"), sep = "\t", row.names = FALSE, quote = FALSE)
-
-p1 <- dotplot(go,
-    showCategory = nrow(go_df),
-    title = "Enriched GO Terms",
-    font.size = 10
+write.table(go_df, paste0(opt$output_dir, "/results/go-df-", opt$module_index, ".tsv"),
+    sep = "\t", row.names = FALSE, quote = FALSE
 )
 
-ggsave(p1,
-    filename = paste0(opt$output_dir, "/go-dotplot.png"),
-    height = 22, width = 22, units = "cm"
-)
+if (nrow(go_df) > 0) {
+    plot <- dotplot(go,
+        showCategory = nrow(go_df),
+        title = "Enriched GO Terms",
+        font.size = 10
+    )
 
-print("Generated data frame and dot plot showing the enriched GO terms")
+    ggsave(plot,
+        filename = paste0(opt$output_dir, "/plots/go-dotplot-", opt$module_index, ".png"),
+        height = max(c(22, nrow(go_df))), width = 22, units = "cm"
+    )
+
+    print(paste0(
+        "Generated data frame and dot plot showing the enriched GO terms for module #",
+        opt$module_index
+    ))
+} else {
+    print(paste0("No GO terms enriched for module #", opt$module_index))
+}
