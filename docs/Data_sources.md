@@ -32,13 +32,32 @@ Rice gene co-expression network was obtained from [RiceNet](https://www.inetbio.
 
 MSU accessions are mapped to their respective KEGG transcript IDs using the R package [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html).
 
-For MSU accessions that cannot be mapped by `riceidconverter`, a two-step approach of (a) mapping them to their respective RAP-DB accessions and (b) mapping the RAP-DB accessions to their respective KEGG transcript IDs is followed. The pertinent files can be downloaded from the Rice Annotation Project Database (RAP-DB):
+For MSU accessions that cannot be mapped by `riceidconverter`, a two-step approach of (a) mapping them to their respective RAP-DB accessions and (b) mapping the RAP-DB accessions to their respective KEGG transcript IDs is followed. The pertinent files were downloaded from the Rice Annotation Project Database (RAP-DB):
 - [Mapping MSU accessions to their respective RAP-DB accessions](https://rapdb.dna.affrc.go.jp/download/archive/RAP-MSU_2023-03-15.txt.gz)
 - [Mapping RAP-DB accessions to their respective KEGG transcript IDs](https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz)
 
-The following recipe may be used to unzip the downloaded files (assume that the working directory is `../enrichment_analysis`):
+The files were saved in `../enrichment_analysis/data/rap_db`. This recipe was used to unzip them (assume that the working directory is `../enrichment_analysis`):
 
 ```
 gzip -dv data/rap_db/RAP-MSU_2023-03-15.txt.gz
 gzip -dv data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz
 ```
+
+### Mapping MSU accessions to Entrez IDs
+
+The file for mapping MSU accessions to their respective Entrez IDs was obtained from the [Bioinformatics Lab of Fujian Agriculture and Forestry University](https://bioinformatics.fafu.edu.cn/riceidtable/) and saved in `../enrichment_analysis/data/to_entrez`.
+
+### Gene Ontology Annotations
+
+Gene ontology annotations were obtained from three sources:
+1. [agriGO v2.0](http://systemsbiology.cau.edu.cn/agriGOv2/download/871_slimGO)
+2. [RAP-DB](https://rapdb.dna.affrc.go.jp/download/archive/irgsp1/IRGSP-1.0_representative_annotation_2023-03-15.tsv.gz)
+3. [OryzaBase](https://shigen.nig.ac.jp/rice/oryzabase/gene/download?classtag=GENE_LIST)
+
+The approach of merging the last two data sources (namely RAP-DB and OryzaBase) follows the idea in this [protocol](https://bio-protocol.org/exchange/protocoldetail?id=4446&type=1).
+
+Except for the gene ontology from RAP-DB (saved in `../enrichment_analysis/data/rap_db`), the files were saved in `../enrichment_analysis/data/go`.
+
+### KEGG Pathway Data
+
+KGML pathway data files for the organism [`dosa`](https://www.genome.jp/kegg-bin/show_organism?org=dosa) were obtained from KEGG and saved in `..enrichment_analysis/data/kegg_dosa/XML`.
