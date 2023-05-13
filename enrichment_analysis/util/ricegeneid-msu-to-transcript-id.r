@@ -45,3 +45,6 @@ if (!dir.exists(opt$output_dir)) {
 
 lapply(na_all_transcript, write, paste0(opt$output_dir, "/all-na-transcript-id.txt"), append = TRUE, sep = "\n")
 lapply(all_transcript, write, paste0(opt$output_dir, "/all-transcript-id.txt"), append = TRUE, sep = "\n")
+
+print(paste0("Generated ", opt$output_dir, "/all-na-transcript-id.txt"))
+print(paste0("Generated ", opt$output_dir, "/all-transcript-id.txt"))
