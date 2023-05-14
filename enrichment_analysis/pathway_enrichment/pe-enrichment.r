@@ -61,6 +61,7 @@ write.table(kegg_df, paste0(opt$output_dir, "/results/pe-df-", opt$module_index,
     sep = "\t", row.names = TRUE, quote = FALSE
 )
 
+cat("\n")
 print(paste0(
     "Generated data frame showing the enriched KEGG pathways for module #",
     opt$module_index
