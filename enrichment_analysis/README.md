@@ -55,6 +55,8 @@ python util/aggregate-po-annotations.py data/go/OryzabaseGeneListAll_20230322010
 
 #### a. Gene Ontology Enrichment Analysis
 
+Prerequisites:
+
 -   Install the following R libraries:
     -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
@@ -67,6 +69,8 @@ Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/networks_modu
 
 #### b. Trait Ontology Enrichment Analysis
 
+Prerequisites:
+
 -   Install the following R libraries:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
@@ -78,6 +82,11 @@ Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/networks_modu
 
 #### b. Plant Ontology Enrichment Analysis
 
+Prerequisites:
+
+-   Install the following R libraries:
+    -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
+
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
@@ -88,10 +97,39 @@ Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/networks_modu
 
 #### a. Overrepresentation Analysis via clusterProfiler
 
+Prerequisites:
+
+-   Install the following R libraries:
+    -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
+
+This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
+
 ```
 Rscript --vanilla pathway_enrichment/ora-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 1 -b data/all_genes/transcript/all-genes.tsv -o data/output/pathway_enrichment/ora
 ```
 
 #### b. Topology-Based Analysis via Pathway-Express
 
+Paper: https://pubmed.ncbi.nlm.nih.gov/17785539/
+
+Prerequisites:
+
+-   Install the following R libraries:
+    -   [`ROntoTools`](https://bioconductor.org/packages/release/bioc/html/ROntoTools.html)
+
+This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
+
+```
+Rscript --vanilla pathway_enrichment/pe-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b data/all_genes/transcript/all-genes.tsv -o data/output/pathway_enrichment/pe
+```
+
 #### c. Topology-Based Analysis via SPIA
+
+Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2732297/
+
+Prerequisites:
+
+-   Install the following R libraries:
+    -   [`SPIA`](https://bioconductor.org/packages/release/bioc/html/SPIA.html)
+
+This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
