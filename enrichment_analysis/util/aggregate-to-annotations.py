@@ -75,7 +75,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        'oryzabase_file', help='text file containing the GO annotations from Oryzabase')
+        'oryzabase_file', help='text file containing the TO annotations from Oryzabase')
     parser.add_argument(
         'output_dir', help='output directory for the TSV file mapping MSU accessions to TO term IDs')
 
