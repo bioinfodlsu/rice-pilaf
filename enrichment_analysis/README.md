@@ -126,7 +126,7 @@ Output: Results table and dot plot in `output/pathway_enrichment/ora`
 
 #### b. Topology-Based Analysis via Pathway-Express
 
-Paper: https://pubmed.ncbi.nlm.nih.gov/17785539/
+Paper: https://genome.cshlp.org/content/17/10/1537.long
 
 Prerequisites:
 
@@ -143,7 +143,7 @@ Output: Results table in `output/pathway_enrichment/pe`
 
 #### c. Topology-Based Analysis via SPIA
 
-Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2732297/
+Paper: https://academic.oup.com/bioinformatics/article/25/1/75/302846
 
 Prerequisites:
 
