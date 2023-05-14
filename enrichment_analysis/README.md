@@ -43,7 +43,7 @@ python util/aggregate-go-annotations.py data/go/agrigo.tsv data/go/OryzabaseGene
 This recipe prepares the data needed for trait ontology enrichment analysis:
 
 ```
-
+python util/aggregate-to-annotations.py data/go/OryzabaseGeneListAll_20230322010000.txt data/to
 ```
 
 This recipe prepares the data needed for plant ontology enrichment analysis:
@@ -63,6 +63,12 @@ Rscript --vanilla go-enrichment.r -g ../static/networks_modules/OS-CX/module_lis
 ```
 
 #### b. Trait Ontology Enrichment Analysis
+
+This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
+
+```
+Rscript --vanilla to-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/to_enrichment
+```
 
 #### b. Plant Ontology Enrichment Analysis
 
