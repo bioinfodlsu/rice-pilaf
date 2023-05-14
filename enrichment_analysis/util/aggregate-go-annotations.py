@@ -1,4 +1,5 @@
 import csv
+import os
 import pickle
 import re
 from collections import defaultdict
@@ -102,6 +103,9 @@ def merge_annotations(*args):
 
 
 def save_to_csv(output_dir, merged_df):
+    if not os.path.exists(f'{output_dir}'):
+        os.makedirs(f'{output_dir}')
+
     merged_df.to_csv(f'{output_dir}/go-annotations.tsv',
                      sep='\t', index=False, header=False)
     print(f'Generated {output_dir}/go-annotations.tsv')
