@@ -57,7 +57,7 @@ if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
 }
 
 kegg_df <- as.data.frame(kegg)
-write.table(kegg_df, paste0(opt$output_dir, "/results/ora-pathway-df-", opt$module_index, ".tsv"),
+write.table(kegg_df, paste0(opt$output_dir, "/results/ora-df-", opt$module_index, ".tsv"),
   sep = "\t", row.names = FALSE, quote = FALSE
 )
 
@@ -69,7 +69,7 @@ if (nrow(kegg_df) > 0) {
   )
 
   ggsave(plot,
-    filename = paste0(opt$output_dir, "/plots/ora-pathway-dotplot-", opt$module_index, ".png"),
+    filename = paste0(opt$output_dir, "/plots/ora-dotplot-", opt$module_index, ".png"),
     height = max(c(22, nrow(kegg_df))), width = 22, units = "cm"
   )
 

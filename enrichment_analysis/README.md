@@ -59,7 +59,7 @@ python util/aggregate-po-annotations.py data/go/OryzabaseGeneListAll_20230322010
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla go-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/go/go-annotations.tsv -o data/output/go_enrichment
+Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/go/go-annotations.tsv -o data/output/ontology_enrichment/go
 ```
 
 #### b. Trait Ontology Enrichment Analysis
@@ -67,7 +67,7 @@ Rscript --vanilla go-enrichment.r -g ../static/networks_modules/OS-CX/module_lis
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla to-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/to_enrichment
+Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/ontology_enrichment/to
 ```
 
 #### b. Plant Ontology Enrichment Analysis
@@ -75,12 +75,16 @@ Rscript --vanilla to-enrichment.r -g ../static/networks_modules/OS-CX/module_lis
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/po_enrichment
+Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/ontology_enrichment/po
 ```
 
 ### 3. Pathway Enrichment Analysis
 
 #### a. Overrepresentation Analysis via clusterProfiler
+
+```
+Rscript --vanilla pathway_enrichment/ora-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 1 -b data/all_genes/transcript/all-genes.tsv -o data/output/pathway_enrichment/ora
+```
 
 #### b. Topology-Based Analysis via Pathway-Express
 
