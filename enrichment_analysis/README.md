@@ -22,7 +22,7 @@ Prerequisites:
     -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
     -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
 
-This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools:
+This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools; the last two commands assume that the modules of interest were obtained via the ClusterONE algorithm:
 
 ```
 Rscript --vanilla util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
