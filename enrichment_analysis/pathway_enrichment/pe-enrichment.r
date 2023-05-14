@@ -1,30 +1,67 @@
 library(data.table)
 library(ggplot2)
-library(riceidconverter)
-library(SPIA)
 library(graphite)
 library(tidyverse)
 library(ROntoTools)
+library(optparse)
 
+option_list <- list(
+    make_option(c("-g", "--modules"),
+        type = "character", default = NULL,
+        help = "text file containing the modules (gene IDs should be KEGG transcript IDs)"
+    ),
+    make_option(c("-i", "--module_index"),
+        type = "integer", default = NULL,
+        help = "index of the module of interest (first module is index 1)"
+    ),
+    make_option(c("-b", "--background_genes"),
+        type = "character", default = NULL,
+        help = "text file containing the background genes"
+    ),
+    make_option(c("-o", "--output_dir"),
+        type = "character", default = NULL,
+        help = "output directory for the data frame and plot showing the enriched pathways"
+    )
+)
+
+opt_parser <- OptionParser(option_list = option_list)
+opt <- parse_args(opt_parser)
+
+modules <- readLines(opt$modules)
+modules <- str_split(modules, "\t")
+
+genes <- paste0("dosa:", unlist(modules[opt$module_index]))
+dummy_val <- 20
+dummy_fc <- replicate(length(genes), dummy_val)
+input_data <- setNames(dummy_fc, genes)
+
+background <- readLines(opt$background_genes)
+background <- str_split(background, "\t")
+background <- paste0("dosa:", unlist(background))
 
 kpg <- keggPathwayGraphs("dosa")
 kpg <- setEdgeWeights(kpg)
 kpg <- setNodeWeights(kpg)
 
-print(kpg$`path:dosa03015`@nodes)
+pe_results <- pe(input_data,
+    graphs = kpg,
+    ref = background, nboot = 2000, verbose = TRUE
+)
 
-module <- readLines("data/clusters/transcript/clusterone-module-list.txt")
-module <- str_split(module, "\t")
+if (!dir.exists(opt$output_dir)) {
+    dir.create(opt$output_dir, recursive = TRUE)
+}
 
-genes <- paste0("dosa:", unlist(module[100]))
-dummy_fc <- replicate(length(genes), 20)
-input_data <- setNames(dummy_fc, genes)
+if (!dir.exists(paste0(opt$output_dir, "/results"))) {
+    dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
+}
 
-background <- readLines("data/all_genes/transcript/all_genes.txt")
-background <- str_split(background, "\t")
-background <- paste0("dosa:", unlist(background))
+kegg_df <- head(summary(pe_results))
+write.table(kegg_df, paste0(opt$output_dir, "/results/pe-df-", opt$module_index, ".tsv"),
+    sep = "\t", row.names = TRUE, quote = FALSE
+)
 
-peRes <- pe(input_data, graphs = kpg, ref = background, nboot = 2000, verbose = TRUE)
-kegg_df <- head(summary(peRes))
-
-write.table(kegg_df, "data/pe.txt", sep = "\t", row.names = TRUE, quote = FALSE)
+print(paste0(
+    "Generated data frame showing the enriched KEGG pathways for module #",
+    opt$module_index
+))

@@ -19,7 +19,6 @@ Download all the necessary data following the instructions [here](https://github
 Prerequisites:
 
 -   Install the following R libraries:
-    -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
     -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
 
 This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools; the last two commands assume that the modules of interest were obtained via the ClusterONE algorithm:
@@ -56,6 +55,10 @@ python util/aggregate-po-annotations.py data/go/OryzabaseGeneListAll_20230322010
 
 #### a. Gene Ontology Enrichment Analysis
 
+-   Install the following R libraries:
+    -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
+    -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
+
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
@@ -63,6 +66,9 @@ Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/networks_modu
 ```
 
 #### b. Trait Ontology Enrichment Analysis
+
+-   Install the following R libraries:
+    -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
