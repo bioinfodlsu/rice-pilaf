@@ -105,7 +105,7 @@ This recipe assumes that the module of interest is the first module (as specifie
 Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/ontology_enrichment/po
 ```
 
-Output: Results table and dot plot in `output/ontology_enrichment/to`
+Output: Results table and dot plot in `output/ontology_enrichment/po`
 
 ### 3. Pathway Enrichment Analysis
 
@@ -150,6 +150,16 @@ Prerequisites:
 -   Install the following R libraries:
     -   [`SPIA`](https://bioconductor.org/packages/release/bioc/html/SPIA.html)
 
-This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
+This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter) and uses the `dosaSPIA.RData` generated from by SPIA from the KEGG pathway data files for the organism `dosa` (downloaded on May 11, 2023):
+
+```
+Rscript --vanilla pathway_enrichment/spia-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b data/all_genes/transcript/all-genes.tsv -s data/kegg_dosa/SPIA -o data/output/pathway_enrichment/spia
+```
+
+If you would like to generate the `dosaSPIA.RData` yourself, the recipe is given below. Note, however, that you have to supply the KEGG pathway data files for the organism `dosa`; we do not distribute them in compliance with KEGG's licensing restrictions.
+
+```
+Rscript --vanilla pathway_enrichment/spia-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b data/all_genes/transcript/all-genes.tsv -p data/kegg_dosa/XML -s data/kegg_dosa/SPIA -o data/output/pathway_enrichment/spia
+```
 
 Output: Results table in `output/pathway_enrichment/spia`
