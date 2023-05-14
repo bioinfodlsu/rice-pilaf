@@ -40,11 +40,11 @@ for (gene in all_genes) {
 }
 
 if (!dir.exists(opt$output_dir)) {
-  dir.create(opt$output_dir)
+  dir.create(opt$output_dir, recursive = TRUE)
 }
 
 lapply(na_all_transcript, write, paste0(opt$output_dir, "/all-na-transcript-id.txt"), append = TRUE, sep = "\n")
-lapply(all_transcript, write, paste0(opt$output_dir, "/all-transcript-id.txt"), append = TRUE, sep = "\n")
-
 print(paste0("Generated ", opt$output_dir, "/all-na-transcript-id.txt"))
+
+lapply(all_transcript, write, paste0(opt$output_dir, "/all-transcript-id.txt"), append = TRUE, sep = "\n")
 print(paste0("Generated ", opt$output_dir, "/all-transcript-id.txt"))
