@@ -72,6 +72,12 @@ Rscript --vanilla to-enrichment.r -g ../static/networks_modules/OS-CX/module_lis
 
 #### b. Plant Ontology Enrichment Analysis
 
+This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
+
+```
+Rscript --vanilla po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/po_enrichment
+```
+
 ### 3. Pathway Enrichment Analysis
 
 #### a. Overrepresentation Analysis via clusterProfiler
