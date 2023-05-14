@@ -92,7 +92,7 @@ Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/networks_modu
 
 Output: Results table and dot plot in `output/ontology_enrichment/to`
 
-#### b. Plant Ontology Enrichment Analysis
+#### c. Plant Ontology Enrichment Analysis
 
 Prerequisites:
 
