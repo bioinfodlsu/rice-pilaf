@@ -5,14 +5,14 @@ from dash import dcc, html
 
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
-# G = nx.path_graph(3)
 # path needs to be relative to top-level folder
-coexpress_nw = "static/networks/OS-CX.txt.1000"
+coexpress_nw = "static/networks_display/clusterone/module-3.tsv"
 G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
-print("converting to cytoscape JSON")
 cyto_G = nx.cytoscape_data(G)
 
-# print(cyto_G['elements']['nodes'])
+# Set the node label (user-facing)
+for node in cyto_G['elements']['nodes']:
+    node['data']['label'] = node['data']['name']
 
 layout = html.Div(
     [
