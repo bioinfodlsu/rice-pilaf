@@ -188,6 +188,7 @@ rsconnect/
 scratch/
 scratch.ipynb
 scratch.py
+*dummy*
 
 # Scripts for bulk processing
 *-bulk.*
