@@ -33,11 +33,15 @@ python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clu
 python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-transcript-id.pickle data/modules/clusterone transcript
 ```
 
+Output: TSV files containing Entrez and KEGG transcript IDs in `data/all_genes` and `data/modules/clusterone`
+
 This recipe prepares the data needed for gene ontology enrichment analysis:
 
 ```
 python util/aggregate-go-annotations.py data/go/agrigo.tsv data/go/OryzabaseGeneListAll_20230322010000.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/all_genes/transcript/all-genes.tsv data/mapping/msu-to-transcript-id.pickle data/go
 ```
+
+Output: `go-annotations.tsv` in `data/go`
 
 This recipe prepares the data needed for trait ontology enrichment analysis:
 
@@ -45,11 +49,15 @@ This recipe prepares the data needed for trait ontology enrichment analysis:
 python util/aggregate-to-annotations.py data/go/OryzabaseGeneListAll_20230322010000.txt data/to
 ```
 
+Output: `to-annotations.tsv` and `to-id-to-name.tsv` in `data/to`
+
 This recipe prepares the data needed for plant ontology enrichment analysis:
 
 ```
 python util/aggregate-po-annotations.py data/go/OryzabaseGeneListAll_20230322010000.txt data/po
 ```
+
+Output: `po-annotations.tsv` and `po-id-to-name.tsv` in `data/po`
 
 ### 2. Ontology Enrichment Analysis
 
@@ -67,6 +75,8 @@ This recipe assumes that the module of interest is the first module (as specifie
 Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/go/go-annotations.tsv -o data/output/ontology_enrichment/go
 ```
 
+Output: Results table and dot plot in `output/ontology_enrichment/go`
+
 #### b. Trait Ontology Enrichment Analysis
 
 Prerequisites:
@@ -80,6 +90,8 @@ This recipe assumes that the module of interest is the first module (as specifie
 Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/ontology_enrichment/to
 ```
 
+Output: Results table and dot plot in `output/ontology_enrichment/to`
+
 #### b. Plant Ontology Enrichment Analysis
 
 Prerequisites:
@@ -92,6 +104,8 @@ This recipe assumes that the module of interest is the first module (as specifie
 ```
 Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/ontology_enrichment/po
 ```
+
+Output: Results table and dot plot in `output/ontology_enrichment/to`
 
 ### 3. Pathway Enrichment Analysis
 
@@ -108,6 +122,8 @@ This recipe assumes that the module of interest is the first module (as specifie
 Rscript --vanilla pathway_enrichment/ora-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 1 -b data/all_genes/transcript/all-genes.tsv -o data/output/pathway_enrichment/ora
 ```
 
+Output: Results table and dot plot in `output/pathway_enrichment/ora`
+
 #### b. Topology-Based Analysis via Pathway-Express
 
 Paper: https://pubmed.ncbi.nlm.nih.gov/17785539/
@@ -123,6 +139,8 @@ This recipe assumes that the module of interest is the 100<sup>th</sup> module (
 Rscript --vanilla pathway_enrichment/pe-enrichment.r -g data/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b data/all_genes/transcript/all-genes.tsv -o data/output/pathway_enrichment/pe
 ```
 
+Output: Results table in `output/pathway_enrichment/pe`
+
 #### c. Topology-Based Analysis via SPIA
 
 Paper: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2732297/
@@ -133,3 +151,5 @@ Prerequisites:
     -   [`SPIA`](https://bioconductor.org/packages/release/bioc/html/SPIA.html)
 
 This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
+
+Output: Results table in `output/pathway_enrichment/spia`
