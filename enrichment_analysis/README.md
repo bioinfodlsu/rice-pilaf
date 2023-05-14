@@ -49,7 +49,7 @@ python util/aggregate-to-annotations.py data/go/OryzabaseGeneListAll_20230322010
 This recipe prepares the data needed for plant ontology enrichment analysis:
 
 ```
-
+python util/aggregate-po-annotations.py data/go/OryzabaseGeneListAll_20230322010000.txt data/po
 ```
 
 ### 2. Ontology Enrichment Analysis
