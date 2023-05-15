@@ -17,4 +17,3 @@ def write_genes_to_file(genes):
 def do_module_enrichment_analysis(gene_ids):
     genes = list(set(gene_ids))
     write_genes_to_file(genes)
-    pass
