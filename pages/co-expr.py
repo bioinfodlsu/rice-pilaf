@@ -6,13 +6,16 @@ from dash import html
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
 # path needs to be relative to top-level folder
-coexpress_nw = "static/networks_display/clusterone/module-25.tsv"
+coexpress_nw = "static/networks_display/clusterone/modules/module-25.tsv"
 G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
 cyto_G = nx.cytoscape_data(G)
 
 layout = html.Div(
     [
         html.Div(id='coexpression-input-genomic-intervals'),
+        html.Br(),
+        html.Div(id='coexpression-loading',
+                 children='Finding enriched modules...', hidden=False),
         cyto.Cytoscape(
             id='cytoscape-two-nodes',
             layout={'name': 'circle'},
