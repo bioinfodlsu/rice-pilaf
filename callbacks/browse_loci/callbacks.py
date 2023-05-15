@@ -3,7 +3,7 @@ from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
-
+from .util import *
 from ..constants import Constants
 const = Constants()
 
@@ -31,10 +31,14 @@ def init_callback(app):
         except FileNotFoundError:
             abort(404)
 
-    @app.server.route('/annotations_nb/<path:filename>')
-    def send_annotations_nb_url(filename):
+    @app.server.route('/annotations_nb/<path:filename>/<loci>')
+    def send_annotations_nb_url(filename, loci):
         try:
-            return send_from_directory(const.ANNOTATIONS_NB, filename)
+            output_folder, output_filename = get_data_base_on_loci(
+                f'{const.ANNOTATIONS_NB}/{filename}', filename, loci)
+
+            return send_from_directory(output_folder, output_filename)
+
         except FileNotFoundError:
             abort(404)
 
@@ -71,7 +75,7 @@ def init_callback(app):
                                 "name": "MSU V7 genes",
                                 "format": "gff3",
                                 "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": "annotations_nb/IRGSPMSU.gff",
+                                "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}",
                                 "displayMode": "EXPANDED",
                                 "height": 200
                             }

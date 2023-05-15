@@ -7,6 +7,7 @@ class Constants(object):
     IGV = f'{DATA}/igv'
     GENOMES_NIPPONBARE = f'{DATA}/genomes/Nipponbare'
     ANNOTATIONS_NB = f'{DATA}/annotations/Nb'
+    TEMP = f'{DATA}/temp'
 
     def __init__(self):
         pass
