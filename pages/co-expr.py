@@ -35,6 +35,8 @@ layout = html.Div(
                 }
             ],
             elements=cyto_G['elements']
-        )
+        ),
+
+        html.Div(id='test', children='')
     ]
 )
