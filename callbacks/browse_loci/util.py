@@ -1,6 +1,4 @@
 from ..lift_over import util
-import pickle
-from collections import defaultdict, namedtuple
 import gffutils
 import pandas as pd
 import os
