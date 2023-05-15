@@ -15,6 +15,7 @@ Note that all recipes assume that the working directory is `workflow/scripts`.
         -   [Detecting modules via DEMON](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#2-detecting-modules-via-demon)
         -   [Detecting modules via COACH](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#3-detecting-modules-via-coach)
         -   [Detecting modules via ClusterONE](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#4-detecting-modules-via-clusterone)
+        -   [Getting the Genes in the Coexpression Network](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#5-getting-the-genes-in-the-coexpression-network)
 
 ## Mapping OGI and reference-specific accessions
 
@@ -63,6 +64,19 @@ python network_util/convert-to-int-edge-list.py input_edge_list_file output_dir
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | `input_edge_list` | Text file corresponding to the edge list where the node labels are strings                                                                                                                   | The node labels in each line should be separated by a tab (`\t`).                      |
 | `output_dir`      | Output directory containing (1) the edge list with the node labels converted to integers and (2) a pickled dictionary mapping the integer node labels to their respective string node labels | If `input_edge_list` contains weights, the weights will not be included in the output. |
+
+#### 2. `network_util/get-nodes-from-network.py`
+
+This script gets the nodes given an edge list.
+
+```
+python network_util/get-nodes-from-network.py network_file output_dir
+```
+
+| Argument          | Description                                                                                                                                                                                  | Note                                                                                   |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `network_file` | Text file corresponding to the edge list | The node labels in each line should be separated by a tab (`\t`).                      |
+| `output_dir`      | Output directory for the list of nodes | |
 
 ### B. Module Detection Utility Scripts (`module_util`)
 
@@ -156,14 +170,15 @@ Prerequisites:
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-./module_detection/LazyFox --input-graph ../../../static/networks_modules/OS-CX/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/fox-int-module-list.txt
+python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+./LazyFox --input-graph ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+mkdir -p ../../../static/networks_modules/OS-CX/temp
+mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt
 rm -r temp
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX fox
+python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
 ```
 
-Output: `fox-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `fox-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 2. Detecting Modules via DEMON
 
@@ -174,13 +189,13 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
-python module_detection/detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX demon
+python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
+python module_detection/detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list demon
 ```
 
-Output: `demon-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `demon-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 3. Detecting Modules via COACH
 
@@ -191,13 +206,13 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX
-python module_detection/detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/int-edge-list.txt ../../../static/networks_modules/OS-CX
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX coach
+python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
+python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
+python module_detection/detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
+python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list coach
 ```
 
-Output: `coach-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `coach-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
 
 #### 4. Detecting Modules via ClusterONE
 
@@ -210,8 +225,17 @@ Prerequisites:
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
-java -jar module_detection/cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/clusterone-results.csv
-python module_util/get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/clusterone-results.csv ../../../static/networks_modules/OS-CX
+mkdir -p ../../../static/networks_modules/OS-CX/temp
+java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv
+python module_util/get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/networks_modules/OS-CX/module_list
 ```
 
-Output: `clusterone-module-list.txt` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `clusterone-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+
+#### 5. Getting the Genes in the Coexpression Network
+
+```
+python network_util/get-nodes-from-network.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
+```
+
+Output: `all-genes.txt` in `../../../static/networks_modules/OS-CX`

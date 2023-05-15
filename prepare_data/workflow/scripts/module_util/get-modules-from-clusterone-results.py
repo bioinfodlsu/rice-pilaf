@@ -6,7 +6,7 @@ def get_modules(clusterone_results, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open(clusterone_results) as results, open(f'{output_dir}/clusterone-module-list.txt', 'w') as output:
+    with open(clusterone_results) as results, open(f'{output_dir}/clusterone-module-list.tsv', 'w') as output:
         csv_reader = csv.reader(results, delimiter=',')
         next(csv_reader)            # Skip header
         for line in csv_reader:
@@ -14,7 +14,7 @@ def get_modules(clusterone_results, output_dir):
             modules = modules.replace(" ", "\t")
             output.write(modules + "\n")
 
-        print("Finished getting modules")
+        print(f'Generated {output_dir}/clusterone-module-list.tsv')
 
 
 if __name__ == '__main__':
