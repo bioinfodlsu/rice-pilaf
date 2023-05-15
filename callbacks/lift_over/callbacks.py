@@ -170,21 +170,19 @@ def init_callback(app):
                 if not is_error(nb_intervals):
                     SUMMARY_TAB = 'tab-0'
                     NB_TAB = 'tab-1'
-                    df_nb_complete = get_genes_from_Nb(
-                        nb_intervals).to_dict('records')
+                    genes_from_Nb = get_genes_from_Nb(
+                        nb_intervals)
+                    df_nb_complete = genes_from_Nb[0].to_dict('records')
 
                     if active_tab == SUMMARY_TAB:
                         df_nb = get_overlapping_ogi(
                             filter_rice_variants, nb_intervals).to_dict('records')
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
                             df_nb, active_tab, {
-                                'display': 'block'}, filter_rice_variants, df_nb_complete
+                                'display': 'block'}, filter_rice_variants, genes_from_Nb[1]
 
                     elif active_tab == NB_TAB:
-                        # df_nb = get_genes_from_Nb(
-                        #    nb_intervals).to_dict('records')
-
-                        return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants, df_nb_complete
+                        return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
 
                     else:
                         tab_number = int(active_tab[len('tab-'):])
@@ -192,7 +190,7 @@ def init_callback(app):
                         df_nb = get_genes_from_other_ref(
                             other_ref, nb_intervals).to_dict('records')
 
-                        return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants, df_nb_complete
+                        return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
                 else:
                     return None, None, None, {'display': 'none'}, None, None
             else:
