@@ -12,11 +12,11 @@ cyto_G = nx.cytoscape_data(G)
 
 layout = html.Div(
     [
-        dcc.Markdown("Co-expression action happens here"),
+        html.Div(id='coexpression-input-genomic-intervals'),
         cyto.Cytoscape(
             id='cytoscape-two-nodes',
             layout={'name': 'circle'},
-            style={'width': '100%', 'height': '200vh'},
+            style={'width': '100%', 'height': '100vh'},
             stylesheet=[
                 {
                     'selector': 'node',
@@ -36,7 +36,5 @@ layout = html.Div(
             ],
             elements=cyto_G['elements']
         ),
-
-        html.Div(id='test', children='')
     ]
 )

@@ -1,4 +1,4 @@
-from dash import Input, Output, State, dcc, html
+from dash import Input, Output
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -6,12 +6,11 @@ from .util import *
 
 def init_callback(app):
     @app.callback(
-        Output('test', 'children'),
+        Output('coexpression-input-genomic-intervals', 'children'),
         Input('lift-over-nb-table', 'data')
     )
-    def test(nb_table):
-        # if active_tab == 'tab-1':
-        print(nb_table)
-        # return nb_table
+    def test(gene_ids):
+        do_module_enrichment_analysis(gene_ids)
+        return 'Implicated genes: ' + ', '.join(gene_ids)
 
         raise PreventUpdate
