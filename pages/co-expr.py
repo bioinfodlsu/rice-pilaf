@@ -1,7 +1,7 @@
 import dash
 import dash_cytoscape as cyto
 import networkx as nx
-from dash import html
+from dash import dcc, html
 
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
@@ -16,6 +16,12 @@ layout = html.Div(
         html.Br(),
         html.Div(id='coexpression-loading',
                  children='Finding enriched modules...', hidden=False),
+
+        dcc.Dropdown(
+            id='coexpression-modules',
+            style={'display': 'none'}
+        ),
+
         cyto.Cytoscape(
             id='cytoscape-two-nodes',
             layout={'name': 'circle'},

@@ -41,22 +41,20 @@ go <- enricher(
     universe = background,
     TERM2GENE = read.table(opt$module_to_gene_mapping,
         sep = "\t", stringsAsFactors = FALSE
-    ),
+    )
 )
-
-print("Finished enrichment analysis")
 
 if (!dir.exists(opt$output_dir)) {
     dir.create(opt$output_dir, recursive = TRUE)
 }
 
-if (!dir.exists(paste0(opt$output_dir, "/enriched-modules"))) {
-    dir.create(paste0(opt$output_dir, "/enriched-modules"), recursive = TRUE)
+if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {
+    dir.create(paste0(opt$output_dir, "/enriched_modules"), recursive = TRUE)
 }
 
 go_df <- as.data.frame(go)
 write.table(go_df,
-    paste0(opt$output_dir, "/enriched-modules/ora-df", ".tsv"),
+    paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
     sep = "\t", row.names = FALSE, quote = FALSE
 )
 
@@ -68,11 +66,7 @@ if (nrow(go_df) > 0) {
     )
 
     ggsave(plot,
-        filename = paste0(opt$output_dir, "/enriched-modules/ora-dotplot", ".png"),
+        filename = paste0(opt$output_dir, "/enriched_modules/ora-dotplot", ".png"),
         height = max(c(22, nrow(go_df))), width = 22, units = "cm"
     )
-
-    print("Generated data frame and dot plot showing the enriched modules")
-} else {
-    print("No enriched modules")
 }

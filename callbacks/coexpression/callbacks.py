@@ -18,13 +18,15 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-loading', 'hidden'),
+        Output('coexpression-modules', 'style'),
         Input('lift-over-nb-table', 'data'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data')
     )
     def perform_module_enrichment(gene_ids, genomic_intervals, is_submitted):
         if is_submitted:
-            do_module_enrichment_analysis(gene_ids, genomic_intervals)
-            return True
+            enriched_modules = do_module_enrichment_analysis(
+                gene_ids, genomic_intervals)
+            return True, {'display': 'block'}
 
         raise PreventUpdate
