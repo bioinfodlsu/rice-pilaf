@@ -31,13 +31,21 @@ def init_callback(app):
         except FileNotFoundError:
             abort(404)
 
-    @app.server.route('/annotations_nb/<path:filename>/<loci>')
-    def send_annotations_nb_url(filename, loci):
+    @app.server.route('/annotations_nb/<path:filename>/<loci>/<file_format>')
+    def send_annotations_nb_url(filename, loci, file_format):
         try:
             output_folder, output_filename = get_data_base_on_loci(
-                f'{const.ANNOTATIONS_NB}/{filename}', filename, loci)
+                f'{const.ANNOTATIONS_NB}/{filename}', filename, loci, file_format)
 
             return send_from_directory(output_folder, output_filename)
+
+        except FileNotFoundError:
+            abort(404)
+
+    @app.server.route('/open_chromatin_panicle/<path:filename>')
+    def send_open_chromatin_panicle_url(filename):
+        try:
+            return send_from_directory(const.OPEN_CHROMATIN_PANICLE, filename)
 
         except FileNotFoundError:
             abort(404)
@@ -75,7 +83,15 @@ def init_callback(app):
                                 "name": "MSU V7 genes",
                                 "format": "gff3",
                                 "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}",
+                                "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                                "displayMode": "EXPANDED",
+                                "height": 200
+                            },
+                            {
+                                "name": "chromatin open",
+                                "format": "bed",
+                                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                                "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
                                 "displayMode": "EXPANDED",
                                 "height": 200
                             }
