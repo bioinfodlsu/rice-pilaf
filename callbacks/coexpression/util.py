@@ -47,8 +47,8 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals):
     OUTPUT_DIR = f'{const.IMPLICATED_GENES}/{subdirectory}'
     if not os.path.exists(f'{OUTPUT_DIR}/enriched_modules'):
         INPUT_GENES = f'{const.IMPLICATED_GENES}/{subdirectory}/genes.txt'
-        BACKGROUND_GENES = f'{const.NETWORKS}/OS-CX.txt'
-        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_CLUSTERONE}/modules-to-genes.tsv'
+        BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY_OS_CX}/all-genes.txt'
+        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX_CLUSTERONE}/modules-to-genes.tsv'
 
         COMMAND = f'Rscript --vanilla {const.ORA_ENRICHMENT_ANALYSIS_PROGRAM} -g {INPUT_GENES} -b {BACKGROUND_GENES} -m {MODULE_TO_GENE_MAPPING} -o {OUTPUT_DIR}'
         os.system(COMMAND)
