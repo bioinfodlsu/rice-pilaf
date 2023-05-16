@@ -19,7 +19,11 @@ class Constants(object):
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
 
-    ORA_ENRICHMENT_ANALYSIS_PROGRAM = 'enrichment_analysis/ontology_enrichment/generic-enrichment.r'
+    ENRICHMENT_ANALAYSIS = 'enrichment_analysis'
+    ENRICHMENT_ANALYSIS_OUTPUT = f'{ENRICHMENT_ANALAYSIS}/data/output'
+    ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/ontology_enrichment'
+    ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/pathway_enrichment'
+    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALAYSIS}/ontology_enrichment/generic-enrichment.r'
 
     def __init__(self):
         pass

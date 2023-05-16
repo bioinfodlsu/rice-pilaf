@@ -40,6 +40,15 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('coexpression-pathways', 'data'),
+        Input('coexpression-modules-pathway', 'active_tab'),
+        Input('coexpression-modules', 'value')
+    )
+    def display_pathways(active_tab, module):
+        module_idx = module.split(' ')[1]
+        return convert_to_df(active_tab, module_idx).to_dict('records')
+
+    @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'style'),
         Input('coexpression-modules', 'value')

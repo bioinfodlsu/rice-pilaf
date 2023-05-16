@@ -1,8 +1,13 @@
 import os
 
+import pandas as pd
+
 from ..constants import Constants
 
 const = Constants()
+
+PATHWAY_TABS = ['Gene Ontology', 'Trait Ontology', 'Plant Ontology',
+                'Pathways (Overrepresentation)', 'Pathway-Express', 'SPIA']
 
 
 def convert_genomic_intervals_to_filename(genomic_intervals):
@@ -49,3 +54,41 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals):
         os.system(COMMAND)
 
     return fetch_enriched_modules(OUTPUT_DIR)
+
+
+def convert_to_df(active_tab, module_idx):
+    results = None
+
+    active_tab = active_tab.split('-')[1]
+    if PATHWAY_TABS[int(active_tab)] == 'Gene Ontology':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY}/go/results/go-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+    elif PATHWAY_TABS[int(active_tab)] == 'Trait Ontology':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY}/to/results/to-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+    elif PATHWAY_TABS[int(active_tab)] == 'Plant Ontology':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY}/po/results/po-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+    elif PATHWAY_TABS[int(active_tab)] == 'Pathways (Overrepresentation)':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY}/ora/results/ora-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+    elif PATHWAY_TABS[int(active_tab)] == 'Pathway-Express':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY}/pe/results/pe-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+    elif PATHWAY_TABS[int(active_tab)] == 'SPIA':
+        results = pd.read_csv(
+            f'{const.ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY}/spia/results/spia-df-{module_idx}.tsv',
+            delimiter='\t'
+        )
+
+    return results
