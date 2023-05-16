@@ -5,6 +5,10 @@ from ..constants import Constants
 const = Constants()
 
 
+def convert_genomic_interval_to_filename(genomic_interval):
+    pass
+
+
 def write_genes_to_file(genes):
     if not os.path.exists(const.IMPLICATED_GENES):
         os.makedirs(const.IMPLICATED_GENES)
@@ -26,3 +30,7 @@ def do_module_enrichment_analysis(gene_ids):
     os.system(COMMAND)
 
     print("Yay")
+
+
+def fetch_enriched_modules(output_dir):
+    pass
