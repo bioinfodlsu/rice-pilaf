@@ -24,7 +24,7 @@ def get_data_base_on_loci(input_dir, input_dir_filename, nb_intervals_str, file_
         nb_intervals = util.get_genomic_intervals_from_input(
             nb_intervals_str)
 
-        output_dir_folder = f'{const.TEMP}/{input_dir_filename}'
+        output_dir_folder = f'{const.TEMP}/igv/{sanitize_folder_name(input_dir_filename)}'
         if not os.path.exists(output_dir_folder):
             os.makedirs(output_dir_folder)
 
@@ -38,7 +38,7 @@ def get_data_base_on_loci(input_dir, input_dir_filename, nb_intervals_str, file_
 
                 genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
                                                    completely_within=False, featuretype='gene'))
-                print(genes_in_interval)
+
                 with open(output_dir, 'w') as fp:
                     for line in genes_in_interval:
                         fp.write('%s\n' % line)
