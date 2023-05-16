@@ -14,18 +14,20 @@ class Constants(object):
 
     NETWORKS = f'{RAW_DATA}/networks'
     NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
-    NETWORKS_DISPLAY_CLUSTERONE = f'{NETWORKS_DISPLAY}/clusterone'
-    NETWORKS_DISPLAY_CLUSTERONE_MODULES = f'{NETWORKS_DISPLAY_CLUSTERONE}/modules'
+    NETWORKS_DISPLAY_OS_CX = f'{NETWORKS_DISPLAY}/OS-CX'
+    NETWORKS_DISPLAY_OS_CX_CLUSTERONE = f'{NETWORKS_DISPLAY_OS_CX}/clusterone'
+    NETWORKS_DISPLAY_OS_CX_CLUSTERONE_MODULES = f'{NETWORKS_DISPLAY_OS_CX_CLUSTERONE}/modules'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
     TEMP_IGV = f'{TEMP}/igv'
 
-    ENRICHMENT_ANALAYSIS = 'prepare_data/workflow/scripts/enrichment_analysis'
-    ENRICHMENT_ANALYSIS_OUTPUT = f'{ENRICHMENT_ANALAYSIS}/data/output'
+    DATA_PREPARATION_SCRITPS = 'prepare_data/workflow/scripts'
+    ENRICHMENT_ANALAYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRITPS}/enrichment_analysis'
+    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALAYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
+    ENRICHMENT_ANALYSIS_OUTPUT = f'{APP_DATA}/enrichment_analysis/output'
     ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/ontology_enrichment'
     ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/pathway_enrichment'
-    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALAYSIS}/ontology_enrichment/generic-enrichment.r'
 
     def __init__(self):
         pass
