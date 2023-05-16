@@ -1,27 +1,16 @@
 # Data Preparation
 
-Note that all recipes assume that the working directory is `workflow/scripts`.
-
-## Table of Contents
-
--   [Mapping OGI and reference-specific accessions](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#mapping-ogi-and-reference-specific-accessions)
-    -   [Generating the pickled dictionaries mapping the reference-specific accession to their respective OGIs](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#1-generating-the-pickled-dictionaries-mapping-the-reference-specific-accession-to-their-respective-ogis)
--   [Coexpression Network](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#coexpression-network)
-    -   [Detecting modules via FOX](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#1-detecting-modules-via-fox)
-    -   [Detecting modules via DEMON](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#2-detecting-modules-via-demon)
-    -   [Detecting modules via COACH](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#3-detecting-modules-via-coach)
-    -   [Detecting modules via ClusterONE](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#4-detecting-modules-via-clusterone)
-    -   [Getting the Genes in the Coexpression Network](https://github.com/bioinfodlsu/rice-pilaf/tree/main/prepare_data#5-getting-the-genes-in-the-coexpression-network)
+All the recipes below assume that the working directory is `workflow/scripts`.
 
 ## Mapping OGI and reference-specific accessions
 
 ### 1. Generating the pickled dictionaries mapping the reference-specific accession to their respective OGIs
 
 ```
-python generate-ogi-dicts.py ../../../static/gene_ID_mapping_fromRGI ../../../static/ogi_mapping
+python ogi_mapping/generate-ogi-dicts.py ../../../static/raw_data/gene_ID_mapping_fromRGI ../../../static/app_data/ogi_mapping
 ```
 
-Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/ogi_mapping`.
+Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/app_data/ogi_mapping`.
 
 ## Coexpression Network
 
@@ -36,15 +25,15 @@ Prerequisites:
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
-./LazyFox --input-graph ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mkdir -p ../../../static/networks_modules/OS-CX/temp
-mv temp/CPP*/iterations/*.txt ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt
+python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
+./LazyFox --input-graph ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
+mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp
+mv temp/CPP*/iterations/*.txt ../../../static/raw_data/networks_modules/OS-CX/temp/fox-int-module-list.txt
 rm -r temp
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list fox
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list fox
 ```
 
-Output: `fox-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `fox-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
 
 ### 2. Detecting Modules via DEMON
 
@@ -55,13 +44,13 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
-python module_detection/detect-modules-via-demon.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list demon
+python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
+python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/mapping
+python module_detection/detect-modules-via-demon.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list demon
 ```
 
-Output: `demon-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `demon-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
 
 ### 3. Detecting Modules via COACH
 
@@ -72,13 +61,13 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX/mapping
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/networks_modules/OS-CX/mapping
-python module_detection/detect-modules-via-coach.py ../../../static/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/networks_modules/OS-CX/temp
-python module_util/restore-node-labels-in-modules.py ../../../static/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/networks_modules/OS-CX/module_list coach
+python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
+python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/mapping
+python module_detection/detect-modules-via-coach.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list coach
 ```
 
-Output: `coach-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `coach-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
 
 ### 4. Detecting Modules via ClusterONE
 
@@ -91,20 +80,20 @@ Prerequisites:
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
-mkdir -p ../../../static/networks_modules/OS-CX/temp
-java -jar cluster_one-1.0.jar --output-format csv ../../../static/networks/OS-CX.txt > ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv
-python module_util/get-modules-from-clusterone-results.py ../../../static/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/networks_modules/OS-CX/module_list
+mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp
+java -jar cluster_one-1.0.jar --output-format csv ../../../static/raw_data/networks/OS-CX.txt > ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv
+python module_util/get-modules-from-clusterone-results.py ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/raw_data/networks_modules/OS-CX/module_list
 ```
 
-Output: `clusterone-module-list.tsv` in `../../../static/networks_modules/OS-CX/module_list`
+Output: `clusterone-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
 
 ### 5. Getting the Genes in the Coexpression Network
 
 ```
-python network_util/get-nodes-from-network.py ../../../static/networks/OS-CX.txt ../../../static/networks_modules/OS-CX
+python network_util/get-nodes-from-network.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX
 ```
 
-Output: `all-genes.txt` in `../../../static/networks_modules/OS-CX`
+Output: `all-genes.txt` in `../../../static/raw_data/networks_modules/OS-CX`
 
 # Enrichment Analysis Scripts
 
@@ -132,13 +121,13 @@ Prerequisites:
 This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools; the last two commands assume that the modules of interest were obtained via the ClusterONE algorithm:
 
 ```
-Rscript --vanilla util/ricegeneid-msu-to-transcript-id.r -g ../static/networks_modules/OS-CX/all-genes.txt -o data/temp
+Rscript --vanilla util/ricegeneid-msu-to-transcript-id.r -g ../static/raw_data/networks_modules/OS-CX/all-genes.txt -o data/temp
 python util/msu-to-transcript-id.py data/temp/all-transcript-id.txt data/temp/all-na-transcript-id.txt data/rap_db/RAP-MSU_2023-03-15.txt data/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
 python util/msu-to-entrez-id.py data/to_entrez/riceIDtable.csv data/mapping
-python util/file-convert-msu.py ../static/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-entrez-id.pickle data/all_genes entrez
-python util/file-convert-msu.py ../static/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-transcript-id.pickle data/all_genes transcript
-python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-entrez-id.pickle data/modules/clusterone entrez
-python util/file-convert-msu.py ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-transcript-id.pickle data/modules/clusterone transcript
+python util/file-convert-msu.py ../static/raw_data/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-entrez-id.pickle data/all_genes entrez
+python util/file-convert-msu.py ../static/raw_data/networks_modules/OS-CX/all-genes.txt data/mapping/msu-to-transcript-id.pickle data/all_genes transcript
+python util/file-convert-msu.py ../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-entrez-id.pickle data/modules/clusterone entrez
+python util/file-convert-msu.py ../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv data/mapping/msu-to-transcript-id.pickle data/modules/clusterone transcript
 ```
 
 Output: TSV files containing Entrez and KEGG transcript IDs in `data/all_genes` and `data/modules/clusterone`
@@ -180,7 +169,7 @@ Prerequisites:
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/go/go-annotations.tsv -o data/output/ontology_enrichment/go
+Rscript --vanilla ontology_enrichment/go-enrichment.r -g ../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/raw_data/networks_modules/OS-CX/all-genes.txt -m data/go/go-annotations.tsv -o data/output/ontology_enrichment/go
 ```
 
 Output: Results table and dot plot in `output/ontology_enrichment/go`
@@ -195,7 +184,7 @@ Prerequisites:
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/ontology_enrichment/to
+Rscript --vanilla ontology_enrichment/to-enrichment.r -g ../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/raw_data/networks_modules/OS-CX/all-genes.txt -m data/to/to-annotations.tsv -t data/to/to-id-to-name.tsv -o data/output/ontology_enrichment/to
 ```
 
 Output: Results table and dot plot in `output/ontology_enrichment/to`
@@ -210,7 +199,7 @@ Prerequisites:
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/ontology_enrichment/po
+Rscript --vanilla ontology_enrichment/po-enrichment.r -g ../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../static/raw_data/networks_modules/OS-CX/all-genes.txt -m data/po/po-annotations.tsv -t data/po/po-id-to-name.tsv -o data/output/ontology_enrichment/po
 ```
 
 Output: Results table and dot plot in `output/ontology_enrichment/po`
@@ -271,4 +260,3 @@ Rscript --vanilla pathway_enrichment/spia-enrichment.r -g data/modules/clusteron
 ```
 
 Output: Results table in `output/pathway_enrichment/spia`
-
