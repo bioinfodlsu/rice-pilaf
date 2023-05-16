@@ -3,7 +3,7 @@ from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
-
+from .util import *
 from ..constants import Constants
 const = Constants()
 
@@ -24,10 +24,29 @@ def init_callback(app):
         response.content_type = "application/json"
         return response
 
-    @app.server.route('/igv/<path:filename>')
-    def send_igv_url(filename):
+    @app.server.route('/genomes_nipponbare/<path:filename>')
+    def send_genomes_nipponbare_url(filename):
         try:
-            return send_from_directory(const.IGV, filename)
+            return send_from_directory(const.GENOMES_NIPPONBARE, filename)
+        except FileNotFoundError:
+            abort(404)
+
+    @app.server.route('/annotations_nb/<path:filename>/<loci>/<file_format>')
+    def send_annotations_nb_url(filename, loci, file_format):
+        try:
+            output_folder, output_filename = get_data_base_on_loci(
+                f'{const.ANNOTATIONS_NB}/{filename}', filename, loci, file_format)
+
+            return send_from_directory(output_folder, output_filename)
+
+        except FileNotFoundError:
+            abort(404)
+
+    @app.server.route('/open_chromatin_panicle/<path:filename>')
+    def send_open_chromatin_panicle_url(filename):
+        try:
+            return send_from_directory(const.OPEN_CHROMATIN_PANICLE, filename)
+
         except FileNotFoundError:
             abort(404)
 
@@ -57,16 +76,22 @@ def init_callback(app):
                     reference={
                         "id": "GCF_001433935.1",
                         "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
-                        "fastaURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz",
-                        "indexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.fai",
-                        "compressedIndexURL": "igv/GCF_001433935.1_IRGSP-1.0_genomic.fna.gz.gzi",
-                        "aliasURL": "igv/GCF_001433935.1_chromAlias.tab",
+                        "fastaURL": "genomes_nipponbare/Npb.fasta",
+                        "indexURL": "genomes_nipponbare/Npb.fasta.fai",
                         "tracks": [
                             {
                                 "name": "MSU V7 genes",
                                 "format": "gff3",
                                 "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": "igv/MSU_V7.gff3",
+                                "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                                "displayMode": "EXPANDED",
+                                "height": 200
+                            },
+                            {
+                                "name": "chromatin open",
+                                "format": "bed",
+                                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                                "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
                                 "displayMode": "EXPANDED",
                                 "height": 200
                             }

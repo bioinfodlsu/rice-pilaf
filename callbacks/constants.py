@@ -6,6 +6,11 @@ class Constants(object):
     OGI_MAPPING = f'{DATA}/ogi_mapping'
 
     IGV = f'{DATA}/igv'
+    GENOMES_NIPPONBARE = f'{DATA}/genomes/Nipponbare'
+    ANNOTATIONS_NB = f'{ANNOTATIONS}/Nb'
+    TEMP = f'{DATA}/temp'
+    OPEN_CHROMATIN = f'{DATA}/open_chromatin'
+    OPEN_CHROMATIN_PANICLE = f'{OPEN_CHROMATIN}/panicle'
 
     NETWORKS = f'{DATA}/networks'
     NETWORKS_DISPLAY = f'{DATA}/networks_display'
