@@ -30,7 +30,7 @@ def fetch_enriched_modules(output_dir):
             line = line.split('\t')
 
             if line[0] != 'ID':
-                modules.append(line[0])
+                modules.append('Module ' + line[0])
 
     return modules
 
@@ -48,5 +48,4 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals):
         COMMAND = f'Rscript --vanilla {const.ORA_ENRICHMENT_ANALYSIS_PROGRAM} -g {INPUT_GENES} -b {BACKGROUND_GENES} -m {MODULE_TO_GENE_MAPPING} -o {OUTPUT_DIR}'
         os.system(COMMAND)
 
-    modules = fetch_enriched_modules(OUTPUT_DIR)
-    print(modules)
+    return fetch_enriched_modules(OUTPUT_DIR)

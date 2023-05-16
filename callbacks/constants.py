@@ -14,6 +14,7 @@ class Constants(object):
     NETWORKS = f'{DATA}/networks'
     NETWORKS_DISPLAY = f'{DATA}/networks_display'
     NETWORKS_DISPLAY_CLUSTERONE = f'{NETWORKS_DISPLAY}/clusterone'
+    NETWORKS_DISPLAY_CLUSTERONE_MODULES = f'{NETWORKS_DISPLAY_CLUSTERONE}/modules'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'

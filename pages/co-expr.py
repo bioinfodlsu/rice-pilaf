@@ -1,14 +1,8 @@
 import dash
 import dash_cytoscape as cyto
-import networkx as nx
 from dash import dcc, html
 
 dash.register_page(__name__, name="Co-expression Network Analysis")
-
-# path needs to be relative to top-level folder
-coexpress_nw = "static/networks_display/clusterone/modules/module-25.tsv"
-G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
-cyto_G = nx.cytoscape_data(G)
 
 layout = html.Div(
     [
@@ -23,9 +17,9 @@ layout = html.Div(
         ),
 
         cyto.Cytoscape(
-            id='cytoscape-two-nodes',
+            id='coexpression-module-graph',
             layout={'name': 'circle'},
-            style={'width': '100%', 'height': '100vh'},
+            style={'visibility': 'hidden', 'width': '100%', 'height': '100vh'},
             stylesheet=[
                 {
                     'selector': 'node',
@@ -42,8 +36,7 @@ layout = html.Div(
                         'width': '1px',
                     }
                 }
-            ],
-            elements=cyto_G['elements']
-        ),
+            ]
+        )
     ]
 )
