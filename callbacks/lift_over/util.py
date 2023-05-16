@@ -264,12 +264,12 @@ def get_genes_from_Nb(Nb_intervals):
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df()
+            return create_empty_df(), table['name'].values.tolist()
 
-        return table
+        return table, table['name'].values.tolist()
 
     except ValueError:
-        return create_empty_df()
+        return create_empty_df(), table['name'].values.tolist()
 
 
 # Remove 'gene' prefix from gene IDs (e.g., from N22)
