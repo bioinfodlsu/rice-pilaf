@@ -2,6 +2,12 @@ from dash import Input, Output, State, dcc, html
 from dash.exceptions import PreventUpdate
 
 from .util import *
+from ..browse_loci import util
+from ..constants import Constants
+const = Constants()
+
+track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
+            [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
 
 
 def init_callback(app):
@@ -45,6 +51,10 @@ def init_callback(app):
                         {'display': 'block'}, str(
                             True), nb_intervals_str, other_refs, 0
                 else:
+                    for db in track_db:
+                        if db[2] != 'bed':
+                            util.get_data_base_on_loci(
+                                f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
                     return None, {'display': 'none'}, True, nb_intervals_str, other_refs, 0
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
