@@ -104,6 +104,9 @@ def init_callback(app):
                 other_refs = get_user_other_refs_input(
                     n_clicks, other_refs, orig_other_refs)
 
+                # list of other ref
+                other_refs_list = other_refs
+
                 if other_refs:
                     tabs = tabs + other_refs
 
@@ -113,12 +116,14 @@ def init_callback(app):
                 if not active_filter:
                     active_filter = tabs[1:]
 
+                # get the first ref and points the other_ref to the str input value
+                # valid for non multi select option
                 if not is_multi_other_refs and other_refs:
                     other_refs = other_refs[0]
 
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
                     tabs_children, 'Genomic Interval: ' + nb_intervals_str, 'Homologous regions: ' + \
-                    str(other_refs)[1:-1], nb_intervals_str, other_refs, \
+                    str(other_refs_list)[1:-1], nb_intervals_str, other_refs, \
                     tabs[1:], active_filter
             else:
                 return None, None, None, None, nb_intervals_str, other_refs, [], None
