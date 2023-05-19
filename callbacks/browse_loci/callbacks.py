@@ -34,10 +34,10 @@ def init_callback(app):
     @app.server.route('/annotations_nb/<path:filename>/<loci>/<file_format>')
     def send_annotations_nb_url(filename, loci, file_format):
         try:
-            output_folder, output_filename = get_data_base_on_loci(
-                f'{const.ANNOTATIONS_NB}/{filename}', filename, loci, file_format)
+            temp_dir = f'{const.TEMP_IGV}/{sanitize_folder_name(filename)}'
+            temp_dir_filename = f'{sanitize_filename(loci)}.{file_format}'
 
-            return send_from_directory(output_folder, output_filename)
+            return send_from_directory(temp_dir, temp_dir_filename)
 
         except FileNotFoundError:
             abort(404)
