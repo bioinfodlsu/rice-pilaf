@@ -1,7 +1,7 @@
-library(data.table)
-library(optparse)
-library(tidyverse)
-library(clusterProfiler)
+suppressPackageStartupMessages({
+    library(optparse)
+    library(clusterProfiler)
+})
 
 option_list <- list(
     make_option(c("-g", "--input_genes"),
@@ -25,14 +25,9 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-modules <- str_split(readLines(opt$input_genes), "\t")
-genes <- unlist(modules[1]) # There is only a single line
-
-background <- unlist(str_split(readLines(opt$background_genes), "\t"))
-
 go <- enricher(
-    gene = genes,
-    universe = background,
+    gene = unlist(strsplit(readLines(opt$input_genes), "\t")[1]),       # There is only a single line
+    universe = unlist(strsplit(readLines(opt$background_genes), "\t")),
     TERM2GENE = read.table(opt$module_to_gene_mapping,
         sep = "\t", stringsAsFactors = FALSE
     )
