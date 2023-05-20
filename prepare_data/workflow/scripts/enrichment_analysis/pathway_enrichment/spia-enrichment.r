@@ -78,7 +78,12 @@ write.table(kegg_df, paste0(opt$output_dir, "/results/spia-df-", opt$module_inde
 )
 
 cat("\n")
-print(paste0(
-    "Generated data frame showing the enriched KEGG pathways for module #",
-    opt$module_index
-))
+
+if (nrow(kegg_df) > 0) {
+    print(paste0(
+        "Generated data frame showing the enriched KEGG pathways for module #",
+        opt$module_index
+    ))
+} else {
+    print(paste0("No KEGG pathways enriched for module #", opt$module_index))
+}
