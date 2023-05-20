@@ -42,7 +42,7 @@ if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {
     dir.create(paste0(opt$output_dir, "/enriched_modules"), recursive = TRUE)
 }
 
-write.table(as.data.frame(go),
+write.table((as.data.frame(go))[c("ID", "p.adjust")],
     paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
     sep = "\t", row.names = FALSE, quote = FALSE
 )
