@@ -2,8 +2,8 @@ library(data.table)
 library(ggplot2)
 library(graphite)
 library(tidyverse)
-library(ROntoTools)
 library(optparse)
+library(ROntoTools)
 
 option_list <- list(
     make_option(c("-g", "--modules"),

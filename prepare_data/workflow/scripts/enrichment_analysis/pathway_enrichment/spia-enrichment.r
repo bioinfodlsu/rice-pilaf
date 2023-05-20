@@ -1,9 +1,9 @@
 library(data.table)
 library(ggplot2)
-library(SPIA)
 library(graphite)
 library(tidyverse)
 library(optparse)
+library(SPIA)
 
 option_list <- list(
     make_option(c("-g", "--modules"),

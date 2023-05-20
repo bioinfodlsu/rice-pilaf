@@ -1,9 +1,7 @@
-library(clusterProfiler)
 library(data.table)
-library(ggplot2)
 library(optparse)
 library(tidyverse)
-library(GO.db)
+library(clusterProfiler)
 
 option_list <- list(
     make_option(c("-g", "--input_genes"),
@@ -27,14 +25,10 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-modules <- readLines(opt$input_genes)
-modules <- str_split(modules, "\t")
-
+modules <- str_split(readLines(opt$input_genes), "\t")
 genes <- unlist(modules[1]) # There is only a single line
 
-background <- readLines(opt$background_genes)
-background <- str_split(background, "\t")
-background <- unlist(background)
+background <- unlist(str_split(readLines(opt$background_genes), "\t"))
 
 go <- enricher(
     gene = genes,
@@ -44,29 +38,11 @@ go <- enricher(
     )
 )
 
-if (!dir.exists(opt$output_dir)) {
-    dir.create(opt$output_dir, recursive = TRUE)
-}
-
 if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {
     dir.create(paste0(opt$output_dir, "/enriched_modules"), recursive = TRUE)
 }
 
-go_df <- as.data.frame(go)
-write.table(go_df,
+write.table(as.data.frame(go),
     paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
     sep = "\t", row.names = FALSE, quote = FALSE
 )
-
-if (nrow(go_df) > 0) {
-    plot <- dotplot(go,
-        showCategory = nrow(go_df),
-        title = "Enriched modules",
-        font.size = 10
-    )
-
-    ggsave(plot,
-        filename = paste0(opt$output_dir, "/enriched_modules/ora-dotplot", ".png"),
-        height = max(c(22, nrow(go_df))), width = 22, units = "cm"
-    )
-}
