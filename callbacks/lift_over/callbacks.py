@@ -93,13 +93,30 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('lift-over-nb-table', 'data'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def get_nipponbare_gene_ids(nb_intervals_str, is_submitted):
+        if has_user_submitted(is_submitted):
+            if nb_intervals_str:
+                nb_intervals = get_genomic_intervals_from_input(
+                    nb_intervals_str)
+
+                if not is_error(nb_intervals):
+                    genes_from_Nb = get_genes_from_Nb(
+                        nb_intervals)
+
+                    return genes_from_Nb[1]
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'data'),
         # Output('lift-over-active-tab', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
         # Output('lift-over-active-filter', 'data'),
-
-        # Output('lift-over-nb-table', 'data'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
@@ -136,13 +153,13 @@ def init_callback(app):
                             filter_rice_variants, nb_intervals).to_dict('records')
                         # return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
                         #     df_nb, active_tab, {
-                        #         'display': 'block'}, filter_rice_variants, genes_from_Nb[1]
+                        #         'display': 'block'}, filter_rice_variants
 
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
                             df_nb, {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        # return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        # return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants
                         return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, {'display': 'none'}
 
                     else:
@@ -151,14 +168,14 @@ def init_callback(app):
                         df_nb = get_genes_from_other_ref(
                             other_ref, nb_intervals).to_dict('records')
 
-                        # return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        # return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants
                         return f'Genes from homologous regions in {other_ref}', df_nb, {'display': 'none'}
 
                 else:
-                    # return None, None, None, {'display': 'none'}, None, None
+                    # return None, None, None, {'display': 'none'}, None
                     return None, None, {'display': 'none'}
             else:
-                # return None, None, None, {'display': 'none'}, None, None
+                # return None, None, None, {'display': 'none'}, None
                 return None, None, {'display': 'none'}
 
         raise PreventUpdate
