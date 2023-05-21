@@ -1,8 +1,7 @@
-from dash import Input, Output, State, dcc, html
+from dash import Input, Output, State, dcc
 from dash.exceptions import PreventUpdate
 
 from .util import *
-from ..browse_loci import util
 from ..constants import Constants
 const = Constants()
 
@@ -96,11 +95,11 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'data'),
-        Output('lift-over-active-tab', 'data'),
+        # Output('lift-over-active-tab', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
-        Output('lift-over-active-filter', 'data'),
+        # Output('lift-over-active-filter', 'data'),
 
-        Output('lift-over-nb-table', 'data'),
+        # Output('lift-over-nb-table', 'data'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
@@ -108,7 +107,9 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+
+        prevent_initial_call=True
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
         # if reset_n_clicks >= 1:
@@ -133,12 +134,16 @@ def init_callback(app):
                     if active_tab == SUMMARY_TAB:
                         df_nb = get_overlapping_ogi(
                             filter_rice_variants, nb_intervals).to_dict('records')
+                        # return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
+                        #     df_nb, active_tab, {
+                        #         'display': 'block'}, filter_rice_variants, genes_from_Nb[1]
+
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
-                            df_nb, active_tab, {
-                                'display': 'block'}, filter_rice_variants, genes_from_Nb[1]
+                            df_nb, {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        # return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, {'display': 'none'}
 
                     else:
                         tab_number = int(active_tab[len('tab-'):])
@@ -146,10 +151,14 @@ def init_callback(app):
                         df_nb = get_genes_from_other_ref(
                             other_ref, nb_intervals).to_dict('records')
 
-                        return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        # return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants, genes_from_Nb[1]
+                        return f'Genes from homologous regions in {other_ref}', df_nb, {'display': 'none'}
+
                 else:
-                    return None, None, None, {'display': 'none'}, None, None
+                    # return None, None, None, {'display': 'none'}, None, None
+                    return None, None, {'display': 'none'}
             else:
-                return None, None, None, {'display': 'none'}, None, None
+                # return None, None, None, {'display': 'none'}, None, None
+                return None, None, {'display': 'none'}
 
         raise PreventUpdate
