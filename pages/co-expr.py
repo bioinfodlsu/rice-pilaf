@@ -7,6 +7,30 @@ dash.register_page(__name__, name="Co-expression Network Analysis")
 
 layout = html.Div(
     [
+        html.Div(["Module detection algorithm ", html.I(
+            className="bi bi-info-circle-fill me-2", id="coexpression-clustering-algo-tooltip")]),
+
+        html.Br(),
+
+        dbc.RadioItems(
+            id='coexpression-clustering-algo',
+            options=[
+                {'value': 'ClusterONE', 'label': 'ClusterONE',
+                    'label_id': 'cluster-one'},
+                {'value': 'COACH', 'label': 'COACH', 'label_id': 'coach'},
+                {'value': 'FOX', 'label': 'FOX', 'label_id': 'fox'},
+                {'value': 'DEMON', 'label': 'DEMON', 'label_id': 'demon'},
+            ],
+            inline=True
+        ),
+
+        dbc.Tooltip("Hover over each of the choices for more details",
+                    target='coexpression-clustering-algo-tooltip'),
+
+        html.Br(),
+
+        dcc.Markdown("Enriched modules"),
+
         dcc.Loading(dcc.Dropdown(
             id='coexpression-modules',
             style={'display': 'none'}
