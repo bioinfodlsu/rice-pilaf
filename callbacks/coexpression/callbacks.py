@@ -7,7 +7,6 @@ from .util import *
 
 def init_callback(app):
     @app.callback(
-        Output('coexpression-loading', 'hidden'),
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
@@ -24,7 +23,7 @@ def init_callback(app):
             if enriched_modules:
                 first_module = enriched_modules[0]
 
-            return True, {'display': 'block'}, enriched_modules, first_module
+            return {'display': 'block'}, enriched_modules, first_module
 
         raise PreventUpdate
 
