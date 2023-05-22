@@ -5,6 +5,7 @@ from dash import dcc, html
 
 import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
+import callbacks.coexpression.callbacks
 
 from flask import Flask
 
@@ -81,6 +82,11 @@ app.layout = dbc.Container(
         dcc.Store(
             id='lift-over-active-filter',
             storage_type='session'
+        ),
+
+        dcc.Store(
+            id='lift-over-nb-table',
+            storage_type='session'
         )
     ],
     fluid=True
@@ -89,6 +95,7 @@ app.layout = dbc.Container(
 
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.browse_loci.callbacks.init_callback(app)
+callbacks.coexpression.callbacks.init_callback(app)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

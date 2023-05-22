@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
 other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
-genomic_interval = ''  # 'Chr01:10000-20000;Chr01:22000-25000'
+genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 dash.register_page(__name__, path="/", name="Input and Lift-over")
 

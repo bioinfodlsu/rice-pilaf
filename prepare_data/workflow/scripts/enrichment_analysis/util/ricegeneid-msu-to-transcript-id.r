@@ -5,11 +5,11 @@ library(optparse)
 option_list <- list(
   make_option(c("-g", "--msu_genes"),
     type = "character", default = NULL,
-    help = "Text file containing the input genes (MSU ID)"
+    help = "text file containing the input genes (MSU ID)"
   ),
   make_option(c("-o", "--output_dir"),
     type = "character", default = NULL,
-    help = "Output directory for the text file containing the equivalent KEGG transcript IDs and the text file containing the genes without equivalent KEGG transcript IDs"
+    help = "output directory for the text file containing the equivalent KEGG transcript IDs and the text file containing the genes without equivalent KEGG transcript IDs"
   )
 )
 
@@ -40,8 +40,11 @@ for (gene in all_genes) {
 }
 
 if (!dir.exists(opt$output_dir)) {
-  dir.create(opt$output_dir)
+  dir.create(opt$output_dir, recursive = TRUE)
 }
 
 lapply(na_all_transcript, write, paste0(opt$output_dir, "/all-na-transcript-id.txt"), append = TRUE, sep = "\n")
+print(paste0("Generated ", opt$output_dir, "/all-na-transcript-id.txt"))
+
 lapply(all_transcript, write, paste0(opt$output_dir, "/all-transcript-id.txt"), append = TRUE, sep = "\n")
+print(paste0("Generated ", opt$output_dir, "/all-transcript-id.txt"))
