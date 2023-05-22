@@ -2,8 +2,8 @@ library(data.table)
 library(ggplot2)
 library(graphite)
 library(tidyverse)
-library(ROntoTools)
 library(optparse)
+library(ROntoTools)
 
 option_list <- list(
     make_option(c("-g", "--modules"),
@@ -62,7 +62,13 @@ write.table(kegg_df, paste0(opt$output_dir, "/results/pe-df-", opt$module_index,
 )
 
 cat("\n")
-print(paste0(
-    "Generated data frame showing the enriched KEGG pathways for module #",
-    opt$module_index
-))
+
+if (nrow(kegg_df) > 0) {
+    print(paste0(
+        "Generated data frame showing the enriched KEGG pathways for module #",
+        opt$module_index
+    ))
+} else {
+    print(paste0("No KEGG pathways enriched for module #", opt$module_index))
+}
+

@@ -7,15 +7,10 @@ dash.register_page(__name__, name="Co-expression Network Analysis")
 
 layout = html.Div(
     [
-        html.Div(id='coexpression-input-genomic-intervals'),
-        html.Br(),
-        html.Div(id='coexpression-loading',
-                 children='Finding enriched modules...', hidden=False),
-
-        dcc.Dropdown(
+        dcc.Loading(dcc.Dropdown(
             id='coexpression-modules',
             style={'display': 'none'}
-        ),
+        )),
 
         html.Br(),
 
