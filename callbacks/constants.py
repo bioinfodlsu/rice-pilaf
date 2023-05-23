@@ -24,8 +24,6 @@ class Constants(object):
     ENRICHMENT_ANALAYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRITPS}/enrichment_analysis'
     ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALAYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
     ENRICHMENT_ANALYSIS_OUTPUT = f'{APP_DATA}/enrichment_analysis/output'
-    ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/ontology_enrichment'
-    ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/pathway_enrichment'
 
     def __init__(self):
         pass

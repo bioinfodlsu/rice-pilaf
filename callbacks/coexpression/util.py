@@ -45,8 +45,8 @@ def fetch_enriched_modules(output_dir):
 
 
 def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters):
-    print(algo)
-    print(parameters)
+    # print(algo)
+    # print(parameters)
 
     genes = list(set(gene_ids))
     subdirectory = write_genes_to_file(
