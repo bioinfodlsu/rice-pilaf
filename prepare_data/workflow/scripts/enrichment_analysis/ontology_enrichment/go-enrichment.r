@@ -1,9 +1,9 @@
-library(clusterProfiler)
 library(data.table)
 library(ggplot2)
 library(optparse)
 library(tidyverse)
 library(GO.db)
+library(clusterProfiler)
 
 option_list <- list(
     make_option(c("-g", "--modules"),

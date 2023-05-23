@@ -32,12 +32,12 @@ layout = html.Div(
 
         html.Br(),
 
-        dash_table.DataTable(
+        dcc.Loading(dash_table.DataTable(
             id='lift-over-results-table',
             persistence=True,
             persistence_type='memory',
             export_format='csv'
-        ),
+        )),
 
         html.Br()
     ]

@@ -12,7 +12,8 @@ from flask import Flask
 
 server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                external_stylesheets=[dbc.themes.BOOTSTRAP,
+                                      dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server)
 
 welcome = dcc.Markdown(
@@ -151,4 +152,4 @@ callbacks.coexpression.callbacks.init_callback(app)
 callbacks.homepage_dash.callbacks.init_callback(app)
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="0.0.0.0", port="8050", debug=True)
