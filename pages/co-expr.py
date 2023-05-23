@@ -24,8 +24,11 @@ layout = html.Div(
             inline=True
         ),
 
-        dbc.Tooltip("Hover over each of the choices for more details",
+        dbc.Tooltip('The algorithms below allow for overlapping modules (that is, genes may belong to more than one module). Hover over each algorithm for more details',
                     target='coexpression-clustering-algo-tooltip'),
+
+        dbc.Tooltip('Detects highly connected gene subnetworks and expands them by including closely associated genes. Reference: Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. BMC Bioinformatics, 10(169)',
+                    target='coach'),
 
         html.Br(),
 
