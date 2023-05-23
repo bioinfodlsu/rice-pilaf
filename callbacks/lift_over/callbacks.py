@@ -113,23 +113,16 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-active-tab', 'data'),
-        Input('lift-over-results-tabs', 'active_tab'),
-        State('lift-over-is-submitted', 'data')
-    )
-    def get_active_tab(active_tab, is_submitted):
-        if has_user_submitted(is_submitted):
-            return active_tab
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('lift-over-active-filter', 'data'),
+
+        Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
+
         State('lift-over-is-submitted', 'data')
     )
-    def get_active_filter(filter_rice_variants, is_submitted):
+    def get_active_filter(active_tab, filter_rice_variants, is_submitted):
         if has_user_submitted(is_submitted):
-            return filter_rice_variants
+            return active_tab, filter_rice_variants
 
         raise PreventUpdate
 
