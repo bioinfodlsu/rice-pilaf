@@ -12,7 +12,7 @@ def convert_module_to_edge_list(module, network_file, output_dir, filename):
             if nodes[0] in module and nodes[1] in module:
                 selected_nodes.add(nodes[0])
                 selected_nodes.add(nodes[1])
-                output.write(f'{nodes[0]}\t{nodes[1]}\t{nodes[2]}\n')
+                output.write(f'{nodes[0]}\t{nodes[1]}\n')
 
     assert len(module) == len(selected_nodes)
 
