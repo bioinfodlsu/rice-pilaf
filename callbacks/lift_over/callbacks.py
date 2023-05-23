@@ -112,6 +112,21 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('lift-over-active-tab', 'data'),
+        Output('lift-over-active-filter', 'data'),
+
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+
+        State('lift-over-is-submitted', 'data')
+    )
+    def get_active_filter(active_tab, filter_rice_variants, is_submitted):
+        if has_user_submitted(is_submitted):
+            return active_tab, filter_rice_variants
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'data'),
         # Output('lift-over-active-tab', 'data'),
@@ -126,7 +141,7 @@ def init_callback(app):
         State('lift-over-results-tabs', 'children'),
         State('lift-over-is-submitted', 'data'),
 
-        prevent_initial_call=True
+        # prevent_initial_call=True
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
         # if reset_n_clicks >= 1:

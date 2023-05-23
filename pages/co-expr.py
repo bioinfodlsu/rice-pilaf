@@ -7,6 +7,44 @@ dash.register_page(__name__, name="Co-expression Network Analysis")
 
 layout = html.Div(
     [
+        html.Div(["Module detection algorithm ", html.I(
+            className="bi bi-info-circle-fill me-2", id="coexpression-clustering-algo-tooltip")]),
+
+        html.Br(),
+
+        dbc.RadioItems(
+            id='coexpression-clustering-algo',
+            options=[
+                {'value': 'clusterone', 'label': 'ClusterONE',
+                    'label_id': 'clusterone'},
+                {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
+                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
+                {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
+            ],
+            value='clusterone',
+            inline=True
+        ),
+
+        dbc.Tooltip('The algorithms below allow for overlapping modules (that is, genes may belong to more than one module). Hover over each algorithm for more details',
+                    target='coexpression-clustering-algo-tooltip'),
+
+        dbc.Tooltip('Detects highly connected gene subnetworks and expands them by including closely associated genes. Reference: Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. BMC Bioinformatics, 10(169)',
+                    target='coach'),
+
+        html.Br(),
+
+        html.Div(["Parameter ", html.I(
+            className="bi bi-info-circle-fill me-2", id="coexpression-parameter-tooltip")]),
+
+        html.Br(),
+
+        dcc.Slider(0, 1, 0.05,
+                   value=0.3,
+                   id='coexpression-parameter-slider'
+                   ),
+
+        dcc.Markdown("Enriched modules"),
+
         dcc.Loading(dcc.Dropdown(
             id='coexpression-modules',
             style={'display': 'none'}
