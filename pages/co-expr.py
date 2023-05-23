@@ -21,6 +21,7 @@ layout = html.Div(
                 {'value': 'FOX', 'label': 'FOX', 'label_id': 'fox'},
                 {'value': 'DEMON', 'label': 'DEMON', 'label_id': 'demon'},
             ],
+            value='ClusterONE',
             inline=True
         ),
 
@@ -31,6 +32,11 @@ layout = html.Div(
                     target='coach'),
 
         html.Br(),
+
+        dcc.Slider(0, 20, 5,
+                   value=10,
+                   id='my-slider'
+                   ),
 
         dcc.Markdown("Enriched modules"),
 
