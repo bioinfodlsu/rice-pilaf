@@ -31,14 +31,15 @@ def init_callback(app):
         Input('lift-over-other-refs-saved-input', 'data'),
 
         State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data'),
 
         State('lift-over-active-filter', 'data'),
 
         State('lift-over-other-refs', 'multi')
     )
-    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, active_filter, is_multi_other_refs):
-        # if reset_n_clicks >= 1:
-        #    return None, None, None, None, None, None, [], None
+    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, is_resetted, active_filter, is_multi_other_refs):
+        if is_resetted:
+            return None, None, None, None, [], None
 
         if has_user_submitted(is_submitted):
             # nb_intervals_str = get_user_genomic_intervals_str_input(
@@ -118,9 +119,13 @@ def init_callback(app):
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def get_active_filter(active_tab, filter_rice_variants, is_submitted):
+    def get_active_filter(active_tab, filter_rice_variants, is_submitted, is_resetted):
+        if is_resetted:
+            return None, None
+
         if has_user_submitted(is_submitted):
             return active_tab, filter_rice_variants
 
@@ -129,9 +134,7 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'data'),
-        # Output('lift-over-active-tab', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
-        # Output('lift-over-active-filter', 'data'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
@@ -140,12 +143,11 @@ def init_callback(app):
 
         State('lift-over-results-tabs', 'children'),
         State('lift-over-is-submitted', 'data'),
-
-        # prevent_initial_call=True
+        State('lift-over-is-resetted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
-        # if reset_n_clicks >= 1:
-        #    return None, None, 'tab-0', {'display': 'none'}, None, None
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted, is_resetted):
+        if is_resetted:
+            return None, None, {'display': 'none'}
 
         if has_user_submitted(is_submitted):
 
@@ -166,15 +168,11 @@ def init_callback(app):
                     if active_tab == SUMMARY_TAB:
                         df_nb = get_overlapping_ogi(
                             filter_rice_variants, nb_intervals).to_dict('records')
-                        # return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
-                        #     df_nb, active_tab, {
-                        #         'display': 'block'}, filter_rice_variants
 
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
                             df_nb, {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        # return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, active_tab, {'display': 'none'}, filter_rice_variants
                         return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, {'display': 'none'}
 
                     else:
@@ -183,14 +181,11 @@ def init_callback(app):
                         df_nb = get_genes_from_other_ref(
                             other_ref, nb_intervals).to_dict('records')
 
-                        # return f'Genes from homologous regions in {other_ref}', df_nb, active_tab, {'display': 'none'}, filter_rice_variants
                         return f'Genes from homologous regions in {other_ref}', df_nb, {'display': 'none'}
 
                 else:
-                    # return None, None, None, {'display': 'none'}, None
                     return None, None, {'display': 'none'}
             else:
-                # return None, None, None, {'display': 'none'}, None
                 return None, None, {'display': 'none'}
 
         raise PreventUpdate
