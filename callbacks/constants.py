@@ -15,8 +15,6 @@ class Constants(object):
     NETWORKS = f'{RAW_DATA}/networks'
     NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
     NETWORKS_DISPLAY_OS_CX = f'{NETWORKS_DISPLAY}/OS-CX'
-    NETWORKS_DISPLAY_OS_CX_CLUSTERONE = f'{NETWORKS_DISPLAY_OS_CX}/clusterone'
-    NETWORKS_DISPLAY_OS_CX_CLUSTERONE_MODULES = f'{NETWORKS_DISPLAY_OS_CX_CLUSTERONE}/modules/30'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'

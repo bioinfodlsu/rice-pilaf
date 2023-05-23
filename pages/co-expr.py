@@ -15,13 +15,13 @@ layout = html.Div(
         dbc.RadioItems(
             id='coexpression-clustering-algo',
             options=[
-                {'value': 'ClusterONE', 'label': 'ClusterONE',
-                    'label_id': 'cluster-one'},
-                {'value': 'COACH', 'label': 'COACH', 'label_id': 'coach'},
-                {'value': 'FOX', 'label': 'FOX', 'label_id': 'fox'},
-                {'value': 'DEMON', 'label': 'DEMON', 'label_id': 'demon'},
+                {'value': 'clusterone', 'label': 'ClusterONE',
+                    'label_id': 'clusterone'},
+                {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
+                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
+                {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
             ],
-            value='ClusterONE',
+            value='clusterone',
             inline=True
         ),
 
@@ -33,9 +33,14 @@ layout = html.Div(
 
         html.Br(),
 
-        dcc.Slider(0, 20, 5,
-                   value=10,
-                   id='my-slider'
+        html.Div(["Parameter ", html.I(
+            className="bi bi-info-circle-fill me-2", id="coexpression-parameter-tooltip")]),
+
+        html.Br(),
+
+        dcc.Slider(0, 1, 0.05,
+                   value=0.3,
+                   id='coexpression-parameter-slider'
                    ),
 
         dcc.Markdown("Enriched modules"),

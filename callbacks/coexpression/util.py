@@ -18,8 +18,8 @@ def convert_genomic_intervals_to_filename(genomic_intervals):
     return genomic_intervals.replace(":", "_").replace(";", "_")
 
 
-def write_genes_to_file(genes, genomic_intervals):
-    subdirectory = convert_genomic_intervals_to_filename(genomic_intervals)
+def write_genes_to_file(genes, genomic_intervals, algo, parameters):
+    subdirectory = f'{convert_genomic_intervals_to_filename(genomic_intervals)}/{algo}/{parameters}'
 
     if not os.path.exists(f'{const.IMPLICATED_GENES}/{subdirectory}'):
         os.makedirs(f'{const.IMPLICATED_GENES}/{subdirectory}')
@@ -44,15 +44,19 @@ def fetch_enriched_modules(output_dir):
     return modules
 
 
-def do_module_enrichment_analysis(gene_ids, genomic_intervals):
+def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters):
+    print(algo)
+    print(parameters)
+
     genes = list(set(gene_ids))
-    subdirectory = write_genes_to_file(genes, genomic_intervals)
+    subdirectory = write_genes_to_file(
+        genes, genomic_intervals, algo, parameters)
 
     OUTPUT_DIR = f'{const.IMPLICATED_GENES}/{subdirectory}'
     if not os.path.exists(f'{OUTPUT_DIR}/enriched_modules'):
         INPUT_GENES = f'{const.IMPLICATED_GENES}/{subdirectory}/genes.txt'
         BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY_OS_CX}/all-genes.txt'
-        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX_CLUSTERONE}/modules-to-genes.tsv'
+        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
         COMMAND = f'Rscript --vanilla {const.ORA_ENRICHMENT_ANALYSIS_PROGRAM} -g {INPUT_GENES} -b {BACKGROUND_GENES} -m {MODULE_TO_GENE_MAPPING} -o {OUTPUT_DIR}'
         os.system(COMMAND)
