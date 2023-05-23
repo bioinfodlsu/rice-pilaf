@@ -192,6 +192,7 @@ scratch.py
 
 # Scripts for bulk processing
 *-bulk.*
+*-bulk*.*
 
 # Binary files
 prepare_data/**/LazyFox

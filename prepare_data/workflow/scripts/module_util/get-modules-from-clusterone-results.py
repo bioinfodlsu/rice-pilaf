@@ -1,5 +1,15 @@
 import csv
 import os
+import sys
+
+maxInt = sys.maxsize
+
+while True:
+    try:
+        csv.field_size_limit(maxInt)
+        break
+    except OverflowError:
+        maxInt = int(maxInt/10)
 
 
 def get_modules(clusterone_results, output_dir):
