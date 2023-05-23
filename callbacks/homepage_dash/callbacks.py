@@ -27,7 +27,7 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def parse_input(n_clicks, reset_n_clicks, nb_intervals_str, other_refs, is_submitted):
-        if lift_over_util.has_user_submitted(is_submitted) and reset_n_clicks >= 1:
+        if is_submitted and reset_n_clicks >= 1:
             return None, {'display': 'none'}, False, '', '', reset_n_clicks, True
 
         if n_clicks >= 1:

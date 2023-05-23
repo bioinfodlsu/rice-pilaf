@@ -41,7 +41,7 @@ def init_callback(app):
         if is_resetted:
             return None, None, None, None, [], None
 
-        if has_user_submitted(is_submitted):
+        if is_submitted:
             # nb_intervals_str = get_user_genomic_intervals_str_input(
             #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
 
@@ -85,7 +85,7 @@ def init_callback(app):
         State('lift-over-active-tab', 'data')
     )
     def switch_active_tab(nb_intervals_str, is_submitted, active_tab):
-        if has_user_submitted(is_submitted):
+        if is_submitted:
             if not active_tab:
                 return 'tab-0'
 
@@ -99,7 +99,7 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def get_nipponbare_gene_ids(nb_intervals_str, is_submitted):
-        if has_user_submitted(is_submitted):
+        if is_submitted:
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
@@ -112,6 +112,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    """
     @app.callback(
         Output('lift-over-active-tab', 'data'),
         Output('lift-over-active-filter', 'data'),
@@ -126,10 +127,11 @@ def init_callback(app):
         if is_resetted:
             return None, None
 
-        if has_user_submitted(is_submitted):
+        if is_submitted:
             return active_tab, filter_rice_variants
 
         raise PreventUpdate
+    """
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
@@ -149,8 +151,7 @@ def init_callback(app):
         if is_resetted:
             return None, None, {'display': 'none'}
 
-        if has_user_submitted(is_submitted):
-
+        if is_submitted:
             # nb_intervals_str = get_user_genomic_intervals_str_input(
             #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
 
