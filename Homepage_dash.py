@@ -6,6 +6,7 @@ from dash import dcc, html
 import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 import callbacks.coexpression.callbacks
+import callbacks.tf_enrich.callbacks
 
 from flask import Flask
 
@@ -42,7 +43,7 @@ app.layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(html.Div("Rice-Pilaf",
+                dbc.Col(html.Div("rice-pilaf",
                                  style={'fontSize': 50, 'textAlign': 'center'})),
                 welcome
             ]
@@ -96,6 +97,7 @@ app.layout = dbc.Container(
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.browse_loci.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
+callbacks.tf_enrich.callbacks.init_callback(app)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

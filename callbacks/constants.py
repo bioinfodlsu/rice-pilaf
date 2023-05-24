@@ -22,9 +22,9 @@ class Constants(object):
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
     TEMP_IGV = f'{TEMP}/igv'
 
-    DATA_PREPARATION_SCRITPS = 'prepare_data/workflow/scripts'
-    ENRICHMENT_ANALAYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRITPS}/enrichment_analysis'
-    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALAYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
+    DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
+    ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
+    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
     ENRICHMENT_ANALYSIS_OUTPUT = f'{APP_DATA}/enrichment_analysis/output'
     ENRICHMENT_ANALYSIS_OUTPUT_ONTOLOGY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/ontology_enrichment'
     ENRICHMENT_ANALYSIS_OUTPUT_PATHWAY = f'{ENRICHMENT_ANALYSIS_OUTPUT}/pathway_enrichment'
