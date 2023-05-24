@@ -14,7 +14,7 @@ def convert_module_to_edge_list(module, network_file, output_dir, filename):
                 selected_nodes.add(nodes[1])
                 output.write(f'{nodes[0]}\t{nodes[1]}\n')
 
-    assert len(module) == len(selected_nodes)
+    assert len(selected_nodes - module) == 0
 
 
 def convert_modules(network_file, module_file, output_dir):
