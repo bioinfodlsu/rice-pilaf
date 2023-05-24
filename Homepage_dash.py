@@ -7,12 +7,14 @@ import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 import callbacks.coexpression.callbacks
 import callbacks.tf_enrich.callbacks
+import callbacks.homepage_dash.callbacks
 
 from flask import Flask
 
 server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                external_stylesheets=[dbc.themes.BOOTSTRAP,
+                                      dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server)
 
 welcome = dcc.Markdown(
@@ -23,6 +25,9 @@ welcome = dcc.Markdown(
     """
 )
 
+other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
+genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
+
 sidebar = dbc.Nav(
     [
         dbc.NavLink(
@@ -31,12 +36,14 @@ sidebar = dbc.Nav(
             ],
             href=page["path"],
             active="exact",
+            # disabled=True,
+            # id='homepage-dash-navlink'
         )
         for page in dash.page_registry.values()
     ],
     vertical=True,
     pills=True,
-    className="bg-light"
+    className="bg-light",
 )
 
 app.layout = dbc.Container(
@@ -48,6 +55,47 @@ app.layout = dbc.Container(
                 welcome
             ]
         ),
+
+        dcc.Markdown('Provide genomic interval(s) from your GWAS:'),
+        dbc.Alert(
+            id='input-error',
+            children='',
+            color='danger',
+            style={'display': 'none'}
+        ),
+        dbc.Input(
+            id='lift-over-genomic-intervals',
+            type='text',
+            style={'width': '100%'},
+            value=genomic_interval,
+            persistence=True,
+            persistence_type='memory'
+        ),
+
+        html.Br(),
+
+        dcc.Markdown(
+            'Search homologous regions of the following genomes:'),
+        dcc.Dropdown(other_ref_genomes,
+                     id='lift-over-other-refs',
+                     multi=False,
+                     persistence=True,
+                     persistence_type='memory'
+                     ),
+
+        html.Br(),
+
+        html.Div(children=[dbc.Button('Submit', id='lift-over-submit',
+                                      n_clicks=0),
+                           dbc.Button('Reset All Display',
+                                      color='danger',
+                                      outline=True,
+                                      id='lift-over-reset',
+                                      n_clicks=0,
+                                      style={'margin-left': '1em'})]
+                 ),
+
+        html.Br(),
 
         html.Hr(),
 
@@ -63,6 +111,11 @@ app.layout = dbc.Container(
         dcc.Store(
             id='lift-over-is-submitted',
             storage_type='session',
+        ),
+
+        dcc.Store(
+            id='lift-over-is-resetted',
+            storage_type='session'
         ),
 
         dcc.Store(
@@ -98,6 +151,7 @@ callbacks.lift_over.callbacks.init_callback(app)
 callbacks.browse_loci.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
 callbacks.tf_enrich.callbacks.init_callback(app)
+callbacks.homepage_dash.callbacks.init_callback(app)
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="0.0.0.0", port="8050", debug=True)

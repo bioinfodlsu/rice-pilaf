@@ -1,8 +1,8 @@
-library(clusterProfiler)
 library(data.table)
 library(ggplot2)
 library(optparse)
 library(tidyverse)
+library(clusterProfiler)
 
 option_list <- list(
   make_option(c("-g", "--modules"),
