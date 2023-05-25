@@ -90,8 +90,6 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
 
 
 def convert_to_df_go(result):
-    result.cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
-                   'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts']
     cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
             'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
 
