@@ -36,7 +36,11 @@ layout = html.Div(
             id='lift-over-results-table',
             persistence=True,
             persistence_type='memory',
-            export_format='csv'
+            export_format='csv',
+            style_cell={
+                'whiteSpace': 'pre-line',
+                'font-family': 'sans-serif'
+            }
         )),
 
         html.Br()

@@ -40,6 +40,8 @@ layout = html.Div(
 
         dcc.Slider(id='coexpression-parameter-slider', step=None),
 
+        html.Br(),
+
         dcc.Markdown("Enriched modules"),
 
         dcc.Loading(dcc.Dropdown(
