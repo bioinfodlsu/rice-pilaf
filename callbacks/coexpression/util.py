@@ -107,6 +107,42 @@ def convert_to_df_go(result):
     return result.dropna()
 
 
+def convert_to_df_to(result):
+    cols = ['ID', 'Trait Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
+def convert_to_df_po(result):
+    cols = ['ID', 'Plant Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
 def convert_to_df(active_tab, module_idx, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
@@ -121,8 +157,19 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
                              skiprows=1)
         return convert_to_df_go(result)
 
+    elif enrichment_type == 'to':
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Trait Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_to(result)
+
     elif enrichment_type == 'po':
-        pass
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Plant Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_po(result)
 
 
 def load_module_graph(module, algo, parameters):
