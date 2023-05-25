@@ -38,7 +38,7 @@ layout = html.Div(
 
         html.Br(),
 
-        dcc.Slider(0, 1, 0.05,
+        dcc.Slider(0, 1, 0.1,
                    value=0.3,
                    id='coexpression-parameter-slider'
                    ),

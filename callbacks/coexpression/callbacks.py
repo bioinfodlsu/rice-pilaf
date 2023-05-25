@@ -19,7 +19,7 @@ def init_callback(app):
     def perform_module_enrichment(gene_ids, genomic_intervals, algo, parameters, is_submitted):
         if is_submitted:
             enriched_modules = do_module_enrichment_analysis(
-                gene_ids, genomic_intervals, algo, int(float(parameters) * 100))
+                gene_ids, genomic_intervals, algo, get_dir_for_parameter(algo, parameters))
 
             first_module = 'No enriched modules found'
             if enriched_modules:
@@ -32,11 +32,13 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-modules', 'value')
+        Input('coexpression-modules', 'value'),
+        Input('coexpression-clustering-algo', 'value'),
+        Input('coexpression-parameter-slider', 'value'),
     )
-    def display_pathways(active_tab, module):
+    def display_pathways(active_tab, module, algo, parameters):
         module_idx = module.split(' ')[1]
-        return convert_to_df(active_tab, module_idx).to_dict('records')
+        return convert_to_df(active_tab, module_idx, algo, get_dir_for_parameter(algo, parameters)).to_dict('records')
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
@@ -47,7 +49,7 @@ def init_callback(app):
     )
     def display_module_graph(module, algo, parameters):
         module_idx = module.split(' ')[1]
-        coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{int(float(parameters) * 100)}/module-{module_idx}.tsv'
+        coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{get_dir_for_parameter(algo, parameters)}/module-{module_idx}.tsv'
         G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
 
         return nx.cytoscape_data(G)['elements'], {'visibility': 'visible', 'width': '100%', 'height': '100vh'},

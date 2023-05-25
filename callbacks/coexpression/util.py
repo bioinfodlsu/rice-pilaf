@@ -13,6 +13,15 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
                 ('Pathway-Express', 'pathway_enrichment/pe'),
                 ('SPIA', 'pathway_enrichment/spia')]
 
+ALGOS_MULT = {'clusterone': '100',
+              'coach': '1000',
+              'demon': '100',
+              'fox': '100'}
+
+
+def get_dir_for_parameter(algo, parameters):
+    return int(float(parameters) * int(ALGOS_MULT[algo]))
+
 
 def convert_genomic_intervals_to_filename(genomic_intervals):
     return genomic_intervals.replace(":", "_").replace(";", "_")
@@ -64,16 +73,16 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
-def convert_to_df(active_tab, module_idx, algorithm='clusterone', threshold=30):
+def convert_to_df(active_tab, module_idx, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
-    algo = dir.split('/')[-1]
+    enrichment_type = dir.split('/')[-1]
 
-    file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algorithm}/{threshold}/{dir}/results/{algo}-df-{module_idx}.tsv'
+    file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
     result = pd.read_csv(file, delimiter='\t')
     if algo == 'go':
         result = result[['ID', 'Description',
-                         'GeneRatio', 'BgRatio', 'p.adjust', 'geneID']]
+                         'GeneRatio', 'BgRatio', 'pvalue', 'p.adjust', 'geneID']]
 
     return result
