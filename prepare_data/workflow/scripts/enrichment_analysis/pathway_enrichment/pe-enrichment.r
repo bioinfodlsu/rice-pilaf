@@ -1,7 +1,5 @@
-library(data.table)
 library(ggplot2)
 library(graphite)
-library(tidyverse)
 library(optparse)
 library(ROntoTools)
 
@@ -27,10 +25,7 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-modules <- readLines(opt$modules)
-modules <- str_split(modules, "\t")
-
-genes <- paste0("dosa:", unlist(modules[opt$module_index]))
+genes <- paste0("dosa:", unlist(strsplit(readLines(opt$modules), "\t")[opt$module_index]))
 dummy_val <- 20
 dummy_fc <- replicate(length(genes), dummy_val)
 input_data <- setNames(dummy_fc, genes)
