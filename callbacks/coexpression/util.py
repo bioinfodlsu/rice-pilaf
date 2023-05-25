@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+import networkx as nx
 
 from ..constants import Constants
 
@@ -13,14 +14,29 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
                 ('Pathway-Express', 'pathway_enrichment/pe'),
                 ('SPIA', 'pathway_enrichment/spia')]
 
-ALGOS_MULT = {'clusterone': '100',
-              'coach': '1000',
-              'demon': '100',
-              'fox': '100'}
+ALGOS_MULT = {'clusterone': 100,
+              'coach': 1000,
+              'demon': 100,
+              'fox': 100}
+
+ALGOS_DEFAULT_PARAM = {'clusterone': 0.3,
+                       'coach': 0.225,
+                       'demon': 0.25,
+                       'fox': 0.01}
+
+
+def get_parameters_for_algo(algo):
+    param_dict = {}
+    parameters = os.listdir(f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')
+    for parameter in parameters:
+        param_dict[int(parameter)] = str(
+            int(parameter) / ALGOS_MULT[algo])
+
+    return param_dict
 
 
 def get_dir_for_parameter(algo, parameters):
-    return int(float(parameters) * int(ALGOS_MULT[algo]))
+    return int(float(parameters) * ALGOS_MULT[algo])
 
 
 def convert_genomic_intervals_to_filename(genomic_intervals):
@@ -86,3 +102,11 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
                          'GeneRatio', 'BgRatio', 'pvalue', 'p.adjust', 'geneID']]
 
     return result
+
+
+def load_module_graph(module, algo, parameters):
+    module_idx = module.split(' ')[1]
+    coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
+    G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
+
+    return nx.cytoscape_data(G)['elements'], {'visibility': 'visible', 'width': '100%', 'height': '100vh'}

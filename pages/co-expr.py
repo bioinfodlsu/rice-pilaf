@@ -18,8 +18,8 @@ layout = html.Div(
                 {'value': 'clusterone', 'label': 'ClusterONE',
                     'label_id': 'clusterone'},
                 {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
-                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
                 {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
+                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
             ],
             value='clusterone',
             inline=True
@@ -38,10 +38,7 @@ layout = html.Div(
 
         html.Br(),
 
-        dcc.Slider(0, 1, 0.1,
-                   value=0.3,
-                   id='coexpression-parameter-slider'
-                   ),
+        dcc.Slider(id='coexpression-parameter-slider', step=None),
 
         dcc.Markdown("Enriched modules"),
 
