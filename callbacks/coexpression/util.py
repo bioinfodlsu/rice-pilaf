@@ -89,6 +89,26 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
+def convert_to_df_go(result):
+    result.cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
+                   'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts']
+    cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
 def convert_to_df(active_tab, module_idx, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
@@ -96,12 +116,15 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
 
     file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
-    result = pd.read_csv(file, delimiter='\t')
-    if algo == 'go':
-        result = result[['ID', 'Description',
-                         'GeneRatio', 'BgRatio', 'pvalue', 'p.adjust', 'geneID']]
+    if enrichment_type == 'go':
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Gene Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_go(result)
 
-    return result
+    elif enrichment_type == 'po':
+        pass
 
 
 def load_module_graph(module, algo, parameters):

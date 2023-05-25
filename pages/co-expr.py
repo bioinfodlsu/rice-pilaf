@@ -68,7 +68,11 @@ layout = html.Div(
             id='coexpression-pathways',
             persistence=True,
             persistence_type='memory',
-            export_format='csv'
+            export_format='csv',
+            style_cell={
+                'whiteSpace': 'pre-line',
+                'font-family': 'sans-serif'
+            }
         ),
 
         cyto.Cytoscape(
