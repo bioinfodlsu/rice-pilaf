@@ -69,17 +69,18 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
         Input('igv-genomic-intervals', 'value'),
         State('lift-over-is-submitted', 'data'),
         State('lift-over-is-resetted', 'data')
     )
-    def display_igv_tracks(selected_nb_intervals_str, is_submitted, is_resetteed):
-        if is_resetteed:
-            return []
+    def display_igv_tracks(selected_nb_intervals_str, is_submitted, is_resetted):
+        if is_resetted:
+            return None, []
 
         if is_submitted:
-            return ['MSU V7 genes', 'chromatin open']
+            return 'Use the checkbox below to filter tracks you want to see:', ['MSU V7 genes', 'chromatin open']
         raise PreventUpdate
 
     @app.callback(

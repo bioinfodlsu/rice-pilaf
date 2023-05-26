@@ -16,6 +16,8 @@ layout = html.Div(id='igv-container', children=[
 
     html.Br(),
 
+    html.Div(id='igv-track-intro', children=''),
+
     dbc.Checklist(id='igv-track-filter',
                   inline=True,
                   options=[],
