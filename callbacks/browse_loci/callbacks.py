@@ -75,7 +75,7 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data'),
         State('lift-over-is-resetted', 'data')
     )
-    def display_igv_tracks(selected_nb_intervals_str, is_submitted, is_resetted):
+    def display_igv_tracks_filter(selected_nb_intervals_str, is_submitted, is_resetted):
         if is_resetted:
             return None, []
 
