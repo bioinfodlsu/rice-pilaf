@@ -5,6 +5,7 @@ from dash import dash_table, dcc, html
 
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
+
 layout = html.Div(
     [
         html.Div(["Module detection algorithm ", html.I(
@@ -18,8 +19,8 @@ layout = html.Div(
                 {'value': 'clusterone', 'label': 'ClusterONE',
                     'label_id': 'clusterone'},
                 {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
-                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
                 {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
+                {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
             ],
             value='clusterone',
             inline=True
@@ -38,10 +39,12 @@ layout = html.Div(
 
         html.Br(),
 
-        dcc.Slider(0, 1, 0.05,
-                   value=0.3,
-                   id='coexpression-parameter-slider'
-                   ),
+        dcc.Slider(id='coexpression-parameter-slider', step=None,
+                   marks={0: '0.0', 10: '0.1', 20: '0.2', 30: '0.3', 40: '0.4',
+                          50: '0.5', 60: '0.6', 70: '0.7', 80: '0.8', 90: '0.9', 100: '1.0'},
+                   value=30),
+
+        html.Br(),
 
         dcc.Markdown("Enriched modules"),
 
@@ -71,7 +74,11 @@ layout = html.Div(
             id='coexpression-pathways',
             persistence=True,
             persistence_type='memory',
-            export_format='csv'
+            export_format='csv',
+            style_cell={
+                'whiteSpace': 'pre-line',
+                'font-family': 'sans-serif'
+            }
         ),
 
         cyto.Cytoscape(

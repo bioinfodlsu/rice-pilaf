@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+import networkx as nx
 
 from ..constants import Constants
 
@@ -12,6 +13,30 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
                 ('Pathways (Overrepresentation)', 'pathway_enrichment/ora'),
                 ('Pathway-Express', 'pathway_enrichment/pe'),
                 ('SPIA', 'pathway_enrichment/spia')]
+
+ALGOS_MULT = {'clusterone': 100,
+              'coach': 1000,
+              'demon': 100,
+              'fox': 100}
+
+ALGOS_DEFAULT_PARAM = {'clusterone': 0.3,
+                       'coach': 0.225,
+                       'demon': 0.25,
+                       'fox': 0.01}
+
+
+def get_parameters_for_algo(algo):
+    param_dict = {}
+    parameters = os.listdir(f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')
+    for parameter in parameters:
+        param_dict[int(parameter)] = str(
+            int(parameter) / ALGOS_MULT[algo])
+
+    return param_dict
+
+
+def get_dir_for_parameter(algo, parameters):
+    return int(float(parameters) * ALGOS_MULT[algo])
 
 
 def convert_genomic_intervals_to_filename(genomic_intervals):
@@ -64,16 +89,92 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
-def convert_to_df(active_tab, module_idx, algorithm='clusterone', threshold=30):
+def convert_to_df_go(result):
+    cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
+def convert_to_df_to(result):
+    cols = ['ID', 'Trait Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
+def convert_to_df_po(result):
+    cols = ['ID', 'Plant Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result = result[cols]
+
+    return result.dropna()
+
+
+def convert_to_df(active_tab, module_idx, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
-    algo = dir.split('/')[-1]
+    enrichment_type = dir.split('/')[-1]
 
-    file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algorithm}/{threshold}/{dir}/results/{algo}-df-{module_idx}.tsv'
+    file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
-    result = pd.read_csv(file, delimiter='\t')
-    if algo == 'go':
-        result = result[['ID', 'Description',
-                         'GeneRatio', 'BgRatio', 'p.adjust', 'geneID']]
+    if enrichment_type == 'go':
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Gene Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_go(result)
 
-    return result
+    elif enrichment_type == 'to':
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Trait Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_to(result)
+
+    elif enrichment_type == 'po':
+        result = pd.read_csv(file, delimiter='\t',
+                             names=['ID', 'Plant Ontology Term', 'Gene Ratio',
+                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                             skiprows=1)
+        return convert_to_df_po(result)
+
+
+def load_module_graph(module, algo, parameters):
+    module_idx = module.split(' ')[1]
+    coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
+    G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
+
+    return nx.cytoscape_data(G)['elements'], {'visibility': 'visible', 'width': '100%', 'height': '100vh'}

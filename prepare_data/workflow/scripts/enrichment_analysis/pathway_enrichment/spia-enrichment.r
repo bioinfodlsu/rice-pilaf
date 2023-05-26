@@ -1,7 +1,5 @@
-library(data.table)
 library(ggplot2)
 library(graphite)
-library(tidyverse)
 library(optparse)
 library(SPIA)
 
@@ -35,7 +33,6 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-
 if (!is.na(opt$pathways_dir)) {
     if (!dir.exists(opt$spia_pathway_dir)) {
         dir.create(opt$spia_pathway_dir, recursive = TRUE)
@@ -47,10 +44,7 @@ if (!is.na(opt$pathways_dir)) {
     )
 }
 
-modules <- readLines(opt$modules)
-modules <- str_split(modules, "\t")
-
-genes <- unlist(modules[opt$module_index])
+genes <- unlist(strsplit(readLines(opt$modules), "\t")[opt$module_index])
 dummy_val <- 20
 dummy_fc <- replicate(length(genes), dummy_val)
 input_data <- setNames(dummy_fc, genes)
