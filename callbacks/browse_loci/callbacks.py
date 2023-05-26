@@ -55,9 +55,13 @@ def init_callback(app):
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def display_igv_genomic_intervals(nb_intervals_str, is_submitted):
+    def display_igv_genomic_intervals(nb_intervals_str, is_submitted, is_resetted):
+        if is_resetted:
+            return [], None
+
         if is_submitted:
             igv_options = nb_intervals_str.split(';')
             return igv_options, igv_options[0]
@@ -68,8 +72,12 @@ def init_callback(app):
         Output('igv-track-filter', 'options'),
         Input('igv-genomic-intervals', 'value'),
         State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def display_igv_tracks(selected_nb_intervals_str, is_submitted):
+    def display_igv_tracks(selected_nb_intervals_str, is_submitted, is_resetteed):
+        if is_resetteed:
+            return []
+
         if is_submitted:
             return ['MSU V7 genes', 'chromatin open']
         raise PreventUpdate
@@ -78,10 +86,13 @@ def init_callback(app):
         Output('igv-container', 'children'),
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
-        State('lift-over-is-submitted', 'data')
-        # State('igv-track-filter', 'value')
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted):
+    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted, is_resetted):
+        if is_resetted:
+            return None
+
         if is_submitted:
             track_info = [
                 {
