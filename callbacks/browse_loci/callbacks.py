@@ -71,7 +71,7 @@ def init_callback(app):
     @app.callback(
         Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
-        Input('igv-genomic-intervals', 'value'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data'),
         State('lift-over-is-resetted', 'data')
     )
