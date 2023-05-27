@@ -23,7 +23,10 @@ class Constants(object):
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
     ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
-    ENRICHMENT_ANALYSIS_OUTPUT = f'{APP_DATA}/enrichment_analysis/output'
+
+    ENRICHMNET_ANALYSIS_DATA = f'{APP_DATA}/enrichment_analysis'
+    ENRICHMENT_ANALYSIS_OUTPUT = f'{ENRICHMNET_ANALYSIS_DATA}/output'
+    TRANSCRIPT_TO_MSU_DICT = f'{ENRICHMNET_ANALYSIS_DATA}/mapping/transcript-to-msu-id.pickle'
 
     def __init__(self):
         pass

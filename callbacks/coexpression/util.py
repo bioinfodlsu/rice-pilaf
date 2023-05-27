@@ -1,4 +1,5 @@
 import os
+import pickle
 
 import pandas as pd
 import networkx as nx
@@ -143,6 +144,43 @@ def convert_to_df_po(result):
     return result.dropna()
 
 
+def convert_transcript_to_msu_id(transcript_ids_str):
+    transcript_ids = transcript_ids_str.split('\n')
+    with open(const.TRANSCRIPT_TO_MSU_DICT, 'rb') as f:
+        mapping_dict = pickle.load(f)
+
+    output_str = ''
+    for transcript_id in transcript_ids:
+        for msu_id in mapping_dict[transcript_id]:
+            output_str += f'{msu_id} ({transcript_id})\n'
+
+    return output_str
+
+
+def convert_to_df_ora(result):
+    cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'adj. p-value', 'Genes', 'View on KEGG']
+
+    cols_dict = {}
+    for col in cols:
+        cols_dict[col] = ['-']
+
+    if result.empty:
+        return pd.DataFrame(cols_dict)
+
+    result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split(
+            '/').str.join('+') + '" target = "_blank">Link</a>'
+
+    # Prettify display of genes and convert to MSU accessions
+    result['Genes'] = result['Genes'].str.split(
+        '/').str.join('\n').apply(convert_transcript_to_msu_id)
+
+    result = result[cols]
+
+    return result.dropna()
+
+
 def convert_to_df(active_tab, module_idx, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
@@ -150,26 +188,58 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
 
     file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
+    empty = False
     if enrichment_type == 'go':
-        result = pd.read_csv(file, delimiter='\t',
-                             names=['ID', 'Gene Ontology Term', 'Gene Ratio',
-                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
-                             skiprows=1)
-        return convert_to_df_go(result)
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['ID', 'Gene Ontology Term', 'Gene Ratio',
+                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                                 skiprows=1)
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_go(result), empty
 
     elif enrichment_type == 'to':
-        result = pd.read_csv(file, delimiter='\t',
-                             names=['ID', 'Trait Ontology Term', 'Gene Ratio',
-                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
-                             skiprows=1)
-        return convert_to_df_to(result)
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['ID', 'Trait Ontology Term', 'Gene Ratio',
+                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                 skiprows=1)
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_to(result), empty
 
     elif enrichment_type == 'po':
-        result = pd.read_csv(file, delimiter='\t',
-                             names=['ID', 'Plant Ontology Term', 'Gene Ratio',
-                                    'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
-                             skiprows=1)
-        return convert_to_df_po(result)
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['ID', 'Plant Ontology Term', 'Gene Ratio',
+                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                 skiprows=1)
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_po(result), empty
+
+    elif enrichment_type == 'ora':
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['ID', 'KEGG Pathway', 'Gene Ratio',
+                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                 skiprows=1)
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_ora(result), empty
 
 
 def load_module_graph(module, algo, parameters):
