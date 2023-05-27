@@ -1,3 +1,4 @@
+import json
 import dash_bio as dashbio
 from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
@@ -54,9 +55,13 @@ def init_callback(app):
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def display_igv_genomic_intervals(nb_intervals_str, is_submitted):
+    def display_igv_genomic_intervals(nb_intervals_str, is_submitted, is_resetted):
+        if is_resetted:
+            return [], None
+
         if is_submitted:
             igv_options = nb_intervals_str.split(';')
             return igv_options, igv_options[0]
@@ -64,12 +69,56 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('igv-track-intro', 'children'),
+        Output('igv-track-filter', 'options'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
+    )
+    def display_igv_tracks_filter(selected_nb_intervals_str, is_submitted, is_resetted):
+        if is_resetted:
+            return None, []
+
+        if is_submitted:
+            return 'Use the checkbox below to filter tracks you want to see:', ['MSU V7 genes', 'chromatin open']
+        raise PreventUpdate
+
+    @app.callback(
         Output('igv-container', 'children'),
         Input('igv-genomic-intervals', 'value'),
-        State('lift-over-is-submitted', 'data')
+        Input('igv-track-filter', 'value'),
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-is-resetted', 'data')
     )
-    def display_igv(selected_nb_intervals_str, is_submitted):
+    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted, is_resetted):
+        if is_resetted:
+            return None
+
         if is_submitted:
+            track_info = [
+                {
+                    "name": "MSU V7 genes",
+                    "format": "gff3",
+                    "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                    "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                    "displayMode": "EXPANDED",
+                    "height": 200
+                },
+                {
+                    "name": "chromatin open",
+                    "format": "bed",
+                    "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
+                    "displayMode": "EXPANDED",
+                    "height": 200
+                }
+            ]
+
+            display_tracks = []
+            for track in track_info:
+                if selected_tracks and track['name'] in selected_tracks:
+                    display_tracks.append(track)
+
             return html.Div([
                 dashbio.Igv(
                     id='igv-Nipponbare-local',
@@ -78,24 +127,7 @@ def init_callback(app):
                         "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
                         "fastaURL": "genomes_nipponbare/Npb.fasta",
                         "indexURL": "genomes_nipponbare/Npb.fasta.fai",
-                        "tracks": [
-                            {
-                                "name": "MSU V7 genes",
-                                "format": "gff3",
-                                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
-                                "displayMode": "EXPANDED",
-                                "height": 200
-                            },
-                            {
-                                "name": "chromatin open",
-                                "format": "bed",
-                                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                                "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
-                                "displayMode": "EXPANDED",
-                                "height": 200
-                            }
-                        ]
+                        "tracks": display_tracks
                     },
                     locus=[selected_nb_intervals_str]
                 )
