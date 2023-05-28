@@ -1,10 +1,9 @@
+from ..constants import Constants
 import os
 import pickle
 
 import pandas as pd
 import networkx as nx
-
-from ..constants import Constants
 
 const = Constants()
 
@@ -71,9 +70,6 @@ def fetch_enriched_modules(output_dir):
 
 
 def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters):
-    # print(algo)
-    # print(parameters)
-
     genes = list(set(gene_ids))
     subdirectory = write_genes_to_file(
         genes, genomic_intervals, algo, parameters)
@@ -90,58 +86,21 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
-def convert_to_df_go(result):
-    cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
+def display_in_sci_notation(number):
+    return '{:.6e}'.format(number)
 
+
+def display_cols_in_sci_notation(result, numeric_columns):
+    for column in numeric_columns:
+        result[column] = result[column].apply(display_in_sci_notation)
+
+
+def create_empty_df(cols):
     cols_dict = {}
     for col in cols:
         cols_dict[col] = ['-']
 
-    if result.empty:
-        return pd.DataFrame(cols_dict)
-
-    # Prettify display of genes
-    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
-    result = result[cols]
-
-    return result.dropna()
-
-
-def convert_to_df_to(result):
-    cols = ['ID', 'Trait Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
-
-    cols_dict = {}
-    for col in cols:
-        cols_dict[col] = ['-']
-
-    if result.empty:
-        return pd.DataFrame(cols_dict)
-
-    # Prettify display of genes
-    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
-    result = result[cols]
-
-    return result.dropna()
-
-
-def convert_to_df_po(result):
-    cols = ['ID', 'Plant Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'adj. p-value', 'Genes']
-
-    cols_dict = {}
-    for col in cols:
-        cols_dict[col] = ['-']
-
-    if result.empty:
-        return pd.DataFrame(cols_dict)
-
-    # Prettify display of genes
-    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
-    result = result[cols]
-
-    return result.dropna()
+    return pd.DataFrame(cols_dict)
 
 
 def convert_transcript_to_msu_id(transcript_ids_str):
@@ -152,21 +111,75 @@ def convert_transcript_to_msu_id(transcript_ids_str):
     output_str = ''
     for transcript_id in transcript_ids:
         for msu_id in mapping_dict[transcript_id]:
-            output_str += f'{msu_id} ({transcript_id})\n'
+            output_str += f'{msu_id}\n({transcript_id})\n\n'
 
-    return output_str
+    return output_str[:-2]
+
+
+def get_genes_from_kegg_link(link):
+    idx = link.find('?')
+    query = link[idx:].split('+')
+
+    return '\n'.join(query[1:])
+
+
+def convert_to_df_go(result):
+    cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+
+    if result.empty:
+        return create_empty_df(cols)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
+
+    return result[cols].dropna()
+
+
+def convert_to_df_to(result):
+    cols = ['ID', 'Trait Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+
+    if result.empty:
+        return create_empty_df(cols)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
+
+    return result[cols].dropna()
+
+
+def convert_to_df_po(result):
+    cols = ['ID', 'Plant Ontology Term', 'Gene Ratio',
+            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+
+    if result.empty:
+        return create_empty_df(cols)
+
+    # Prettify display of genes
+    result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
+
+    return result[cols].dropna()
 
 
 def convert_to_df_ora(result):
     cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'adj. p-value', 'Genes', 'View on KEGG']
-
-    cols_dict = {}
-    for col in cols:
-        cols_dict[col] = ['-']
+            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes', 'View on KEGG']
 
     if result.empty:
-        return pd.DataFrame(cols_dict)
+        return create_empty_df(cols)
+
+    result['KEGG Pathway'] = result['KEGG Pathway'].str[:-
+                                                        len(' - Oryza sativa japonica (Japanese rice) (RAPDB)')]
 
     result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
         result['ID'] + '+' + result['Genes'].str.split(
@@ -176,9 +189,35 @@ def convert_to_df_ora(result):
     result['Genes'] = result['Genes'].str.split(
         '/').str.join('\n').apply(convert_transcript_to_msu_id)
 
-    result = result[cols]
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
 
-    return result.dropna()
+    return result[cols].dropna()
+
+
+def convert_to_df_spia(result):
+    cols = ['ID', 'Name', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
+            'Adj. Combined p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'Genes',
+            'View on KEGG']
+
+    if result.empty:
+        return create_empty_df(cols)
+
+    # Prettify display of ID
+    result['ID'] = 'dosa' + result['ID_temp']
+    result['Total Acc. Perturbation'] = result['tA']
+
+    # Prettify display of genes and convert to MSU accessions
+    result['Genes'] = result['View on KEGG'].apply(
+        get_genes_from_kegg_link).apply(convert_transcript_to_msu_id)
+
+    result['View on KEGG'] = '<a href = "' + \
+        result['View on KEGG'] + '" target = "_blank">Link</a>'
+
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
+
+    return result[cols].dropna()
 
 
 def convert_to_df(active_tab, module_idx, algo, parameters):
@@ -193,7 +232,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Gene Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Counts'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Counts'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -206,7 +245,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Trait Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -219,7 +258,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Plant Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -232,7 +271,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'KEGG Pathway', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'adj. p-value', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -240,6 +279,21 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             empty = True
 
         return convert_to_df_ora(result), empty
+
+    elif enrichment_type == 'spia':
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['Name',	'ID_temp', 'pSize', 'NDE', 'ORA p-value', 'tA',
+                                        'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value (Benjamini-Hochberg)',
+                                        'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG'],
+                                 skiprows=1,
+                                 dtype={'ID_temp': object})      # Preserve leading 0 in KEGG pathway ID
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_spia(result), empty
 
 
 def load_module_graph(module, algo, parameters):
