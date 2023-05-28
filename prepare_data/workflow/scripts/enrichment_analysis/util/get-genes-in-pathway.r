@@ -20,6 +20,6 @@ if (!dir.exists(opt$output_dir)) {
 
 write.table(genes_df,
             paste0(opt$output_dir, "/kegg-dosa-geneset.tsv"),
-            sep = "/t", row.names = TRUE, col.names = FALSE, quote = FALSE)
+            sep = "\t", row.names = TRUE, col.names = FALSE, quote = FALSE)
 
 print(paste0("Generated ", opt$output_dir, "/kegg-dosa-geneset.tsv"))
