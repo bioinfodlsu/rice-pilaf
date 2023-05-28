@@ -126,7 +126,9 @@ python enrichment_analysis/util/file-convert-msu.py ../../../static/app_data/net
 python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/modules/clusterone transcript
 ```
 
-Output: TSV files containing Entrez and KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/raw_data/enrichment_analysis/modules/clusterone`
+Output: 
+- TSV files containing Entrez and KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/raw_data/enrichment_analysis/modules/clusterone`
+- `transcript-to-msu-id.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
 
 This recipe prepares the data needed for gene ontology enrichment analysis:
 
