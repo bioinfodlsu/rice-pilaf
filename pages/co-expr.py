@@ -78,7 +78,8 @@ layout = html.Div(
             style_cell={
                 'whiteSpace': 'pre-line',
                 'font-family': 'sans-serif'
-            }
+            },
+            markdown_options={"html": True}
         ),
 
         cyto.Cytoscape(

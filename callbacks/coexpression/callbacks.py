@@ -38,6 +38,7 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-pathways', 'data'),
+        Output('coexpression-pathways', 'columns'),
         Input('coexpression-modules-pathway', 'active_tab'),
         Input('coexpression-modules', 'value'),
         Input('coexpression-clustering-algo', 'value'),
@@ -45,7 +46,16 @@ def init_callback(app):
     )
     def display_pathways(active_tab, module, algo, parameters):
         module_idx = module.split(' ')[1]
-        return convert_to_df(active_tab, module_idx, algo, parameters).to_dict('records')
+        table, empty = convert_to_df(active_tab, module_idx, algo, parameters)
+
+        if not empty:
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
+                       'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
+        else:
+            columns = [{'id': x, 'name': x}
+                       for x in table.columns]
+
+        return table.to_dict('records'), columns
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
