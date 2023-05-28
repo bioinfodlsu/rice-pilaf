@@ -244,7 +244,7 @@ python enrichment_analysis/util/get-genes-in-pathway-dict.py ../../../static/raw
 wget -O ../../../static/app_data/enrichment_analysis/mapping/kegg-dosa-pathway-names.tsv https://rest.kegg.jp/list/pathway/dosa
 ```
 
-Output: `kegg-dosa-geneset.pickle` and `kega-dosa-pathway-names.txt` in `../../../static/app_data/enrichment_analysis/mapping`
+Output: `kegg-dosa-geneset.pickle` and `kega-dosa-pathway-names.tsv` in `../../../static/app_data/enrichment_analysis/mapping`
 
 
 #### c. Topology-Based Analysis via SPIA
