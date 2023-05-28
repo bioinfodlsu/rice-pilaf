@@ -86,6 +86,10 @@ def do_module_enrichment_analysis(gene_ids, genomic_intervals, algo, parameters)
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
+# ========================================================
+# Utility functions for the display of the tables showing
+# the results of the enrichment analysis
+# ========================================================
 def display_in_sci_notation(number):
     return '{:.6e}'.format(number)
 
@@ -121,6 +125,41 @@ def get_genes_from_kegg_link(link):
     query = link[idx:].split('+')
 
     return '\n'.join(query[1:])
+
+
+def get_genes_in_module(module_idx, algo, parameters):
+    with open(f'{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
+        for idx, module in enumerate(f):
+            if idx + 1 == int(module_idx):
+                return set(module.split('\t'))
+
+
+def get_genes_in_pathway(pathway_id):
+    with open(const.KEGG_DOSA_GENESET, 'rb') as f:
+        genes_in_pathway = pickle.load(f)
+
+    return genes_in_pathway[pathway_id]
+
+
+def get_genes_in_module_and_pathway(pathway_id, module_idx, algo, parameters):
+    return '\n'.join(list(get_genes_in_pathway(pathway_id).intersection(get_genes_in_module(module_idx, algo, parameters))))
+
+
+def get_kegg_pathway_name(pathway_id):
+    with open(const.KEGG_DOSA_PATHWAY_NAMES) as pathways:
+        for line in pathways:
+            line = line.split('\t')
+            if line[0].rstrip() == pathway_id:
+                return line[1].strip()
+
+
+def remove_rap_db_info_in_pathway_name(pathway_name):
+    return pathway_name[:-len(' - Oryza sativa japonica (Japanese rice) (RAPDB)')]
+
+# ================================================
+# Functions for the display of the tables showing
+# the results of the enrichment analysis
+# ================================================
 
 
 def convert_to_df_go(result):
@@ -178,8 +217,8 @@ def convert_to_df_ora(result):
     if result.empty:
         return create_empty_df(cols)
 
-    result['KEGG Pathway'] = result['KEGG Pathway'].str[:-
-                                                        len(' - Oryza sativa japonica (Japanese rice) (RAPDB)')]
+    result['KEGG Pathway'] = result['KEGG Pathway'].apply(
+        remove_rap_db_info_in_pathway_name)
 
     result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
         result['ID'] + '+' + result['Genes'].str.split(
@@ -195,8 +234,8 @@ def convert_to_df_ora(result):
     return result[cols].dropna()
 
 
-def convert_to_df_pe(result):
-    cols = ['ID', 'Name', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
+def convert_to_df_pe(result, module_idx, algo, parameters):
+    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
             'Adj. ORA p-value (Benjamini-Hochberg)', 'Adj. Perturbation p-value (Benjamini-Hochberg)',
             'Adj. Combined p-value (Benjamini-Hochberg)', 'Genes', 'View on KEGG']
 
@@ -206,9 +245,17 @@ def convert_to_df_pe(result):
     # Prettify display of ID
     result['ID'] = result['ID'].str[len('path:'):]
 
-    result['Name'] = 'Hello'
-    result['Genes'] = 'Hello'
-    result['View on KEGG'] = 'Hello'
+    result['KEGG Pathway'] = result['ID'].apply(get_kegg_pathway_name).apply(
+        remove_rap_db_info_in_pathway_name)
+
+    result['Genes'] = result.apply(lambda x: get_genes_in_module_and_pathway(
+        x['ID'], module_idx, algo, parameters), axis=1)
+
+    result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split(
+            '\n').str.join('+') + '" target = "_blank">Link</a>'
+
+    result['Genes'] = result['Genes'].apply(convert_transcript_to_msu_id)
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -217,7 +264,7 @@ def convert_to_df_pe(result):
 
 
 def convert_to_df_spia(result):
-    cols = ['ID', 'Name', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
+    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
             'Adj. Combined p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'Genes',
             'View on KEGG']
 
@@ -314,12 +361,12 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             result = pd.DataFrame()
             empty = True
 
-        return convert_to_df_pe(result), empty
+        return convert_to_df_pe(result, module_idx, algo, parameters), empty
 
     elif enrichment_type == 'spia':
         try:
             result = pd.read_csv(file, delimiter='\t',
-                                 names=['Name',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
+                                 names=['KEGG Pathway',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
                                         'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value (Benjamini-Hochberg)',
                                         'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG'],
                                  skiprows=1,
