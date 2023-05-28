@@ -241,9 +241,10 @@ This recipe generates additional files needed for the user-facing display of the
 ```
 Rscript enrichment_analysis/util/get-genes-in-pathway.r -o ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset
 python enrichment_analysis/util/get-genes-in-pathway-dict.py ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset/kegg-dosa-geneset.tsv ../../../static/app_data/enrichment_analysis/mapping
+wget -O ../../../static/app_data/enrichment_analysis/mapping/kegg-dosa-pathway-names.tsv https://rest.kegg.jp/list/pathway/dosa
 ```
 
-Output: `kegg_dosa_geneset.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
+Output: `kegg-dosa-geneset.pickle` and `kega-dosa-pathway-names.txt` in `../../../static/app_data/enrichment_analysis/mapping`
 
 
 #### c. Topology-Based Analysis via SPIA
