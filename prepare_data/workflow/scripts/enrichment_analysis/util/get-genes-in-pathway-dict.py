@@ -24,11 +24,11 @@ def save_pathway_dict(pathway_dict, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open(f'{output_dir}/kegg_dosa_geneset.pickle', 'wb') as handle:
+    with open(f'{output_dir}/kegg-dosa-geneset.pickle', 'wb') as handle:
         pickle.dump(pathway_dict, handle,
                     protocol=pickle.HIGHEST_PROTOCOL)
 
-    print(f'Generated {output_dir}/kegg_dosa_geneset.pickle')
+    print(f'Generated {output_dir}/kegg-dosa-geneset.pickle')
 
 
 if __name__ == '__main__':
