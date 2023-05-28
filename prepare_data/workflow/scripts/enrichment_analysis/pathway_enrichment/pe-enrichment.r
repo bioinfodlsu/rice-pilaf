@@ -46,7 +46,7 @@ if (!dir.exists(paste0(opt$output_dir, "/results"))) {
     dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
 }
 
-kegg_df <- head(summary(pe_results))
+kegg_df <- summary(pe_results)
 write.table(kegg_df, paste0(opt$output_dir, "/results/pe-df-", opt$module_index, ".tsv"),
     sep = "\t", row.names = TRUE, quote = FALSE
 )
