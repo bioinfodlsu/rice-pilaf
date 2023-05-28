@@ -195,6 +195,27 @@ def convert_to_df_ora(result):
     return result[cols].dropna()
 
 
+def convert_to_df_pe(result):
+    cols = ['ID', 'Name', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
+            'Adj. ORA p-value (Benjamini-Hochberg)', 'Adj. Perturbation p-value (Benjamini-Hochberg)',
+            'Adj. Combined p-value (Benjamini-Hochberg)', 'Genes', 'View on KEGG']
+
+    if result.empty:
+        return create_empty_df(cols)
+
+    # Prettify display of ID
+    result['ID'] = result['ID'].str[len('path:'):]
+
+    result['Name'] = 'Hello'
+    result['Genes'] = 'Hello'
+    result['View on KEGG'] = 'Hello'
+
+    display_cols_in_sci_notation(
+        result, [col for col in cols if 'p-value' in col])
+
+    return result[cols].dropna()
+
+
 def convert_to_df_spia(result):
     cols = ['ID', 'Name', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
             'Adj. Combined p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'Genes',
@@ -204,7 +225,7 @@ def convert_to_df_spia(result):
         return create_empty_df(cols)
 
     # Prettify display of ID
-    result['ID'] = 'dosa' + result['ID_temp']
+    result['ID'] = 'dosa' + result['ID']
     result['Total Acc. Perturbation'] = result['tA']
 
     # Prettify display of genes and convert to MSU accessions
@@ -280,14 +301,29 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
 
         return convert_to_df_ora(result), empty
 
+    elif enrichment_type == 'pe':
+        try:
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=['ID', 'totalAcc', 'totalPert', 'totalAccNorm', 'totalPertNorm',
+                                        'Perturbation p-value',	'pAcc',	'ORA p-value', 'Combined p-value',
+                                        'Adj. Perturbation p-value (Benjamini-Hochberg)', 'Adj. Accumulation p-value (Benjamini-Hochberg)',
+                                        'Adj. ORA p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Benjamini-Hochberg)'],
+                                 skiprows=1)
+            empty = result.empty
+        except:
+            result = pd.DataFrame()
+            empty = True
+
+        return convert_to_df_pe(result), empty
+
     elif enrichment_type == 'spia':
         try:
             result = pd.read_csv(file, delimiter='\t',
-                                 names=['Name',	'ID_temp', 'pSize', 'NDE', 'ORA p-value', 'tA',
+                                 names=['Name',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
                                         'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value (Benjamini-Hochberg)',
                                         'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG'],
                                  skiprows=1,
-                                 dtype={'ID_temp': object})      # Preserve leading 0 in KEGG pathway ID
+                                 dtype={'ID': object})      # Preserve leading 0 in KEGG pathway ID
             empty = result.empty
         except:
             result = pd.DataFrame()
