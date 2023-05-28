@@ -234,6 +234,16 @@ Rscript --vanilla enrichment_analysis/pathway_enrichment/pe-enrichment.r -g ../.
 
 Output: Results table in `../../../static/app_data/enrichment_analysis/output/pathway_enrichment/pe`
 
+This recipe generates additional files needed for the user-facing display of the results on the app:
+
+```
+Rscript enrichment_analysis/util/get-genes-in-pathway.r -o ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset
+python enrichment_analysis/util/get-genes-in-pathway-dict.py ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset/kegg-dosa-geneset.tsv ../../../static/app_data/enrichment_analysis/mapping
+```
+
+Output: `kegg_dosa_geneset.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
+
+
 #### c. Topology-Based Analysis via SPIA
 
 Paper: https://academic.oup.com/bioinformatics/article/25/1/75/302846
