@@ -112,18 +112,18 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    """
     @app.callback(
-        Output('lift-over-active-tab', 'data'),
-        Output('lift-over-active-filter', 'data'),
+        Output('lift-over-active-tab', 'data', allow_duplicate=True),
+        Output('lift-over-active-filter', 'data', allow_duplicate=True),
 
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data')
+        State('lift-over-is-resetted', 'data'),
+        prevent_initial_call=True,
     )
-    def get_active_filter(active_tab, filter_rice_variants, is_submitted, is_resetted):
+    def get_active_tab_and_filter(active_tab, filter_rice_variants, is_submitted, is_resetted):
         if is_resetted:
             return None, None
 
@@ -131,7 +131,6 @@ def init_callback(app):
             return active_tab, filter_rice_variants
 
         raise PreventUpdate
-    """
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),

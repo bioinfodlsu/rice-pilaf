@@ -147,6 +147,11 @@ app.layout = dbc.Container(
             id='igv-selected-genomic-intervals-saved-input',
             storage_type='session'
         ),
+
+        dcc.Store(
+            id='igv-active-filter',
+            storage_type='session'
+        )
     ],
     fluid=True
 
