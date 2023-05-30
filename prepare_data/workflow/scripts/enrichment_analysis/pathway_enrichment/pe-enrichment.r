@@ -61,4 +61,3 @@ if (nrow(kegg_df) > 0) {
 } else {
     print(paste0("No KEGG pathways enriched for module #", opt$module_index))
 }
-
