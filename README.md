@@ -15,17 +15,19 @@ A demo version can be seen [here](http://165.22.55.49/).
 
 ## Running the App Locally
 
-**[Optional]** Build the Docker image by running the following command (note that this takes around 30 minutes):
-```
-docker build -t rice-pilaf .
-```
+1. **[Optional]** Build the Docker image by running the following command (note that this takes around 30 minutes):
+   ```
+   docker build -t rice-pilaf .
+   ```
+   
+   Note that building the image may take up to 30 minutes in a machine with a 32 GB RAM and 8-core CPU @ 2.30 GHz. The image has size 2.32 GB.
 
-Spin up a container from the Docker image by running the following command:
-```
-docker run -v path/to/static/in/local:/app/static -p 8050:8050 rice-pilaf
-```
+2. Spin up a container from the Docker image by running the following command:
+   ```
+   docker run -v path/to/static/in/local:/app/static -p 8050:8050 rice-pilaf
+   ```
 
-Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path.
+   Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path.
 
 ## Contact
 If you have issues, concerns, questions, please contact: Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph)
