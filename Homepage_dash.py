@@ -36,14 +36,13 @@ sidebar = dbc.Nav(
             ],
             href=page["path"],
             active="exact",
-            # disabled=True,
-            # id='homepage-dash-navlink'
         )
         for page in dash.page_registry.values()
     ],
     vertical=True,
     pills=True,
     className="bg-light",
+    id='homepage-dash-nav'
 )
 
 app.layout = dbc.Container(

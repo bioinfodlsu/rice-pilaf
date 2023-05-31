@@ -33,7 +33,7 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def parse_input(n_clicks, reset_n_clicks, nb_intervals_str, other_refs, is_submitted):
-        if is_submitted and 'lift-over-reset' == ctx.triggered_id:
+        if 'lift-over-reset' == ctx.triggered_id:
             return None, {'display': 'none'}, False, '', '', True, None, None, None, None
 
         if n_clicks >= 1:
@@ -61,14 +61,13 @@ def init_callback(app):
                     True, nb_intervals_str, other_refs, False, None, None, None, None
 
         raise PreventUpdate
-    """
+
     @app.callback(
-        Output('homepage-dash-navlink', 'disabled'),
+        Output('homepage-dash-nav', 'style'),
         Input('lift-over-is-submitted', 'data'),
     )
-    def disable_side_bars(is_submitted):
+    def hide_side_bars(is_submitted):
         if is_submitted:
-            return True
+            return {'display': 'block'}
         else:
-            return False
-    """
+            return {'display': 'none'}
