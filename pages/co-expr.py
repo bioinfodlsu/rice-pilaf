@@ -101,6 +101,15 @@ layout = html.Div(
                     'style': {
                         'width': '1px',
                     }
+                },
+                {
+                    'selector': '.red',
+                    'style': {
+                        'background-color': 'red',
+                        'line-color': 'red',
+                        'height': '20px',
+                        'width': '20px'
+                    }
                 }
             ]
         )

@@ -23,10 +23,10 @@ def init_callback(app):
         Input('coexpression-parameter-slider', 'value'),
         State('lift-over-is-submitted', 'data')
     )
-    def perform_module_enrichment(gene_ids, genomic_intervals, algo, parameters, is_submitted):
+    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted):
         if is_submitted:
             enriched_modules = do_module_enrichment_analysis(
-                gene_ids, genomic_intervals, algo, parameters)
+                implicated_gene_ids, genomic_intervals, algo, parameters)
 
             first_module = 'No enriched modules found'
             if enriched_modules:
@@ -60,9 +60,10 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'style'),
+        Input('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value')
     )
-    def display_module_graph(module, algo, parameters):
-        return load_module_graph(module, algo, parameters)
+    def display_module_graph(implicated_gene_ids, module, algo, parameters):
+        return load_module_graph(implicated_gene_ids, module, algo, parameters)
