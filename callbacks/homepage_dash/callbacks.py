@@ -61,6 +61,21 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('lift-over-genomic-intervals', 'value'),
+        Output('lift-over-other-refs', 'value'),
+        Input('lift-over-reset', 'n_clicks'),
+        State('lift-over-other-refs', 'multi')
+    )
+    def clear_input_fields(reset_n_clicks, is_multi_other_refs):
+        if reset_n_clicks >= 1:
+            if is_multi_other_refs:
+                return None, []
+            else:
+                return None, None
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('homepage-dash-nav', 'style'),
         Output('lift-over-reset', 'href'),
         Input('lift-over-is-submitted', 'data'),
