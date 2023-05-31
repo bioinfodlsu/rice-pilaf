@@ -38,9 +38,6 @@ def init_callback(app):
     )
     def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, active_filter, is_multi_other_refs):
         if is_submitted:
-            # nb_intervals_str = get_user_genomic_intervals_str_input(
-            #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
-
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = ['Summary', 'Nb']
 
@@ -139,9 +136,6 @@ def init_callback(app):
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
         if is_submitted:
-            # nb_intervals_str = get_user_genomic_intervals_str_input(
-            #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
-
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
