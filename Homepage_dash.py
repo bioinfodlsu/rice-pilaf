@@ -145,6 +145,16 @@ app.layout = dbc.Container(
         dcc.Store(
             id='igv-active-filter',
             storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-clustering-algo-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-parameter-slider-saved-input',
+            storage_type='session'
         )
     ],
     fluid=True

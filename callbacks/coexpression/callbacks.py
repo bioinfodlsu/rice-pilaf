@@ -8,9 +8,13 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
-        Input('coexpression-clustering-algo', 'value')
+        Input('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider-saved-input', 'data')
     )
-    def set_parameter_slider(algo):
+    def set_parameter_slider(algo, parameter):
+        if parameter and algo in parameter:
+            return parameter[algo][0], parameter[algo][1]
+
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
     @app.callback(
@@ -67,6 +71,43 @@ def init_callback(app):
     )
     def display_module_graph(implicated_gene_ids, module, algo, parameters):
         return load_module_graph(implicated_gene_ids, module, algo, parameters)
+
+    @app.callback(
+        Output('coexpression-clustering-algo-saved-input',
+               'data', allow_duplicate=True),
+        Output('coexpression-parameter-slider-saved-input',
+               'data', allow_duplicate=True),
+        Input('coexpression-clustering-algo', 'value'),
+        Input('coexpression-parameter-slider', 'value'),
+        State('coexpression-parameter-slider', 'marks'),
+        State('lift-over-is-submitted', 'data'),
+        State('coexpression-parameter-slider-saved-input', 'data'),
+        prevent_initial_call=True
+    )
+    def set_coexpression_session_state(algo, parameter_value, parameter_mark, is_submitted, parameter):
+        if is_submitted:
+            if parameter:
+                parameter[algo] = [parameter_mark, parameter_value]
+
+            else:
+                parameter = {algo: [parameter_mark, parameter_value]}
+
+            return algo, parameter
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-clustering-algo', 'value'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted', 'data'),
+        State('coexpression-clustering-algo-saved-input', 'data')
+    )
+    def get_coexpression_session_state(nb_intervals_str, is_submitted, algo):
+        if is_submitted:
+            if algo:
+                return algo
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-container', 'style'),
