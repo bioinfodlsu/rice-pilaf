@@ -113,11 +113,6 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
-            id='lift-over-is-resetted',
-            storage_type='session'
-        ),
-
-        dcc.Store(
             id='lift-over-active-tab',
             storage_type='session'
         ),

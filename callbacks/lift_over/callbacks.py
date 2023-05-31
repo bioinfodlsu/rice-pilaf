@@ -31,16 +31,12 @@ def init_callback(app):
         Input('lift-over-other-refs-saved-input', 'data'),
 
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
 
         State('lift-over-active-filter', 'data'),
 
         State('lift-over-other-refs', 'multi')
     )
-    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, is_resetted, active_filter, is_multi_other_refs):
-        if is_resetted:
-            return None, None, None, None, [], None
-
+    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, active_filter, is_multi_other_refs):
         if is_submitted:
             # nb_intervals_str = get_user_genomic_intervals_str_input(
             #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
@@ -120,13 +116,9 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
         prevent_initial_call=True,
     )
-    def get_active_tab_and_filter(active_tab, filter_rice_variants, is_submitted, is_resetted):
-        if is_resetted:
-            return None, None
-
+    def get_active_tab_and_filter(active_tab, filter_rice_variants, is_submitted):
         if is_submitted:
             return active_tab, filter_rice_variants
 
@@ -143,13 +135,9 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
-        State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data')
+        State('lift-over-is-submitted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted, is_resetted):
-        if is_resetted:
-            return None, None, {'display': 'none'}
-
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
         if is_submitted:
             # nb_intervals_str = get_user_genomic_intervals_str_input(
             #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
@@ -189,3 +177,13 @@ def init_callback(app):
                 return None, None, {'display': 'none'}
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('lift-over-container', 'style'),
+        Input('lift-over-is-submitted', 'data'),
+    )
+    def hide_lift_over_page(is_submitted):
+        if is_submitted:
+            return {'display': 'block'}
+        else:
+            return {'display': 'none'}

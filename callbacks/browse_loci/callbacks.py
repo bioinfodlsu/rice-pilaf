@@ -56,13 +56,9 @@ def init_callback(app):
         Output('igv-genomic-intervals', 'value'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
         State('igv-selected-genomic-intervals-saved-input', 'data')
     )
-    def display_selected_genomic_intervals(nb_intervals_str, is_submitted, is_resetted, selected_nb_interval):
-        if is_resetted:
-            return [], None
-
+    def display_selected_genomic_intervals(nb_intervals_str, is_submitted, selected_nb_interval):
         if is_submitted:
             igv_options = nb_intervals_str.split(';')
 
@@ -79,13 +75,9 @@ def init_callback(app):
         Output('igv-track-filter', 'value'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
         State('igv-active-filter', 'data')
     )
-    def display_igv_tracks_filter(nb_intervals_str, is_submitted, is_resetted, active_filter):
-        if is_resetted:
-            return None, [], ''
-
+    def display_igv_tracks_filter(nb_intervals_str, is_submitted, active_filter):
         if is_submitted:
             if not active_filter:
                 active_filter = ''
@@ -95,16 +87,12 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-container', 'children'),
+        Output('igv-display', 'children'),
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
-        State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
+        State('lift-over-is-submitted', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted, is_resetted):
-        if is_resetted:
-            return None
-
+    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted):
         if is_submitted:
             track_info = [
                 {
@@ -151,12 +139,19 @@ def init_callback(app):
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
+
         prevent_initial_call=True,
     )
-    def get_active_genomic_interval_and_filter(selected_nb_intervals_str, selected_tracks, is_submitted, is_resetted):
-        if is_resetted:
-            return None, None
-
+    def get_active_genomic_interval_and_filter(selected_nb_intervals_str, selected_tracks, is_submitted):
         if is_submitted:
             return selected_nb_intervals_str, selected_tracks
+
+    @app.callback(
+        Output('igv-container', 'style'),
+        Input('lift-over-is-submitted', 'data'),
+    )
+    def hide_browse_loci_page(is_submitted):
+        if is_submitted:
+            return {'display': 'block'}
+        else:
+            return {'display': 'none'}
