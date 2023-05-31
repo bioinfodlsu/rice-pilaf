@@ -142,7 +142,7 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def get_active_genomic_interval_and_filter(selected_nb_intervals_str, selected_tracks, is_submitted):
+    def set_igv_session_state(selected_nb_intervals_str, selected_tracks, is_submitted):
         if is_submitted:
             return selected_nb_intervals_str, selected_tracks
 

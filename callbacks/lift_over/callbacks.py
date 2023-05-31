@@ -103,7 +103,7 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data'),
         prevent_initial_call=True,
     )
-    def get_active_tab_and_filter(active_tab, filter_rice_variants, is_submitted):
+    def set_lift_over_session_state(active_tab, filter_rice_variants, is_submitted):
         if is_submitted:
             return active_tab, filter_rice_variants
 
