@@ -1,28 +1,37 @@
 #Input and output path
-input_data_dir: "../../data"
+input_data_dir: "../../static"
 processed_data_dir: "../../Azu_IR64_ARC_CHAO"
-
+tfbs_dir: "../../static/tfbs"
 #Data
 #compute whole-genome alignment vs. Nb, for the following genomes
 other_refs:
     ["Azu","IR64","ARC","CHAO"]
-#Links
-assembly_links:
-    Nb: https://riceome.hzau.edu.cn/download/Npb.fasta
-    ARC: https://riceome.hzau.edu.cn/download/117425.fasta
-    Azu: https://riceome.hzau.edu.cn/download/Azucena.fasta
-    CHAO: https://riceome.hzau.edu.cn/download/132278.fasta
-    IR64: https://riceome.hzau.edu.cn/download/IR64.fasta
-    LIU: https://riceome.hzau.edu.cn/download/125827.fasta
-    MH63: https://riceome.hzau.edu.cn/download/MH63RS3.fasta
-    N22: https://riceome.hzau.edu.cn/download/117534.fasta
-annotation_links:
-    Nb: https://riceome.hzau.edu.cn/download/IRGSPMSU.gff
-    ARC: https://riceome.hzau.edu.cn/download/117425.gff
-    Azu: https://riceome.hzau.edu.cn/download/Azucena.gff
-    CHAO: https://riceome.hzau.edu.cn/download/132278.gff
-    IR64: https://riceome.hzau.edu.cn/download/IR64.gff
-    LIU: https://riceome.hzau.edu.cn/download/125827.gff
-    MH63: https://riceome.hzau.edu.cn/download/MH63RS3.gff
-    N22: https://riceome.hzau.edu.cn/download/117534.gff
 threads: 1
+
+#Data URLs
+assembly_links:
+    Nb: "https://riceome.hzau.edu.cn/download/Npb.fasta"
+    ARC: "https://riceome.hzau.edu.cn/download/117425.fasta"
+    Azu: "https://riceome.hzau.edu.cn/download/Azucena.fasta"
+    CHAO: "https://riceome.hzau.edu.cn/download/132278.fasta"
+    IR64: "https://riceome.hzau.edu.cn/download/IR64.fasta"
+    LIU: "https://riceome.hzau.edu.cn/download/125827.fasta"
+    MH63: "https://riceome.hzau.edu.cn/download/MH63RS3.fasta"
+    N22: "https://riceome.hzau.edu.cn/download/117534.fasta"
+annotation_links:
+    Nb: "https://riceome.hzau.edu.cn/download/IRGSPMSU.gff"
+    ARC: "https://riceome.hzau.edu.cn/download/117425.gff"
+    Azu: "https://riceome.hzau.edu.cn/download/Azucena.gff"
+    CHAO: "https://riceome.hzau.edu.cn/download/132278.gff"
+    IR64: "https://riceome.hzau.edu.cn/download/IR64.gff"
+    LIU: "https://riceome.hzau.edu.cn/download/125827.gff"
+    MH63: "https://riceome.hzau.edu.cn/download/MH63RS3.gff"
+    N22: "https://riceome.hzau.edu.cn/download/117534.gff"
+tfbs_links:
+    tf_list: "http://planttfdb.gao-lab.org/download/TF_list/Osj_TF_list.txt.gz"
+    promoter_motif: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_inProm_Osj.gff"
+    promoter_motif_CE: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_CE_inProm_Osj.gff"
+    promoter_FunTBFS: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_FunTFBS_inProm_Osj.gff"
+    genome_motif: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_genome-wide_Osj.gff"
+    genome_motif_CE: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_CE_genome-wide_Osj.gff"
+    genome_FunTBFS: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_FunTFBS_genome-wide_Osj.gff"

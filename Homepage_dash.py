@@ -6,13 +6,15 @@ from dash import dcc, html
 import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 import callbacks.coexpression.callbacks
+import callbacks.tf_enrich.callbacks
 import callbacks.homepage_dash.callbacks
 
 from flask import Flask
 
 server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP],
+                external_stylesheets=[dbc.themes.BOOTSTRAP,
+                                      dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server)
 
 welcome = dcc.Markdown(
@@ -34,21 +36,20 @@ sidebar = dbc.Nav(
             ],
             href=page["path"],
             active="exact",
-            # disabled=True,
-            # id='homepage-dash-navlink'
         )
         for page in dash.page_registry.values()
     ],
     vertical=True,
     pills=True,
     className="bg-light",
+    id='homepage-dash-nav'
 )
 
 app.layout = dbc.Container(
     [
         dbc.Row(
             [
-                dbc.Col(html.Div("Rice-Pilaf",
+                dbc.Col(html.Div("rice-pilaf",
                                  style={'fontSize': 50, 'textAlign': 'center'})),
                 welcome
             ]
@@ -85,7 +86,7 @@ app.layout = dbc.Container(
 
         html.Div(children=[dbc.Button('Submit', id='lift-over-submit',
                                       n_clicks=0),
-                           dbc.Button('Reset All Display',
+                           dbc.Button('Clear All Display',
                                       color='danger',
                                       outline=True,
                                       id='lift-over-reset',
@@ -134,6 +135,26 @@ app.layout = dbc.Container(
         dcc.Store(
             id='lift-over-nb-table',
             storage_type='session'
+        ),
+
+        dcc.Store(
+            id='igv-selected-genomic-intervals-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='igv-active-filter',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-clustering-algo-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-parameter-slider-saved-input',
+            storage_type='session'
         )
     ],
     fluid=True
@@ -143,7 +164,8 @@ app.layout = dbc.Container(
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.browse_loci.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
+callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.homepage_dash.callbacks.init_callback(app)
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host="0.0.0.0", port="8050", debug=True)

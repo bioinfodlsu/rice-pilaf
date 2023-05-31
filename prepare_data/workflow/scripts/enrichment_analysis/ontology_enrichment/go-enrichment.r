@@ -1,9 +1,7 @@
-library(clusterProfiler)
-library(data.table)
 library(ggplot2)
 library(optparse)
-library(tidyverse)
 library(GO.db)
+library(clusterProfiler)
 
 option_list <- list(
     make_option(c("-g", "--modules"),
@@ -31,18 +29,9 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-modules <- readLines(opt$modules)
-modules <- str_split(modules, "\t")
-
-genes <- unlist(modules[opt$module_index])
-
-background <- readLines(opt$background_genes)
-background <- str_split(background, "\t")
-background <- unlist(background)
-
 go <- enricher(
-    gene = genes,
-    universe = background,
+    gene = unlist(strsplit(readLines(opt$modules), "\t")[opt$module_index]),
+    universe = unlist(strsplit(readLines(opt$background_genes), "\t")),
     TERM2GENE = read.table(opt$go_to_gene_mapping, sep = "\t", stringsAsFactors = FALSE),
     TERM2NAME = data.frame("GOID" = names(Term(GOTERM)), "term" = Term(GOTERM))
 )

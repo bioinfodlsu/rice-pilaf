@@ -121,11 +121,14 @@ This recipe maps the MSU accessions used in the app to the target IDs required b
 ```
 Rscript --vanilla enrichment_analysis/util/ricegeneid-msu-to-transcript-id.r -g ../../../static/app_data/networks_display/OS-CX/all-genes.txt -o ../../../static/raw_data/enrichment_analysis/temp
 python enrichment_analysis/util/msu-to-transcript-id.py ../../../static/raw_data/enrichment_analysis/temp/all-transcript-id.txt ../../../static/raw_data/enrichment_analysis/temp/all-na-transcript-id.txt ../../../static/raw_data/enrichment_analysis/rap_db/RAP-MSU_2023-03-15.txt ../../../static/raw_data/enrichment_analysis/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
+python enrichment_analysis/util/transcript-to-msu-id.py ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/mapping
 python enrichment_analysis/util/file-convert-msu.py ../../../static/app_data/networks_display/OS-CX/all-genes.txt ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/all_genes transcript --skip_no_matches
-python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/modules/clusterone transcript
+python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/modules/clusterone transcript
 ```
 
-Output: TSV files containing Entrez and KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/raw_data/enrichment_analysis/modules/clusterone`
+Output: 
+- TSV files containing Entrez and KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/raw_data/enrichment_analysis/modules/clusterone`
+- `transcript-to-msu-id.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
 
 This recipe prepares the data needed for gene ontology enrichment analysis:
 
@@ -232,6 +235,17 @@ Rscript --vanilla enrichment_analysis/pathway_enrichment/pe-enrichment.r -g ../.
 ```
 
 Output: Results table in `../../../static/app_data/enrichment_analysis/output/pathway_enrichment/pe`
+
+This recipe generates additional files needed for the user-facing display of the results on the app:
+
+```
+Rscript enrichment_analysis/util/get-genes-in-pathway.r -o ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset
+python enrichment_analysis/util/get-genes-in-pathway-dict.py ../../../static/raw_data/enrichment_analysis/kegg_dosa/geneset/kegg-dosa-geneset.tsv ../../../static/app_data/enrichment_analysis/mapping
+wget -O ../../../static/app_data/enrichment_analysis/mapping/kegg-dosa-pathway-names.tsv https://rest.kegg.jp/list/pathway/dosa
+```
+
+Output: `kegg-dosa-geneset.pickle` and `kega-dosa-pathway-names.tsv` in `../../../static/app_data/enrichment_analysis/mapping`
+
 
 #### c. Topology-Based Analysis via SPIA
 
