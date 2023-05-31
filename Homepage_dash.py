@@ -86,7 +86,7 @@ app.layout = dbc.Container(
 
         html.Div(children=[dbc.Button('Submit', id='lift-over-submit',
                                       n_clicks=0),
-                           dbc.Button('Reset All Display',
+                           dbc.Button('Clear All Display',
                                       color='danger',
                                       outline=True,
                                       id='lift-over-reset',
