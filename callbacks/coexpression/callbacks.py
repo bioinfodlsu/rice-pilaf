@@ -116,10 +116,12 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data'),
         State('coexpression-clustering-algo-saved-input', 'data')
     )
-    def get_coexpression_session_state(nb_intervals_str, is_submitted, algo):
+    def display_selected_clustering_algo(nb_intervals_str, is_submitted, algo):
         if is_submitted:
-            if algo:
-                return algo
+            if not algo:
+                return 'clusterone'
+
+            return algo
 
         raise PreventUpdate
 
