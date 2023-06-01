@@ -3,6 +3,9 @@ from dash.exceptions import PreventUpdate
 from collections import namedtuple
 from .util import *
 
+Parameter_module = namedtuple('Parameter_module', [
+                              'param_slider_marks', 'param_slider_value', 'param_module'])
+
 
 def init_callback(app):
     @app.callback(
@@ -13,7 +16,7 @@ def init_callback(app):
     )
     def set_parameter_slider(algo, parameter_module):
         if parameter_module and algo in parameter_module:
-            return parameter_module[algo][0], parameter_module[algo][1]
+            return parameter_module[algo]['param_slider_marks'], parameter_module[algo]['param_slider_value']
 
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
@@ -36,8 +39,8 @@ def init_callback(app):
             first_module = 'No enriched modules found'
 
             if parameter_module and algo in parameter_module:
-                if parameter_module[algo][2]:
-                    first_module = parameter_module[algo][2]
+                if parameter_module[algo]['param_module']:
+                    first_module = parameter_module[algo]['param_module']
 
             else:
                 if enriched_modules:
@@ -94,8 +97,8 @@ def init_callback(app):
     )
     def set_coexpression_session_state(algo, parameter_value, module, parameter_mark, is_submitted, parameter_module):
         if is_submitted:
-            paramater_module_value = [
-                parameter_mark, parameter_value, module]
+            paramater_module_value = Parameter_module(
+                parameter_mark, parameter_value, module)._asdict()
 
             if parameter_module:
                 parameter_module[algo] = paramater_module_value
