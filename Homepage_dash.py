@@ -30,6 +30,11 @@ welcome = dcc.Markdown(
 other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
+
+# ===================
+# Top Navigation Bar
+# ===================
+
 navbar = dbc.NavbarSimple(
     children=[
         dbc.NavItem(dbc.NavLink('Home', href='/', active='exact')),
@@ -44,6 +49,11 @@ navbar = dbc.NavbarSimple(
     color='#4d987d',
     dark=True
 )
+
+
+# ====================
+# Side Navigation Bar
+# ====================
 
 sidebar = dbc.Nav(
     [
@@ -62,56 +72,68 @@ sidebar = dbc.Nav(
     id='homepage-dash-nav'
 )
 
+
+# ======
+# Input
+# ======
+
+submit_clear_buttons = [dbc.Button('Submit',
+                                   id='lift-over-submit',
+                                   n_clicks=0,
+                                   className='home-button'),
+                        dbc.Button('Clear All Display',
+                                   color='danger',
+                                   outline=True,
+                                   id='lift-over-reset',
+                                   n_clicks=0,
+                                   className='home-button')]
+
+genome_ref_input = dbc.Col([
+    html.H5('Genomic interval(s) from GWAS'),
+    dbc.Alert(
+        id='input-error',
+        children='',
+        color='danger',
+        style={'display': 'none'}
+    ),
+    dbc.Input(
+        id='lift-over-genomic-intervals',
+        type='text',
+        value=genomic_interval,
+        persistence=True,
+        persistence_type='memory'
+    ),
+
+    html.Br(),
+
+    dbc.Label(
+        'Select a genome to search for homologous regions'),
+    dcc.Dropdown(
+        other_ref_genomes,
+        id='lift-over-other-refs',
+        multi=False,
+        persistence=True,
+        persistence_type='memory',
+        className='dash-bootstrap'
+    ),
+
+    html.Br(),
+
+    html.Div(submit_clear_buttons)
+])
+
+
+# ============
+# Main Layout
+# ============
+
 app.layout = dbc.Container(
     [
         dbc.Row(navbar),
         html.Br(),
 
         dbc.Row(
-            dbc.Col([
-                html.H5('Genomic interval(s) from GWAS'),
-                dbc.Alert(
-                    id='input-error',
-                    children='',
-                    color='danger',
-                    style={'display': 'none'}
-                ),
-                dbc.Input(
-                    id='lift-over-genomic-intervals',
-                    type='text',
-                    value=genomic_interval,
-                    persistence=True,
-                    persistence_type='memory'
-                ),
-
-                html.Br(),
-
-                dbc.Label(
-                    'Select a genome to search for homologous regions'),
-                dcc.Dropdown(
-                    other_ref_genomes,
-                    id='lift-over-other-refs',
-                    multi=False,
-                    persistence=True,
-                    persistence_type='memory',
-                    className='dash-bootstrap'
-                ),
-
-                html.Br(),
-
-                html.Div(
-                    [dbc.Button('Submit',
-                                id='lift-over-submit',
-                                n_clicks=0,
-                                className='home-button'),
-                     dbc.Button('Clear All Display',
-                                color='danger',
-                                outline=True,
-                                id='lift-over-reset',
-                                n_clicks=0,
-                                className='home-button')]
-                ),
-            ]),
+            genome_ref_input,
             className='px-5'
         ),
 
