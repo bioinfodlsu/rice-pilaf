@@ -20,11 +20,11 @@ app = dash.Dash(__name__, use_pages=True,
                 update_title='Loading...')
 
 welcome = dcc.Markdown(
-    """
+    '''
     Welcome ! Rice Pilaf is short for Rice Post-GWAS Dashboard.
     Ok, we are not good at abbreviations, but like a good pilaf, this dashboard combines many ingredients.
     With this tool, you can do amazing things like ... (write me)
-    """
+    '''
 )
 
 other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
@@ -59,16 +59,16 @@ sidebar = dbc.Nav(
     [
         dbc.NavLink(
             [
-                html.Div(page["name"], className="ms-2"),
+                html.Div(page['name'], className='ms-2'),
             ],
-            href=page["path"],
-            active="exact",
+            href=page['path'],
+            active='exact',
         )
         for page in dash.page_registry.values()
     ],
     vertical=True,
     pills=True,
-    className="bg-light",
+    className='bg-light',
     id='homepage-dash-nav'
 )
 
@@ -89,7 +89,7 @@ submit_clear_buttons = [dbc.Button('Submit',
                                    className='home-button')]
 
 genome_ref_input = dbc.Col([
-    html.H5('Genomic interval(s) from GWAS'),
+    html.H5('Genomic interval(s) from GWAS', id='genomic-interval-hdr'),
     dbc.Alert(
         id='input-error',
         children='',
@@ -138,14 +138,16 @@ app.layout = dbc.Container(
         ),
 
         html.Br(),
-
-        html.Hr(),
+        html.Hr(className='mx-5'),
+        html.Br(),
 
         dbc.Row([
-            dbc.Col([sidebar], xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-            dbc.Col([dash.page_container], xs=8,
-                    sm=8, md=10, lg=10, xl=10, xxl=10)
-        ], className='p-3'),
+            dbc.Col([html.H5('Post-GWAS Analysis', id='post-gwas-hdr'),
+                     sidebar],
+                    xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+            dbc.Col([dash.page_container],
+                    xs=8, sm=8, md=10, lg=10, xl=10, xxl=10)
+        ], className='px-5'),
 
         # Session storage
         dcc.Store(
@@ -208,4 +210,4 @@ callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.homepage_dash.callbacks.init_callback(app)
 
 if __name__ == '__main__':
-    app.run_server(host="0.0.0.0", port="8050", debug=True)
+    app.run_server(host='0.0.0.0', port='8050', debug=True)

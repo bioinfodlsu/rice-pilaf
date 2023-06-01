@@ -33,3 +33,20 @@ html, body {
 .home-button {
     width: 11em;
 }
+
+.nav-link{
+    color: var(--bs-body-color) !important;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff !important;
+    background-color: var(--green);
+}
+
+#post-gwas-hdr {
+    margin-bottom: 1em;
+}
+
+#genomic-interval-hdr {
+    margin-bottom: 0.6em;
+}
