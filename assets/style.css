@@ -13,7 +13,7 @@ html, body {
 }
 
 #lift-over-reset {
-    margin-left: 1em;
+    margin-left: 2em;
 }
 
 #lift-over-submit {
@@ -26,7 +26,7 @@ html, body {
     border-color: var(--green-hover);
 }
 
-#navbar {
+#top-navbar {
     background-color: var(--green) !important;
 }
 
@@ -43,10 +43,22 @@ html, body {
     background-color: var(--green);
 }
 
+.top-navbar-item {
+    color: var(--bs-nav-link-color) !important;
+}
+
+.top-navbar-item.active {
+    color: white !important;
+}
+
 #post-gwas-hdr {
     margin-bottom: 1em;
 }
 
 #genomic-interval-hdr {
     margin-bottom: 0.6em;
+}
+
+#page {
+    padding-left: 3em;
 }

@@ -37,13 +37,14 @@ genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink('Home', href='/', active='exact')),
+        dbc.NavItem(dbc.NavLink('Home', href='/', active='exact',
+                    className='top-navbar-item')),
         dbc.NavItem(dbc.NavLink(
-                    'About', href='/about', active='exact')),
+                    'About', href='/about', active='exact', className='top-navbar-item')),
         dbc.NavItem(dbc.NavLink(
-                    'People', href='/people', active='exact'))
+                    'People', href='/people', active='exact', className='top-navbar-item'))
     ],
-    id='navbar',
+    id='top-navbar',
     brand=['Rice Pilaf'],
     brand_href='/',
     color='#4d987d',
@@ -146,7 +147,8 @@ app.layout = dbc.Container(
                      sidebar],
                     xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
             dbc.Col([dash.page_container],
-                    xs=8, sm=8, md=10, lg=10, xl=10, xxl=10)
+                    xs=8, sm=8, md=10, lg=10, xl=10, xxl=10,
+                    id='page')
         ], className='px-5'),
 
         # Session storage
