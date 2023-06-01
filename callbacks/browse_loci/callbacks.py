@@ -79,11 +79,13 @@ def init_callback(app):
     )
     def display_igv_tracks_filter(nb_intervals_str, is_submitted, active_filter):
         if is_submitted:
+            tracks = ['MSU V7 genes', 'chromatin open']
+
             if not active_filter:
-                active_filter = ''
+                active_filter = tracks[0]
 
             return 'Use the checkbox below to filter tracks you want to see:', \
-                ['MSU V7 genes', 'chromatin open'], active_filter
+                tracks, active_filter
         raise PreventUpdate
 
     @app.callback(
