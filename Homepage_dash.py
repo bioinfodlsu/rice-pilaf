@@ -15,7 +15,9 @@ server = Flask(__name__, static_folder='static')
 app = dash.Dash(__name__, use_pages=True,
                 external_stylesheets=[dbc.themes.BOOTSTRAP,
                                       dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
-                server=server)
+                server=server,
+                title='Rice Pilaf',
+                update_title='Loading...')
 
 welcome = dcc.Markdown(
     """
@@ -27,6 +29,21 @@ welcome = dcc.Markdown(
 
 other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
+
+navbar = dbc.NavbarSimple(
+    children=[
+        dbc.NavItem(dbc.NavLink('Home', href='/', active='exact')),
+        dbc.NavItem(dbc.NavLink(
+                    'About', href='/about', active='exact')),
+        dbc.NavItem(dbc.NavLink(
+                    'People', href='/people', active='exact'))
+    ],
+    id='navbar',
+    brand=['Rice Pilaf'],
+    brand_href='/',
+    color='#4d987d',
+    dark=True
+)
 
 sidebar = dbc.Nav(
     [
@@ -47,64 +64,64 @@ sidebar = dbc.Nav(
 
 app.layout = dbc.Container(
     [
+        dbc.Row(navbar),
+        html.Br(),
+
         dbc.Row(
-            [
-                dbc.Col(html.Div("rice-pilaf",
-                                 style={'fontSize': 50, 'textAlign': 'center'})),
-                welcome
-            ]
+            dbc.Col([
+                html.H5('Genomic interval(s) from GWAS'),
+                dbc.Alert(
+                    id='input-error',
+                    children='',
+                    color='danger',
+                    style={'display': 'none'}
+                ),
+                dbc.Input(
+                    id='lift-over-genomic-intervals',
+                    type='text',
+                    value=genomic_interval,
+                    persistence=True,
+                    persistence_type='memory'
+                ),
+
+                html.Br(),
+
+                dbc.Label(
+                    'Select a genome to search for homologous regions'),
+                dcc.Dropdown(
+                    other_ref_genomes,
+                    id='lift-over-other-refs',
+                    multi=False,
+                    persistence=True,
+                    persistence_type='memory',
+                    className='dash-bootstrap'
+                ),
+
+                html.Br(),
+
+                html.Div(
+                    [dbc.Button('Submit',
+                                id='lift-over-submit',
+                                n_clicks=0),
+                     dbc.Button('Clear All Display',
+                                color='danger',
+                                outline=True,
+                                id='lift-over-reset',
+                                n_clicks=0)]
+                ),
+            ]),
+            className='px-5'
         ),
-
-        dcc.Markdown('Provide genomic interval(s) from your GWAS:'),
-        dbc.Alert(
-            id='input-error',
-            children='',
-            color='danger',
-            style={'display': 'none'}
-        ),
-        dbc.Input(
-            id='lift-over-genomic-intervals',
-            type='text',
-            style={'width': '100%'},
-            value=genomic_interval,
-            persistence=True,
-            persistence_type='memory'
-        ),
-
-        html.Br(),
-
-        dcc.Markdown(
-            'Search homologous regions of the following genomes:'),
-        dcc.Dropdown(other_ref_genomes,
-                     id='lift-over-other-refs',
-                     multi=False,
-                     persistence=True,
-                     persistence_type='memory'
-                     ),
-
-        html.Br(),
-
-        html.Div(children=[dbc.Button('Submit', id='lift-over-submit',
-                                      n_clicks=0),
-                           dbc.Button('Clear All Display',
-                                      color='danger',
-                                      outline=True,
-                                      id='lift-over-reset',
-                                      n_clicks=0,
-                                      style={'margin-left': '1em'})]
-                 ),
 
         html.Br(),
 
         html.Hr(),
 
-        dbc.Row(
-            [
-                dbc.Col([sidebar], xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-                dbc.Col([dash.page_container], xs=8,
-                        sm=8, md=10, lg=10, xl=10, xxl=10)
-            ]
-        ),
+        dbc.Row([
+            dbc.Col([sidebar], xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+            dbc.Col([dash.page_container], xs=8,
+                    sm=8, md=10, lg=10, xl=10, xxl=10)
+        ], className='p-3'),
 
         # Session storage
         dcc.Store(
@@ -157,8 +174,7 @@ app.layout = dbc.Container(
             storage_type='session'
         )
     ],
-    fluid=True
-
+    fluid=True,
 )
 
 callbacks.lift_over.callbacks.init_callback(app)

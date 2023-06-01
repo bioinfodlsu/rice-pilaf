@@ -1,0 +1,31 @@
+:root {
+    --green: #247a5b;
+    --green-hover: #266e54;
+    --light-gray: #fdfdfd
+}
+  
+html, body {
+    background-color: var(--light-gray);
+}
+
+#logo {
+    height: 30px;
+}
+
+#lift-over-reset {
+    margin-left: 1em;
+}
+
+#lift-over-submit {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+#lift-over-submit:hover {
+    background-color: var(--green-hover);
+    border-color: var(--green-hover);
+}
+
+#navbar {
+    background-color: var(--green) !important;
+}
