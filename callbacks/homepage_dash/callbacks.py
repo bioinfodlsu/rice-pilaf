@@ -25,8 +25,7 @@ def init_callback(app):
 
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
-
-        Output('coexpression-parameter-slider-saved-input',
+        Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
 
         Input('lift-over-submit', 'n_clicks'),

@@ -153,7 +153,7 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
-            id='coexpression-parameter-slider-saved-input',
+            id='coexpression-parameter-module-saved-input',
             storage_type='session'
         )
     ],

@@ -1,6 +1,6 @@
 from dash import Input, Output, State
 from dash.exceptions import PreventUpdate
-
+from collections import namedtuple
 from .util import *
 
 
@@ -9,11 +9,11 @@ def init_callback(app):
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
         Input('coexpression-clustering-algo', 'value'),
-        State('coexpression-parameter-slider-saved-input', 'data')
+        State('coexpression-parameter-module-saved-input', 'data')
     )
-    def set_parameter_slider(algo, parameter):
-        if parameter and algo in parameter:
-            return parameter[algo][0], parameter[algo][1]
+    def set_parameter_slider(algo, parameter_module):
+        if parameter_module and algo in parameter_module:
+            return parameter_module[algo][0], parameter_module[algo][1]
 
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
@@ -25,16 +25,23 @@ def init_callback(app):
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+        State('coexpression-parameter-module-saved-input', 'data')
     )
-    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted):
+    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted, parameter_module):
         if is_submitted:
             enriched_modules = do_module_enrichment_analysis(
                 implicated_gene_ids, genomic_intervals, algo, parameters)
 
             first_module = 'No enriched modules found'
-            if enriched_modules:
-                first_module = enriched_modules[0]
+
+            if parameter_module and algo in parameter_module:
+                if parameter_module[algo][2]:
+                    first_module = parameter_module[algo][2]
+
+            else:
+                if enriched_modules:
+                    first_module = enriched_modules[0]
 
             return {'display': 'block'}, enriched_modules, first_module
 
@@ -75,24 +82,28 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
-        Output('coexpression-parameter-slider-saved-input',
+        Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
+        Input('coexpression-modules', 'value'),
         State('coexpression-parameter-slider', 'marks'),
         State('lift-over-is-submitted', 'data'),
-        State('coexpression-parameter-slider-saved-input', 'data'),
+        State('coexpression-parameter-module-saved-input', 'data'),
         prevent_initial_call=True
     )
-    def set_coexpression_session_state(algo, parameter_value, parameter_mark, is_submitted, parameter):
+    def set_coexpression_session_state(algo, parameter_value, module, parameter_mark, is_submitted, parameter_module):
         if is_submitted:
-            if parameter:
-                parameter[algo] = [parameter_mark, parameter_value]
+            paramater_module_value = [
+                parameter_mark, parameter_value, module]
+
+            if parameter_module:
+                parameter_module[algo] = paramater_module_value
 
             else:
-                parameter = {algo: [parameter_mark, parameter_value]}
+                parameter_module = {algo: paramater_module_value}
 
-            return algo, parameter
+            return algo, parameter_module
 
         raise PreventUpdate
 
