@@ -1,6 +1,6 @@
 :root {
     --green: #247a5b;
-    --green-hover: #266e54;
+    --green-hover: #106a49;
     --light-gray: #fdfdfd
 }
   
@@ -28,4 +28,8 @@ html, body {
 
 #navbar {
     background-color: var(--green) !important;
+}
+
+.home-button {
+    width: 11em;
 }

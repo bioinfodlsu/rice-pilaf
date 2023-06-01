@@ -102,12 +102,14 @@ app.layout = dbc.Container(
                 html.Div(
                     [dbc.Button('Submit',
                                 id='lift-over-submit',
-                                n_clicks=0),
+                                n_clicks=0,
+                                className='home-button'),
                      dbc.Button('Clear All Display',
                                 color='danger',
                                 outline=True,
                                 id='lift-over-reset',
-                                n_clicks=0)]
+                                n_clicks=0,
+                                className='home-button')]
                 ),
             ]),
             className='px-5'
