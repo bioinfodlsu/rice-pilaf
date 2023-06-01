@@ -142,14 +142,17 @@ app.layout = dbc.Container(
         html.Hr(className='mx-5'),
         html.Br(),
 
-        dbc.Row([
-            dbc.Col([html.H5('Post-GWAS Analysis', id='post-gwas-hdr'),
-                     sidebar],
+        html.Div(id='post-gwas-analysis-container', hidden=True, children=[
+            dbc.Row([
+                dbc.Col([html.H5('Post-GWAS Analysis', id='post-gwas-hdr'),
+                         sidebar],
                     xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-            dbc.Col([dash.page_container],
+                dbc.Col([dash.page_container],
                     xs=8, sm=8, md=10, lg=10, xl=10, xxl=10,
                     id='page')
-        ], className='px-5'),
+            ], className='px-5'),
+        ]
+        ),
 
         # Session storage
         dcc.Store(

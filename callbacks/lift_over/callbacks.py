@@ -159,13 +159,3 @@ def init_callback(app):
                 return None, None, {'display': 'none'}
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('lift-over-container', 'style'),
-        Input('lift-over-is-submitted', 'data'),
-    )
-    def hide_lift_over_page(is_submitted):
-        if is_submitted:
-            return {'display': 'block'}
-        else:
-            return {'display': 'none'}

@@ -86,12 +86,12 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-dash-nav', 'style'),
+        Output('post-gwas-analysis-container', 'hidden'),
         Output('lift-over-reset', 'href'),
         Input('lift-over-is-submitted', 'data'),
     )
     def hide_side_bars(is_submitted):
         if is_submitted:
-            return {'display': 'block'}, '/'
+            return False, '/'
         else:
-            return {'display': 'none'}, '/'
+            return True, '/'

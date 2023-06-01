@@ -124,13 +124,3 @@ def init_callback(app):
             return algo
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-container', 'style'),
-        Input('lift-over-is-submitted', 'data'),
-    )
-    def hide_coexpression_page(is_submitted):
-        if is_submitted:
-            return {'display': 'block'}
-        else:
-            return {'display': 'none'}

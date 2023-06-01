@@ -145,13 +145,3 @@ def init_callback(app):
     def set_igv_session_state(selected_nb_intervals_str, selected_tracks, is_submitted):
         if is_submitted:
             return selected_nb_intervals_str, selected_tracks
-
-    @app.callback(
-        Output('igv-container', 'style'),
-        Input('lift-over-is-submitted', 'data'),
-    )
-    def hide_browse_loci_page(is_submitted):
-        if is_submitted:
-            return {'display': 'block'}
-        else:
-            return {'display': 'none'}
