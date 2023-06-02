@@ -1,5 +1,6 @@
 from dash import Input, Output, State, html, ctx
 from dash.exceptions import PreventUpdate
+from .util import *
 from ..lift_over import util as lift_over_util
 from ..browse_loci import util as browse_loci_util
 from ..constants import Constants
@@ -30,18 +31,22 @@ def init_callback(app):
 
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-reset', 'n_clicks'),
+        Input('lift-over-clear-cache', 'n_clicks'),
 
         State('lift-over-genomic-intervals', 'value'),
         State('lift-over-other-refs', 'value'),
 
         prevent_initial_call=True
     )
-    def parse_input(n_clicks, reset_n_clicks, nb_intervals_str, other_refs):
+    def parse_input(n_clicks, reset_n_clicks, clear_cache_n_clicks, nb_intervals_str, other_refs):
+        if 'lift-over-clear-cache' == ctx.triggered_id:
+            clear_cache_folder()
+
         if 'lift-over-reset' == ctx.triggered_id:
             return None, {'display': 'none'}, False, '', '', \
                 None, None, None, None, None, None
 
-        if n_clicks >= 1:
+        if 'lift-over-submit' == ctx.triggered_id:
             if nb_intervals_str:
                 intervals = lift_over_util.get_genomic_intervals_from_input(
                     nb_intervals_str)

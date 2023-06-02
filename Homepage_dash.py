@@ -87,6 +87,10 @@ submit_clear_buttons = [dbc.Button('Submit',
                                    outline=True,
                                    id='lift-over-reset',
                                    n_clicks=0,
+                                   className='home-button'),
+                        dbc.Button('Clear Cache',
+                                   id='lift-over-clear-cache',
+                                   n_clicks=0,
                                    className='home-button')]
 
 genome_ref_input = dbc.Col([
