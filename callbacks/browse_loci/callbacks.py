@@ -82,7 +82,7 @@ def init_callback(app):
             tracks = ['MSU V7 genes', 'chromatin open']
 
             if not active_filter:
-                active_filter = tracks[0]
+                active_filter = [tracks[0]]
 
             return 'Use the checkbox below to filter tracks you want to see:', \
                 tracks, active_filter
