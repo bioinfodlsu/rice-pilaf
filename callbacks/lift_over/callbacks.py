@@ -95,6 +95,7 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-nb-table', 'data'),
+        Output('lift_over_nb_entire_table','data'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data')
     )
@@ -108,7 +109,7 @@ def init_callback(app):
                     genes_from_Nb = get_genes_from_Nb(
                         nb_intervals)
 
-                    return genes_from_Nb[1]
+                    return genes_from_Nb[1],genes_from_Nb[0].to_dict('records')
 
         raise PreventUpdate
 

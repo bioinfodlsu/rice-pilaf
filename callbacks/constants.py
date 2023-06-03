@@ -20,6 +20,9 @@ class Constants(object):
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
     TEMP_IGV = f'{TEMP}/igv'
 
+    TEMP_TFBS = f'{TEMP}/tf_enrichment'
+    TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
+
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
     ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'

@@ -141,6 +141,11 @@ app.layout = dbc.Container(
         dcc.Store(
             id='lift-over-nb-table',
             storage_type='session'
+        ),
+
+        dcc.Store(
+            id='lift_over_nb_entire_table',
+            storage_type='session'
         )
     ],
     fluid=True

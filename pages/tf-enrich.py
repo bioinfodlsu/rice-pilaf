@@ -9,10 +9,21 @@ layout = html.Div(
         html.Div(id='TF-enrichment-input-genomic-intervals'),
 
         html.Br(),
-
-        dcc.Dropdown(["genome-wide","in promoter regions"],
+        dcc.Markdown("Consider TF binding sites in the following regions:"),
+        dcc.Dropdown(["genome-wide","promoters"],
+                     'promoters',
                      id='tfbs_set',
                      placeholder='Select a TFBS set',
+                     multi=False,
+                     persistence=True,
+                     persistence_type='memory'
+        ),
+       html.Br(),
+       dcc.Markdown("Choose TF binding site prediction technique:"),
+       dcc.Dropdown(["motif scan","motif conservation","FunTFBS"],
+                    "FunTFBS",
+                     id='tfbs_prediction_technique',
+                     placeholder='Select a TF binding site prediction technique',
                      multi=False,
                      persistence=True,
                      persistence_type='memory'

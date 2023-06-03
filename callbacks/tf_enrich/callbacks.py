@@ -6,20 +6,18 @@ gwas_loci = None
 
 def init_callback(app):
     @app.callback(
-        Output('TF-enrichment-input-genomic-intervals', 'children'),
-        Input('lift-over-nb-table', 'data'),
-        State('lift-over-is-submitted', 'data')
-    )
-    def display_implicated_genes(gene_ids, is_submitted):
-        if is_submitted:
-            return 'Implicated genes: ' + ', '.join(gene_ids)
-        raise PreventUpdate
-
-    @app.callback(
         Output('tf_enrichment_result_table', 'data'),
-        Input('tfbs_set', 'value')
+        Input('lift_over_nb_entire_table', 'data'),
+        Input('tfbs_set', 'value'),
+        Input('tfbs_prediction_technique','value'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted','data')
     )
-    def display_enrichment_results(tfbs_set):
-        enrichment_results_df = perform_enrichment_all_tf(tfbs_set,gwas_loci)
-        return enrichment_results_df.to_dict('records')
+    def display_enrichment_results(lift_over_nb_entire_table,tfbs_set,tfbs_prediction_technique,
+                                   nb_interval_str,lift_over_submitted):
+        nb_interval_str_fname = nb_interval_str.replace(":", "_").replace(";", "__").replace("-", "_")
+        if lift_over_submitted:
+            write_promoter_intervals_to_file(lift_over_nb_entire_table,nb_interval_str_fname) #TODO this should be moved to lift_over/callbacks.py
+            enrichment_results_df = perform_enrichment_all_tf(tfbs_set,tfbs_prediction_technique,nb_interval_str_fname)
+            return enrichment_results_df.to_dict('records')
 
