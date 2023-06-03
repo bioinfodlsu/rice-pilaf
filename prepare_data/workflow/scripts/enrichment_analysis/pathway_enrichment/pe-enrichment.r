@@ -1,7 +1,5 @@
-library(data.table)
 library(ggplot2)
 library(graphite)
-library(tidyverse)
 library(optparse)
 library(ROntoTools)
 
@@ -27,25 +25,17 @@ option_list <- list(
 opt_parser <- OptionParser(option_list = option_list)
 opt <- parse_args(opt_parser)
 
-modules <- readLines(opt$modules)
-modules <- str_split(modules, "\t")
-
-genes <- paste0("dosa:", unlist(modules[opt$module_index]))
+genes <- paste0("dosa:", unlist(strsplit(readLines(opt$modules), "\t")[opt$module_index]))
 dummy_val <- 20
 dummy_fc <- replicate(length(genes), dummy_val)
 input_data <- setNames(dummy_fc, genes)
 
-background <- readLines(opt$background_genes)
-background <- str_split(background, "\t")
-background <- paste0("dosa:", unlist(background))
-
-kpg <- keggPathwayGraphs("dosa")
-kpg <- setEdgeWeights(kpg)
-kpg <- setNodeWeights(kpg)
+kpg <- setNodeWeights(setEdgeWeights(keggPathwayGraphs("dosa")))
 
 pe_results <- pe(input_data,
     graphs = kpg,
-    ref = background, nboot = 2000, verbose = TRUE
+    ref = paste0("dosa:", unlist(strsplit(readLines(opt$background_genes), "\t"))), 
+    nboot = 2000, verbose = TRUE
 )
 
 if (!dir.exists(opt$output_dir)) {
@@ -56,7 +46,7 @@ if (!dir.exists(paste0(opt$output_dir, "/results"))) {
     dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
 }
 
-kegg_df <- head(summary(pe_results))
+kegg_df <- summary(pe_results)
 write.table(kegg_df, paste0(opt$output_dir, "/results/pe-df-", opt$module_index, ".tsv"),
     sep = "\t", row.names = TRUE, quote = FALSE
 )
@@ -71,4 +61,3 @@ if (nrow(kegg_df) > 0) {
 } else {
     print(paste0("No KEGG pathways enriched for module #", opt$module_index))
 }
-

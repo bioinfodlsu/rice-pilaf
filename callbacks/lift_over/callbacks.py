@@ -171,7 +171,7 @@ def init_callback(app):
                         df_nb = get_overlapping_ogi(
                             filter_rice_variants, nb_intervals).to_dict('records')
 
-                        return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varities:', \
+                        return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varieties:', \
                             df_nb, {'display': 'block'}
 
                     elif active_tab == NB_TAB:
