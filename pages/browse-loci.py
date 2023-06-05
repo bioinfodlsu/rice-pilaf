@@ -25,5 +25,6 @@ layout = html.Div(id='igv-container', children=[
 
     html.Br(),
 
-    dcc.Loading(id='igv-container')
-])
+    dcc.Loading(id='igv-display')
+]
+)

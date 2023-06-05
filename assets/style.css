@@ -1,0 +1,64 @@
+:root {
+    --green: #247a5b;
+    --green-hover: #106a49;
+    --light-gray: #fdfdfd
+}
+  
+html, body {
+    background-color: var(--light-gray);
+}
+
+#logo {
+    height: 30px;
+}
+
+#lift-over-reset {
+    margin-left: 2em;
+}
+
+#lift-over-submit {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+#lift-over-submit:hover {
+    background-color: var(--green-hover);
+    border-color: var(--green-hover);
+}
+
+#top-navbar {
+    background-color: var(--green) !important;
+}
+
+.home-button {
+    width: 11em;
+}
+
+.nav-link{
+    color: var(--bs-body-color) !important;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff !important;
+    background-color: var(--green);
+}
+
+.top-navbar-item {
+    color: var(--bs-nav-link-color) !important;
+}
+
+.top-navbar-item.active {
+    color: white !important;
+}
+
+#post-gwas-hdr {
+    margin-bottom: 1em;
+}
+
+#genomic-interval-hdr {
+    margin-bottom: 0.6em;
+}
+
+#page {
+    padding-left: 3em;
+}

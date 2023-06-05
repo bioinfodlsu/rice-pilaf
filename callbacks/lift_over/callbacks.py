@@ -31,29 +31,15 @@ def init_callback(app):
         Input('lift-over-other-refs-saved-input', 'data'),
 
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data'),
 
-        State('lift-over-active-filter', 'data'),
-
-        State('lift-over-other-refs', 'multi')
+        State('lift-over-active-filter', 'data')
     )
-    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, is_resetted, active_filter, is_multi_other_refs):
-        if is_resetted:
-            return None, None, None, None, [], None
-
+    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, active_filter):
         if is_submitted:
-            # nb_intervals_str = get_user_genomic_intervals_str_input(
-            #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
-
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = ['Summary', 'Nb']
 
                 other_refs = sanitize_other_refs(other_refs)
-                # other_refs = get_user_other_refs_input(
-                #    n_clicks, other_refs, orig_other_refs)
-
-                # list of other ref
-                other_refs_list = other_refs
 
                 if other_refs:
                     tabs = tabs + other_refs
@@ -64,13 +50,8 @@ def init_callback(app):
                 if not active_filter:
                     active_filter = tabs[1:]
 
-                # get the first ref and points the other_ref to the str input value
-                # valid for non multi select option
-                if not is_multi_other_refs and other_refs:
-                    other_refs = other_refs[0]
-
                 return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                    tabs_children, f'Genomic Interval: {nb_intervals_str}', f'Homologous regions: {str(other_refs_list)[1:-1]}', \
+                    tabs_children, f'Genomic Interval: {nb_intervals_str}', f'Homologous regions: {str(other_refs)[1:-1]}', \
                     tabs[1:], active_filter
             else:
                 return None, None, None, None, [], None
@@ -113,26 +94,21 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    """
     @app.callback(
-        Output('lift-over-active-tab', 'data'),
-        Output('lift-over-active-filter', 'data'),
+        Output('lift-over-active-tab', 'data', allow_duplicate=True),
+        Output('lift-over-active-filter', 'data', allow_duplicate=True),
 
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data')
+        prevent_initial_call=True,
     )
-    def get_active_filter(active_tab, filter_rice_variants, is_submitted, is_resetted):
-        if is_resetted:
-            return None, None
-
+    def set_lift_over_session_state(active_tab, filter_rice_variants, is_submitted):
         if is_submitted:
             return active_tab, filter_rice_variants
 
         raise PreventUpdate
-    """
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
@@ -145,17 +121,10 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
-        State('lift-over-is-submitted', 'data'),
-        State('lift-over-is-resetted', 'data')
+        State('lift-over-is-submitted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted, is_resetted):
-        if is_resetted:
-            return None, None, {'display': 'none'}
-
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
         if is_submitted:
-            # nb_intervals_str = get_user_genomic_intervals_str_input(
-            #    n_clicks, nb_intervals_str, orig_nb_intervals_str)
-
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
