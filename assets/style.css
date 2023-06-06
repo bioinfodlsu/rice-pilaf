@@ -73,6 +73,6 @@ tr:nth-of-type(odd) td {
     background-color: #f0f0f0 !important;    
 }
 
-td {
+th, td {
     padding: 0.5em !important;
 }
