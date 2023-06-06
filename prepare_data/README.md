@@ -26,6 +26,17 @@ Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/app_d
 
 ## Coexpression Network
 
+### 0. Data Preparation
+
+This recipe converts the coexpression network to the respective formats required to run the module detection algorithms and generates the required mapping dictionaries to convert across the different network representation formats.
+
+```
+python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
+python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/mapping
+mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp/fox
+mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone
+```
+
 ### 1. Detecting Modules via FOX
 
 Paper: https://dl.acm.org/doi/10.1145/3404970
@@ -37,15 +48,16 @@ Prerequisites:
 As mentioned in the LazyFox [paper](https://peerj.com/articles/cs-1291/), running LazyFox with a queue size of 1 and a thread count of 1 is equivalent to running the original FOX algorithm.
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
-./LazyFox --input-graph ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping
-mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp
-mv temp/CPP*/iterations/*.txt ../../../static/raw_data/networks_modules/OS-CX/temp/fox-int-module-list.txt
+./LazyFox --input-graph ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt --output-dir temp --queue-size 1 --thread-count 1 --disable-dumping --wcc-threshold {WCC_THRESHOLD}
+mv temp/CPP*/iterations/*.txt ../../../static/raw_data/networks_modules/OS-CX/temp/fox/fox-int-module-list-{WCC_THRESHOLD * 100}.txt
 rm -r temp
-python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/fox-int-module-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list fox
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/fox/fox-int-module-list-{WCC_THRESHOLD * 100}.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list/fox/{WCC_THRESHOLD * 100} fox
 ```
 
-Output: `fox-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
+Replace `{WCC_THRESHOLD}` with the weighted community clustering (WCC) threshold:
+- If `{WCC_THRESHOLD}` is 0.01, then `{WCC_THRESHOLD * 100}` is 1. This is just a convention in the app to avoid having decimal points in the directory and file names.
+
+Output: `fox-module-list-{WCC_THRESHOLD * 100}.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/fox`
 
 ### 2. Detecting Modules via DEMON
 
@@ -56,13 +68,14 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/mapping
-python module_detection/detect-modules-via-demon.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp
-python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/demon-int-module-list.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list demon
+python module_detection/detect-modules-via-demon.py -epsilon {EPSILON} ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp/demon
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/demon/demon-int-module-list-{EPSILON * 100}.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list/demon/{EPSILON * 100} demon
 ```
 
-Output: `demon-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
+Replace `{EPSILON}` with the merging threshold (epsilon):
+- If `{EPSILON}` is 0.25, then `{EPSILON * 100}` is 25. This is just a convention in the app to avoid having decimal points in the directory and file names.
+
+Output: `demon-module-list-{EPSILON * 100}.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/epsilon`
 
 ### 3. Detecting Modules via COACH
 
@@ -73,8 +86,6 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
-python module_util/generate-mapping-from-networkx-int-edge-graph.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/mapping
 python module_detection/detect-modules-via-coach.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp
 python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list coach
 ```
@@ -92,7 +103,6 @@ Prerequisites:
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
-mkdir -p ../../../static/raw_data/networks_modules/OS-CX/temp
 java -jar cluster_one-1.0.jar --output-format csv ../../../static/raw_data/networks/OS-CX.txt > ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv
 python module_util/get-modules-from-clusterone-results.py ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/raw_data/networks_modules/OS-CX/module_list
 ```
@@ -109,7 +119,7 @@ Output: `all-genes.txt` in `../../../static/raw_data/networks_modules/OS-CX`
 
 ## Enrichment Analysis
 
-### 1. Data Preparation
+### 0. Data Preparation
 
 Prerequisites:
 
@@ -154,7 +164,7 @@ python enrichment_analysis/util/aggregate-po-annotations.py ../../../static/raw_
 
 Output: `po-annotations.tsv` and `po-id-to-name.tsv` in `../../../static/raw_data/enrichment_analysis/po`
 
-### 2. Ontology Enrichment Analysis
+### 1. Ontology Enrichment Analysis
 
 #### a. Gene Ontology Enrichment Analysis
 
@@ -202,7 +212,7 @@ Rscript --vanilla enrichment_analysis/ontology_enrichment/po-enrichment.r -g ../
 
 Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/ontology_enrichment/po`
 
-### 3. Pathway Enrichment Analysis
+### 2. Pathway Enrichment Analysis
 
 #### a. Overrepresentation Analysis via clusterProfiler
 
