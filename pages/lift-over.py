@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
 
-dash.register_page(__name__, path="/", name="Input and Lift-over")
+dash.register_page(__name__, path="/", name="Lift-over")
 
 layout = html.Div(id='lift-over-container', children=[
     html.Div(id='lift-over-results-genomic-intervals-input',

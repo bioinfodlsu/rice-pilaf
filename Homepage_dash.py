@@ -27,7 +27,7 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = ['N22 — aus Nagina 22', 'MH63',
+other_ref_genomes = ['N22 | aus Nagina 22', 'MH63 | indica Minhui 63',
                      'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
