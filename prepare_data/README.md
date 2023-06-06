@@ -117,10 +117,10 @@ Output: `clusterone-module-list.tsv` in `../../../static/raw_data/networks_modul
 ### 5. Getting the Genes in the Coexpression Network
 
 ```
-python network_util/get-nodes-from-network.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX
+python network_util/get-nodes-from-network.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/app_data/networks_display/OS-CX
 ```
 
-Output: `all-genes.txt` in `../../../static/raw_data/networks_modules/OS-CX`
+Output: `all-genes.txt` in `../../../static/app_data/networks_display/OS-CX`
 
 ## Enrichment Analysis
 

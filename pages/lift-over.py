@@ -37,9 +37,9 @@ layout = html.Div(id='lift-over-container', children=[
         persistence_type='memory',
         export_format='csv',
         style_cell={
-                'whiteSpace': 'pre-line',
-                'font-family': 'sans-serif'
-                }
+            'whiteSpace': 'pre-line',
+            'font-family': 'sans-serif'
+        }
     )),
 
     html.Br()
