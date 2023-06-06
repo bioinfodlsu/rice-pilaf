@@ -102,7 +102,6 @@ Paper: https://www.nature.com/articles/nmeth.1938
 Prerequisites:
 
 -   Download the ClusterONE JAR file from this [link](https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar), and save it in the directory `workflow/scripts/module_detection`.
-
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
