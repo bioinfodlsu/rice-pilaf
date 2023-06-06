@@ -27,7 +27,8 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
+other_ref_genomes = ['N22 — aus Nagina 22', 'MH63',
+                     'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 
@@ -137,15 +138,13 @@ genome_ref_input = dbc.Col([
 app.layout = dbc.Container(
     [
         dbc.Row(navbar),
-        html.Br(),
 
         dbc.Row(
             genome_ref_input,
-            className='px-5'
+            className='px-5 pt-4 pb-5',
+            id='genome-ref-input-container'
         ),
 
-        html.Br(),
-        html.Hr(className='mx-5'),
         html.Br(),
 
         html.Div(id='post-gwas-analysis-container', hidden=True,
