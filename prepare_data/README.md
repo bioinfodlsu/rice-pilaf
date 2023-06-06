@@ -57,7 +57,7 @@ python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/ne
 Replace `{WCC_THRESHOLD}` with the weighted community clustering (WCC) threshold:
 - If `{WCC_THRESHOLD}` is 0.01, then `{WCC_THRESHOLD * 100}` is 1. This is just a convention in the app to avoid having decimal points in the directory and file names.
 
-Output: `fox-module-list-{WCC_THRESHOLD * 100}.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/fox`
+Output: `fox-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/fox/{WCC_THRESHOLD * 100}`
 
 ### 2. Detecting Modules via DEMON
 
@@ -75,7 +75,7 @@ python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/ne
 Replace `{EPSILON}` with the merging threshold (epsilon):
 - If `{EPSILON}` is 0.25, then `{EPSILON * 100}` is 25. This is just a convention in the app to avoid having decimal points in the directory and file names.
 
-Output: `demon-module-list-{EPSILON * 100}.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/epsilon`
+Output: `demon-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/demon/{EPSILON * 100}`
 
 ### 3. Detecting Modules via COACH
 
@@ -86,11 +86,11 @@ Prerequisites:
 -   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
 
 ```
-python module_detection/detect-modules-via-coach.py ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp
-python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/coach-int-module-list.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list coach
+python module_detection/detect-modules-via-coach.py -affinity_threshold {AFFINITY_THRESHOLD} ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp/coach
+python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/coach/coach-int-module-list-{AFFINITY_THRESHOLD * 1000}.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list/coach/{AFFINITY_THRESHOLD * 1000} coach
 ```
 
-Output: `coach-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
+Output: `coach-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/coach/{AFFINITY_THRESHOLD * 1000}`
 
 ### 4. Detecting Modules via ClusterONE
 
