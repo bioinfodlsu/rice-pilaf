@@ -114,6 +114,7 @@ def init_callback(app):
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
+        Output('lift-over-results-table', 'filter_query'),
         Output('lift-over-overlap-table-filter', 'style'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
@@ -149,10 +150,10 @@ def init_callback(app):
                                    for key in df_nb_raw.columns]
 
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varieties:', \
-                            columns, df_nb, {'display': 'block'}
+                            columns, df_nb, '', {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'Genes overlapping the site in the Nipponbare reference', columns, df_nb_complete, \
+                        return 'Genes overlapping the site in the Nipponbare reference', columns, df_nb_complete, '', \
                             {'display': 'none'}
 
                     else:
@@ -166,11 +167,11 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'Genes from homologous regions in {other_ref}', columns, df_nb, {'display': 'none'}
+                        return f'Genes from homologous regions in {other_ref}', columns, df_nb, '', {'display': 'none'}
 
                 else:
-                    return None, None, None, {'display': 'none'}
+                    return None, None, None, None, {'display': 'none'}
             else:
-                return None, None, None, {'display': 'none'}
+                return None, None, None, None, {'display': 'none'}
 
         raise PreventUpdate

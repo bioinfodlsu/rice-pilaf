@@ -103,3 +103,8 @@ th, td {
 .rc-slider-track {
     background-color: var(--green) !important;
 }
+
+.page-number, .current-page {
+    font-family: var(--bs-body-font-family) !important;
+    font-size: var(--font-size-base) !important;
+}
