@@ -1,6 +1,7 @@
 :root {
     --green: #247a5b;
     --green-hover: #106a49;
+    --light-green: #cfddd7;
     --light-gray: #fdfdfd
 }
   
@@ -12,7 +13,7 @@ html, body {
     height: 30px;
 }
 
-#lift-over-reset {
+#lift-over-reset, #lift-over-clear-cache {
     margin-left: 2em;
 }
 
@@ -61,4 +62,17 @@ html, body {
 
 #page {
     padding-left: 3em;
+}
+
+th {
+    font-weight: bold !important;
+    background-color: var(--light-green) !important;
+}
+
+tr:nth-of-type(odd) td {
+    background-color: #f0f0f0 !important;    
+}
+
+th, td {
+    padding: 0.5em !important;
 }
