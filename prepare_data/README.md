@@ -1,6 +1,6 @@
 # Data Preparation
 
-All the recipes below assume that the working directory is `workflow/scripts`.
+### 📁 All the recipes below assume that the working directory is `workflow/scripts`.
 
 Running the R scripts from the terminal require the [`optparse`](https://cran.r-project.org/web/packages/optparse/index.html) library. It can be installed by running the following command:
 
@@ -150,29 +150,18 @@ Output:
 - TSV files containing KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript`
 - `transcript-to-msu-id.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
 
-This recipe prepares the data needed for gene ontology enrichment analysis:
+This recipe prepares the data needed for ontology enrichment analysis:
 
 ```
 python enrichment_analysis/util/aggregate-go-annotations.py ../../../static/raw_data/enrichment_analysis/go/agrigo.tsv ../../../static/raw_data/enrichment_analysis/go/OryzabaseGeneListAll_20230322010000.txt ../../../static/raw_data/enrichment_analysis/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv ../../../static/raw_data/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/go
-```
-
-Output: `go-annotations.tsv` in `../../../static/raw_data/enrichment_analysis/go`
-
-This recipe prepares the data needed for trait ontology enrichment analysis:
-
-```
 python enrichment_analysis/util/aggregate-to-annotations.py ../../../static/raw_data/enrichment_analysis/go/OryzabaseGeneListAll_20230322010000.txt ../../../static/raw_data/enrichment_analysis/to
-```
-
-Output: `to-annotations.tsv` and `to-id-to-name.tsv` in `../../../static/raw_data/enrichment_analysis/to`
-
-This recipe prepares the data needed for plant ontology enrichment analysis:
-
-```
 python enrichment_analysis/util/aggregate-po-annotations.py ../../../static/raw_data/enrichment_analysis/go/OryzabaseGeneListAll_20230322010000.txt ../../../static/raw_data/enrichment_analysis/po
 ```
 
-Output: `po-annotations.tsv` and `po-id-to-name.tsv` in `../../../static/raw_data/enrichment_analysis/po`
+Output: 
+- `go-annotations.tsv` in `../../../static/raw_data/enrichment_analysis/go`
+- `to-annotations.tsv` and `to-id-to-name.tsv` in `../../../static/raw_data/enrichment_analysis/to`
+- `po-annotations.tsv` and `po-id-to-name.tsv` in `../../../static/raw_data/enrichment_analysis/po`
 
 ### 1. Ontology Enrichment Analysis
 
