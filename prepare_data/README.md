@@ -65,7 +65,8 @@ Paper: https://dl.acm.org/doi/10.1145/2339530.2339630
 
 Prerequisites:
 
--   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
+-   Install the following Python library: 
+    - [`cdlib`](https://cdlib.readthedocs.io/en/latest/installing.html)
 
 ```
 python module_detection/detect-modules-via-demon.py -epsilon {EPSILON} ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp/demon
@@ -83,7 +84,8 @@ Paper: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10
 
 Prerequisites:
 
--   Install `cdlib`. Instructions can be found [here](https://cdlib.readthedocs.io/en/latest/installing.html).
+-   Install the following Python library: 
+    - [`cdlib`](https://cdlib.readthedocs.io/en/latest/installing.html)
 
 ```
 python module_detection/detect-modules-via-coach.py -affinity_threshold {AFFINITY_THRESHOLD} ../../../static/raw_data/networks_modules/OS-CX/mapping/int-edge-list.txt ../../../static/raw_data/networks_modules/OS-CX/temp/coach
@@ -102,7 +104,7 @@ Paper: https://www.nature.com/articles/nmeth.1938
 Prerequisites:
 
 -   Download the ClusterONE JAR file from this [link](https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar), and save it in the directory `workflow/scripts/module_detection`.
--   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
+-   The source code of ClusterONE is also hosted on [GitHub](https://github.com/ntamas/cl1).
 
 ```
 java -jar cluster_one-1.0.jar --output-format csv --min-density {MIN_DENSITY} ../../../static/raw_data/networks/OS-CX.txt > ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone/clusterone-results-{MIN_DENSITY * 100}.csv
@@ -128,21 +130,24 @@ Output: `all-genes.txt` in `../../../static/app_data/networks_display/OS-CX`
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
 
-This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment tools; the last two commands assume that the modules of interest were obtained via the ClusterONE algorithm:
+This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment analysis tools.
 
 ```
 Rscript --vanilla enrichment_analysis/util/ricegeneid-msu-to-transcript-id.r -g ../../../static/app_data/networks_display/OS-CX/all-genes.txt -o ../../../static/raw_data/enrichment_analysis/temp
 python enrichment_analysis/util/msu-to-transcript-id.py ../../../static/raw_data/enrichment_analysis/temp/all-transcript-id.txt ../../../static/raw_data/enrichment_analysis/temp/all-na-transcript-id.txt ../../../static/raw_data/enrichment_analysis/rap_db/RAP-MSU_2023-03-15.txt ../../../static/raw_data/enrichment_analysis/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
 python enrichment_analysis/util/transcript-to-msu-id.py ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/mapping
 python enrichment_analysis/util/file-convert-msu.py ../../../static/app_data/networks_display/OS-CX/all-genes.txt ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/all_genes transcript --skip_no_matches
-python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/modules/clusterone transcript
+python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM} transcript
 ```
 
+Replace `algo` with the algorithm (`fox`, `demon`, `coach`, or `clusterone`) and `param` with the name of the directory containing the module list after running the algorithm with the specified parameter:
+- For example, if `algo` is `clusterone` and the parameter (minimum density) is 0.3, then `param` is `30`.
+
 Output: 
-- TSV files containing Entrez and KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/raw_data/enrichment_analysis/modules/clusterone`
+- TSV files containing KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript`
 - `transcript-to-msu-id.pickle` in `../../../static/app_data/enrichment_analysis/mapping`
 
 This recipe prepares the data needed for gene ontology enrichment analysis:
@@ -191,7 +196,7 @@ Output: Results table and dot plot in `../../../static/app_data/enrichment_analy
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
@@ -206,7 +211,7 @@ Output: Results table and dot plot in `../../../static/app_data/enrichment_analy
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
@@ -223,7 +228,7 @@ Output: Results table and dot plot in `../../../static/app_data/enrichment_analy
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
@@ -240,7 +245,7 @@ Paper: https://genome.cshlp.org/content/17/10/1537.long
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`ROntoTools`](https://bioconductor.org/packages/release/bioc/html/ROntoTools.html)
 
 This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
@@ -268,7 +273,7 @@ Paper: https://academic.oup.com/bioinformatics/article/25/1/75/302846
 
 Prerequisites:
 
--   Install the following R libraries:
+-   Install the following R library:
     -   [`SPIA`](https://bioconductor.org/packages/release/bioc/html/SPIA.html)
 
 This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter) and uses the `dosaSPIA.RData` file generated from by SPIA from the KEGG pathway data files for the organism `dosa` (downloaded on May 11, 2023):
