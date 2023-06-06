@@ -28,7 +28,7 @@ Output: `ARC_to_ogi.pickle`, `Azu_to_ogi.pickle`, etc. in `../../../static/app_d
 
 ### 0. Data Preparation
 
-This recipe converts the coexpression network to the respective formats required to run the module detection algorithms and generates the required mapping dictionaries to convert across the different network representation formats.
+This recipe converts the coexpression network to the respective formats required to run the module detection algorithms and generates the required mapping dictionaries to convert across the different network representation formats:
 
 ```
 python network_util/convert-to-int-edge-list.py ../../../static/raw_data/networks/OS-CX.txt ../../../static/raw_data/networks_modules/OS-CX/mapping
@@ -133,18 +133,18 @@ Prerequisites:
 -   Install the following R library:
     -   [`riceidconverter`](https://cran.r-project.org/web/packages/riceidconverter/index.html)
 
-This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment analysis tools.
+This recipe maps the MSU accessions used in the app to the target IDs required by the pathway enrichment analysis tools:
 
 ```
 Rscript --vanilla enrichment_analysis/util/ricegeneid-msu-to-transcript-id.r -g ../../../static/app_data/networks_display/OS-CX/all-genes.txt -o ../../../static/raw_data/enrichment_analysis/temp
 python enrichment_analysis/util/msu-to-transcript-id.py ../../../static/raw_data/enrichment_analysis/temp/all-transcript-id.txt ../../../static/raw_data/enrichment_analysis/temp/all-na-transcript-id.txt ../../../static/raw_data/enrichment_analysis/rap_db/RAP-MSU_2023-03-15.txt ../../../static/raw_data/enrichment_analysis/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv data/mapping
 python enrichment_analysis/util/transcript-to-msu-id.py ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/mapping
 python enrichment_analysis/util/file-convert-msu.py ../../../static/app_data/networks_display/OS-CX/all-genes.txt ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/raw_data/enrichment_analysis/all_genes transcript --skip_no_matches
-python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM} transcript
+python enrichment_analysis/util/file-convert-msu.py ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}/{ALGO}-module-list.tsv ../../../static/raw_data/enrichment_analysis/mapping/msu-to-transcript-id.pickle ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM} transcript
 ```
 
-Replace `algo` with the algorithm (`fox`, `demon`, `coach`, or `clusterone`) and `param` with the name of the directory containing the module list after running the algorithm with the specified parameter:
-- For example, if `algo` is `clusterone` and the parameter (minimum density) is 0.3, then `param` is `30`.
+Replace `ALGO` with the algorithm (`fox`, `demon`, `coach`, or `clusterone`) and `PARAM` with the name of the directory containing the module list after running the algorithm with the specified parameter:
+- For example, if `ALGO` is `clusterone` and the parameter (minimum density) is 0.3, then `PARAM` is `30`.
 
 Output: 
 - TSV files containing KEGG transcript IDs in `../../../static/raw_data/enrichment_analysis/all_genes` and `../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript`
@@ -184,13 +184,11 @@ Prerequisites:
     -   [`GO.db`](https://bioconductor.org/packages/release/data/annotation/html/GO.db.html)
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
-This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
-
 ```
-Rscript --vanilla enrichment_analysis/ontology_enrichment/go-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/go/go-annotations.tsv -o ../../../static/app_data/enrichment_analysis/output/ontology_enrichment/go
+Rscript --vanilla enrichment_analysis/ontology_enrichment/go-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/go/go-annotations.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/go
 ```
 
-Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/ontology_enrichment/go`
+Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/go`
 
 #### b. Trait Ontology Enrichment Analysis
 
