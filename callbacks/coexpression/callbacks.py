@@ -80,7 +80,8 @@ def init_callback(app):
         Input('coexpression-parameter-slider', 'value')
     )
     def display_module_graph(implicated_gene_ids, module, algo, parameters):
-        return load_module_graph(implicated_gene_ids, module, algo, parameters)
+        return load_module_graph(
+            implicated_gene_ids, module, algo, parameters)
 
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',
