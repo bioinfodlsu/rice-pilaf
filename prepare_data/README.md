@@ -204,10 +204,10 @@ Prerequisites:
 This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla enrichment_analysis/ontology_enrichment/po-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone-module-list.tsv -i 1 -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/po/po-annotations.tsv -t ../../../static/raw_data/enrichment_analysis/po/po-id-to-name.tsv -o ../../../static/app_data/enrichment_analysis/output/ontology_enrichment/po
+Rscript --vanilla enrichment_analysis/ontology_enrichment/po-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/po/po-annotations.tsv -t ../../../static/raw_data/enrichment_analysis/po/po-id-to-name.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/po
 ```
 
-Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/ontology_enrichment/po`
+Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/po`
 
 ### 2. Pathway Enrichment Analysis
 
