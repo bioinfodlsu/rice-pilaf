@@ -109,7 +109,7 @@ java -jar cluster_one-1.0.jar --output-format csv --min-density {MIN_DENSITY} ..
 python module_util/get-modules-from-clusterone-results.py ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone/clusterone-results-{MIN_DENSITY * 100}.csv ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone/{MIN_DENSITY * 100}
 ```
 
-Replace `{MIN_DENSITY}` with the affinity threshold:
+Replace `{MIN_DENSITY}` with the minimum density:
 - If `{MIN_DENSITY}` is 0.3, then `{MIN_DENSITY * 100}` is 30. This is just a convention in the app to avoid having decimal points in the directory and file names.
 
 Output: `clusterone-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone/{MIN_DENSITY * 100}`
