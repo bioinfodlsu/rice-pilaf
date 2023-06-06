@@ -389,7 +389,7 @@ def load_module_graph(implicated_gene_ids, module, algo, parameters):
         elements = nx.cytoscape_data(G)['elements']
         for node in elements['nodes']:
             if node['data']['id'] in implicated_gene_ids:
-                node['classes'] = 'red'
+                node['classes'] = 'shaded'
 
         return elements, {'visibility': 'visible', 'width': '100%', 'height': '100vh'}
 

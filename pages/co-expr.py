@@ -102,10 +102,10 @@ layout = html.Div(id='coexpression-container', children=[
                 }
             },
             {
-                'selector': '.red',
+                'selector': '.shaded',
                 'style': {
-                    'background-color': 'red',
-                    'line-color': 'red',
+                    'background-color': '#048A81',
+                    'line-color': '#048A81',
                     'height': '20px',
                     'width': '20px'
                 }

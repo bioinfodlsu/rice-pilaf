@@ -1,34 +1,39 @@
 :root {
-    --green: #247a5b;
-    --green-hover: #106a49;
-    --light-green: #cfddd7;
-    --light-gray: #fdfdfd
+    --blue: rgb(59, 59, 130);
+    --blue-hover: rgb(93, 93, 162);
+    --green: #048A81;
+
+    --light-gray: #cfddd7;
+    --bg-gray: #fdfdfd;
+    
+    --th-gray: #e4f1f0;
+    --td-gray: #eff2f2;
 }
   
 html, body {
-    background-color: var(--light-gray);
+    background-color: var(--bg-gray);
 }
 
 #logo {
     height: 30px;
 }
 
-#lift-over-reset, #lift-over-clear-cache {
-    margin-left: 2em;
+#lift-over-reset, #lift-over-submit {
+    margin-right: 2em;
 }
 
 #lift-over-submit {
-    background-color: var(--green);
-    border-color: var(--green);
+    background-color: var(--blue);
+    border-color: var(--blue);
 }
 
 #lift-over-submit:hover {
-    background-color: var(--green-hover);
-    border-color: var(--green-hover);
+    background-color: var(--blue-hover);
+    border-color: var(--blue-hover);
 }
 
 #top-navbar {
-    background-color: var(--green) !important;
+    background-color: var(--blue) !important;
 }
 
 .home-button {
@@ -66,13 +71,35 @@ html, body {
 
 th {
     font-weight: bold !important;
-    background-color: var(--light-green) !important;
+    background-color: var(--th-gray) !important;
 }
 
 tr:nth-of-type(odd) td {
-    background-color: #f0f0f0 !important;    
+    background-color: var(--td-gray) !important;    
 }
 
 th, td {
     padding: 0.5em !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.form-check-input:focus {
+    border-color: var(--light-gray);
+    box-shadow: 0 0 0 0.25rem var(--light-gray);
+}
+
+.dash-default-spinner > div {
+    background-color: var(--green) !important;
+}
+
+.rc-slider-dot-active, .rc-slider-handle {
+    border-color: var(--green) !important;
+}
+
+.rc-slider-track {
+    background-color: var(--green) !important;
 }
