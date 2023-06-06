@@ -186,8 +186,6 @@ Prerequisites:
 -   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
-This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
-
 ```
 Rscript --vanilla enrichment_analysis/ontology_enrichment/to-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/to/to-annotations.tsv -t ../../../static/raw_data/enrichment_analysis/to/to-id-to-name.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/to
 ```
@@ -200,8 +198,6 @@ Prerequisites:
 
 -   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
-
-This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
 
 ```
 Rscript --vanilla enrichment_analysis/ontology_enrichment/po-enrichment.r -g ../../../static/raw_data/networks_modules/OS-CX/module_list/{ALGO}/{PARAM}/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/app_data/networks_display/OS-CX/all-genes.txt -m ../../../static/raw_data/enrichment_analysis/po/po-annotations.tsv -t ../../../static/raw_data/enrichment_analysis/po/po-id-to-name.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/ontology_enrichment/po
@@ -218,13 +214,11 @@ Prerequisites:
 -   Install the following R library:
     -   [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)
 
-This recipe assumes that the module of interest is the first module (as specified using the `-i` parameter):
-
 ```
-Rscript --vanilla enrichment_analysis/pathway_enrichment/ora-enrichment.r -g ../../../static/raw_data/enrichment_analysis/modules/clusterone/transcript/clusterone-module-list.tsv -i 1 -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -o ../../../static/app_data/enrichment_analysis/output/pathway_enrichment/ora
+Rscript --vanilla enrichment_analysis/pathway_enrichment/ora-enrichment.r -g ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/ora
 ```
 
-Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/pathway_enrichment/ora`
+Output: Results table and dot plot in `../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/ora`
 
 #### b. Topology-Based Analysis via Pathway-Express
 
@@ -238,10 +232,10 @@ Prerequisites:
 This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter):
 
 ```
-Rscript --vanilla enrichment_analysis/pathway_enrichment/pe-enrichment.r -g ../../../static/raw_data/enrichment_analysis/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -o ../../../static/app_data/enrichment_analysis/output/pathway_enrichment/pe
+Rscript --vanilla enrichment_analysis/pathway_enrichment/pe-enrichment.r -g ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript/{ALGO}-module-list.tsv -i {MODULE_NUM} -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/pe
 ```
 
-Output: Results table in `../../../static/app_data/enrichment_analysis/output/pathway_enrichment/pe`
+Output: Results table in `../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/pe`
 
 This recipe generates additional files needed for the user-facing display of the results on the app:
 
@@ -266,13 +260,13 @@ Prerequisites:
 This recipe assumes that the module of interest is the 100<sup>th</sup> module (as specified using the `-i` parameter) and uses the `dosaSPIA.RData` file generated from by SPIA from the KEGG pathway data files for the organism `dosa` (downloaded on May 11, 2023):
 
 ```
-Rscript --vanilla enrichment_analysis/pathway_enrichment/spia-enrichment.r -g ../../../static/raw_data/enrichment_analysis/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -s ../../../static/raw_data/enrichment_analysis/kegg_dosa/SPIA -o ../../../static/app_data/enrichment_analysis/output/pathway_enrichment/spia
+Rscript --vanilla enrichment_analysis/pathway_enrichment/spia-enrichment.r -g ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript/clusterone-module-list.tsv -i {MODULE_NUM} -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -s ../../../static/raw_data/enrichment_analysis/kegg_dosa/SPIA -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/spia
 ```
 
-If you would like to generate `dosaSPIA.RData` yourself, the recipe is given below. Note, however, that you have to supply the KEGG pathway data files for the organism `dosa`; we do not distribute them in compliance with KEGG's licensing restrictions.
+If you would like to generate `dosaSPIA.RData` yourself, the recipe is given below. Note, however, that you have to supply the KEGG pathway data files for the organism `dosa` (saved in `../../../static/raw_data/enrichment_analysis/kegg_dosa/XML`). We do not distribute them in compliance with KEGG's licensing restrictions.
 
 ```
-Rscript --vanilla enrichment_analysis/pathway_enrichment/spia-enrichment.r -g ../../../static/raw_data/enrichment_analysis/modules/clusterone/transcript/clusterone-module-list.tsv -i 100 -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -p ../../../static/raw_data/enrichment_analysis/kegg_dosa/XML -s ../../../static/raw_data/enrichment_analysis/kegg_dosa/SPIA -o ../../../static/app_data/enrichment_analysis/output/pathway_enrichment/spia
+Rscript --vanilla enrichment_analysis/pathway_enrichment/spia-enrichment.r -g ../../../static/app_data/enrichment_analysis/modules/{ALGO}/{PARAM}/transcript/clusterone-module-list.tsv -i {MODULE_NUM} -b ../../../static/raw_data/enrichment_analysis/all_genes/transcript/all-genes.tsv -p ../../../static/raw_data/enrichment_analysis/kegg_dosa/XML -s ../../../static/raw_data/enrichment_analysis/kegg_dosa/SPIA -o ../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/spia
 ```
 
-Output: Results table in `../../../static/app_data/enrichment_analysis/output/pathway_enrichment/spia`
+Output: Results table in `../../../static/app_data/enrichment_analysis/output/{ALGO}/{PARAM}/pathway_enrichment/spia`
