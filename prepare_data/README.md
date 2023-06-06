@@ -90,6 +90,9 @@ python module_detection/detect-modules-via-coach.py -affinity_threshold {AFFINIT
 python module_util/restore-node-labels-in-modules.py ../../../static/raw_data/networks_modules/OS-CX/temp/coach/coach-int-module-list-{AFFINITY_THRESHOLD * 1000}.csv ../../../static/raw_data/networks_modules/OS-CX/mapping/networkx-node-mapping.pickle ../../../static/raw_data/networks_modules/OS-CX/module_list/coach/{AFFINITY_THRESHOLD * 1000} coach
 ```
 
+Replace `{AFFINITY_THRESHOLD}` with the affinity threshold:
+- If `{AFFINITY_THRESHOLD}` is 0.125, then `{AFFINITY_THRESHOLD * 1000}` is 125. This is just a convention in the app to avoid having decimal points in the directory and file names.
+
 Output: `coach-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/coach/{AFFINITY_THRESHOLD * 1000}`
 
 ### 4. Detecting Modules via ClusterONE
@@ -103,11 +106,14 @@ Prerequisites:
 -   The source code of ClusterONE is also hosted at [GitHub](https://github.com/ntamas/cl1).
 
 ```
-java -jar cluster_one-1.0.jar --output-format csv ../../../static/raw_data/networks/OS-CX.txt > ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv
-python module_util/get-modules-from-clusterone-results.py ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone-results.csv ../../../static/raw_data/networks_modules/OS-CX/module_list
+java -jar cluster_one-1.0.jar --output-format csv --min-density {MIN_DENSITY} ../../../static/raw_data/networks/OS-CX.txt > ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone/clusterone-results-{MIN_DENSITY * 100}.csv
+python module_util/get-modules-from-clusterone-results.py ../../../static/raw_data/networks_modules/OS-CX/temp/clusterone/clusterone-results-{MIN_DENSITY * 100}.csv ../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone/{MIN_DENSITY * 100}
 ```
 
-Output: `clusterone-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list`
+Replace `{MIN_DENSITY}` with the affinity threshold:
+- If `{MIN_DENSITY}` is 0.3, then `{MIN_DENSITY * 100}` is 30. This is just a convention in the app to avoid having decimal points in the directory and file names.
+
+Output: `clusterone-module-list.tsv` in `../../../static/raw_data/networks_modules/OS-CX/module_list/clusterone/{MIN_DENSITY * 100}`
 
 ### 5. Getting the Genes in the Coexpression Network
 
