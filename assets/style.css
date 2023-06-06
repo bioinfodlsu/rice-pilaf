@@ -69,7 +69,7 @@ html, body {
     padding-left: 3em;
 }
 
-th {
+th:not(.dash-filter) {
     font-weight: bold !important;
     background-color: var(--th-gray) !important;
 }

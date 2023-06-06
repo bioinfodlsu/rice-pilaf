@@ -39,7 +39,13 @@ layout = html.Div(id='lift-over-container', children=[
         style_cell={
             'whiteSpace': 'pre-line',
             'font-family': 'sans-serif'
-        }
+        },
+        sort_action='native',
+        filter_action='native',
+        filter_options={'case': 'insensitive',
+                        'placeholder_text': 'Search column'},
+        page_action='native',
+        page_size=15
     )),
 
     html.Br()
