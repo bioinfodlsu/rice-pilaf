@@ -27,12 +27,12 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = [{'value': 'N22', 'label': 'N22   |   aus Nagina-22'},
-                     {'value': 'MH63', 'label': 'MH63   |   indica Minghui-63'},
-                     {'value': 'Azu', 'label': 'Azu   |   japonica Azucena'},
-                     {'value': 'ARC', 'label': 'ARC   |   basmati ARC'},
-                     {'value': 'IR64', 'label': 'IR64   |   indica IR64'},
-                     {'value': 'CMeo', 'label': 'CMeo   |   japonica CHAO MEO'}]
+other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
+                     {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
+                     {'value': 'Azu', 'label': 'Azu   (japonica Azucena)'},
+                     {'value': 'ARC', 'label': 'ARC   (basmati ARC)'},
+                     {'value': 'IR64', 'label': 'IR64   (indica IR64)'},
+                     {'value': 'CMeo', 'label': 'CMeo   (japonica CHAO MEO)'}]
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 
