@@ -238,7 +238,8 @@ def get_genes_from_Nb(Nb_intervals):
             'name': [gene.id for gene in genes_in_interval],
             'chrom': [gene.chrom for gene in genes_in_interval],
             'start': [gene.start for gene in genes_in_interval],
-            'end': [gene.end for gene in genes_in_interval]
+            'end': [gene.end for gene in genes_in_interval],
+            'strand':[gene.strand for gene in genes_in_interval]
         })
         dfs.append(df)
 
@@ -295,7 +296,8 @@ def get_genes_from_other_ref(ref, Nb_intervals):
                 'name': [gene.id for gene in genes_in_interval],
                 'chrom': [gene.chrom for gene in genes_in_interval],
                 'start': [gene.start for gene in genes_in_interval],
-                'end': [gene.end for gene in genes_in_interval]
+                'end': [gene.end for gene in genes_in_interval],
+                'strand':[gene.strand for gene in genes_in_interval]
             })
             dfs.append(df)
 
