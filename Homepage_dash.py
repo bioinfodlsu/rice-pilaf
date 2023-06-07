@@ -27,8 +27,7 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = ['N22 | aus Nagina 22', 'MH63 | indica Minhui 63',
-                     'Azu', 'ARC', 'IR64', 'CMeo']
+other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 
@@ -79,22 +78,26 @@ sidebar = dbc.Nav(
 # Input
 # ======
 
-submit_clear_buttons = [dbc.Button('Submit',
-                                   id='lift-over-submit',
-                                   n_clicks=0,
-                                   className='home-button'),
-                        dbc.Button('Clear All Display',
-                                   color='danger',
-                                   outline=True,
-                                   id='lift-over-reset',
-                                   n_clicks=0,
-                                   className='home-button'),
-                        dbc.Button('Clear Cache',
-                                   id='lift-over-clear-cache',
-                                   color='danger',
-                                   outline=True,
-                                   n_clicks=0,
-                                   className='home-button')]
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
+                                                   id='lift-over-submit',
+                                                   n_clicks=0,
+                                                   className='home-button', style={'width': '100%'}),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                                dbc.Col(dbc.Button('Clear All Display',
+                                                   color='danger',
+                                                   outline=True,
+                                                   id='lift-over-reset',
+                                                   n_clicks=0,
+                                                   className='home-button', style={'width': '100%'}),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2, className='mx-4'),
+                                dbc.Col(dbc.Button('Clear Cache',
+                                                   id='lift-over-clear-cache',
+                                                   color='danger',
+                                                   outline=True,
+                                                   n_clicks=0,
+                                                   className='home-button', style={'width': '100%'}),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                                ], className='pt-2')
 
 genome_ref_input = dbc.Col([
     html.H5('Genomic interval(s) from GWAS', id='genomic-interval-hdr'),
@@ -126,8 +129,7 @@ genome_ref_input = dbc.Col([
     ),
 
     html.Br(),
-
-    html.Div(submit_clear_buttons)
+    submit_clear_buttons
 ])
 
 
@@ -156,7 +158,7 @@ app.layout = dbc.Container(
                         dbc.Col([dash.page_container],
                             xs=8, sm=8, md=10, lg=10, xl=10, xxl=10,
                             id='page')
-                    ], className='px-5')]
+                    ], className='px-5 py-2')]
                  ),
 
         # Session storage

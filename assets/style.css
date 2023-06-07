@@ -1,11 +1,11 @@
 :root {
     --green-top: #254b5d;
-    --green-top-hover: #048A81;
+    --green-top-hover: rgb(67, 93, 106);
     --green: #048A81;
 
     --light-gray: #cfddd7;
     --bg-gray: #fdfdfd;
-    --bg-gray-darker: #eff2f2;
+    --bg-gray-darker: #f2f7f7;
     
     --th-gray: #e1eeed;
     --td-gray: #eff2f2;
@@ -21,10 +21,6 @@ html, body {
 
 #genome-ref-input-container {
     background-color: var(--bg-gray-darker);
-}
-
-#lift-over-reset, #lift-over-submit {
-    margin-right: 2em;
 }
 
 #lift-over-reset, #lift-over-clear-cache {
@@ -50,7 +46,7 @@ html, body {
 }
 
 .home-button {
-    width: 11em;
+    width: 100%;
 }
 
 .nav-link{
