@@ -78,7 +78,13 @@ layout = html.Div(id='coexpression-container', children=[
             'whiteSpace': 'pre-line',
             'font-family': 'sans-serif'
         },
-        markdown_options={"html": True}
+        markdown_options={"html": True},
+        sort_action='native',
+        filter_action='native',
+        filter_options={'case': 'insensitive',
+                        'placeholder_text': 'Search column'},
+        page_action='native',
+        page_size=15
     ),
 
     cyto.Cytoscape(
