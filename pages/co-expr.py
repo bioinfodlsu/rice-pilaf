@@ -45,6 +45,14 @@ layout = html.Div(id='coexpression-container', children=[
 
     html.Br(),
 
+    dbc.Button('Submit',
+               id='coexpression-submit',
+               className='page-button',
+               n_clicks=0),
+
+    html.Br(),
+    html.Br(),
+
     dcc.Markdown("Enriched modules"),
 
     dcc.Loading(dcc.Dropdown(

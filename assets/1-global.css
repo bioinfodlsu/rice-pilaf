@@ -2,6 +2,7 @@
     --green-top: #254b5d;
     --green-top-hover: rgb(67, 93, 106);
     --green: #048A81;
+    --green-lighter: #048A81;
 
     --light-gray: #cfddd7;
     --bg-gray: #fdfdfd;
@@ -49,13 +50,19 @@ html, body {
     width: 100%;
 }
 
+.page-button {
+    width: 11em;
+    background-color: var(--green-lighter);
+    border-color: var(--green-lighter);
+}
+
 .nav-link{
     color: var(--bs-body-color) !important;
 }
 
 .nav-pills .nav-link.active {
     color: #fff !important;
-    background-color: var(--green);
+    background-color: var(--green-top);
 }
 
 .top-navbar-item {
