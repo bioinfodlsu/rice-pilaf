@@ -38,7 +38,7 @@
 
 .nav-pills .nav-link.active {
     color: #fff !important;
-    background-color: var(--green-top);
+    background-color: var(--green-lightest);
 }
 
 .top-navbar-item {

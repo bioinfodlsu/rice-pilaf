@@ -1,8 +1,9 @@
 :root {
     --green-top: #254b5d;
-    --green-top-hover: rgb(67, 93, 106);
+    --green-top-hover: #2d6078;
     --green: #048A81;
-    --green-lighter: #048A81;
+    --green-lighter: #254b5d;
+    --green-lightest: #4aa59f;
 
     --light-gray: #cfddd7;
     --bg-gray: #fdfdfd;
@@ -20,6 +21,12 @@ html, body {
     width: 11em;
     background-color: var(--green-lighter);
     border-color: var(--green-lighter);
+}
+
+.page-button:hover {
+    width: 11em;
+    background-color: var(--green-top-hover);
+    border-color: var(--green-top-hover);
 }
 
 #page {

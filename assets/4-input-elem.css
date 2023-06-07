@@ -1,6 +1,6 @@
 .form-check-input:checked {
-    background-color: var(--green);
-    border-color: var(--green);
+    background-color: var(--green-lighter);
+    border-color: var(--green-lighter);
 }
 
 .form-check-input:focus {
@@ -9,13 +9,13 @@
 }
 
 .dash-default-spinner > div {
-    background-color: var(--green) !important;
+    background-color: var(--green-lighter) !important;
 }
 
 .rc-slider-dot-active, .rc-slider-handle {
-    border-color: var(--green) !important;
+    border-color: var(--green-lighter) !important;
 }
 
 .rc-slider-track {
-    background-color: var(--green) !important;
+    background-color: var(--green-lighter) !important;
 }

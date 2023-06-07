@@ -135,8 +135,8 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
             {
                 'selector': '.shaded',
                 'style': {
-                    'background-color': '#048A81',
-                    'line-color': '#048A81',
+                    'background-color': '#254b5d',
+                    'line-color': '#254b5d',
                     'height': '20px',
                     'width': '20px'
                 }
