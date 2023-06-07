@@ -16,118 +16,12 @@ html, body {
     background-color: var(--bg-gray);
 }
 
-#logo {
-    height: 30px;
-}
-
-#genome-ref-input-container {
-    background-color: var(--bg-gray-darker);
-}
-
-#lift-over-reset, #lift-over-clear-cache {
-    background-color: white;
-}
-
-#lift-over-reset:hover, #lift-over-clear-cache:hover {
-    background-color: #dc3545;
-}
-
-#lift-over-submit {
-    background-color: var(--green-top);
-    border-color: var(--green-top);
-}
-
-#lift-over-submit:hover {
-    background-color: var(--green-top-hover);
-    border-color: var(--green-top-hover);
-}
-
-#top-navbar {
-    background-color: var(--green-top) !important;
-}
-
-.home-button {
-    width: 100%;
-}
-
 .page-button {
     width: 11em;
     background-color: var(--green-lighter);
     border-color: var(--green-lighter);
 }
 
-.nav-link{
-    color: var(--bs-body-color) !important;
-}
-
-.nav-pills .nav-link.active {
-    color: #fff !important;
-    background-color: var(--green-top);
-}
-
-.top-navbar-item {
-    color: var(--bs-nav-link-color) !important;
-}
-
-.top-navbar-item.active {
-    color: white !important;
-}
-
-#post-gwas-hdr {
-    margin-bottom: 1em;
-}
-
-#genomic-interval-hdr {
-    margin-bottom: 0.6em;
-}
-
 #page {
-    padding-left: 3em;
-}
-
-th:not(.dash-filter) {
-    font-weight: bold !important;
-    background-color: var(--th-gray) !important;
-}
-
-tr:nth-of-type(odd) td {
-    background-color: var(--td-gray) !important;    
-}
-
-th, td {
-    padding: 0.5em !important;
-}
-
-.form-check-input:checked {
-    background-color: var(--green);
-    border-color: var(--green);
-}
-
-.form-check-input:focus {
-    border-color: var(--light-gray);
-    box-shadow: 0 0 0 0.25rem var(--light-gray);
-}
-
-.dash-default-spinner > div {
-    background-color: var(--green) !important;
-}
-
-.rc-slider-dot-active, .rc-slider-handle {
-    border-color: var(--green) !important;
-}
-
-.rc-slider-track {
-    background-color: var(--green) !important;
-}
-
-.page-number, .current-page {
-    font-family: var(--bs-body-font-family) !important;
-    font-size: var(--font-size-base) !important;
-}
-
-#coexpression-module-graph {
-    visibility: hidden;
-    width: 100%;
-    height: 100vh;
-    border: 1px solid rgb(211, 211, 211);;
+    margin-left: 3em;
 }

@@ -6,7 +6,7 @@ from dash import dash_table, dcc, html
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
 
-layout = html.Div(id='coexpression-container', children=[
+layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Div(["Module detection algorithm ", html.I(
         className="bi bi-info-circle-fill me-2", id="coexpression-clustering-algo-tooltip")]),
 
@@ -45,7 +45,7 @@ layout = html.Div(id='coexpression-container', children=[
 
     html.Br(),
 
-    dbc.Button('Submit',
+    dbc.Button('Run Analysis',
                id='coexpression-submit',
                className='page-button',
                n_clicks=0),
@@ -144,4 +144,4 @@ layout = html.Div(id='coexpression-container', children=[
         ]
     )
 ]
-)
+))

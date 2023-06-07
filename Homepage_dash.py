@@ -94,14 +94,16 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
                                                    id='lift-over-reset',
                                                    n_clicks=0,
                                                    className='home-button'),
-                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2, className='mx-4'),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
+                                        style={'marginLeft': '3em'}),
                                 dbc.Col(dbc.Button('Clear Cache',
                                                    id='lift-over-clear-cache',
                                                    color='danger',
                                                    outline=True,
                                                    n_clicks=0,
                                                    className='home-button'),
-                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
+                                        style={'marginLeft': '3em'}),
                                 ], className='pt-2')
 
 genome_ref_input = dbc.Col([
@@ -161,9 +163,9 @@ app.layout = dbc.Container(
                                 sidebar],
                             xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                         dbc.Col([dash.page_container],
-                            xs=8, sm=8, md=10, lg=10, xl=10, xxl=10,
+                            xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
                             id='page')
-                    ], className='px-5 py-2')]
+                    ], className='ps-5 py-2')]
                  ),
 
         # Session storage
