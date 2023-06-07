@@ -117,3 +117,10 @@ th, td {
     font-family: var(--bs-body-font-family) !important;
     font-size: var(--font-size-base) !important;
 }
+
+#coexpression-module-graph {
+    visibility: hidden;
+    width: 100%;
+    height: 100vh;
+    border: 1px solid rgb(211, 211, 211);;
+}

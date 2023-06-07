@@ -379,7 +379,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         return convert_to_df_spia(result), empty
 
 
-def load_module_graph(implicated_gene_ids, module, algo, parameters):
+def load_module_graph(implicated_gene_ids, module, algo, parameters, layout):
     module_idx = module.split(' ')[1]
     coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
 
@@ -391,8 +391,8 @@ def load_module_graph(implicated_gene_ids, module, algo, parameters):
             if node['data']['id'] in implicated_gene_ids:
                 node['classes'] = 'shaded'
 
-        return elements, {'visibility': 'visible', 'width': '100%', 'height': '100vh'}
+        return elements, {'name': layout}, {'visibility': 'visible', 'width': '100%', 'height': '100vh'}
 
     # Triggered when there are no enriched modules
     except FileNotFoundError:
-        return {}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
+        return {}, {}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
