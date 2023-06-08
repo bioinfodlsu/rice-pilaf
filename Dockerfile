@@ -1,5 +1,6 @@
 FROM rocker/r-ver:4.3.0
 
+RUN mkdir -p /app
 COPY requirements.txt /app
 COPY install-libraries.r /app
 WORKDIR /app
