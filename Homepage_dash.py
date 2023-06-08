@@ -27,7 +27,12 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = ['N22', 'MH63', 'Azu', 'ARC', 'IR64', 'CMeo']
+other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
+                     {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
+                     {'value': 'Azu', 'label': 'Azu   (japonica Azucena)'},
+                     {'value': 'ARC', 'label': 'ARC   (basmati ARC)'},
+                     {'value': 'IR64', 'label': 'IR64   (indica IR64)'},
+                     {'value': 'CMeo', 'label': 'CMeo   (japonica CHAO MEO)'}]
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 
@@ -78,22 +83,28 @@ sidebar = dbc.Nav(
 # Input
 # ======
 
-submit_clear_buttons = [dbc.Button('Submit',
-                                   id='lift-over-submit',
-                                   n_clicks=0,
-                                   className='home-button'),
-                        dbc.Button('Clear All Display',
-                                   color='danger',
-                                   outline=True,
-                                   id='lift-over-reset',
-                                   n_clicks=0,
-                                   className='home-button'),
-                        dbc.Button('Clear Cache',
-                                   id='lift-over-clear-cache',
-                                   color='danger',
-                                   outline=True,
-                                   n_clicks=0,
-                                   className='home-button')]
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
+                                                   id='lift-over-submit',
+                                                   n_clicks=0,
+                                                   className='home-button'),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                                dbc.Col(dbc.Button('Clear All Display',
+                                                   color='danger',
+                                                   outline=True,
+                                                   id='lift-over-reset',
+                                                   n_clicks=0,
+                                                   className='home-button'),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
+                                        style={'marginLeft': '3em'}),
+                                dbc.Col(dbc.Button('Clear Cache',
+                                                   id='lift-over-clear-cache',
+                                                   color='danger',
+                                                   outline=True,
+                                                   n_clicks=0,
+                                                   className='home-button'),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
+                                        style={'marginLeft': '3em'}),
+                                ], className='pt-2')
 
 genome_ref_input = dbc.Col([
     html.H5('Genomic interval(s) from GWAS', id='genomic-interval-hdr'),
@@ -125,8 +136,7 @@ genome_ref_input = dbc.Col([
     ),
 
     html.Br(),
-
-    html.Div(submit_clear_buttons)
+    submit_clear_buttons
 ])
 
 
@@ -137,15 +147,13 @@ genome_ref_input = dbc.Col([
 app.layout = dbc.Container(
     [
         dbc.Row(navbar),
-        html.Br(),
 
         dbc.Row(
             genome_ref_input,
-            className='px-5'
+            className='px-5 pt-4 pb-5',
+            id='genome-ref-input-container'
         ),
 
-        html.Br(),
-        html.Hr(className='mx-5'),
         html.Br(),
 
         html.Div(id='post-gwas-analysis-container', hidden=True,
@@ -155,9 +163,9 @@ app.layout = dbc.Container(
                                 sidebar],
                             xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                         dbc.Col([dash.page_container],
-                            xs=8, sm=8, md=10, lg=10, xl=10, xxl=10,
+                            xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
                             id='page')
-                    ], className='px-5')]
+                    ], className='ps-5 py-2')]
                  ),
 
         # Session storage

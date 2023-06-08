@@ -1,0 +1,17 @@
+th:not(.dash-filter) {
+    font-weight: bold !important;
+    background-color: var(--th-gray) !important;
+}
+
+tr:nth-of-type(odd) td {
+    background-color: var(--td-gray) !important;    
+}
+
+th, td {
+    padding: 0.5em !important;
+}
+
+.page-number, .current-page {
+    font-family: var(--bs-body-font-family) !important;
+    font-size: var(--font-size-base) !important;
+}

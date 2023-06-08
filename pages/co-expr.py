@@ -6,7 +6,7 @@ from dash import dash_table, dcc, html
 dash.register_page(__name__, name="Co-expression Network Analysis")
 
 
-layout = html.Div(id='coexpression-container', children=[
+layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Div(["Module detection algorithm ", html.I(
         className="bi bi-info-circle-fill me-2", id="coexpression-clustering-algo-tooltip")]),
 
@@ -19,7 +19,7 @@ layout = html.Div(id='coexpression-container', children=[
              'label_id': 'clusterone'},
             {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
             {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
-            {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'},
+            {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
         ],
         value='clusterone',
         inline=True
@@ -43,6 +43,14 @@ layout = html.Div(id='coexpression-container', children=[
                       50: '0.5', 60: '0.6', 70: '0.7', 80: '0.8', 90: '0.9', 100: '1.0'},
                value=30),
 
+    html.Br(),
+
+    dbc.Button('Run Analysis',
+               id='coexpression-submit',
+               className='page-button',
+               n_clicks=0),
+
+    html.Br(),
     html.Br(),
 
     dcc.Markdown("Enriched modules"),
@@ -78,13 +86,36 @@ layout = html.Div(id='coexpression-container', children=[
             'whiteSpace': 'pre-line',
             'font-family': 'sans-serif'
         },
-        markdown_options={"html": True}
+        markdown_options={"html": True},
+        sort_action='native',
+        filter_action='native',
+        filter_options={'case': 'insensitive',
+                        'placeholder_text': 'Search column'},
+        page_action='native',
+        page_size=15
     ),
+
+    html.Br(),
+
+    dcc.Markdown("Module"),
+
+    dbc.RadioItems(
+        id='coexpression-graph-layout',
+        options=[
+            {'value': 'circle', 'label': 'Circle', 'label_id': 'circle'},
+            {'value': 'grid', 'label': 'Grid', 'label_id': 'grid'}
+        ],
+        value='circle',
+        inline=True
+    ),
+
+    html.Br(),
 
     cyto.Cytoscape(
         id='coexpression-module-graph',
         layout={'name': 'circle'},
-        style={'visibility': 'hidden', 'width': '100%', 'height': '100vh'},
+        style={'width': '100%',
+               'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
         stylesheet=[
             {
                 'selector': 'node',
@@ -102,10 +133,10 @@ layout = html.Div(id='coexpression-container', children=[
                 }
             },
             {
-                'selector': '.red',
+                'selector': '.shaded',
                 'style': {
-                    'background-color': 'red',
-                    'line-color': 'red',
+                    'background-color': '#254b5d',
+                    'line-color': '#254b5d',
                     'height': '20px',
                     'width': '20px'
                 }
@@ -113,4 +144,4 @@ layout = html.Div(id='coexpression-container', children=[
         ]
     )
 ]
-)
+))

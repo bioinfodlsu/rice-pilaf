@@ -73,14 +73,17 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
+        Output('coexpression-module-graph', 'layout'),
         Output('coexpression-module-graph', 'style'),
         Input('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
         Input('coexpression-clustering-algo', 'value'),
-        Input('coexpression-parameter-slider', 'value')
+        Input('coexpression-parameter-slider', 'value'),
+        Input('coexpression-graph-layout', 'value')
     )
-    def display_module_graph(implicated_gene_ids, module, algo, parameters):
-        return load_module_graph(implicated_gene_ids, module, algo, parameters)
+    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout):
+        return load_module_graph(
+            implicated_gene_ids, module, algo, parameters, layout)
 
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',

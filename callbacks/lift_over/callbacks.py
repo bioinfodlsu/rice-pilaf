@@ -76,7 +76,7 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-nb-table', 'data'),
-        Output('lift_over_nb_entire_table','data'),
+        Output('lift_over_nb_entire_table', 'data'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         State('lift-over-is-submitted', 'data')
     )
@@ -90,7 +90,7 @@ def init_callback(app):
                     genes_from_Nb = get_genes_from_Nb(
                         nb_intervals)
 
-                    return genes_from_Nb[1],genes_from_Nb[0].to_dict('records')
+                    return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
 
         raise PreventUpdate
 
@@ -112,7 +112,9 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
+        Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
+        Output('lift-over-results-table', 'filter_query'),
         Output('lift-over-overlap-table-filter', 'style'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
@@ -136,27 +138,40 @@ def init_callback(app):
                         nb_intervals)
                     df_nb_complete = genes_from_Nb[0].to_dict('records')
 
+                    columns = [{'id': key, 'name': key}
+                               for key in genes_from_Nb[0].columns]
+
                     if active_tab == SUMMARY_TAB:
-                        df_nb = get_overlapping_ogi(
-                            filter_rice_variants, nb_intervals).to_dict('records')
+                        df_nb_raw = get_overlapping_ogi(
+                            filter_rice_variants, nb_intervals)
+                        df_nb = df_nb_raw.to_dict('records')
+
+                        columns = [{'id': key, 'name': key}
+                                   for key in df_nb_raw.columns]
 
                         return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varieties:', \
-                            df_nb, {'display': 'block'}
+                            columns, df_nb, '', {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'Genes overlapping the site in the Nipponbare reference', df_nb_complete, {'display': 'none'}
+                        return 'Genes overlapping the site in the Nipponbare reference', columns, df_nb_complete, '', \
+                            {'display': 'none'}
 
                     else:
                         tab_number = int(active_tab[len('tab-'):])
                         other_ref = children[tab_number]["props"]["value"]
-                        df_nb = get_genes_from_other_ref(
-                            other_ref, nb_intervals).to_dict('records')
 
-                        return f'Genes from homologous regions in {other_ref}', df_nb, {'display': 'none'}
+                        df_nb_raw = get_genes_from_other_ref(
+                            other_ref, nb_intervals)
+                        df_nb = df_nb_raw.to_dict('records')
+
+                        columns = [{'id': key, 'name': key}
+                                   for key in df_nb_raw.columns]
+
+                        return f'Genes from homologous regions in {other_ref}', columns, df_nb, '', {'display': 'none'}
 
                 else:
-                    return None, None, {'display': 'none'}
+                    return None, None, None, None, {'display': 'none'}
             else:
-                return None, None, {'display': 'none'}
+                return None, None, None, None, {'display': 'none'}
 
         raise PreventUpdate
