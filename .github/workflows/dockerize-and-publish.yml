@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: [Check for syntax errors]
     types: [completed]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
