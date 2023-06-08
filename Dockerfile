@@ -5,7 +5,9 @@ COPY requirements.txt /app
 COPY install-libraries.r /app
 WORKDIR /app
 
-RUN set -ex && apt-get update && apt-get install -y \
+RUN set -ex 
+RUN apt-get update
+RUN apt-get install -y \
   build-essential \
   libcurl4-openssl-dev \
   libffi-dev \
