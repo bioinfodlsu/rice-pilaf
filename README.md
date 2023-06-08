@@ -71,7 +71,7 @@ Start by creating a copy of this repository:
 
 2. Install the necessary R libraries by running [`install-libraries.r`](https://github.com/bioinfodlsu/rice-pilaf/blob/main/install-libraries.r).
 
-3. Run the following command to start running the server:
+3. Run the following command to start the server:
    ```
    python Homepage_dash.py
    ```
