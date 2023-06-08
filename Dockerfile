@@ -1,6 +1,7 @@
 FROM rocker/r-ver:4.3.0
 
-COPY . /app
+COPY requirements.txt /app
+COPY install-libraries.r /app
 WORKDIR /app
 
 RUN set -ex
@@ -12,6 +13,8 @@ RUN apt-get install -y python3-pip
 RUN pip3 install -r requirements.txt
 
 RUN Rscript --vanilla install-libraries.r
+
+COPY . /app
 
 EXPOSE 8050
 CMD ["python3", "Homepage_dash.py"]
