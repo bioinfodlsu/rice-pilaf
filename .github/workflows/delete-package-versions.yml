@@ -1,15 +1,15 @@
 name: Delete package versions
 
 on:
-  push:
-    branches: ['main']
+  workflow_run:
+    workflows: [Create and publish a Docker image]
+    types: [completed]
+    branches: [main]
 
 jobs:
   delete-versions:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/delete-package-versions@v4
@@ -17,3 +17,9 @@ jobs:
           package-name: 'rice-pilaf'
           package-type: 'container'
           min-versions-to-keep: 1
+          
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow failed'
