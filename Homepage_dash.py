@@ -106,7 +106,7 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
                                 ], className='pt-2')
 
 genome_ref_input = dbc.Col([
-    html.H5('Genomic interval(s) from GWAS', id='genomic-interval-hdr'),
+    html.H5('Enter genomic intervals from GWAS', id='genomic-interval-hdr'),
     dbc.Alert(
         id='input-error',
         children='',
