@@ -5,15 +5,18 @@ COPY requirements.txt /app
 COPY install-libraries.r /app
 WORKDIR /app
 
-RUN set -ex
-
-RUN apt-get update
-RUN apt-get install -y build-essential libssl-dev libcurl4-openssl-dev libfontconfig1-dev libxml2-dev libffi-dev python3-dev
-
-RUN apt-get install -y python3-pip
-RUN pip3 install -r requirements.txt
+RUN set -ex && apt-get update && apt-get install -y \
+  build-essential \
+  libcurl4-openssl-dev \
+  libffi-dev \
+  libfontconfig1-dev \
+  libssl-dev \
+  libxml2-dev \
+  python3-dev \
+  python3-pip
 
 RUN Rscript --vanilla install-libraries.r
+RUN pip3 install -r requirements.txt
 
 COPY . /app
 
