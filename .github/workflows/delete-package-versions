@@ -1,0 +1,19 @@
+name: Delete package versions
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  delete-versions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'rice-pilaf'
+          package-type: 'container'
+          min-versions-to-keep: 1
