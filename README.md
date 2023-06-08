@@ -37,6 +37,11 @@ Start by creating a copy of this repository:
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
    
+4. Open the app by accessing the following URL on your browser:
+   ```
+   http://localhost:8050/
+   ```
+   
 ### Building the Image Locally
 1. Download [Docker](https://www.docker.com/), a platform for building and running containerized apps.
 2. Build the Docker image by running the following command on the root of the cloned repository:
@@ -52,6 +57,11 @@ Start by creating a copy of this repository:
    ```
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
+   
+4. Open the app by accessing the following URL on your browser:
+   ```
+   http://localhost:8050/
+   ```
 
 ### Running Without Docker
 1. Install the necessary Python libraries by running the following command:
@@ -61,9 +71,14 @@ Start by creating a copy of this repository:
 
 2. Install the necessary R libraries by running [`install-libraries.r`](https://github.com/bioinfodlsu/rice-pilaf/blob/main/install-libraries.r).
 
-3. Run the following command to launch the app on your browser:
+3. Run the following command to start running the server:
    ```
    python Homepage_dash.py
+   ```
+   
+4. Open the app by accessing the following URL on your browser:
+   ```
+   http://localhost:8050/
    ```
 
 ## Contact
