@@ -25,40 +25,46 @@ Start by creating a copy of this repository:
 
 ### [Recommended] Using the Image Published on GitHub Packages
 1. Download [Docker](https://www.docker.com/), a platform for building and running containerized apps.
-2. Pull the Docker image from GitHub's Container registry by running the following command:
+2. Start the Docker daemon:
+   - If you are using Windows, open Docker Desktop to start the daemon.
+   - If you are using Ubuntu or Debian, follow the instructions [here](https://docs.docker.com/config/daemon/start/).
+3. Pull the Docker image from GitHub's Container registry by running the following command:
    ```
    docker pull ghcr.io/bioinfodlsu/rice-pilaf:main
    ```
 
-3. Spin up a container from the Docker image by running the following command:
+4. Spin up a container from the Docker image by running the following command:
    ```
    docker run -v path/to/static/in/local:/app/static -p 8050:8050 ghcr.io/bioinfodlsu/rice-pilaf:main
    ```
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
    
-4. Open the app by accessing the following URL on your browser:
+5. Open the app by accessing the following URL on your browser:
    ```
    http://localhost:8050/
    ```
    
 ### Building the Image Locally
 1. Download [Docker](https://www.docker.com/), a platform for building and running containerized apps.
-2. Build the Docker image by running the following command on the root of the cloned repository:
+2. Start the Docker daemon:
+   - If you are using Windows, open Docker Desktop to start the daemon.
+   - If you are using Ubuntu or Debian, follow the instructions [here](https://docs.docker.com/config/daemon/start/).
+3. Build the Docker image by running the following command on the root of the cloned repository:
    ```
    docker build -t rice-pilaf .
    ``` 
    
    Note that building the image may take up to 30 minutes in a machine with a 32 GB RAM and 8-core CPU @ 2.30 GHz. 
 
-3. Spin up a container from the Docker image by running the following command:
+4. Spin up a container from the Docker image by running the following command:
    ```
    docker run -v path/to/static/in/local:/app/static -p 8050:8050 rice-pilaf
    ```
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
    
-4. Open the app by accessing the following URL on your browser:
+5. Open the app by accessing the following URL on your browser:
    ```
    http://localhost:8050/
    ```
