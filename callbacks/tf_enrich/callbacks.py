@@ -28,3 +28,14 @@ def init_callback(app):
             return enrichment_results_df.to_dict('records')
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('tfbs-results-container', 'style'),
+        Input('tfbs-submit', 'n_clicks'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_tfbs_results(tfbs_submit_n_clicks, is_submitted):
+        if is_submitted and tfbs_submit_n_clicks >= 1:
+            return {'display': 'block'}
+        else:
+            return {'display': 'none'}
