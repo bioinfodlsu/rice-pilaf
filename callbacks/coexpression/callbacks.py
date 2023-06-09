@@ -127,3 +127,15 @@ def init_callback(app):
             return algo
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-results-container', 'style'),
+        Input('coexpression-submit', 'n_clicks'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_coexpression_results(coexpression_submit_n_clicks, is_submitted):
+        if is_submitted and coexpression_submit_n_clicks >= 1:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
