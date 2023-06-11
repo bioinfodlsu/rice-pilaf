@@ -27,6 +27,13 @@ layout = html.Div(id='lift-over-container', children=[
                       inline=True),
 
         html.Br(),
+
+        html.P(html.Div([dbc.Button([html.I(
+            className="bi bi-download me-2", id="coexpression-clustering-algo-tooltip"), 'Export to CSV'], color='light', size='sm', className='table-button'),
+            dbc.Button([html.I(
+                className="bi bi-arrow-clockwise me-2", id="coexpression-clustering-algo-tooltip"), 'Reset Table'], color='light', size='sm', className='ms-3 table-button')],
+            style={'textAlign': 'right'})),
+
         dash_table.DataTable(
             id='lift-over-results-table',
             persistence=True,
