@@ -20,28 +20,28 @@ layout = html.Div(id='lift-over-container', children=[
 
     html.Br(),
 
-    html.P(id='lift-over-results-gene-intro', children=''),
+    dcc.Loading([
+        dbc.Label(id='lift-over-results-gene-intro', children=''),
 
-    html.P(dbc.Checklist(id='lift-over-overlap-table-filter',
-                         inline=True)),
+        dbc.Checklist(id='lift-over-overlap-table-filter',
+                      inline=True),
 
-    html.Br(),
-
-    dcc.Loading(dash_table.DataTable(
-        id='lift-over-results-table',
-        persistence=True,
-        persistence_type='memory',
-        style_cell={
-            'whiteSpace': 'pre-line',
-            'font-family': 'sans-serif'
-        },
-        sort_action='native',
-        filter_action='native',
-        filter_options={'case': 'insensitive',
-                        'placeholder_text': 'Search column'},
-        page_action='native',
-        page_size=15
-    )),
+        html.Br(),
+        dash_table.DataTable(
+            id='lift-over-results-table',
+            persistence=True,
+            persistence_type='memory',
+            style_cell={
+                'whiteSpace': 'pre-line',
+                'font-family': 'sans-serif'
+            },
+            sort_action='native',
+            filter_action='native',
+            filter_options={'case': 'insensitive',
+                            'placeholder_text': 'Search column'},
+            page_action='native',
+            page_size=15
+        )]),
 
     html.Br()
 ]

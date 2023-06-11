@@ -159,8 +159,8 @@ def init_callback(app):
                             columns, df_nb, '', {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'This table lists the genes overlapping the site in the Nipponbare reference.', columns, df_nb_complete, '', \
-                            {'display': 'none'}
+                        return html.P('This table lists the genes overlapping the site in the Nipponbare reference.'), \
+                            columns, df_nb_complete, '', {'display': 'none'}
 
                     else:
                         tab_number = int(active_tab[len('tab-'):])
@@ -173,7 +173,8 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'This table lists the genes from homologous regions in {other_ref}.', columns, df_nb, '', {'display': 'none'}
+                        return html.P(f'This table lists the genes from homologous regions in {other_ref}.'), \
+                            columns, df_nb, '', {'display': 'none'}
 
                 else:
                     return None, None, None, None, {'display': 'none'}
