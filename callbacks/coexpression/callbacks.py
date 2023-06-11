@@ -64,6 +64,9 @@ def init_callback(app):
     )
     def perform_module_enrichment(coexpression_n_clicks, implicated_gene_ids, genomic_intervals, algo, submitted_algo, parameters, is_submitted, parameter_module, submitted_parameter_module, coexpression_is_submitted):
         if is_submitted and (coexpression_n_clicks >= 1 or coexpression_is_submitted):
+            # TODO: maybe theres a way to improve lines 67-73
+            # (Potential bug: submitted algo or submitted parameter module is missing)
+            # --> if any one of them are missing, it will use the latest clicked clustering algo or saved parameter module
             if coexpression_is_submitted:
                 if submitted_algo:
                     algo = submitted_algo
