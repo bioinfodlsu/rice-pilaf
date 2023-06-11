@@ -155,11 +155,11 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return 'This table lists the implicated genes present in the references selected using the checkbox below:', \
+                        return 'The table below lists the implicated genes that are common to:', \
                             columns, df_nb, '', {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return html.P('This table lists the genes overlapping the site in the Nipponbare reference.'), \
+                        return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
                             columns, df_nb_complete, '', {'display': 'none'}
 
                     else:
@@ -173,7 +173,7 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return html.P(f'This table lists the genes from homologous regions in {other_ref}.'), \
+                        return f'The table below lists the genes from homologous regions in {other_ref}.', \
                             columns, df_nb, '', {'display': 'none'}
 
                 else:
