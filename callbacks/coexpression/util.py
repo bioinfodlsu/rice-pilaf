@@ -293,7 +293,11 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
     dir = PATHWAY_TABS[int(active_tab)][1]
     enrichment_type = dir.split('/')[-1]
 
-    file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
+    try:
+        file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
+
+    except:
+        file = None
 
     empty = False
     if enrichment_type == 'go':
@@ -380,10 +384,10 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
 
 
 def load_module_graph(implicated_gene_ids, module, algo, parameters, layout):
-    module_idx = module.split(' ')[1]
-    coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
-
     try:
+        module_idx = module.split(' ')[1]
+        coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
+
         G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
 
         elements = nx.cytoscape_data(G)['elements']
@@ -394,5 +398,5 @@ def load_module_graph(implicated_gene_ids, module, algo, parameters, layout):
         return elements, {'name': layout}, {'visibility': 'visible', 'width': '100%', 'height': '100vh'}
 
     # Triggered when there are no enriched modules
-    except FileNotFoundError:
-        return {}, {}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
+    except:  # FileNotFoundError:
+        return {}, {'name': layout}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}

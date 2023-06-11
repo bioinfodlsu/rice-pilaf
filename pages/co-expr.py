@@ -53,7 +53,7 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Br(),
     html.Br(),
 
-    html.Div(id="coexpression-results-container", children=[
+    html.Div(id="coexpression-results-container", style={'display': 'none'}, children=[
         dcc.Markdown("Enriched modules"),
 
         dcc.Loading(dcc.Dropdown(

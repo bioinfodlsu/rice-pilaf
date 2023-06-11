@@ -9,6 +9,18 @@ Parameter_module = namedtuple('Parameter_module', [
 
 def init_callback(app):
     @app.callback(
+        Output('coexpression-results-container', 'style'),
+        Input('coexpression-submit', 'n_clicks'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_coexpression_results(coexpression_submit_n_clicks, is_submitted):
+        if is_submitted and coexpression_submit_n_clicks >= 1:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
+
+    @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
         Input('coexpression-clustering-algo', 'value'),
@@ -24,15 +36,16 @@ def init_callback(app):
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
-        Input('lift-over-nb-table', 'data'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
-        Input('coexpression-clustering-algo', 'value'),
-        Input('coexpression-parameter-slider', 'value'),
+        Input('coexpression-submit', 'n_clicks'),
+        State('lift-over-nb-table', 'data'),
+        State('lift-over-genomic-intervals-saved-input', 'data'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
         State('lift-over-is-submitted', 'data'),
-        State('coexpression-parameter-module-saved-input', 'data')
+        State('coexpression-parameter-module-saved-input', 'data'),
     )
-    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted, parameter_module):
-        if is_submitted:
+    def perform_module_enrichment(coexpression_n_clicks, implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted, parameter_module):
+        if is_submitted and coexpression_n_clicks >= 1:
             enriched_modules = do_module_enrichment_analysis(
                 implicated_gene_ids, genomic_intervals, algo, parameters)
 
@@ -53,37 +66,50 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Output('coexpression-pathways', 'columns'),
+        Input('coexpression-submit', 'n_clicks'),
         Input('coexpression-modules-pathway', 'active_tab'),
         Input('coexpression-modules', 'value'),
-        Input('coexpression-clustering-algo', 'value'),
-        Input('coexpression-parameter-slider', 'value'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
     )
-    def display_pathways(active_tab, module, algo, parameters):
-        module_idx = module.split(' ')[1]
-        table, empty = convert_to_df(active_tab, module_idx, algo, parameters)
+    def display_pathways(coexpression_n_clicks, active_tab, module, algo, parameters):
+        if coexpression_n_clicks >= 1:
+            try:
+                module_idx = module.split(' ')[1]
+                table, empty = convert_to_df(
+                    active_tab, module_idx, algo, parameters)
+            except:
+                table, empty = convert_to_df(
+                    active_tab, None, algo, parameters)
 
-        if not empty:
-            columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
-                       'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
-        else:
-            columns = [{'id': x, 'name': x}
-                       for x in table.columns]
+            if not empty:
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
+                           'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
+            else:
+                columns = [{'id': x, 'name': x}
+                           for x in table.columns]
 
-        return table.to_dict('records'), columns
+            return table.to_dict('records'), columns
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'layout'),
         Output('coexpression-module-graph', 'style'),
-        Input('lift-over-nb-table', 'data'),
+        State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
-        Input('coexpression-clustering-algo', 'value'),
-        Input('coexpression-parameter-slider', 'value'),
-        Input('coexpression-graph-layout', 'value')
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
+        Input('coexpression-graph-layout', 'value'),
+        Input('coexpression-submit', 'n_clicks')
     )
-    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout):
-        return load_module_graph(
-            implicated_gene_ids, module, algo, parameters, layout)
+    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout, coexpression_n_clicks):
+        if coexpression_n_clicks >= 1:
+            return load_module_graph(
+                implicated_gene_ids, module, algo, parameters, layout)
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',
@@ -127,15 +153,3 @@ def init_callback(app):
             return algo
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-results-container', 'style'),
-        Input('coexpression-submit', 'n_clicks'),
-        State('lift-over-is-submitted', 'data')
-    )
-    def display_coexpression_results(coexpression_submit_n_clicks, is_submitted):
-        if is_submitted and coexpression_submit_n_clicks >= 1:
-            return {'display': 'block'}
-
-        else:
-            return {'display': 'none'}
