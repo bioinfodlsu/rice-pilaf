@@ -1,4 +1,4 @@
-from dash import Input, Output, State, dcc
+from dash import Input, Output, State, dcc, html
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -22,7 +22,6 @@ def init_callback(app):
         Output('lift-over-results-tabs', 'children'),
 
         Output('lift-over-results-genomic-intervals-input', 'children'),
-        Output('lift-over-results-other-refs-input', 'children'),
 
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
@@ -50,9 +49,16 @@ def init_callback(app):
                 if not active_filter:
                     active_filter = tabs[1:]
 
-                return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                    tabs_children, f'Genomic Interval: {nb_intervals_str}', f'Homologous regions: {str(other_refs)[1:-1]}', \
-                    tabs[1:], active_filter
+                gene_list_msg = [html.Span(
+                    'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
+
+                if other_refs:
+                    gene_list_msg += [html.Span(' and in homologous regions of '),
+                                      html.B(','.join(other_refs)), html.Span('.')]
+                else:
+                    gene_list_msg += [html.Span('.')]
+
+                return gene_list_msg, tabs_children, [html.B('Genomic Interval: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
             else:
                 return None, None, None, None, [], None
 
@@ -149,11 +155,11 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varieties:', \
+                        return 'This table lists the implicated genes present in the references selected using the checkbox below:', \
                             columns, df_nb, '', {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'Genes overlapping the site in the Nipponbare reference', columns, df_nb_complete, '', \
+                        return 'This table lists the genes overlapping the site in the Nipponbare reference.', columns, df_nb_complete, '', \
                             {'display': 'none'}
 
                     else:
@@ -167,7 +173,7 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'Genes from homologous regions in {other_ref}', columns, df_nb, '', {'display': 'none'}
+                        return f'This table lists the genes from homologous regions in {other_ref}.', columns, df_nb, '', {'display': 'none'}
 
                 else:
                     return None, None, None, None, {'display': 'none'}

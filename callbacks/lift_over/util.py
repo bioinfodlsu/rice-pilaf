@@ -25,10 +25,12 @@ error_messages = {
 
 def create_empty_df():
     return pd.DataFrame({
-        'name': ['-'],
-        'chrom': ['-'],
-        'start': ['-'],
-        'end': ['-']
+        'OGI': ['-'],
+        'Name': ['-'],
+        'Chromosome': ['-'],
+        'Start': ['-'],
+        'End': ['-'],
+        'Strand': ['-']
     })
 
 # The first element is the error code and the second element is the malformed interval
@@ -234,12 +236,12 @@ def get_genes_from_Nb(Nb_intervals):
 
         # TODO should be a better way to do this?
         df = pd.DataFrame({
-            'ogi': ogi_list,
-            'name': [gene.id for gene in genes_in_interval],
-            'chrom': [gene.chrom for gene in genes_in_interval],
-            'start': [gene.start for gene in genes_in_interval],
-            'end': [gene.end for gene in genes_in_interval],
-            'strand':[gene.strand for gene in genes_in_interval]
+            'OGI': ogi_list,
+            'Name': [gene.id for gene in genes_in_interval],
+            'Chromosome': [gene.chrom for gene in genes_in_interval],
+            'Start': [gene.start for gene in genes_in_interval],
+            'End': [gene.end for gene in genes_in_interval],
+            'Strand': [gene.strand for gene in genes_in_interval]
         })
         dfs.append(df)
 
@@ -247,12 +249,12 @@ def get_genes_from_Nb(Nb_intervals):
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df(), table['name'].values.tolist()
+            return create_empty_df(), table['Name'].values.tolist()
 
-        return table, table['name'].values.tolist()
+        return table, table['Name'].values.tolist()
 
     except ValueError:
-        return create_empty_df(), table['name'].values.tolist()
+        return create_empty_df(), table['Name'].values.tolist()
 
 
 # Remove 'gene' prefix from gene IDs (e.g., from N22)
@@ -292,12 +294,12 @@ def get_genes_from_other_ref(ref, Nb_intervals):
                                     for gene in genes_in_interval], ogi_mapping)
 
             df = pd.DataFrame({
-                'ogi': ogi_list,
-                'name': [gene.id for gene in genes_in_interval],
-                'chrom': [gene.chrom for gene in genes_in_interval],
-                'start': [gene.start for gene in genes_in_interval],
-                'end': [gene.end for gene in genes_in_interval],
-                'strand':[gene.strand for gene in genes_in_interval]
+                'OGI': ogi_list,
+                'Name': [gene.id for gene in genes_in_interval],
+                'Chromosome': [gene.chrom for gene in genes_in_interval],
+                'Start': [gene.start for gene in genes_in_interval],
+                'End': [gene.end for gene in genes_in_interval],
+                'Strand': [gene.strand for gene in genes_in_interval]
             })
             dfs.append(df)
 

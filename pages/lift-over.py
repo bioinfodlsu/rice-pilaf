@@ -6,11 +6,11 @@ from dash import dash_table, dcc, html
 dash.register_page(__name__, path="/", name="Lift-over")
 
 layout = html.Div(id='lift-over-container', children=[
-    html.Div(id='lift-over-results-genomic-intervals-input',
-             children=''),
+    html.P(id='lift-over-results-genomic-intervals-input',
+           children=''),
 
-    html.Div(id='lift-over-results-other-refs-input',
-             children=''),
+    html.P(id='lift-over-results-other-refs-input',
+           children=''),
 
     html.Div(id='lift-over-results-intro', children=''),
 
@@ -20,14 +20,10 @@ layout = html.Div(id='lift-over-container', children=[
 
     html.Br(),
 
-    html.Div(id='lift-over-results-gene-intro', children=''),
+    html.P(id='lift-over-results-gene-intro', children=''),
 
-    html.Br(),
-
-    dbc.Checklist(id='lift-over-overlap-table-filter',
-                  inline=True,
-                  options=[],
-                  style={}),
+    html.P(dbc.Checklist(id='lift-over-overlap-table-filter',
+                         inline=True)),
 
     html.Br(),
 
@@ -35,7 +31,6 @@ layout = html.Div(id='lift-over-container', children=[
         id='lift-over-results-table',
         persistence=True,
         persistence_type='memory',
-        export_format='csv',
         style_cell={
             'whiteSpace': 'pre-line',
             'font-family': 'sans-serif'
