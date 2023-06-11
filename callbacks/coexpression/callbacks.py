@@ -10,15 +10,30 @@ Parameter_module = namedtuple('Parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-results-container', 'style'),
+        Output('coexpression-is-submitted', 'data', allow_duplicate=True),
+        Output('coexpression-submitted-clustering-algo',
+               'data', allow_duplicate=True),
+        Output('coexpression-submitted-parameter-module',
+               'data', allow_duplicate=True),
         Input('coexpression-submit', 'n_clicks'),
-        State('lift-over-is-submitted', 'data')
+        State('lift-over-is-submitted', 'data'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'marks'),
+        State('coexpression-parameter-slider', 'value'),
+        prevent_initial_call=True
     )
-    def display_coexpression_results(coexpression_submit_n_clicks, is_submitted):
+    def display_coexpression_results(coexpression_submit_n_clicks, is_submitted, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if is_submitted and coexpression_submit_n_clicks >= 1:
-            return {'display': 'block'}
+            paramater_module_value = Parameter_module(
+                submitted_slider_marks, submitted_slider_value, '')._asdict()
+
+            coexpression_submitted_parameter_module = {
+                submitted_algo: paramater_module_value}
+
+            return {'display': 'block'}, True, submitted_algo, coexpression_submitted_parameter_module
 
         else:
-            return {'display': 'none'}
+            return {'display': 'none'}, False, None, None
 
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
@@ -40,12 +55,22 @@ def init_callback(app):
         State('lift-over-nb-table', 'data'),
         State('lift-over-genomic-intervals-saved-input', 'data'),
         State('coexpression-clustering-algo', 'value'),
+        State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-parameter-slider', 'value'),
         State('lift-over-is-submitted', 'data'),
         State('coexpression-parameter-module-saved-input', 'data'),
+        State('coexpression-submitted-parameter-module', 'data'),
+        State('coexpression-is-submitted', 'data')
     )
-    def perform_module_enrichment(coexpression_n_clicks, implicated_gene_ids, genomic_intervals, algo, parameters, is_submitted, parameter_module):
-        if is_submitted and coexpression_n_clicks >= 1:
+    def perform_module_enrichment(coexpression_n_clicks, implicated_gene_ids, genomic_intervals, algo, submitted_algo, parameters, is_submitted, parameter_module, submitted_parameter_module, coexpression_is_submitted):
+        if is_submitted and (coexpression_n_clicks >= 1 or coexpression_is_submitted):
+            if coexpression_is_submitted:
+                if submitted_algo:
+                    algo = submitted_algo
+
+                if submitted_parameter_module:
+                    parameter_module = submitted_parameter_module
+
             enriched_modules = do_module_enrichment_analysis(
                 implicated_gene_ids, genomic_intervals, algo, parameters)
 
@@ -124,7 +149,7 @@ def init_callback(app):
         State('coexpression-parameter-module-saved-input', 'data'),
         prevent_initial_call=True
     )
-    def set_coexpression_session_state(algo, parameter_value, module, parameter_mark, is_submitted, parameter_module):
+    def set_input_coexpression_session_state(algo, parameter_value, module, parameter_mark, is_submitted, parameter_module):
         if is_submitted:
             paramater_module_value = Parameter_module(
                 parameter_mark, parameter_value, module)._asdict()
@@ -136,6 +161,25 @@ def init_callback(app):
                 parameter_module = {algo: paramater_module_value}
 
             return algo, parameter_module
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-submitted-parameter-module',
+               'data', allow_duplicate=True),
+        Input('coexpression-submit', 'n_clicks'),
+        Input('coexpression-modules', 'value'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('lift-over-is-submitted', 'data'),
+        State('coexpression-submitted-parameter-module', 'data'),
+        prevent_initial_call=True
+    )
+    def set_submitted_coexpression_session_state_module(coexpression_n_clicks, module, algo, is_submitted, parameter_module):
+        if is_submitted and coexpression_n_clicks >= 1:
+            if parameter_module and algo in parameter_module:
+                parameter_module[algo]['param_module'] = module
+
+                return parameter_module
 
         raise PreventUpdate
 
@@ -153,3 +197,15 @@ def init_callback(app):
             return algo
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-submit', 'n_clicks'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('coexpression-is-submitted', 'data')
+    )
+    def display_submitted_results(nb_intervals_str, coexpression_is_submitted):
+        if coexpression_is_submitted:
+            return 1
+
+        else:
+            return 0

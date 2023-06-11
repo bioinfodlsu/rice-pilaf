@@ -219,9 +219,25 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
+            id='coexpression-submitted-clustering-algo',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-submitted-parameter-module',
+            storage_type='session'
+        ),
+
+        dcc.Store(
             id='coexpression-parameter-module-saved-input',
             storage_type='session'
-        )
+        ),
+
+        dcc.Store(
+            id='coexpression-is-submitted',
+            storage_type='session'
+        ),
+
     ],
     fluid=True,
 )
