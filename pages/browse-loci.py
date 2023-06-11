@@ -10,13 +10,18 @@ layout = html.Div(id='igv-container', children=[
     #      genome="GCF_001433935.1",
     #      minimumBases=100,
     # )
+    html.P(id='igv-genomic-intervals-input',
+           children=''),
+
+    dbc.Label('Select a genomic interval of interest'),
+
     dcc.Dropdown(
         id='igv-genomic-intervals'
     ),
 
     html.Br(),
 
-    html.Div(id='igv-track-intro', children=''),
+    dbc.Label(id='igv-track-intro', children=''),
 
     dbc.Checklist(id='igv-track-filter',
                   inline=True,

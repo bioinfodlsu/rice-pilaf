@@ -58,7 +58,7 @@ def init_callback(app):
                 else:
                     gene_list_msg += [html.Span('.')]
 
-                return gene_list_msg, tabs_children, [html.B('Genomic Interval: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
+                return gene_list_msg, tabs_children, [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
             else:
                 return None, None, None, None, [], None
 
