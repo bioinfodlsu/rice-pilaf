@@ -116,12 +116,12 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
                                          dbc.Button([html.I(
                                              className='bi bi-download me-2'),
                                              'Export to CSV'],
-                                             id='lift-over-export-table',
+                                             id='coexpression-export-table',
                                              color='light', size='sm', className='table-button'),
                                          dbc.Button([html.I(
                                              className='bi bi-arrow-clockwise me-2'),
                                              'Reset Table'],
-                                             id='lift-over-reset-table',
+                                             id='coexpression-reset-table',
                                              color='light', size='sm', className='ms-3 table-button')
                                      ], style={'textAlign': 'right'})
                                  ),
@@ -160,7 +160,24 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
                                      className='ms-3'
                                  ),
 
-                                 html.Br(),
+                                 html.P(
+                                     html.Div([
+                                         dbc.Button([html.I(
+                                             className='bi bi-download me-2'),
+                                             'Export to JSON'],
+                                             id='coexpression-export-graph',
+                                             color='light', size='sm',
+                                             className='table-button'),
+                                         dbc.Button([html.I(
+                                             className='bi bi-arrow-clockwise me-2'),
+                                             'Reset Graph'],
+                                             id='coexpression-reset-graph',
+                                             n_clicks=0,
+                                             color='light', size='sm',
+                                             className='ms-3 table-button')
+                                     ], style={'textAlign': 'right'})
+                                 ),
+
 
                                  cyto.Cytoscape(
                                      id='coexpression-module-graph',

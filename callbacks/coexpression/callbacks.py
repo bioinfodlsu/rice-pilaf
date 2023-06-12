@@ -183,6 +183,25 @@ def init_callback(app):
             implicated_gene_ids, module, algo, parameters, layout)
 
     @app.callback(
+        Output('coexpression-module-graph', 'elements', allow_duplicate=True),
+        Output('coexpression-module-graph', 'layout', allow_duplicate=True),
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        State('lift-over-nb-table', 'data'),
+        Input('coexpression-modules', 'value'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
+        Input('coexpression-graph-layout', 'value'),
+        Input('coexpression-reset-graph', 'n_clicks'),
+        prevent_initial_call='initial_duplicate'
+    )
+    def reset_module_graph(implicated_gene_ids, module, algo, parameters, layout, reset_graph_n_clicks):
+        if reset_graph_n_clicks > 0:
+            return load_module_graph(
+                implicated_gene_ids, module, algo, parameters, layout)
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
         Output('coexpression-parameter-module-saved-input',
