@@ -8,8 +8,7 @@ dash.register_page(__name__, name='Co-expression Network Analysis')
 
 layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     dbc.Label(['Select a module detection algorithm ', html.I(
-        className='bi bi-info-circle mx-2', id='coexpression-clustering-algo-tooltip')],
-        className='mb-2'),
+        className='bi bi-info-circle mx-2', id='coexpression-clustering-algo-tooltip')]),
 
     dbc.RadioItems(
         id='coexpression-clustering-algo',
@@ -22,7 +21,7 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
         ],
         value='clusterone',
         inline=True,
-        className='ms-3 mt-2'
+        className='ms-3 mt-1'
     ),
 
     html.Br(),
