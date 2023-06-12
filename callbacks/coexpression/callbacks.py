@@ -228,3 +228,11 @@ def init_callback(app):
 
         else:
             return 0
+
+    @app.callback(
+        Output('coexpression-clustering-algo-modal', 'is_open'),
+        Input('coexpression-clustering-algo-tooltip', 'n_clicks')
+    )
+    def open_modals(tooltip_n_clicks):
+        if tooltip_n_clicks > 0:
+            return True

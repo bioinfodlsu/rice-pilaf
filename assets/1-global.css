@@ -32,3 +32,15 @@ html, body {
 #page {
     margin-left: 3em;
 }
+
+i {
+    cursor: pointer;
+}
+
+a {
+    color: var(--green-top);
+}
+
+a:hover {
+    color: var(--bs-body-color);
+}

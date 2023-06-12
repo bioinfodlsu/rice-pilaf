@@ -9,8 +9,39 @@ dash.register_page(__name__, name='Co-expression Network Analysis')
 layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.P(id='coexpression-genomic-intervals-input'),
 
-    dbc.Label(['Select a module detection algorithm ', html.I(
-        className='bi bi-info-circle mx-2', id='coexpression-clustering-algo-tooltip')]),
+    dbc.Label(['Select a module detection algorithm ',
+               html.I(
+                   className='bi bi-info-circle mx-2',
+                   id='coexpression-clustering-algo-tooltip',
+                   n_clicks=0
+               )]),
+
+    dbc.Modal([
+        dbc.ModalHeader(
+            dbc.ModalTitle('Module Detection Algorithms')
+        ),
+        dbc.ModalBody([
+            html.P(
+                'The available algorithms allow for overlapping modules (that is, genes may belong to more than one module):'),
+            html.Ul(
+                html.Li(
+                    [html.B('COACH'),
+                     html.Span(
+                         ' detects highly connected gene subnetworks and expands them by including closely associated genes'),
+                     html.Br(),
+                     html.B('Reference: '),
+                     html.Span(
+                         'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
+                     html.I('BMC Bioinformatics, 10'),
+                     html.Span('(169). '),
+                     html.A('https://doi.org/10.1186/1471-2105-10-169', href='https://doi.org/10.1186/1471-2105-10-169')]
+                )
+            )
+        ])],
+        id='coexpression-clustering-algo-modal',
+        is_open=False,
+        size='xl',
+    ),
 
     dbc.RadioItems(
         id='coexpression-clustering-algo',
