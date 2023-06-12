@@ -34,7 +34,9 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
                          'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
                      html.I('BMC Bioinformatics, 10'),
                      html.Span('(169). '),
-                     html.A('https://doi.org/10.1186/1471-2105-10-169', href='https://doi.org/10.1186/1471-2105-10-169')]
+                     html.A('https://doi.org/10.1186/1471-2105-10-169',
+                            href='https://doi.org/10.1186/1471-2105-10-169',
+                            target='_blank')]
                 )
             )
         ])],
