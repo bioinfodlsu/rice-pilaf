@@ -79,31 +79,43 @@ def init_callback(app):
         State('coexpression-is-submitted', 'data')
     )
     def perform_module_enrichment(coexpression_n_clicks, implicated_gene_ids, genomic_intervals, algo, submitted_algo, parameters, is_submitted, parameter_module, submitted_parameter_module, coexpression_is_submitted):
-        if is_submitted and (coexpression_n_clicks >= 1 or coexpression_is_submitted):
-            # TODO: maybe theres a way to improve lines 67-73
-            # (Potential bug: submitted algo or submitted parameter module is missing)
-            # --> if any one of them are missing, it will use the latest clicked clustering algo or saved parameter module
-            #if coexpression_is_submitted:
-            #    if submitted_algo:
-            #        algo = submitted_algo
+        if is_submitted:
+            if coexpression_n_clicks >= 1:
+                enriched_modules = do_module_enrichment_analysis(
+                    implicated_gene_ids, genomic_intervals, algo, parameters)
 
-            #    if submitted_parameter_module:
-            #        parameter_module = submitted_parameter_module
-
-            enriched_modules = do_module_enrichment_analysis(
-                implicated_gene_ids, genomic_intervals, algo, parameters)
-
-            first_module = 'No enriched modules found'
-
-            if parameter_module and algo in parameter_module:
-                if parameter_module[algo]['param_module']:
-                    first_module = parameter_module[algo]['param_module']
-
-            else:
                 if enriched_modules:
                     first_module = enriched_modules[0]
+                else:
+                    first_module = 'hello'
 
-            return {'display': 'block'}, enriched_modules, first_module
+                return {'display': 'block'}, enriched_modules, first_module
+
+            elif coexpression_is_submitted:
+                # TODO: maybe theres a way to improve lines 67-73
+                # (Potential bug: submitted algo or submitted parameter module is missing)
+                # --> if any one of them are missing, it will use the latest clicked clustering algo or saved parameter module
+                # if coexpression_is_submitted:
+                #    if submitted_algo:
+                #        algo = submitted_algo
+
+                #    if submitted_parameter_module:
+                #        parameter_module = submitted_parameter_module
+
+                enriched_modules = do_module_enrichment_analysis(
+                    implicated_gene_ids, genomic_intervals, algo, parameters)
+
+                first_module = 'No enriched modules found'
+
+                if parameter_module and algo in parameter_module:
+                    if parameter_module[algo]['param_module']:
+                        first_module = parameter_module[algo]['param_module']
+
+                else:
+                    if enriched_modules:
+                        first_module = enriched_modules[0]
+
+                return {'display': 'block'}, enriched_modules, first_module
 
         raise PreventUpdate
 
