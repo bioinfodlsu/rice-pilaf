@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
 
-dash.register_page(__name__, path="/", name="Lift-over")
+dash.register_page(__name__, path='/', name='Lift-over')
 
 layout = html.Div(id='lift-over-container', children=[
     html.P(id='lift-over-results-genomic-intervals-input'),
@@ -28,12 +28,12 @@ layout = html.Div(id='lift-over-container', children=[
         html.P(
             html.Div([
                 dbc.Button([html.I(
-                    className="bi bi-download me-2", id="coexpression-clustering-algo-tooltip"),
+                    className='bi bi-download me-2'),
                     'Export to CSV'],
                     id='lift-over-export-table',
                     color='light', size='sm', className='table-button'),
                 dbc.Button([html.I(
-                    className="bi bi-arrow-clockwise me-2", id="coexpression-clustering-algo-tooltip"),
+                    className='bi bi-arrow-clockwise me-2'),
                     'Reset Table'],
                     id='lift-over-reset-table',
                     color='light', size='sm', className='ms-3 table-button')

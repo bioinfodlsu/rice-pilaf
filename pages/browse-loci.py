@@ -2,12 +2,12 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, name="Browse Loci")
+dash.register_page(__name__, name='Browse Loci')
 
 layout = html.Div(id='igv-container', children=[
     # dashbio.Igv(
     #      id='igv-Nipponbare',
-    #      genome="GCF_001433935.1",
+    #      genome='GCF_001433935.1',
     #      minimumBases=100,
     # )
     html.P(id='igv-genomic-intervals-input'),

@@ -1,13 +1,29 @@
-from dash import Input, Output, State
+from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
+
 from .util import *
+from ..lift_over import util as lift_over_util
 
 Parameter_module = namedtuple('Parameter_module', [
                               'param_slider_marks', 'param_slider_value', 'param_module'])
 
 
 def init_callback(app):
+    @app.callback(
+        Output('coexpression-genomic-intervals-input', 'children'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted', 'data'),
+    )
+    def display_input(nb_intervals_str, is_submitted):
+        if is_submitted:
+            if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
+                return [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)]
+            else:
+                return None
+
+        raise PreventUpdate
+
     @app.callback(
         Output('coexpression-results-container', 'style'),
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
