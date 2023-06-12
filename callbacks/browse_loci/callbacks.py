@@ -1,15 +1,33 @@
 import json
 import dash_bio as dashbio
+
 from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
+
 from .util import *
+from ..lift_over import util as lift_over_util
+
 from ..constants import Constants
 const = Constants()
 
 
 def init_callback(app):
+    @app.callback(
+        Output('igv-genomic-intervals-input', 'children'),
+        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-is-submitted', 'data'),
+    )
+    def display_input(nb_intervals_str, is_submitted):
+        if is_submitted:
+            if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
+                return [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)]
+            else:
+                return None
+
+        raise PreventUpdate
+
     # Lifted from https://flask.palletsprojects.com/en/2.2.x/errorhandling/#:~:text=When%20an%20error%20occurs%20in,user%20when%20an%20error%20occurs.
     @app.server.errorhandler(HTTPException)
     def handle_exception(e):
@@ -84,7 +102,7 @@ def init_callback(app):
             if not active_filter:
                 active_filter = [tracks[0]]
 
-            return 'Use the checkbox below to filter tracks you want to see:', \
+            return 'Select the tracks to be displayed', \
                 tracks, active_filter
         raise PreventUpdate
 

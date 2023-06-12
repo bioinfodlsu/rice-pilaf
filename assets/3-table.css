@@ -15,3 +15,13 @@ th, td {
     font-family: var(--bs-body-font-family) !important;
     font-size: var(--font-size-base) !important;
 }
+
+.table-button {
+    border: 1px solid rgb(211, 211, 211);
+    background-color: transparent;
+}
+
+.table-button:hover {
+    border: 1px solid rgb(211, 211, 211);
+    background-color: var(--td-gray);
+}

@@ -1,4 +1,4 @@
-from dash import Input, Output, State, dcc
+from dash import Input, Output, State, dcc, html, ctx
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -8,21 +8,10 @@ const = Constants()
 
 def init_callback(app):
     @app.callback(
-        Output('lift-over-results-table', 'css'),
-        Input('lift-over-results-table', 'derived_virtual_data')
-    )
-    def display_export_button(data):
-        if data == []:
-            return [{"selector": ".export", "rule": "display:none"}]
-        else:
-            return [{"selector": ".export", "rule": "display:block"}]
-
-    @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
 
         Output('lift-over-results-genomic-intervals-input', 'children'),
-        Output('lift-over-results-other-refs-input', 'children'),
 
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
@@ -50,9 +39,16 @@ def init_callback(app):
                 if not active_filter:
                     active_filter = tabs[1:]
 
-                return 'The tabs below show a list of genes in Nipponbare and in homologous regions of the other references you chose', \
-                    tabs_children, f'Genomic Interval: {nb_intervals_str}', f'Homologous regions: {str(other_refs)[1:-1]}', \
-                    tabs[1:], active_filter
+                gene_list_msg = [html.Span(
+                    'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
+
+                if other_refs:
+                    gene_list_msg += [html.Span(' and in homologous regions of '),
+                                      html.B(','.join(other_refs)), html.Span('.')]
+                else:
+                    gene_list_msg += [html.Span('.')]
+
+                return gene_list_msg, tabs_children, [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
             else:
                 return None, None, None, None, [], None
 
@@ -114,12 +110,10 @@ def init_callback(app):
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
-        Output('lift-over-results-table', 'filter_query'),
         Output('lift-over-overlap-table-filter', 'style'),
 
         Input('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
-
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
@@ -149,12 +143,12 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return 'Genes present in the selected rice varieties. Use the checkbox below to filter rice varieties:', \
-                            columns, df_nb, '', {'display': 'block'}
+                        return 'The table below lists the implicated genes that are common to:', \
+                            columns, df_nb, {'display': 'block'}
 
                     elif active_tab == NB_TAB:
-                        return 'Genes overlapping the site in the Nipponbare reference', columns, df_nb_complete, '', \
-                            {'display': 'none'}
+                        return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
+                            columns, df_nb_complete, {'display': 'none'}
 
                     else:
                         tab_number = int(active_tab[len('tab-'):])
@@ -167,11 +161,25 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'Genes from homologous regions in {other_ref}', columns, df_nb, '', {'display': 'none'}
+                        return f'The table below lists the genes from homologous regions in {other_ref}.', \
+                            columns, df_nb, {'display': 'none'}
 
                 else:
-                    return None, None, None, None, {'display': 'none'}
+                    return None, None, None, {'display': 'none'}
             else:
-                return None, None, None, None, {'display': 'none'}
+                return None, None, None, {'display': 'none'}
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('lift-over-results-table', 'filter_query'),
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+        Input('lift-over-reset-table', 'n_clicks')
+    )
+    def reset_table_filters(active_tab, filter_rice_variants, reset_n_clicks):
+        if 'lift-over-reset-table' == ctx.triggered_id:
+            if reset_n_clicks > 0:
+                return ''
+        else:
+            return ''
