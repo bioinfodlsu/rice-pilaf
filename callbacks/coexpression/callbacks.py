@@ -64,6 +64,26 @@ def init_callback(app):
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
     @app.callback(
+        Output('coexpression-module-graph', 'elements'),
+        Output('coexpression-module-graph', 'layout'),
+        Output('coexpression-module-graph', 'style'),
+        Output('coexpression-graph-container', 'style'),
+
+        State('lift-over-nb-table', 'data'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
+        State('coexpression-graph-layout', 'value'),
+        Input('coexpression-submit', 'n_clicks'),
+        prevent_initial_call='initial_duplicate'
+    )
+    def hide_table_graph(implicated_gene_ids, algo, parameters, layout, coexpression_n_clicks):
+        if coexpression_n_clicks >= 1:
+            return load_module_graph(
+                implicated_gene_ids, None, algo, parameters, layout) + ({'visibility': 'hidden'}, )
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
@@ -150,43 +170,28 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-module-graph', 'elements'),
-        Output('coexpression-module-graph', 'layout'),
-        Output('coexpression-module-graph', 'style'),
-        State('lift-over-nb-table', 'data'),
-        State('coexpression-clustering-algo', 'value'),
-        State('coexpression-parameter-slider', 'value'),
-        State('coexpression-graph-layout', 'value'),
-        Input('coexpression-submit', 'n_clicks'),
-        prevent_initial_call='initial_duplicate'
-    )
-    def hide_module_graph(implicated_gene_ids, algo, parameters, layout, coexpression_n_clicks):
-        if coexpression_n_clicks >= 1:
-            return load_module_graph(
-                implicated_gene_ids, None, algo, parameters, layout)
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('coexpression-module-graph', 'elements', allow_duplicate=True),
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        Output('coexpression-graph-container', 'style', allow_duplicate=True),
+
         State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'value'),
         Input('coexpression-graph-layout', 'value'),
         Input('coexpression-reset-graph', 'n_clicks'),
+
         prevent_initial_call='initial_duplicate'
     )
-    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout, reset_graph_n_clicks):
+    def display_table_graph(implicated_gene_ids, module, algo, parameters, layout, reset_graph_n_clicks):
         if 'coexpression-reset-graph' == ctx.triggered_id:
             if reset_graph_n_clicks > 0:
                 return load_module_graph(
-                    implicated_gene_ids, module, algo, parameters, layout)
+                    implicated_gene_ids, module, algo, parameters, layout) + ({'visibility': 'visible'}, )
 
         return load_module_graph(
-            implicated_gene_ids, module, algo, parameters, layout)
+            implicated_gene_ids, module, algo, parameters, layout) + ({'visibility': 'visible'}, )
 
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',

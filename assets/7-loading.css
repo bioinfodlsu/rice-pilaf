@@ -1,0 +1,6 @@
+#coexpression-modules-pathway + div, #lift-over-results-table + div {
+    display: block !important;
+    height: 0 !important;
+    margin-top: 0;
+    padding-top: 0;
+}

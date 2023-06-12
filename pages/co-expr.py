@@ -82,136 +82,145 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Br(),
     html.Br(),
 
-    html.Div(id='coexpression-results-container',
-             style={'display': 'none'},
-             children=[
-                 dcc.Loading(id='coexpression-loading',
-                             children=[
-                                 dbc.Label('Select an enriched module'),
+    html.Div(
+        id='coexpression-results-container',
+        style={'display': 'none'},
+        children=[
+            dcc.Loading(
+                id='coexpression-loading',
+                children=[
+                    dbc.Label(
+                        'Select an enriched module'),
 
-                                 dcc.Dropdown(
-                                     id='coexpression-modules',
-                                     style={'display': 'none'}
-                                 ),
+                    dcc.Dropdown(
+                        id='coexpression-modules',
+                        style={'display': 'none'}
+                    ),
 
-                                 html.Br(),
+                    html.Br(),
 
-                                 dbc.Tabs(id='coexpression-modules-pathway', active_tab='tab-0',
-                                          children=[dcc.Tab(label='Gene Ontology',
-                                                            value='Gene Ontology'),
-                                                    dcc.Tab(label='Trait Ontology',
-                                                            value='Trait Ontology'),
-                                                    dcc.Tab(label='Plant Ontology',
-                                                            value='Plant Ontology'),
-                                                    dcc.Tab(label='Pathways (Overrepresentation)',
-                                                            value='Pathways (Overrepresentation)'),
-                                                    dcc.Tab(label='Pathway-Express',
-                                                            value='Pathway-Express'),
-                                                    dcc.Tab(label='SPIA', value='SPIA')]),
-
-                                 html.Br(),
-
-                                 html.P(
-                                     html.Div([
-                                         dbc.Button([html.I(
-                                             className='bi bi-download me-2'),
-                                             'Export to CSV'],
-                                             id='coexpression-export-table',
-                                             color='light', size='sm', className='table-button'),
-                                         dbc.Button([html.I(
-                                             className='bi bi-arrow-clockwise me-2'),
-                                             'Reset Table'],
-                                             id='coexpression-reset-table',
-                                             color='light', size='sm', className='ms-3 table-button')
-                                     ], style={'textAlign': 'right'})
-                                 ),
-
-                                 dash_table.DataTable(
-                                     id='coexpression-pathways',
-                                     persistence=True,
-                                     persistence_type='memory',
-                                     style_cell={
-                                         'whiteSpace': 'pre-line',
-                                         'font-family': 'sans-serif'
-                                     },
-                                     markdown_options={'html': True},
-                                     sort_action='native',
-                                     filter_action='native',
-                                     filter_options={'case': 'insensitive',
-                                                     'placeholder_text': 'Search column'},
-                                     page_action='native',
-                                     page_size=15
-                                 ),
-
-                                 html.Br(),
-
-                                 dbc.Label('Select the module display layout'),
-
-                                 dbc.RadioItems(
-                                     id='coexpression-graph-layout',
-                                     options=[
-                                         {'value': 'circle', 'label': 'Circle',
-                                          'label_id': 'circle'},
-                                         {'value': 'grid', 'label': 'Grid',
-                                             'label_id': 'grid'}
-                                     ],
-                                     value='circle',
-                                     inline=True,
-                                     className='ms-3'
-                                 ),
-
-                                 html.P(
-                                     html.Div([
-                                         dbc.Button([html.I(
-                                             className='bi bi-download me-2'),
-                                             'Export to JSON'],
-                                             id='coexpression-export-graph',
-                                             color='light', size='sm',
-                                             className='table-button'),
-                                         dbc.Button([html.I(
-                                             className='bi bi-arrow-clockwise me-2'),
-                                             'Reset Graph'],
-                                             id='coexpression-reset-graph',
-                                             n_clicks=0,
-                                             color='light', size='sm',
-                                             className='ms-3 table-button')
-                                     ], style={'textAlign': 'right'})
-                                 ),
+                    dbc.Tabs(
+                        id='coexpression-modules-pathway',
+                        active_tab='tab-0',
+                        children=[dcc.Tab(label='Gene Ontology',
+                                          value='Gene Ontology'),
+                                  dcc.Tab(label='Trait Ontology',
+                                          value='Trait Ontology'),
+                                  dcc.Tab(label='Plant Ontology',
+                                          value='Plant Ontology'),
+                                  dcc.Tab(label='Pathways (Overrepresentation)',
+                                          value='Pathways (Overrepresentation)'),
+                                  dcc.Tab(label='Pathway-Express',
+                                          value='Pathway-Express'),
+                                  dcc.Tab(label='SPIA', value='SPIA')])
+                ]),
 
 
-                                 cyto.Cytoscape(
-                                     id='coexpression-module-graph',
-                                     layout={'name': 'circle'},
-                                     style={'width': '100%',
-                                            'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
-                                     stylesheet=[
-                                         {
-                                             'selector': 'node',
-                                             'style': {
-                                                 'content': 'data(id)',
-                                                 'height': '5px',
-                                                 'width': '5px',
-                                                 'font-size': '10px'
-                                             }
-                                         },
-                                         {
-                                             'selector': 'edge',
-                                             'style': {
-                                                 'width': '1px',
-                                             }
-                                         },
-                                         {
-                                             'selector': '.shaded',
-                                             'style': {
-                                                 'background-color': '#254b5d',
-                                                 'line-color': '#254b5d',
-                                                 'height': '20px',
-                                                 'width': '20px'
-                                             }
-                                         }
-                                     ]
-                                 )
-                             ], parent_style={'height': '5em'})
-             ])
+            html.Div(
+                id='coexpression-graph-container',
+                style={'visibility': 'hidden'},
+                children=[
+                    html.Br(),
+
+                    html.P(
+                        html.Div([
+                                 dbc.Button([html.I(
+                                     className='bi bi-download me-2'),
+                                     'Export to CSV'],
+                                     id='coexpression-export-table',
+                                     color='light', size='sm', className='table-button'),
+                                 dbc.Button([html.I(
+                                     className='bi bi-arrow-clockwise me-2'),
+                                     'Reset Table'],
+                                     id='coexpression-reset-table',
+                                     color='light', size='sm', className='ms-3 table-button')
+                                 ], style={'textAlign': 'right'})
+                    ),
+
+                    dash_table.DataTable(
+                        id='coexpression-pathways',
+                        persistence=True,
+                        persistence_type='memory',
+                        style_cell={
+                            'whiteSpace': 'pre-line',
+                            'font-family': 'sans-serif'
+                        },
+                        markdown_options={'html': True},
+                        sort_action='native',
+                        filter_action='native',
+                        filter_options={'case': 'insensitive',
+                                        'placeholder_text': 'Search column'},
+                        page_action='native',
+                        page_size=15
+                    ),
+
+                    html.Br(),
+                    dbc.Label('Select the module display layout'),
+
+                    dbc.RadioItems(
+                        id='coexpression-graph-layout',
+                        options=[
+                            {'value': 'circle', 'label': 'Circle',
+                             'label_id': 'circle'},
+                            {'value': 'grid', 'label': 'Grid',
+                             'label_id': 'grid'}
+                        ],
+                        value='circle',
+                        inline=True,
+                        className='ms-3'
+                    ),
+
+                    html.P(
+                        html.Div([
+                                 dbc.Button([html.I(
+                                     className='bi bi-download me-2'),
+                                     'Export to JSON'],
+                                     id='coexpression-export-graph',
+                                     color='light', size='sm',
+                                     className='table-button'),
+                                 dbc.Button([html.I(
+                                     className='bi bi-arrow-clockwise me-2'),
+                                     'Reset Graph'],
+                                     id='coexpression-reset-graph',
+                                     n_clicks=0,
+                                     color='light', size='sm',
+                                     className='ms-3 table-button')
+                                 ], style={'textAlign': 'right'})
+                    ),
+
+                    cyto.Cytoscape(
+                        id='coexpression-module-graph',
+                        layout={'name': 'circle'},
+                        style={'width': '100%',
+                               'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
+                        stylesheet=[
+                            {
+                                'selector': 'node',
+                                'style': {
+                                    'content': 'data(id)',
+                                    'height': '5px',
+                                    'width': '5px',
+                                    'font-size': '10px'
+                                }
+                            },
+                            {
+                                'selector': 'edge',
+                                'style': {
+                                    'width': '1px',
+                                }
+                            },
+                            {
+                                'selector': '.shaded',
+                                'style': {
+                                    'background-color': '#254b5d',
+                                    'line-color': '#254b5d',
+                                    'height': '20px',
+                                    'width': '20px'
+                                }
+                            }
+                        ]
+                    )
+                ])
+        ])
 ]
 ))

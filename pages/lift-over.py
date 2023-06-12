@@ -18,13 +18,14 @@ layout = html.Div(id='lift-over-container', children=[
 
     html.Br(),
 
+    dbc.Label(id='lift-over-results-gene-intro'),
+
+    dbc.Checklist(id='lift-over-overlap-table-filter',
+                  inline=True,
+                  className='ms-3'),
+
+
     dcc.Loading([
-        dbc.Label(id='lift-over-results-gene-intro'),
-
-        dbc.Checklist(id='lift-over-overlap-table-filter',
-                      inline=True,
-                      className='ms-3'),
-
         html.P(
             html.Div([
                 dbc.Button([html.I(
@@ -54,6 +55,6 @@ layout = html.Div(id='lift-over-container', children=[
                             'placeholder_text': 'Search column'},
             page_action='native',
             page_size=15
-        )], parent_style={'height': '5em'}),
+        )]),
 ]
 )
