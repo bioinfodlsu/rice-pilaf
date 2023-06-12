@@ -83,12 +83,12 @@ def init_callback(app):
             # TODO: maybe theres a way to improve lines 67-73
             # (Potential bug: submitted algo or submitted parameter module is missing)
             # --> if any one of them are missing, it will use the latest clicked clustering algo or saved parameter module
-            if coexpression_is_submitted:
-                if submitted_algo:
-                    algo = submitted_algo
+            #if coexpression_is_submitted:
+            #    if submitted_algo:
+            #        algo = submitted_algo
 
-                if submitted_parameter_module:
-                    parameter_module = submitted_parameter_module
+            #    if submitted_parameter_module:
+            #        parameter_module = submitted_parameter_module
 
             enriched_modules = do_module_enrichment_analysis(
                 implicated_gene_ids, genomic_intervals, algo, parameters)
@@ -216,7 +216,7 @@ def init_callback(app):
             return algo
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('coexpression-submit', 'n_clicks'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
@@ -228,6 +228,7 @@ def init_callback(app):
 
         else:
             return 0
+    """
 
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
