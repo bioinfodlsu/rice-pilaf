@@ -48,9 +48,9 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Br(),
 
     html.Div(id='coexpression-results-container', style={'display': 'none'}, children=[
-        dbc.Label('Select an enriched module'),
+        dcc.Loading(id='coexpression-loading', children=[
+            dbc.Label('Select an enriched module'),
 
-        dcc.Loading([
             dcc.Dropdown(
                 id='coexpression-modules',
                 style={'display': 'none'}
@@ -139,7 +139,7 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
                     }
                 ]
             )
-        ])
+        ], parent_style={'height': '5em'})
     ])
 ]
 ))
