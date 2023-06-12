@@ -270,3 +270,15 @@ def init_callback(app):
     def open_modals(tooltip_n_clicks):
         if tooltip_n_clicks > 0:
             return True
+
+    @app.callback(
+        Output('coexpression-pathways', 'filter_query'),
+        Input('coexpression-modules-pathway', 'active_tab'),
+        Input('coexpression-reset-table', 'n_clicks')
+    )
+    def reset_table_filters(active_tab, reset_n_clicks):
+        if 'coexpression-reset-table' == ctx.triggered_id:
+            if reset_n_clicks > 0:
+                return ''
+        else:
+            return ''
