@@ -13,10 +13,11 @@ layout = html.Div(id='igv-container', children=[
     html.P(id='igv-genomic-intervals-input',
            children=''),
 
-    dbc.Label('Select a genomic interval of interest'),
+    dbc.Label('Select a genomic interval of interest',
+              className='mb-2'),
 
     dcc.Dropdown(
-        id='igv-genomic-intervals'
+        id='igv-genomic-intervals',
     ),
 
     html.Br(),
@@ -25,8 +26,7 @@ layout = html.Div(id='igv-container', children=[
 
     dbc.Checklist(id='igv-track-filter',
                   inline=True,
-                  options=[],
-                  style={}),
+                  className='ms-3'),
 
     html.Br(),
 

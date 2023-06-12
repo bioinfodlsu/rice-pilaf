@@ -21,7 +21,8 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
             {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
         ],
         value='clusterone',
-        inline=True
+        inline=True,
+        className='ms-3 mt-2'
     ),
 
     html.Br(),

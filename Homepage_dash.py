@@ -239,7 +239,7 @@ app.layout = dbc.Container(
         ),
 
     ],
-    fluid=True,
+    fluid=True
 )
 
 callbacks.lift_over.callbacks.init_callback(app)
