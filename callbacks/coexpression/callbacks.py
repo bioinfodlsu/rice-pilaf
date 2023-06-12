@@ -154,18 +154,33 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout'),
         Output('coexpression-module-graph', 'style'),
         State('lift-over-nb-table', 'data'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
+        Input('coexpression-graph-layout', 'value'),
+        Input('coexpression-submit', 'n_clicks'),
+        prevent_initial_call='initial_duplicate'
+    )
+    def hide_module_graph(implicated_gene_ids, algo, parameters, layout, coexpression_n_clicks):
+        if coexpression_n_clicks >= 1:
+            return load_module_graph(
+                implicated_gene_ids, None, algo, parameters, layout)
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-module-graph', 'elements', allow_duplicate=True),
+        Output('coexpression-module-graph', 'layout', allow_duplicate=True),
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'value'),
         Input('coexpression-graph-layout', 'value'),
-        Input('coexpression-submit', 'n_clicks')
+        prevent_initial_call='initial_duplicate'
     )
-    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout, coexpression_n_clicks):
-        if coexpression_n_clicks >= 1:
-            return load_module_graph(
-                implicated_gene_ids, module, algo, parameters, layout)
-
-        raise PreventUpdate
+    def display_module_graph(implicated_gene_ids, module, algo, parameters, layout):
+        return load_module_graph(
+            implicated_gene_ids, module, algo, parameters, layout)
 
     @app.callback(
         Output('coexpression-clustering-algo-saved-input',
