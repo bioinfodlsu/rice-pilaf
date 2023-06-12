@@ -64,6 +64,26 @@ def init_callback(app):
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
     @app.callback(
+        Output('coexpression-module-graph', 'elements'),
+        Output('coexpression-module-graph', 'layout'),
+        Output('coexpression-module-graph', 'style'),
+        Output('coexpression-graph-container', 'style'),
+
+        State('lift-over-nb-table', 'data'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value'),
+        State('coexpression-graph-layout', 'value'),
+        Input('coexpression-submit', 'n_clicks'),
+        prevent_initial_call='initial_duplicate'
+    )
+    def hide_table_graph(implicated_gene_ids, algo, parameters, layout, coexpression_n_clicks):
+        if coexpression_n_clicks >= 1:
+            return load_module_graph(
+                implicated_gene_ids, None, algo, parameters, layout) + ({'visibility': 'hidden'}, )
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
@@ -146,26 +166,6 @@ def init_callback(app):
                            for x in table.columns]
 
             return table.to_dict('records'), columns
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-module-graph', 'elements'),
-        Output('coexpression-module-graph', 'layout'),
-        Output('coexpression-module-graph', 'style'),
-        Output('coexpression-graph-container', 'style'),
-
-        State('lift-over-nb-table', 'data'),
-        State('coexpression-clustering-algo', 'value'),
-        State('coexpression-parameter-slider', 'value'),
-        State('coexpression-graph-layout', 'value'),
-        Input('coexpression-submit', 'n_clicks'),
-        prevent_initial_call='initial_duplicate'
-    )
-    def hide_table_graph(implicated_gene_ids, algo, parameters, layout, coexpression_n_clicks):
-        if coexpression_n_clicks >= 1:
-            return load_module_graph(
-                implicated_gene_ids, None, algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
 
