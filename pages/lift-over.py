@@ -54,6 +54,6 @@ layout = html.Div(id='lift-over-container', children=[
                             'placeholder_text': 'Search column'},
             page_action='native',
             page_size=15
-        )], parent_style={'height': '5em'}),
+        )]),
 ]
 )
