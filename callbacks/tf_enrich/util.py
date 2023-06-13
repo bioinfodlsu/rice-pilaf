@@ -22,16 +22,16 @@ def write_promoter_intervals_to_file(gene_table,nb_interval_str_fname,upstream_w
 
     with open(f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query',"w") as f:
         for gene in gene_table:
-            if gene['strand'] == '+':
-                promoter_start = gene['start'] - upstream_win_len
+            if gene['Strand'] == '+':
+                promoter_start = gene['Start'] - upstream_win_len
                 assert promoter_start >= 0
-                promoter_end = gene['start'] + downstream_win_len - 1
-                f.write("{}\t{}\t{}\n".format(gene['chrom'], promoter_start, promoter_end))
-            elif gene['strand'] == '-':
-                promoter_start = gene['end'] + upstream_win_len
-                promoter_end = gene['end'] + 1 - downstream_win_len
+                promoter_end = gene['Start'] + downstream_win_len - 1
+                f.write("{}\t{}\t{}\n".format(gene['Chromosome'], promoter_start, promoter_end))
+            elif gene['Strand'] == '-':
+                promoter_start = gene['End'] + upstream_win_len
+                promoter_end = gene['End'] + 1 - downstream_win_len
                 assert promoter_end >= 0
-                f.write("{}\t{}\t{}\n".format(gene['chrom'], promoter_end, promoter_start))
+                f.write("{}\t{}\t{}\n".format(gene['Chromosome'], promoter_end, promoter_start))
     return f
 
 
