@@ -1,4 +1,3 @@
-import subprocess
 import pandas as pd
 import os
 import subprocess
@@ -56,6 +55,8 @@ def perform_enrichment_all_tf(tfbs_set,tfbs_prediction_technique,nb_interval_str
     return pd.DataFrame.from_dict(results_dict,orient='index').rename_axis("Transcription factor").reset_index()
 
 def perform_enrichment_specific_tf(ref_bed,query_bed,sizes,out_dir):
+    # COMMAND = f'mcdp2 single {ref_bed} {query_bed} {sizes} -o {out_dir}'
+    # os.system(COMMAND)
 
     subprocess.run(["mcdp2","single",ref_bed,query_bed,sizes,"-o",out_dir],
                             shell=False,capture_output=True,text=True)#TODO exception handling
