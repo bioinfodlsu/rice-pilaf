@@ -164,7 +164,7 @@ def remove_rap_db_info_in_pathway_name(pathway_name):
 
 def convert_to_df_go(result):
     cols = ['ID', 'Gene Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
         return create_empty_df(cols)
@@ -180,7 +180,7 @@ def convert_to_df_go(result):
 
 def convert_to_df_to(result):
     cols = ['ID', 'Trait Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
         return create_empty_df(cols)
@@ -196,7 +196,7 @@ def convert_to_df_to(result):
 
 def convert_to_df_po(result):
     cols = ['ID', 'Plant Ontology Term', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
         return create_empty_df(cols)
@@ -212,7 +212,7 @@ def convert_to_df_po(result):
 
 def convert_to_df_ora(result):
     cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'Genes', 'View on KEGG']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes', 'View on KEGG']
 
     if result.empty:
         return create_empty_df(cols)
@@ -236,8 +236,8 @@ def convert_to_df_ora(result):
 
 def convert_to_df_pe(result, module_idx, algo, parameters):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
-            'Adj. ORA p-value (Benjamini-Hochberg)', 'Adj. Perturbation p-value (Benjamini-Hochberg)',
-            'Adj. Combined p-value (Benjamini-Hochberg)', 'Genes', 'View on KEGG']
+            'Adj. ORA p-value', 'Adj. Perturbation p-value',
+            'Adj. Combined p-value', 'Genes', 'View on KEGG']
 
     if result.empty:
         return create_empty_df(cols)
@@ -265,8 +265,7 @@ def convert_to_df_pe(result, module_idx, algo, parameters):
 
 def convert_to_df_spia(result):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
-            'Adj. Combined p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'Genes',
-            'View on KEGG']
+            'Adj. Combined p-value', 'Pathway Status', 'Genes', 'View on KEGG']
 
     if result.empty:
         return create_empty_df(cols)
@@ -304,7 +303,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Gene Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Counts'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Counts'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -317,7 +316,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Trait Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -330,7 +329,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'Plant Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -343,7 +342,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'KEGG Pathway', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value (Benjamini-Hochberg)', 'q-value', 'Genes', 'Count'],
+                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -357,8 +356,8 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             result = pd.read_csv(file, delimiter='\t',
                                  names=['ID', 'totalAcc', 'totalPert', 'totalAccNorm', 'totalPertNorm',
                                         'Perturbation p-value',	'pAcc',	'ORA p-value', 'Combined p-value',
-                                        'Adj. Perturbation p-value (Benjamini-Hochberg)', 'Adj. Accumulation p-value (Benjamini-Hochberg)',
-                                        'Adj. ORA p-value (Benjamini-Hochberg)', 'Adj. Combined p-value (Benjamini-Hochberg)'],
+                                        'Adj. Perturbation p-value', 'Adj. Accumulation p-value',
+                                        'Adj. ORA p-value', 'Adj. Combined p-value'],
                                  skiprows=1)
             empty = result.empty
         except:
@@ -371,7 +370,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
         try:
             result = pd.read_csv(file, delimiter='\t',
                                  names=['KEGG Pathway',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
-                                        'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value (Benjamini-Hochberg)',
+                                        'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value',
                                         'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG'],
                                  skiprows=1,
                                  dtype={'ID': object})      # Preserve leading 0 in KEGG pathway ID
