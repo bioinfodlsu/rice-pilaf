@@ -1,6 +1,7 @@
 from ..constants import Constants
 import os
 import pickle
+import subprocess
 
 import pandas as pd
 import networkx as nx
@@ -80,8 +81,9 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, algo, 
         BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY_OS_CX}/all-genes.txt'
         MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
-        COMMAND = f'Rscript --vanilla {const.ORA_ENRICHMENT_ANALYSIS_PROGRAM} -g {INPUT_GENES} -b {BACKGROUND_GENES} -m {MODULE_TO_GENE_MAPPING} -o {OUTPUT_DIR}'
-        os.system(COMMAND)
+        # TODO: Add exception handling
+        subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
+                        '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', OUTPUT_DIR])
 
     return fetch_enriched_modules(OUTPUT_DIR)
 
