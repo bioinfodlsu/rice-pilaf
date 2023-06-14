@@ -23,9 +23,9 @@ RUN pip3 install -r requirements.txt
 
 # Install mcdp2
 RUN cd ../ \
-  && git clone https://github.com/fmfi-compbio/mcdp2
-  && cd mcdp2
-  && pip3 install .
+  && git clone https://github.com/fmfi-compbio/mcdp2 \
+  && cd mcdp2 \
+  && pip3 install . \
   && cd ../app
 
 COPY . /app
