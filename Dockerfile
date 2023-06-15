@@ -6,9 +6,10 @@ COPY install-libraries.r /app
 WORKDIR /app
 
 RUN set -ex 
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update \
+  && apt-get install -y \
   build-essential \
+  git \
   libcurl4-openssl-dev \
   libffi-dev \
   libfontconfig1-dev \
@@ -19,6 +20,13 @@ RUN apt-get install -y \
 
 RUN Rscript --vanilla install-libraries.r
 RUN pip3 install -r requirements.txt
+
+# Install mcdp2
+RUN cd ../ \
+  && git clone https://github.com/fmfi-compbio/mcdp2 \
+  && cd mcdp2 \
+  && pip3 install . \
+  && cd ../app
 
 COPY . /app
 
