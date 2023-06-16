@@ -66,6 +66,7 @@ def init_callback(app):
 
         return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
 
+    """
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'layout'),
@@ -88,7 +89,7 @@ def init_callback(app):
                 implicated_gene_ids, None, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
