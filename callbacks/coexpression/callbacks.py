@@ -5,8 +5,11 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 
-Parameter_module = namedtuple('Parameter_module', [
-                              'param_slider_marks', 'param_slider_value', 'param_module'])
+Input_parameter_module = namedtuple('Input_parameter_module', [
+    'param_slider_marks', 'param_slider_value'])
+
+Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
+    'param_slider_marks', 'param_slider_value', 'param_module', 'layout'])
 
 
 def init_callback(app):
@@ -41,13 +44,13 @@ def init_callback(app):
     )
     def display_coexpression_results(coexpression_submit_n_clicks, is_submitted, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if is_submitted and coexpression_submit_n_clicks >= 1:
-            paramater_module_value = Parameter_module(
-                submitted_slider_marks, submitted_slider_value, '')._asdict()
+            paramater_module_value = Submitted_parameter_module(
+                submitted_slider_marks, submitted_slider_value, '', 'circle')._asdict()
 
-            coexpression_submitted_parameter_module = {
+            submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            return {'display': 'block'}, True, submitted_algo, coexpression_submitted_parameter_module
+            return {'display': 'block'}, True, submitted_algo, submitted_parameter_module
 
         raise PreventUpdate
 
@@ -70,16 +73,19 @@ def init_callback(app):
         Output('coexpression-graph-container', 'style'),
 
         State('lift-over-nb-table', 'data'),
-        State('coexpression-graph-layout', 'value'),
+        # State('coexpression-graph-layout', 'value'),
 
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data')
     )
-    def hide_table_graph(implicated_gene_ids, layout, submitted_algo, coexpression_is_submitted, parameter_module):
+    def hide_table_graph(implicated_gene_ids, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
+            parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+            layout = submitted_parameter_module[submitted_algo]['layout']
+
             return load_module_graph(
-                implicated_gene_ids, None, submitted_algo, parameter_module[submitted_algo]['param_slider_value'], layout) + ({'visibility': 'hidden'}, )
+                implicated_gene_ids, None, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
 
@@ -163,14 +169,15 @@ def init_callback(app):
         Input('coexpression-reset-graph', 'n_clicks'),
         State('coexpression-is-submitted', 'data'),
 
-        prevent_initial_call='initial_duplicate'
+        prevent_initial_call=True
     )
     def display_table_graph(implicated_gene_ids, module, submitted_algo, submitted_parameter_module, layout, reset_graph_n_clicks, coexpression_is_submitted):
         if coexpression_is_submitted:
-            parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+            if submitted_algo and submitted_algo in submitted_parameter_module:
+                parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
-            return load_module_graph(
-                implicated_gene_ids, module, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
+                return load_module_graph(
+                    implicated_gene_ids, module, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
 
         raise PreventUpdate
 
@@ -181,24 +188,23 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
-        Input('coexpression-modules', 'value'),
         State('coexpression-parameter-slider', 'marks'),
         State('lift-over-is-submitted', 'data'),
         State('coexpression-parameter-module-saved-input', 'data'),
         prevent_initial_call=True
     )
-    def set_input_coexpression_session_state(algo, parameter_value, module, parameter_mark, is_submitted, parameter_module):
+    def set_input_coexpression_session_state(algo, parameter_value, parameter_mark, is_submitted, input_parameter_module):
         if is_submitted:
-            paramater_module_value = Parameter_module(
-                parameter_mark, parameter_value, module)._asdict()
+            input_paramater_module_value = Input_parameter_module(
+                parameter_mark, parameter_value)._asdict()
 
-            if parameter_module:
-                parameter_module[algo] = paramater_module_value
+            if input_parameter_module:
+                input_parameter_module[algo] = input_paramater_module_value
 
             else:
-                parameter_module = {algo: paramater_module_value}
+                input_parameter_module = {algo: input_paramater_module_value}
 
-            return algo, parameter_module
+            return algo, input_parameter_module
 
         raise PreventUpdate
 
@@ -206,17 +212,19 @@ def init_callback(app):
         Output('coexpression-submitted-parameter-module',
                'data', allow_duplicate=True),
         Input('coexpression-modules', 'value'),
+        Input('coexpression-graph-layout', 'value'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('lift-over-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
         prevent_initial_call=True
     )
-    def set_submitted_coexpression_session_state_module(module, algo, is_submitted, parameter_module):
+    def set_submitted_coexpression_session_state(module, layout, submitted_algo, is_submitted, submitted_parameter_module):
         if is_submitted:
-            if parameter_module and algo in parameter_module:
-                parameter_module[algo]['param_module'] = module
+            if submitted_parameter_module and submitted_algo in submitted_parameter_module:
+                submitted_parameter_module[submitted_algo]['param_module'] = module
+                submitted_parameter_module[submitted_algo]['layout'] = layout
 
-                return parameter_module
+                return submitted_parameter_module
 
         raise PreventUpdate
 
@@ -236,13 +244,29 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('coexpression-graph-layout', 'value'),
+        Input('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-is-submitted', 'data'),
+        State('coexpression-submitted-parameter-module', 'data')
+    )
+    def display_selected_graph_layout(submitted_algo, coexpression_is_submitted, submitted_parameter_module):
+        if coexpression_is_submitted:
+            if submitted_algo and submitted_algo in submitted_parameter_module:
+                if submitted_parameter_module[submitted_algo]['layout']:
+                    return submitted_parameter_module[submitted_algo]['layout']
+
+            return 'circle'
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-results-container',
                'style', allow_duplicate=True),
         Input('coexpression-clustering-algo-saved-input', 'data'),
         State('coexpression-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def display_submitted_results(submitted_algo, coexpression_is_submitted):
+    def display_submitted_results(algo, coexpression_is_submitted):
         if coexpression_is_submitted:
             return {'display': 'block'}
 
