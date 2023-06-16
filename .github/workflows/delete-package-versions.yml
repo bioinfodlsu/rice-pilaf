@@ -14,12 +14,12 @@ jobs:
     steps:
       - uses: actions/delete-package-versions@v4
         with: 
-          package-name: 'app'
+          package-name: 'rice-pilaf/app'
           package-type: 'container'
           min-versions-to-keep: 1
       - uses: actions/delete-package-versions@v4
         with: 
-          package-name: 'workflow'
+          package-name: 'rice-pilaf/workflow'
           package-type: 'container'
           min-versions-to-keep: 1
           
