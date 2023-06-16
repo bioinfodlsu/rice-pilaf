@@ -16,12 +16,12 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     strategy:
       fail-fast: false
-      matrix:
+      matrix:                                                 # Cannot use env variables inside matrix
         include:
-          - dockerfile: Dockerfile
-            image: ghcr.io/bioinfodlsu/rice-pilaf/first
-          - dockerfile: Dockerfile
-            image: ghcr.io/bioinfodlsu/rice-pilaf/second
+          - dockerfile: Dockerfile                            # Change to Dockerfile of app
+            image: ghcr.io/bioinfodlsu/rice-pilaf/app         
+          - dockerfile: Dockerfile                            # Change to Dockerfile of workflow
+            image: ghcr.io/bioinfodlsu/rice-pilaf/workflow    
     permissions:
       contents: read
       packages: write
