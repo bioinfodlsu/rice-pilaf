@@ -19,9 +19,9 @@ jobs:
       matrix:
         include:
           - dockerfile: Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/first
+            image: ghcr.io/bioinfodlsu/rice-pilaf/first
           - dockerfile: Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/second
+            image: ghcr.io/bioinfodlsu/rice-pilaf/second
     permissions:
       contents: read
       packages: write
