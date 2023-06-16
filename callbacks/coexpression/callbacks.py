@@ -80,11 +80,12 @@ def init_callback(app):
     )
     def hide_table_graph(implicated_gene_ids, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
-            parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
-            layout = submitted_parameter_module[submitted_algo]['layout']
+            if submitted_algo and submitted_algo in submitted_parameter_module:
+                parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+                layout = submitted_parameter_module[submitted_algo]['layout']
 
-            return load_module_graph(
-                implicated_gene_ids, None, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
+                return load_module_graph(
+                    implicated_gene_ids, None, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
 
@@ -102,21 +103,22 @@ def init_callback(app):
     def perform_module_enrichment(implicated_gene_ids, genomic_intervals, submitted_algo, is_submitted, submitted_parameter_module, coexpression_is_submitted):
         if is_submitted:
             if coexpression_is_submitted:
-                parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+                if submitted_algo and submitted_algo in submitted_parameter_module:
+                    parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
-                enriched_modules = do_module_enrichment_analysis(
-                    implicated_gene_ids, genomic_intervals, submitted_algo, parameters)
+                    enriched_modules = do_module_enrichment_analysis(
+                        implicated_gene_ids, genomic_intervals, submitted_algo, parameters)
 
-                first_module = 'No enriched modules found'
+                    first_module = 'No enriched modules found'
 
-                if enriched_modules:
-                    first_module = enriched_modules[0]
+                    if enriched_modules:
+                        first_module = enriched_modules[0]
 
-                if submitted_parameter_module and submitted_algo in submitted_parameter_module:
-                    if submitted_parameter_module[submitted_algo]['param_module']:
-                        first_module = submitted_parameter_module[submitted_algo]['param_module']
+                    if submitted_parameter_module and submitted_algo in submitted_parameter_module:
+                        if submitted_parameter_module[submitted_algo]['param_module']:
+                            first_module = submitted_parameter_module[submitted_algo]['param_module']
 
-                return {'display': 'block'}, enriched_modules, first_module
+                    return {'display': 'block'}, enriched_modules, first_module
 
         raise PreventUpdate
 
@@ -131,24 +133,25 @@ def init_callback(app):
     )
     def display_pathways(submitted_algo, active_tab, module, submitted_parameter_module, coexpression_is_submitted):
         if coexpression_is_submitted:
-            parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+            if submitted_algo and submitted_algo in submitted_parameter_module:
+                parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
-            try:
-                module_idx = module.split(' ')[1]
-                table, empty = convert_to_df(
-                    active_tab, module_idx, submitted_algo, parameters)
-            except:
-                table, empty = convert_to_df(
-                    active_tab, None, submitted_algo, parameters)
+                try:
+                    module_idx = module.split(' ')[1]
+                    table, empty = convert_to_df(
+                        active_tab, module_idx, submitted_algo, parameters)
+                except:
+                    table, empty = convert_to_df(
+                        active_tab, None, submitted_algo, parameters)
 
-            if not empty:
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
-                           'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
-            else:
-                columns = [{'id': x, 'name': x}
-                           for x in table.columns]
+                if not empty:
+                    columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
+                               'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
+                else:
+                    columns = [{'id': x, 'name': x}
+                               for x in table.columns]
 
-            return table.to_dict('records'), columns
+                return table.to_dict('records'), columns
 
         raise PreventUpdate
 
