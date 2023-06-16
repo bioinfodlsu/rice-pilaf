@@ -4,5 +4,5 @@ jobs:
   check-for-syntax-errors:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: cclauss/Find-Python-syntax-errors-action@master
