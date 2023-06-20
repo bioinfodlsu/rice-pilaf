@@ -273,14 +273,15 @@ def init_callback(app):
         Output('coexpression-results-container',
                'style', allow_duplicate=True),
         Input('coexpression-clustering-algo-saved-input', 'data'),
-        State('coexpression-is-submitted', 'data'),
+        Input('coexpression-is-submitted', 'data'),
         prevent_initial_call=True
     )
     def display_submitted_results(algo, coexpression_is_submitted):
         if coexpression_is_submitted:
             return {'display': 'block'}
 
-        raise PreventUpdate
+        else:
+            return {'display': 'none'}
 
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
