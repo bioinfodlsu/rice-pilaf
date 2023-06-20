@@ -42,11 +42,14 @@ layout = html.Div(
                    className='page-button'),
 
         html.Div(id='tfbs-results-container', children=[
-            dash_table.DataTable(
-                id='tf_enrichment_result_table',
-                persistence=True,
-                persistence_type='memory'
+            dcc.Loading(
+                dash_table.DataTable(
+                    id='tf_enrichment_result_table',
+                    persistence=True,
+                    persistence_type='memory'
+                )
             )
+
         ])
     ]
 )

@@ -238,6 +238,21 @@ app.layout = dbc.Container(
             storage_type='session'
         ),
 
+        dcc.Store(
+            id='tfbs-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='tfbs-submitted-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='tfbs-is-submitted',
+            storage_type='session'
+        )
+
     ],
     fluid=True
 )
