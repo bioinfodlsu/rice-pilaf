@@ -42,44 +42,44 @@ def write_promoter_intervals_to_file(gene_table, nb_interval_str_fname, upstream
 
 
 def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_str_fname):
-    results_outdir = f'{const.TEMP_TFBS}/{tfbs_set}/{tfbs_prediction_technique}/{nb_interval_str_fname}'
+    # results_outdir = f'{const.TEMP_TFBS}/{tfbs_set}/{tfbs_prediction_technique}/{nb_interval_str_fname}'
 
-    if not os.path.exists(results_outdir):
-        os.makedirs(results_outdir)
+    # if not os.path.exists(results_outdir):
+    #    os.makedirs(results_outdir)
 
-        query_bed = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query'
-        sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
-        results_dict = {}  # key=tf, values = results from overlap enrichment analysis
+    query_bed = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query'
+    sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
+    results_dict = {}  # key=tf, values = results from overlap enrichment analysis
 
-        # perform annotation overlap statistical significance tests
-        for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
-            ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
+    # perform annotation overlap statistical significance tests
+    for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
+        ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
 
-            out_dir = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/significance_outdir/{tf}'
-            if not os.path.exists(out_dir):
-                os.makedirs(out_dir)
+        out_dir = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/significance_outdir/{tf}'
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
 
-            results_dict[tf] = perform_enrichment_specific_tf(
-                ref_bed, query_bed, sizes, out_dir)
+        results_dict[tf] = perform_enrichment_specific_tf(
+            ref_bed, query_bed, sizes, out_dir)
 
-        # TODO perform proper multi-test correction
-        for k in results_dict.keys():
-            results_dict[k]['adj_p'] = min(1, results_dict[k]['p_value']*32)
+    # TODO perform proper multi-test correction
+    for k in results_dict.keys():
+        results_dict[k]['adj_p'] = min(1, results_dict[k]['p_value']*32)
 
-        with open(f'{results_outdir}/output.txt', 'w') as fp:
-            json.dump(results_dict, fp)
+    # with open(f'{results_outdir}/output.txt', 'w') as fp:
+    #    json.dump(results_dict, fp)
 
-        # get results
-        # return create_empty_df()
-        return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
+    # get results
+    # return create_empty_df()
+    return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
 
-    else:
-        with open(f'{results_outdir}/output.txt', 'r') as fp:
-            results_dict = json.load(fp)
+    # else:
+    #    with open(f'{results_outdir}/output.txt', 'r') as fp:
+    #        results_dict = json.load(fp)
 
-        # get results
-        # return create_empty_df()
-        return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
+    # get results
+    # return create_empty_df()
+    #    return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
