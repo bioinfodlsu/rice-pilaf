@@ -99,7 +99,7 @@ def init_callback(app):
                         None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, True, \
+                    {'display': 'block'}, False, \
                     nb_intervals_str, \
                     None, None, None, \
                     None, None, \
@@ -109,22 +109,6 @@ def init_callback(app):
                     None, None, None
 
         raise PreventUpdate
-    """
-    @app.callback(
-        Output('lift-over-genomic-intervals', 'value'),
-        Output('lift-over-other-refs', 'value'),
-        Input('lift-over-reset', 'n_clicks'),
-        State('lift-over-other-refs', 'multi')
-    )
-    def clear_input_fields(reset_n_clicks, is_multi_other_refs):
-        if reset_n_clicks >= 1:
-            if is_multi_other_refs:
-                return None, []
-            else:
-                return None, None
-
-        raise PreventUpdate
-    """
 
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
@@ -139,7 +123,7 @@ def init_callback(app):
     @app.callback(
         Output('post-gwas-analysis-container', 'hidden'),
         Output('homepage-reset', 'href'),
-        Input('homepage-is-submitted', 'data'),
+        Input('homepage-is-submitted', 'data')
     )
     def hide_side_bars(homepage_is_submitted):
         if homepage_is_submitted:
