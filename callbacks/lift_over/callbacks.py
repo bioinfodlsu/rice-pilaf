@@ -32,7 +32,7 @@ def init_callback(app):
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        State('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-other-refs-saved-input', 'data'),
 
         State('lift-over-is-submitted', 'data'),
@@ -66,7 +66,7 @@ def init_callback(app):
 
                 return gene_list_msg, tabs_children, [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
             else:
-                return None, None, None, None, [], None
+                return None, None, None, [], None
 
         raise PreventUpdate
 
