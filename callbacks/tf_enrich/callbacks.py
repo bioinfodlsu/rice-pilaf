@@ -6,7 +6,7 @@ from .util import *
 gwas_loci = None
 
 Tfbs_input = namedtuple(
-    'Tfbs_submitted_input', ['tfbs_set', 'tfbs_prediction_technique'])
+    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique'])
 
 
 def init_callback(app):

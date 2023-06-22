@@ -41,6 +41,8 @@ layout = html.Div(
                    n_clicks=0,
                    className='page-button'),
 
+        html.Br(),
+        html.Br(),
         html.Div(id='tfbs-results-container', children=[
             dcc.Loading(
                 dash_table.DataTable(
