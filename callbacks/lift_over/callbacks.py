@@ -12,12 +12,12 @@ def init_callback(app):
         Output('lift-over-other-refs-saved-input',
                'data', allow_duplicate=True),
         Input('lift-over-submit', 'n_clicks'),
-        State('lift-over-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs', 'value'),
         prevent_initial_call=True
     )
-    def display_lift_over_results(lift_over_submit_n_clicks, is_submitted, other_refs):
-        if is_submitted and lift_over_submit_n_clicks >= 1:
+    def display_lift_over_results(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
+        if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
             return {'display': 'block'}, other_refs
@@ -35,12 +35,12 @@ def init_callback(app):
         State('lift-over-genomic-intervals-saved-input', 'data'),
         Input('lift-over-other-refs-saved-input', 'data'),
 
-        State('lift-over-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
 
         State('lift-over-active-filter', 'data')
     )
-    def display_gene_tabs(nb_intervals_str, other_refs, is_submitted, active_filter):
-        if is_submitted:
+    def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter):
+        if homepage_is_submitted:
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = ['Summary', 'Nb']
 
@@ -74,11 +74,11 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
         State('lift-over-active-tab', 'data')
     )
-    def switch_active_tab(nb_intervals_str, is_submitted, active_tab):
-        if is_submitted:
+    def switch_active_tab(nb_intervals_str, homepage_is_submitted, active_tab):
+        if homepage_is_submitted:
             if not active_tab:
                 return 'tab-0'
 
@@ -90,10 +90,10 @@ def init_callback(app):
         Output('lift-over-nb-table', 'data'),
         Output('lift_over_nb_entire_table', 'data'),
         Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data')
+        State('homepage-is-submitted', 'data')
     )
-    def get_nipponbare_gene_ids(nb_intervals_str, is_submitted):
-        if is_submitted:
+    def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):
+        if homepage_is_submitted:
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
@@ -113,11 +113,11 @@ def init_callback(app):
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
-        State('lift-over-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
         prevent_initial_call=True,
     )
-    def set_lift_over_session_state(active_tab, filter_rice_variants, is_submitted):
-        if is_submitted:
+    def set_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted):
+        if homepage_is_submitted:
             return active_tab, filter_rice_variants
 
         raise PreventUpdate
@@ -133,10 +133,10 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         State('lift-over-results-tabs', 'children'),
-        State('lift-over-is-submitted', 'data')
+        State('homepage-is-submitted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, is_submitted):
-        if is_submitted:
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, homepage_is_submitted):
+        if homepage_is_submitted:
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)

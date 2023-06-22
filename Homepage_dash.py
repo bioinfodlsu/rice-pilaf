@@ -152,8 +152,13 @@ app.layout = dbc.Container(
 
         # Session storage
         dcc.Store(
+            id='homepage-is-submitted',
+            storage_type='session'
+        ),
+
+        dcc.Store(
             id='lift-over-is-submitted',
-            storage_type='session',
+            storage_type='session'
         ),
 
         dcc.Store(
@@ -163,12 +168,12 @@ app.layout = dbc.Container(
 
         dcc.Store(
             id='lift-over-genomic-intervals-saved-input',
-            storage_type='session',
+            storage_type='session'
         ),
 
         dcc.Store(
             id='lift-over-other-refs-saved-input',
-            storage_type='session',
+            storage_type='session'
         ),
 
         dcc.Store(

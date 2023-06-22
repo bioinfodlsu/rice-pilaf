@@ -12,8 +12,9 @@ def init_callback(app):
     @app.callback(
         Output('input-error', 'children'),
         Output('input-error', 'style'),
-        Output('lift-over-is-submitted', 'data'),
+        Output('homepage-is-submitted', 'data'),
 
+        Output('lift-over-is-submitted', 'data'),
         Output('lift-over-genomic-intervals-saved-input', 'data'),
 
         Output('lift-over-other-refs-saved-input',
@@ -53,7 +54,7 @@ def init_callback(app):
             clear_cache_folder()
 
         if 'homepage-reset' == ctx.triggered_id:
-            return None, {'display': 'none'}, False, '', \
+            return None, {'display': 'none'}, False, False, '', \
                 None, None, None, \
                 None, None, \
                 None, None, \
@@ -67,8 +68,7 @@ def init_callback(app):
 
                 if lift_over_util.is_error(intervals):
                     return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, str(
-                            True), nb_intervals_str, \
+                        {'display': 'block'}, False, nb_intervals_str, \
                         None, None, None, \
                         None, None, \
                         None, None, \
@@ -82,7 +82,7 @@ def init_callback(app):
                         if db[2] != 'bed':
                             browse_loci_util.get_data_base_on_loci(
                                 f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
-                    return None, {'display': 'none'}, True, nb_intervals_str, \
+                    return None, {'display': 'none'}, True, True, nb_intervals_str, \
                         None, None, None, \
                         None, None, \
                         None, None, \
@@ -90,7 +90,7 @@ def init_callback(app):
                         None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, \
+                    {'display': 'block'}, True, \
                     True, nb_intervals_str, \
                     None, None, None, \
                     None, None, \
