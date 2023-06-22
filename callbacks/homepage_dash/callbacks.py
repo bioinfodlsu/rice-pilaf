@@ -35,6 +35,10 @@ def init_callback(app):
         Output('coexpression-submitted-parameter-module',
                'data', allow_duplicate=True),
 
+        Output('tfbs-is-submitted', 'data', allow_duplicate=True),
+        Output('tfbs-submitted-input', 'data', allow_duplicate=True),
+        Output('tfbs-saved-input', 'data', allow_duplicate=True),
+
         Input('lift-over-submit', 'n_clicks'),
         Input('lift-over-reset', 'n_clicks'),
         Input('lift-over-clear-cache', 'n_clicks'),
@@ -50,7 +54,7 @@ def init_callback(app):
 
         if 'lift-over-reset' == ctx.triggered_id:
             return None, {'display': 'none'}, False, '', '', \
-                None, None, None, None, None, None, None, None, None
+                None, None, None, None, None, None, None, None, None, None, None, None
 
         if 'lift-over-submit' == ctx.triggered_id:
             if nb_intervals_str:
@@ -62,7 +66,7 @@ def init_callback(app):
                     return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
                         {'display': 'block'}, str(
                             True), nb_intervals_str, other_refs, \
-                        None, None, None, None, None, None, None, None, None
+                        None, None, None, None, None, None, None, None, None, None, None, None
                 else:
                     track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
                                 [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
@@ -72,12 +76,12 @@ def init_callback(app):
                             browse_loci_util.get_data_base_on_loci(
                                 f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
                     return None, {'display': 'none'}, True, nb_intervals_str, other_refs, \
-                        None, None, None, None, None, None, None, None, None
+                        None, None, None, None, None, None, None, None, None, None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
                     {'display': 'block'}, \
                     True, nb_intervals_str, other_refs, \
-                    None, None, None, None, None, None, None, None, None
+                    None, None, None, None, None, None, None, None, None, None, None, None
 
         raise PreventUpdate
 
