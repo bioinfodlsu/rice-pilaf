@@ -32,7 +32,7 @@ def init_callback(app):
     @app.callback(
         Output('tf_enrichment_result_table', 'data'),
         State('lift_over_nb_entire_table', 'data'),
-        State('lift-over-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data'),
 
         State('tfbs-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
@@ -92,7 +92,7 @@ def init_callback(app):
     @app.callback(
         Output('tfbs_set', 'value'),
         Output('tfbs_prediction_technique', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-saved-input', 'data')
     )

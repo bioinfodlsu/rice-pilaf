@@ -16,7 +16,7 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals-input', 'children'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -72,7 +72,7 @@ def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('igv-selected-genomic-intervals-saved-input', 'data')
     )
@@ -91,7 +91,7 @@ def init_callback(app):
         Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
         Output('igv-track-filter', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('igv-active-filter', 'data')
     )

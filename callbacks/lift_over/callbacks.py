@@ -32,7 +32,7 @@ def init_callback(app):
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
-        State('lift-over-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data'),
         Input('lift-over-other-refs-saved-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
@@ -73,7 +73,7 @@ def init_callback(app):
     # Chain callback for active tab
     @app.callback(
         Output('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-active-tab', 'data')
     )
@@ -89,7 +89,7 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-nb-table', 'data'),
         Output('lift_over_nb_entire_table', 'data'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data')
     )
     def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):
@@ -128,7 +128,7 @@ def init_callback(app):
         Output('lift-over-results-table', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
 
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 

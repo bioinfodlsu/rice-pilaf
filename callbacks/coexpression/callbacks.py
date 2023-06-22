@@ -15,7 +15,7 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -94,7 +94,7 @@ def init_callback(app):
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
         State('lift-over-nb-table', 'data'),
-        State('lift-over-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('homepage-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
@@ -234,7 +234,7 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-clustering-algo', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('coexpression-clustering-algo-saved-input', 'data')
     )

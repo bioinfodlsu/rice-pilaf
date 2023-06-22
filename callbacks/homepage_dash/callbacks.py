@@ -15,7 +15,7 @@ def init_callback(app):
         Output('homepage-is-submitted', 'data'),
 
         Output('lift-over-is-submitted', 'data'),
-        Output('lift-over-genomic-intervals-saved-input', 'data'),
+        Output('homepage-genomic-intervals-saved-input', 'data'),
 
         Output('lift-over-other-refs-saved-input',
                'data', allow_duplicate=True),
@@ -45,7 +45,7 @@ def init_callback(app):
         Input('homepage-reset', 'n_clicks'),
         Input('homepage-clear-cache', 'n_clicks'),
 
-        State('lift-over-genomic-intervals', 'value'),
+        State('homepage-genomic-intervals', 'value'),
 
         prevent_initial_call=True
     )
@@ -117,7 +117,7 @@ def init_callback(app):
     """
 
     @app.callback(
-        Output('lift-over-genomic-intervals', 'value'),
+        Output('homepage-genomic-intervals', 'value'),
         Input('homepage-reset', 'n_clicks'),
     )
     def clear_input_fields(reset_n_clicks):

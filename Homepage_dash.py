@@ -108,7 +108,7 @@ genome_ref_input = dbc.Col([
         style={'display': 'none'}
     ),
     dbc.Input(
-        id='lift-over-genomic-intervals',
+        id='homepage-genomic-intervals',
         type='text',
         value=genomic_interval,
         persistence=True,
@@ -167,7 +167,7 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
-            id='lift-over-genomic-intervals-saved-input',
+            id='homepage-genomic-intervals-saved-input',
             storage_type='session'
         ),
 
