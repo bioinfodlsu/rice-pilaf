@@ -8,6 +8,22 @@ const = Constants()
 
 def init_callback(app):
     @app.callback(
+        Output('lift-over-results-container', 'style', allow_duplicate=True),
+        Output('lift-over-other-refs-saved-input',
+               'data', allow_duplicate=True),
+        Input('lift-over-submit', 'n_clicks'),
+        State('lift-over-is-submitted', 'data'),
+        State('lift-over-other-refs', 'value'),
+        prevent_initial_call=True
+    )
+    def display_lift_over_results(lift_over_submit_n_clicks, is_submitted, other_refs):
+        if is_submitted and lift_over_submit_n_clicks >= 1:
+            other_refs = sanitize_other_refs(other_refs)
+
+            return {'display': 'block'}, other_refs
+        raise PreventUpdate
+
+    @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
 

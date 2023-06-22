@@ -26,12 +26,6 @@ welcome = dcc.Markdown(
     '''
 )
 
-other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
-                     {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
-                     {'value': 'Azu', 'label': 'Azu   (japonica Azucena)'},
-                     {'value': 'ARC', 'label': 'ARC   (basmati ARC)'},
-                     {'value': 'IR64', 'label': 'IR64   (indica IR64)'},
-                     {'value': 'CMeo', 'label': 'CMeo   (japonica CHAO MEO)'}]
 genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
 
 
@@ -83,7 +77,7 @@ sidebar = dbc.Nav(
 # ======
 
 submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
-                                                   id='lift-over-submit',
+                                                   id='homepage-submit',
                                                    n_clicks=0,
                                                    className='home-button'),
                                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
@@ -122,17 +116,6 @@ genome_ref_input = dbc.Col([
     ),
 
     html.Br(),
-
-    dbc.Label(
-        'Select a genome to search for homologous regions'),
-    dcc.Dropdown(
-        other_ref_genomes,
-        id='lift-over-other-refs',
-        multi=False,
-        persistence=True,
-        persistence_type='memory',
-        className='dash-bootstrap'
-    ),
 
     html.Br(),
     submit_clear_buttons
