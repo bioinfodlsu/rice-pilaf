@@ -177,6 +177,11 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
+            id='lift-over-other-refs-submitted-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
             id='lift-over-active-filter',
             storage_type='session'
         ),

@@ -40,8 +40,8 @@ def init_callback(app):
         Input('tfbs_set', 'value'),
         prevent_initial_call=True
     )
-    def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, lift_over_submitted, tfbs_submitted_input, tfbs_set):
-        if lift_over_submitted and tfbs_is_submitted:
+    def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted, tfbs_submitted_input, tfbs_set):
+        if homepage_submitted and tfbs_is_submitted:
             nb_interval_str_fname = nb_interval_str.replace(
                 ":", "_").replace(";", "__").replace("-", "_")
 

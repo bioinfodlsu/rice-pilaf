@@ -46,7 +46,7 @@ layout = html.Div(id='lift-over-container', children=[
 
             html.Br(),
 
-            dbc.Tabs(id='lift-over-results-tabs'),
+            dbc.Tabs(id='lift-over-results-tabs', active_tab='tab-0'),
 
             html.Br(),
 

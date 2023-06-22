@@ -14,11 +14,14 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
 
-        Output('lift-over-is-submitted', 'data'),
         Output('homepage-genomic-intervals-saved-input', 'data'),
 
+        Output('lift-over-is-submitted', 'data', allow_duplicate=True),
+        Output('lift-over-other-refs-submitted-input',
+               'data', allow_duplicate=True),
         Output('lift-over-other-refs-saved-input',
                'data', allow_duplicate=True),
+
         Output('lift-over-active-tab', 'data', allow_duplicate=True),
         Output('lift-over-active-filter', 'data', allow_duplicate=True),
 
@@ -54,8 +57,10 @@ def init_callback(app):
             clear_cache_folder()
 
         if 'homepage-reset' == ctx.triggered_id:
-            return None, {'display': 'none'}, False, False, '', \
+            return None, {'display': 'none'}, False, \
+                '', \
                 None, None, None, \
+                None, None, \
                 None, None, \
                 None, None, \
                 None, None, None, \
@@ -68,8 +73,10 @@ def init_callback(app):
 
                 if lift_over_util.is_error(intervals):
                     return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, False, nb_intervals_str, \
+                        {'display': 'block'}, False, \
+                        nb_intervals_str, \
                         None, None, None, \
+                        None, None, \
                         None, None, \
                         None, None, \
                         None, None, None, \
@@ -82,8 +89,10 @@ def init_callback(app):
                         if db[2] != 'bed':
                             browse_loci_util.get_data_base_on_loci(
                                 f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
-                    return None, {'display': 'none'}, True, True, nb_intervals_str, \
+                    return None, {'display': 'none'}, True, \
+                        nb_intervals_str, \
                         None, None, None, \
+                        None, None, \
                         None, None, \
                         None, None, \
                         None, None, None, \
@@ -91,8 +100,9 @@ def init_callback(app):
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
                     {'display': 'block'}, True, \
-                    True, nb_intervals_str, \
+                    nb_intervals_str, \
                     None, None, None, \
+                    None, None, \
                     None, None, \
                     None, None, \
                     None, None, None, \
@@ -129,10 +139,10 @@ def init_callback(app):
     @app.callback(
         Output('post-gwas-analysis-container', 'hidden'),
         Output('homepage-reset', 'href'),
-        Input('lift-over-is-submitted', 'data'),
+        Input('homepage-is-submitted', 'data'),
     )
-    def hide_side_bars(is_submitted):
-        if is_submitted:
+    def hide_side_bars(homepage_is_submitted):
+        if homepage_is_submitted:
             return False, '/'
         else:
             return True, '/'
