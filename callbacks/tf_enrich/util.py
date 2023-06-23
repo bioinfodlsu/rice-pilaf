@@ -3,6 +3,7 @@ from timeit import default_timer as timer
 import pandas as pd
 import os
 import subprocess
+import statsmodels.stats.multitest as sm
 
 from ..constants import Constants
 const = Constants()
@@ -49,7 +50,10 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_s
 
     query_bed = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query'
     sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
-    results_dict = {}  # key=tf, values = results from overlap enrichment analysis
+    #results_dict = {}  # key=tf, values = results from overlap enrichment analysis
+
+    TF_list = []
+    pvalue_list = [] #keep together using a dict? but BH correction needs a separate list of p_values
 
     # perform annotation overlap statistical significance tests
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
@@ -59,19 +63,28 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_s
         if not os.path.exists(out_dir):
             os.makedirs(out_dir)
 
-        results_dict[tf] = perform_enrichment_specific_tf(
-            ref_bed, query_bed, sizes, out_dir)
+        #results_dict[tf] = perform_enrichment_specific_tf(
+        #    ref_bed, query_bed, sizes, out_dir)
+        p_value = perform_enrichment_specific_tf(
+                  ref_bed, query_bed, sizes, out_dir)
 
-    # TODO perform proper multi-test correction
-    for k in results_dict.keys():
-        results_dict[k]['adj_p'] = min(1, results_dict[k]['p_value']*32)
+        TF_list.append(tf)
+        pvalue_list.append(p_value)
+
+    print(TF_list)
+    print(pvalue_list)
+
+    significant,adj_pvalue = multiple_testing_correction(pvalue_list, 0.25)
+    results = sorted(list(zip(TF_list,pvalue_list, adj_pvalue,significant)),key=lambda x:x[3])
+    return pd.DataFrame(results,columns=["Transcription factor","p_value","adj_pvalue","significant?"])
+
 
     # with open(f'{results_outdir}/output.txt', 'w') as fp:
     #    json.dump(results_dict, fp)
 
     # get results
     # return create_empty_df()
-    return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
+    #return pd.DataFrame.from_dict(results_dict, orient='index').rename_axis("Transcription factor").reset_index()
 
     # else:
     #    with open(f'{results_outdir}/output.txt', 'r') as fp:
@@ -91,12 +104,15 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
     if not os.path.exists(summary_file):
         subprocess.run(["mcdp2", "single", ref_bed, query_bed, sizes, "-o", out_dir],
                        shell=False, capture_output=True, text=True)  # TODO exception handling
-    results = {}
+
     with open(f'{out_dir}/summary.txt') as f:
         content = f.readlines()
-        results['p_value'] = float(content[3].rstrip().split(":")[1])
-    return results
+        p_value = float(content[3].rstrip().split(":")[1])
+    return p_value
 
 
-def multiple_testing_correction():
-    pass
+def multiple_testing_correction(pvalues,fdr):
+    sig,adj_pvalue,_,_ = sm.multipletests(pvalues, alpha = fdr, method='fdr_bh',is_sorted=False,returnsorted=False)
+    sig = sig.tolist()
+    adj_pvalue = adj_pvalue.tolist()
+    return sig,adj_pvalue
