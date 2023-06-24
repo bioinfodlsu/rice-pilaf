@@ -6,20 +6,20 @@
     background-color: var(--bg-gray-darker);
 }
 
-#lift-over-reset, #lift-over-clear-cache {
+#homepage-reset, #homepage-clear-cache {
     background-color: white;
 }
 
-#lift-over-reset:hover, #lift-over-clear-cache:hover {
+#homepage-reset:hover, #homepage-clear-cache:hover {
     background-color: #dc3545;
 }
 
-#lift-over-submit {
+#homepage-submit {
     background-color: var(--green-top);
     border-color: var(--green-top);
 }
 
-#lift-over-submit:hover {
+#homepage-submit:hover {
     background-color: var(--green-top-hover);
     border-color: var(--green-top-hover);
 }

@@ -16,11 +16,11 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals-input', 'children'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
     )
-    def display_input(nb_intervals_str, is_submitted):
-        if is_submitted:
+    def display_input(nb_intervals_str, homepage_is_submitted):
+        if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)]
             else:
@@ -72,12 +72,12 @@ def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
         State('igv-selected-genomic-intervals-saved-input', 'data')
     )
-    def display_selected_genomic_intervals(nb_intervals_str, is_submitted, selected_nb_interval):
-        if is_submitted:
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval):
+        if homepage_is_submitted:
             igv_options = nb_intervals_str.split(';')
 
             if not selected_nb_interval:
@@ -91,12 +91,12 @@ def init_callback(app):
         Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
         Output('igv-track-filter', 'value'),
-        Input('lift-over-genomic-intervals-saved-input', 'data'),
-        State('lift-over-is-submitted', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
         State('igv-active-filter', 'data')
     )
-    def display_igv_tracks_filter(nb_intervals_str, is_submitted, active_filter):
-        if is_submitted:
+    def display_igv_tracks_filter(nb_intervals_str, homepage_is_submitted, active_filter):
+        if homepage_is_submitted:
             tracks = ['MSU V7 genes', 'chromatin open']
 
             if not active_filter:
@@ -110,10 +110,10 @@ def init_callback(app):
         Output('igv-display', 'children'),
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
-        State('lift-over-is-submitted', 'data')
+        State('homepage-is-submitted', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, is_submitted):
-        if is_submitted:
+    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
+        if homepage_is_submitted:
             track_info = [
                 {
                     "name": "MSU V7 genes",
@@ -158,10 +158,10 @@ def init_callback(app):
         Output('igv-active-filter', 'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
-        State('lift-over-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
 
         prevent_initial_call=True
     )
-    def set_igv_session_state(selected_nb_intervals_str, selected_tracks, is_submitted):
-        if is_submitted:
+    def set_igv_session_state(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
+        if homepage_is_submitted:
             return selected_nb_intervals_str, selected_tracks
