@@ -5,4 +5,5 @@ gffutils==0.11.1
 networkx==2.8.7
 pandas==1.5.1
 dash_bio==1.0.2
-pybind11
+pybind11==2.10.4
+statsmodels==0.14.0

@@ -18,9 +18,9 @@ jobs:
       fail-fast: false
       matrix:                                                 # Cannot use env variables inside matrix
         include:
-          - dockerfile: Dockerfile                            # Change to Dockerfile of app
+          - dockerfile: Dockerfile-app                        # Change to Dockerfile of app
             image: ghcr.io/bioinfodlsu/rice-pilaf/app         
-          - dockerfile: Dockerfile                            # Change to Dockerfile of workflow
+          - dockerfile: Dockerfile-workflow                   # Change to Dockerfile of workflow
             image: ghcr.io/bioinfodlsu/rice-pilaf/workflow    
     permissions:
       contents: read
