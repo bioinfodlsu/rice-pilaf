@@ -14,11 +14,12 @@ layout = html.Div(
         dbc.RadioItems(
             id='tfbs_set',
             options=[
+                {'value': 'promoters', 'label': 'promoters', 'label_id': 'promoters'},
                 {'value': 'genome-wide', 'label': 'genome-wide',
-                 'label_id': 'genome-wide'},
-                {'value': 'promoters', 'label': 'promoters', 'label_id': 'promoters'}
+                 'label_id': 'genome-wide'}
+
             ],
-            value='genome-wide',
+            value='promoters',
             inline=True
         ),
         html.Br(),
@@ -35,6 +36,13 @@ layout = html.Div(
             value='FunTFBS',
             inline=True
         ),
+        html.Br(),
+        dcc.Markdown("Select threshold for False-Discovery Rate:"),
+        dcc.Slider(id='coexpression-parameter-slider', step=None,
+                   marks={0: '0.01', 10: '0.025',  20: '0.05',
+                          30: '0.1',  40: '0.25'},
+                   value=40),
+
         html.Br(),
         dbc.Button('Submit',
                    id='tfbs-submit',
