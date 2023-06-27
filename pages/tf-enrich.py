@@ -44,7 +44,7 @@ layout = html.Div(
                    value=40),
 
         html.Br(),
-        dbc.Button('Submit',
+        dbc.Button('Run Analysis',
                    id='tfbs-submit',
                    n_clicks=0,
                    className='page-button'),

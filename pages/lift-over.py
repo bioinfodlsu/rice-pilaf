@@ -26,7 +26,7 @@ layout = html.Div(id='lift-over-container', children=[
 
     html.Br(),
 
-    dbc.Button('Run Analysis',
+    dbc.Button('Run Lift-over',
                id='lift-over-submit',
                className='page-button',
                n_clicks=0),

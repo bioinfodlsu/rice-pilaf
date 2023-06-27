@@ -76,7 +76,7 @@ sidebar = dbc.Nav(
 # Input
 # ======
 
-submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Submit',
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
                                                    id='homepage-submit',
                                                    n_clicks=0,
                                                    className='home-button'),
