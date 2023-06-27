@@ -46,7 +46,7 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-results-container', 'style', allow_duplicate=True),
-        Input('igv-selected-genomic-intervals-saved-input', 'data'),
+        Input('igv-genomic-intervals', 'value'),
         State('homepage-is-submitted', 'data'),
         State('igv-is-submitted', 'data'),
         prevent_initial_call=True
