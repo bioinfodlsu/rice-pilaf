@@ -113,10 +113,14 @@ def init_callback(app):
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
         Input('homepage-reset', 'n_clicks'),
+        Input('example-preharvest', 'n_clicks')
     )
-    def clear_input_fields(reset_n_clicks):
-        if reset_n_clicks >= 1:
+    def clear_input_fields(reset, preharvest):
+        if 'homepage-reset' == ctx.triggered_id:
             return None
+
+        if 'example-preharvest' == ctx.triggered_id:
+            return get_example_genomic_interval('example-preharvest')
 
         raise PreventUpdate
 

@@ -7,6 +7,7 @@ import callbacks.browse_loci.callbacks
 import callbacks.coexpression.callbacks
 import callbacks.tf_enrich.callbacks
 import callbacks.homepage_dash.callbacks
+import callbacks.homepage_dash.util
 
 from flask import Flask
 
@@ -26,7 +27,8 @@ welcome = dcc.Markdown(
     '''
 )
 
-genomic_interval = 'Chr01:1523625-1770814;Chr04:4662701-4670717'
+genomic_interval = callbacks.homepage_dash.util.example_genomic_intervals[
+    'example-preharvest']
 
 
 # ===================
@@ -38,9 +40,7 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink('Home', href='/', active='exact',
                     className='top-navbar-item')),
         dbc.NavItem(dbc.NavLink(
-                    'About', href='/about', active='exact', className='top-navbar-item')),
-        dbc.NavItem(dbc.NavLink(
-                    'People', href='/people', active='exact', className='top-navbar-item'))
+                    'About', href='/about', active='exact', className='top-navbar-item'))
     ],
     id='top-navbar',
     brand=['Rice Pilaf'],
@@ -115,9 +115,11 @@ genome_ref_input = dbc.Col([
         persistence_type='memory'
     ),
 
+    html.Div([html.Span('Or select from these examples: ', className='pe-2'),
+              html.Span('Pre-Harvest Sprouting (Lee et al., 2021)', id='example-preharvest', className='sample-genomic-interval')],
+             className='pt-3'),
     html.Br(),
 
-    html.Br(),
     submit_clear_buttons
 ])
 

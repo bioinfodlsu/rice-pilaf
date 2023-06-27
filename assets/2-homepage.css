@@ -56,3 +56,12 @@
 #genomic-interval-hdr {
     margin-bottom: 0.6em;
 }
+
+.sample-genomic-interval {
+    color: rgb(107, 107, 185);
+}
+
+.sample-genomic-interval:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
