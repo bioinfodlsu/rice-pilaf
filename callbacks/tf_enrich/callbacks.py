@@ -96,10 +96,10 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('tfbs-saved-input', 'data')
     )
-    def display_selected_clustering_algo(nb_intervals_str, homepage_is_submitted, tfbs_saved_input):
+    def display_submitted_tfbs_input(nb_intervals_str, homepage_is_submitted, tfbs_saved_input):
         if homepage_is_submitted:
             if not tfbs_saved_input:
-                return 'genome-wide', 'FunTFBS'
+                return 'promoters', 'FunTFBS'
 
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
 
