@@ -44,11 +44,13 @@ layout = html.Div(
                    value=40),
 
         html.Br(),
-        dbc.Button('Submit',
+        dbc.Button('Run Analysis',
                    id='tfbs-submit',
                    n_clicks=0,
                    className='page-button'),
 
+        html.Br(),
+        html.Br(),
         html.Div(id='tfbs-results-container', children=[
             dcc.Loading(
                 dash_table.DataTable(
