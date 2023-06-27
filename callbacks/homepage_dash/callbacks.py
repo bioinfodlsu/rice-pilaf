@@ -25,9 +25,13 @@ def init_callback(app):
         Output('lift-over-active-tab', 'data', allow_duplicate=True),
         Output('lift-over-active-filter', 'data', allow_duplicate=True),
 
+        Output('igv-is-submitted', 'data', allow_duplicate=True),
         Output('igv-selected-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
-        Output('igv-active-filter', 'data', allow_duplicate=True),
+        Output('igv-selected-genomic-intervals-submitted-input',
+               'data', allow_duplicate=True),
+        Output('igv-selected-tracks-submitted-input',
+               'data', allow_duplicate=True),
 
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
@@ -61,7 +65,7 @@ def init_callback(app):
                 '', \
                 None, None, None, \
                 None, None, \
-                None, None, \
+                None, None, None, None, \
                 None, None, \
                 None, None, None, \
                 None, None, None
@@ -77,7 +81,7 @@ def init_callback(app):
                         nb_intervals_str, \
                         None, None, None, \
                         None, None, \
-                        None, None, \
+                        None, None, None, None, \
                         None, None, \
                         None, None, None, \
                         None, None, None
@@ -93,7 +97,7 @@ def init_callback(app):
                         nb_intervals_str, \
                         None, None, None, \
                         None, None, \
-                        None, None, \
+                        None, None, None, None, \
                         None, None, \
                         None, None, None, \
                         None, None, None
@@ -103,7 +107,7 @@ def init_callback(app):
                     nb_intervals_str, \
                     None, None, None, \
                     None, None, \
-                    None, None, \
+                    None, None, None, None, \
                     None, None, \
                     None, None, None, \
                     None, None, None

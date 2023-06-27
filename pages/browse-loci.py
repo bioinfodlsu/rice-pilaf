@@ -21,14 +21,28 @@ layout = html.Div(id='igv-container', children=[
 
     html.Br(),
 
-    dbc.Label(id='igv-track-intro'),
-
-    dbc.Checklist(id='igv-track-filter',
-                  inline=True,
-                  className='ms-3'),
+    dbc.Button('Submit',
+               id='igv-submit',
+               n_clicks=0,
+               className='page-button'),
 
     html.Br(),
+    html.Br(),
 
-    dcc.Loading(id='igv-display')
+    html.Div(
+        id='igv-results-container',
+        style={'display': 'none'},
+        children=[
+            dbc.Label(id='igv-track-intro'),
+
+            dcc.Loading(dbc.Checklist(id='igv-track-filter',
+                                      inline=True,
+                                      className='ms-3')),
+
+            html.Br(),
+
+            dcc.Loading(id='igv-display')
+        ]
+    )
 ]
 )

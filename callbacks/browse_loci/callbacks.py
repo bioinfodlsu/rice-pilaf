@@ -28,6 +28,35 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    @app.callback(
+        Output('igv-results-container', 'style', allow_duplicate=True),
+        Output('igv-is-submitted', 'data', allow_duplicate=True),
+        Output('igv-selected-genomic-intervals-submitted-input', 'data'),
+        Input('igv-submit', 'n_clicks'),
+        State('igv-genomic-intervals', 'value'),
+        State('igv-track-filter', 'value'),
+        State('homepage-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def display_igv_results(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
+        if homepage_is_submitted and igv_submit_n_clicks >= 1:
+            return {'display': 'block'}, True, selected_nb_interval
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('igv-results-container', 'style', allow_duplicate=True),
+        Input('igv-genomic-intervals', 'value'),
+        State('homepage-is-submitted', 'data'),
+        State('igv-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def display_igv_results_saved_state(selected_nb_interval, homepage_is_submitted, igv_is_submitted):
+        if igv_is_submitted:
+            return {'display': 'block'}
+        else:
+            return {'display': 'none'}
+
     # Lifted from https://flask.palletsprojects.com/en/2.2.x/errorhandling/#:~:text=When%20an%20error%20occurs%20in,user%20when%20an%20error%20occurs.
     @app.server.errorhandler(HTTPException)
     def handle_exception(e):
@@ -73,6 +102,7 @@ def init_callback(app):
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
         Input('homepage-genomic-intervals-saved-input', 'data'),
+
         State('homepage-is-submitted', 'data'),
         State('igv-selected-genomic-intervals-saved-input', 'data')
     )
@@ -91,29 +121,32 @@ def init_callback(app):
         Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
         Output('igv-track-filter', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('igv-selected-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('igv-active-filter', 'data')
+        Input('igv-selected-tracks-submitted-input', 'data'),
+        State('igv-is-submitted', 'data')
     )
-    def display_igv_tracks_filter(nb_intervals_str, homepage_is_submitted, active_filter):
-        if homepage_is_submitted:
+    def display_igv_tracks_filter(nb_intervals_str, homepage_is_submitted, selected_tracks, igv_is_submitted):
+        if homepage_is_submitted and igv_is_submitted:
             tracks = ['MSU V7 genes', 'chromatin open']
 
-            if not active_filter:
-                active_filter = [tracks[0]]
+            if not selected_tracks:
+                selected_tracks = [tracks[0]]
 
             return 'Select the tracks to be displayed', \
-                tracks, active_filter
+                tracks, selected_tracks
         raise PreventUpdate
 
     @app.callback(
         Output('igv-display', 'children'),
-        Input('igv-genomic-intervals', 'value'),
-        Input('igv-track-filter', 'value'),
-        State('homepage-is-submitted', 'data')
+        State('igv-selected-genomic-intervals-submitted-input', 'data'),
+        Input('igv-selected-tracks-submitted-input', 'data'),
+        # Input('igv-track-filter', 'value'),
+        State('homepage-is-submitted', 'data'),
+        State('igv-is-submitted', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
-        if homepage_is_submitted:
+    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted):
+        if homepage_is_submitted and igv_is_submitted:
             track_info = [
                 {
                     "name": "MSU V7 genes",
@@ -152,16 +185,29 @@ def init_callback(app):
                 )
             ])
 
+        raise PreventUpdate
+
     @app.callback(
         Output('igv-selected-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
-        Output('igv-active-filter', 'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
         Input('igv-track-filter', 'value'),
         State('homepage-is-submitted', 'data'),
 
         prevent_initial_call=True
     )
-    def set_igv_session_state(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
+    def set_input_igv_session_state(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted:
-            return selected_nb_intervals_str, selected_tracks
+            return selected_nb_intervals_str
+
+    @app.callback(
+        Output('igv-selected-tracks-submitted-input',
+               'data', allow_duplicate=True),
+        Input('igv-track-filter', 'value'),
+        State('homepage-is-submitted', 'data'),
+        State('igv-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def set_input_igv_session_state(selected_tracks, homepage_is_submitted, igv_is_submitted):
+        if homepage_is_submitted and igv_is_submitted:
+            return selected_tracks

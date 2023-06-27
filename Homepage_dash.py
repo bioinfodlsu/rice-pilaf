@@ -204,7 +204,17 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
-            id='igv-active-filter',
+            id='igv-selected-genomic-intervals-submitted-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='igv-selected-tracks-submitted-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='igv-is-submitted',
             storage_type='session'
         ),
 
