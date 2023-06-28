@@ -3,7 +3,8 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 
-dash.register_page(__name__, name='Co-expression Network Analysis')
+dash.register_page(__name__, path='/co-expression',
+                   name='Co-expression Network Analysis')
 
 
 layout = dbc.Row(dbc.Col(id='coexpression-container', children=[

@@ -2,7 +2,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
-dash.register_page(__name__, name="Regulatory feature enrichment")
+dash.register_page(__name__, path='/tf-enrichment',
+                   name="Regulatory feature enrichment")
 
 
 layout = html.Div(
