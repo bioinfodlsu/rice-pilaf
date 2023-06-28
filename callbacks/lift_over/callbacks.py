@@ -12,6 +12,8 @@ def init_callback(app):
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
                'data', allow_duplicate=True),
+        Output('lift-over-active-tab', 'data', allow_duplicate=True),
+        Output('lift-over-active-filter', 'data', allow_duplicate=True),
         Input('lift-over-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs', 'value'),
@@ -21,7 +23,7 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
-            return {'display': 'block'}, True, other_refs
+            return {'display': 'block'}, True, other_refs, None, None
 
         raise PreventUpdate
 
@@ -87,41 +89,19 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    # Chain callback for active tab
     @app.callback(
-        Output('lift-over-results-tabs', 'active_tab', allow_duplicate=True),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Output('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-other-refs-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-active-tab', 'data'),
         State('lift-over-is-submitted', 'data'),
-        prevent_initial_call=True
     )
-    def switch_active_tab(nb_intervals_str, homepage_is_submitted, active_tab, lift_over_is_submitted):
+    def display_active_tab(other_refs, homepage_is_submitted, saved_active_tab, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
-            if not active_tab:
+            if not saved_active_tab:
                 return 'tab-0'
 
-            return active_tab
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('lift-over-nb-table', 'data'),
-        Output('lift_over_nb_entire_table', 'data'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
-        State('homepage-is-submitted', 'data')
-    )
-    def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):
-        if homepage_is_submitted:
-            if nb_intervals_str:
-                nb_intervals = get_genomic_intervals_from_input(
-                    nb_intervals_str)
-
-                if not is_error(nb_intervals):
-                    genes_from_Nb = get_genes_from_Nb(
-                        nb_intervals)
-
-                    return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
+            return saved_active_tab
 
         raise PreventUpdate
 
@@ -160,10 +140,13 @@ def init_callback(app):
         Input('homepage-genomic-intervals-saved-input', 'data'),
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
-        State('lift-over-other-refs-saved-input', 'data')
+        State('lift-over-other-refs-submitted-input', 'data'),
     )
     def get_input_lift_over_session_state(nb_interval_str, is_multi_other_refs, homepage_is_submitted, other_refs):
         if homepage_is_submitted:
+            if not is_multi_other_refs and other_refs:
+                other_refs = other_refs[0]
+
             return other_refs
 
         raise PreventUpdate

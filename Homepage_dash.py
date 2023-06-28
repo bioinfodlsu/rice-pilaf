@@ -81,7 +81,7 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
                                                    n_clicks=0,
                                                    className='home-button'),
                                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-                                dbc.Col(dbc.Button('Clear All Display',
+                                dbc.Col(dbc.Button('Reset All Analyses',
                                                    color='danger',
                                                    outline=True,
                                                    id='homepage-reset',
@@ -110,7 +110,7 @@ genome_ref_input = dbc.Col([
     dbc.Input(
         id='homepage-genomic-intervals',
         type='text',
-        value=genomic_interval,
+        value='',  # genomic_interval,
         persistence=True,
         persistence_type='memory'
     ),
