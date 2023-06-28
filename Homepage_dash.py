@@ -110,7 +110,7 @@ genome_ref_input = dbc.Col([
     dbc.Input(
         id='homepage-genomic-intervals',
         type='text',
-        value=genomic_interval,
+        value='',  # genomic_interval,
         persistence=True,
         persistence_type='memory'
     ),
