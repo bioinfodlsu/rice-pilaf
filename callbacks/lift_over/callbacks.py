@@ -89,21 +89,19 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    # Chain callback for active tab
     @app.callback(
-        Output('lift-over-results-tabs', 'active_tab', allow_duplicate=True),
-        Input('lift-over-other-refs-saved-input', 'data'),
+        Output('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-other-refs-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-active-tab', 'data'),
         State('lift-over-is-submitted', 'data'),
-        prevent_initial_call=True
     )
-    def switch_active_tab(other_refs, homepage_is_submitted, active_tab, lift_over_is_submitted):
+    def display_active_tab(other_refs, homepage_is_submitted, saved_active_tab, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
-            if not active_tab:
+            if not saved_active_tab:
                 return 'tab-0'
 
-            return active_tab
+            return saved_active_tab
 
         raise PreventUpdate
 
