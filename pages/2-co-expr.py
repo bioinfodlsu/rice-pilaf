@@ -4,7 +4,7 @@ import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 
 dash.register_page(__name__, path='/co-expression',
-                   name='Co-expression Network Analysis')
+                   name='Coexpression Network Analysis')
 
 coach = html.Li(
     [html.B('COACH'),
