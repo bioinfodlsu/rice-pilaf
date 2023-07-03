@@ -6,6 +6,39 @@ from dash import dash_table, dcc, html
 dash.register_page(__name__, path='/co-expression',
                    name='Co-expression Network Analysis')
 
+coach = html.Li(
+    [html.B('COACH'),
+     html.Span(
+        ' detects highly connected gene subnetworks and expands them by including closely associated genes'),
+     html.Br(),
+     html.B('Reference: '),
+     html.Span(
+        'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
+     html.I('BMC Bioinformatics, 10'),
+     html.Span('(169). '),
+     html.A('https://doi.org/10.1186/1471-2105-10-169',
+            href='https://doi.org/10.1186/1471-2105-10-169',
+            target='_blank')]
+)
+
+demon = html.Li(
+    [html.B('DEMON'),
+     html.Span(
+        ' adopts a bottom-up approach where genes "vote" to determine the module to which connected genes belong'),
+     html.Br(),
+     html.B('Reference: '),
+     html.Span(
+        'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
+     html.I('KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, '),
+     html.Span('pp. 615–623. '),
+     html.A('https://dl.acm.org/doi/10.1145/2339530.2339630',
+            href='https://dl.acm.org/doi/10.1145/2339530.2339630',
+            target='_blank')]
+)
+
+# ============
+# Main Layout
+# ============
 
 layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.P(id='coexpression-genomic-intervals-input'),
@@ -24,22 +57,9 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
         dbc.ModalBody([
             html.P(
                 'The available algorithms allow for overlapping modules (that is, genes may belong to more than one module):'),
-            html.Ul(
-                html.Li(
-                    [html.B('COACH'),
-                     html.Span(
-                         ' detects highly connected gene subnetworks and expands them by including closely associated genes'),
-                     html.Br(),
-                     html.B('Reference: '),
-                     html.Span(
-                         'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
-                     html.I('BMC Bioinformatics, 10'),
-                     html.Span('(169). '),
-                     html.A('https://doi.org/10.1186/1471-2105-10-169',
-                            href='https://doi.org/10.1186/1471-2105-10-169',
-                            target='_blank')]
-                )
-            )
+            html.Ul([
+                coach, html.Br(), demon
+            ])
         ])],
         id='coexpression-clustering-algo-modal',
         is_open=False,
