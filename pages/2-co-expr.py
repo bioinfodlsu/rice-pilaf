@@ -4,37 +4,76 @@ import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 
 dash.register_page(__name__, path='/co-expression',
-                   name='Coexpression Network Analysis')
+                   name='Co-Expression Network Analysis')
 
 coach = html.Li(
     [html.B('COACH'),
      html.Span(
-        ' detects highly connected gene subnetworks and expands them by including closely associated genes'),
-     html.Br(),
-     html.B('Reference: '),
-     html.Span(
-        'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
-     html.I('BMC Bioinformatics, 10'),
-     html.Span('(169). '),
-     html.A('https://doi.org/10.1186/1471-2105-10-169',
-            href='https://doi.org/10.1186/1471-2105-10-169',
-            target='_blank')]
+        ' Detects highly connected gene subnetworks (referred to as "cores") and expands them by including closely associated genes',
+        className='algo-desc'),
+     html.Div([
+         html.Span(
+             'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
+         html.I('BMC Bioinformatics, 10'),
+         html.Span('(169). '),
+         html.A('https://doi.org/10.1186/1471-2105-10-169',
+                href='https://doi.org/10.1186/1471-2105-10-169',
+                target='_blank')],
+        className='reference'
+    )]
 )
 
 demon = html.Li(
     [html.B('DEMON'),
      html.Span(
-        ' adopts a bottom-up approach where genes "vote" to determine the module to which connected genes belong'),
-     html.Br(),
-     html.B('Reference: '),
-     html.Span(
-        'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
-     html.I('KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, '),
-     html.Span('pp. 615–623. '),
-     html.A('https://dl.acm.org/doi/10.1145/2339530.2339630',
-            href='https://dl.acm.org/doi/10.1145/2339530.2339630',
-            target='_blank')]
+        ' Adopts a bottom-up approach where genes "vote" to determine the subnetwork to which connected genes belong',
+        className='algo-desc'),
+     html.Div([
+         html.Span(
+             'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
+         html.I('KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining '),
+         html.Span('(pp. 615–623). Association for Computing Machinery. '),
+         html.A('https://doi.org/10.1145/2339530.2339630',
+                href='https://doi.org/10.1145/2339530.2339630',
+                target='_blank')],
+        className='reference'
+    )]
 )
+
+clusterone = html.Li(
+    [html.B('ClusterONE'),
+     html.Span(
+        ' Forms cohesive gene subnetworks from an initial set of seed genes. Among the module detection algorithms supported by this app, this is the only algorithm that takes into account the weights associated with the coexpression',
+        className='algo-desc'),
+     html.Div([
+         html.Span(
+             'Nepusz, T., Yu, H., & Paccanaro, A. (2012). Detecting overlapping protein complexes in protein-protein interaction networks. '),
+         html.I('Nature Methods, 9, '),
+         html.Span('471–472. '),
+         html.A('https://doi.org/10.1038/nmeth.1938',
+                href='https://doi.org/10.1038/nmeth.1938',
+                target='_blank')],
+        className='reference'
+    )],
+)
+
+fox = html.Li(
+    [html.B('FOX'),
+     html.Span(
+        ' Determines the membership of a gene to a subnetwork by counting the number of triangles formed by the gene with other genes in the subnetwork',
+        className='algo-desc'),
+     html.Div([
+         html.Span(
+             'Lyu, T., Bing, L., Zhang, Z., & Zhang, Y. (2020). FOX: Fast overlapping community detection algorithm in big weighted networks. '),
+         html.I('ACM Transactions on Social Computing, 3'),
+         html.Span('(3), 1–23. '),
+         html.A('https://doi.org/10.1145/3404970',
+                href='https://doi.org/10.1145/3404970',
+                target='_blank')],
+        className='reference'
+    )],
+)
+
 
 # ============
 # Main Layout
@@ -56,9 +95,9 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
         ),
         dbc.ModalBody([
             html.P(
-                'The available algorithms allow for overlapping modules (that is, genes may belong to more than one module):'),
+                'All four algorithms supported by this app allow for overlapping modules (that is, genes may belong to more than one module):'),
             html.Ul([
-                coach, html.Br(), demon
+                clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
             ])
         ])],
         id='coexpression-clustering-algo-modal',
