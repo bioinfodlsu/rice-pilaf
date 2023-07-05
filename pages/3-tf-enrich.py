@@ -6,25 +6,23 @@ dash.register_page(__name__, path='/tf-enrichment',
                    name="Regulatory Feature Enrichment")
 
 
-layout = html.Div(
+layout = html.Div(id='tf-enrichment-over-container',children=
     [
+        html.P(id='tf-enrichment-genomic-intervals-input'),
+        dcc.Markdown('''
+        Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.
+        
+        In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.
+        '''),
         html.Div(id='TF-enrichment-input-genomic-intervals'),
 
         html.Br(),
-        dcc.Markdown("Consider TF binding sites in the following regions:"),
-        dbc.RadioItems(
-            id='tfbs_set',
-            options=[
-                {'value': 'promoters', 'label': 'promoters', 'label_id': 'promoters'},
-                {'value': 'genome-wide', 'label': 'genome-wide',
-                 'label_id': 'genome-wide'}
-
-            ],
-            value='promoters',
-            inline=True
-        ),
-        html.Br(),
-        dcc.Markdown("Choose TF binding site prediction technique:"),
+        dbc.Label(['Choose TF binding site prediction technique:',
+                   html.I(
+                       className='bi bi-info-circle mx-2',
+                       id='tf-enrichment-technique-tooltip',
+                       n_clicks=0
+                 )]),
         dbc.RadioItems(
             id='tfbs_prediction_technique',
             options=[
@@ -35,6 +33,25 @@ layout = html.Div(
                  'label_id': 'motif scan'}
             ],
             value='FunTFBS',
+            inline=True
+        ),
+
+        html.Br(),
+        dbc.Label(['Consider TF binding sites in the following regions:',
+                   html.I(
+                       className='bi bi-info-circle mx-2',
+                       id='tf-enrichment-binding-site-tooltip',
+                       n_clicks=0
+                 )]),
+        dbc.RadioItems(
+            id='tfbs_set',
+            options=[
+                {'value': 'promoters', 'label': 'promoters', 'label_id': 'promoters'},
+                {'value': 'genome-wide', 'label': 'genome-wide',
+                 'label_id': 'genome-wide'}
+
+            ],
+            value='promoters',
             inline=True
         ),
         html.Br(),

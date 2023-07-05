@@ -8,6 +8,21 @@ const = Constants()
 
 def init_callback(app):
     @app.callback(
+        Output('lift-over-genomic-intervals-input', 'children'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
+    )
+    def display_input(nb_intervals_str, homepage_is_submitted):
+        if homepage_is_submitted:
+            if nb_intervals_str and not is_error(
+                    get_genomic_intervals_from_input(nb_intervals_str)):
+                return [html.B('Your input intervals: '), html.Span(nb_intervals_str)]
+            else:
+                return None
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('lift-over-results-container', 'style', allow_duplicate=True),
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
@@ -83,7 +98,7 @@ def init_callback(app):
                 else:
                     gene_list_msg += [html.Span('.')]
 
-                return gene_list_msg, tabs_children, [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
+                return gene_list_msg, tabs_children, [html.B('Nipponbare Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
             else:
                 return None, None, None, [], None
 

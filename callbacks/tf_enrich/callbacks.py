@@ -3,6 +3,8 @@ from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
 from .util import *
+from ..lift_over import util as lift_over_util
+
 gwas_loci = None
 
 Tfbs_input = namedtuple(
@@ -10,6 +12,19 @@ Tfbs_input = namedtuple(
 
 
 def init_callback(app):
+    @app.callback(
+        Output('tf-enrichment-genomic-intervals-input', 'children'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
+    )
+    def display_input(nb_intervals_str, homepage_is_submitted):
+        if homepage_is_submitted:
+            if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
+                return [html.B('Your input intervals: '), html.Span(nb_intervals_str)]
+            else:
+                return None
+
+        raise PreventUpdate
     @app.callback(
         Output('tfbs-results-container', 'style', allow_duplicate=True),
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),

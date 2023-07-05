@@ -12,7 +12,7 @@ layout = html.Div(id='igv-container', children=[
     # )
     html.P(id='igv-genomic-intervals-input'),
 
-    dbc.Label('Select a genomic interval of interest',
+    dbc.Label('Select an interval: ',
               className='mb-2'),
 
     dcc.Dropdown(
