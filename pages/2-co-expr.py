@@ -83,7 +83,7 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.P(id='coexpression-genomic-intervals-input'),
     dcc.Markdown('''
     In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS.
-    Likely functions of the modules are inferred by enrichment analysis against several ontogolies and pathway databases.
+    Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.
     '''),
     dbc.Label(['Select a module detection algorithm ',
                html.I(
