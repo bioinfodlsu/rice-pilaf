@@ -25,6 +25,7 @@ def init_callback(app):
                 return None
 
         raise PreventUpdate
+
     @app.callback(
         Output('tfbs-results-container', 'style', allow_duplicate=True),
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
@@ -62,13 +63,13 @@ def init_callback(app):
 
             # TODO this should be moved to lift_over/callbacks.py
             write_promoter_intervals_to_file(
-                lift_over_nb_entire_table, nb_interval_str_fname)
+                lift_over_nb_entire_table, nb_interval_str)
 
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
 
             enrichment_results_df = perform_enrichment_all_tf(
-                tfbs_set, tfbs_prediction_technique, nb_interval_str_fname)
+                tfbs_set, tfbs_prediction_technique, nb_interval_str)
 
             return enrichment_results_df.to_dict('records')
 

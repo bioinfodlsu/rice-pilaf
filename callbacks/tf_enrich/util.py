@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import subprocess
 import statsmodels.stats.multitest as sm
-
+from ..file_util import *
 from ..constants import Constants
 const = Constants()
 
@@ -18,14 +18,13 @@ def create_empty_df():
 
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
-def write_promoter_intervals_to_file(gene_table, nb_interval_str_fname, upstream_win_len=500, downstream_win_len=100):
-    # if not os.path.exists(const.TEMP_TFBS):
-    #    os.makedirs(const.TEMP_TFBS)
-    if not os.path.exists(os.path.join(const.TEMP_TFBS, nb_interval_str_fname)):
-        os.makedirs(os.path.join(const.TEMP_TFBS,
-                    nb_interval_str_fname))
+def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
+    temp_output_folder_dir = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS, '')
 
-    with open(f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query', "w") as f:
+    create_dir(temp_output_folder_dir)
+
+    with open(f'{temp_output_folder_dir}/query', "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
                 promoter_start = gene['Start'] - upstream_win_len
@@ -42,41 +41,45 @@ def write_promoter_intervals_to_file(gene_table, nb_interval_str_fname, upstream
     return f
 
 
-def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_str_fname):
+def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_str):
 
-    out_dir_all = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/significance_outdir'
+    out_dir_all = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS, 'significance_outdir')
 
-    #already computed, just display
-    if os.path.exists(f'{out_dir_all}/BH_corrected.csv'):
-        results_df = pd.read_csv(f'{out_dir_all}/BH_corrected.csv')
+    # already computed, just display
+    if dir_exist(f'{out_dir_all}/BH_corrected.csv'):
+        results_df = load_csv_from_dir(
+            f'{out_dir_all}/BH_corrected.csv')
         return results_df
 
-    if not os.path.exists(out_dir_all):
-        os.makedirs(out_dir_all)
-    query_bed = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query'
+    create_dir(out_dir_all)
+    query_bed = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS, 'query')
     sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
     TF_list = []
-    pvalue_list = [] #keep together using a dict? but BH correction needs a separate list of p_values
+    # keep together using a dict? but BH correction needs a separate list of p_values
+    pvalue_list = []
 
     # perform annotation overlap statistical significance tests
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
         ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
 
-        out_dir_tf = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/significance_outdir/{tf}'
-        if not os.path.exists(out_dir_tf):
-            os.makedirs(out_dir_tf)
+        out_dir_tf = f'{out_dir_all}/{tf}'
+        create_dir(out_dir_tf)
 
         p_value = perform_enrichment_specific_tf(
-                  ref_bed, query_bed, sizes, out_dir_tf)
+            ref_bed, query_bed, sizes, out_dir_tf)
 
         TF_list.append(tf)
         pvalue_list.append(p_value)
 
-    significant,adj_pvalue = multiple_testing_correction(pvalue_list, 0.25)
-    results = sorted(list(zip(TF_list,pvalue_list, adj_pvalue,significant)),key=lambda x:(x[3],x[1]))
-    results_df = pd.DataFrame(results,columns=["Transcription factor","p_value","Benjamini-Hochberg corrected pvalue","significant?"])
-    results_df.to_csv(f'{out_dir_all}/BH_corrected.csv',index=False)
+    significant, adj_pvalue = multiple_testing_correction(pvalue_list, 0.25)
+    results = sorted(list(zip(TF_list, pvalue_list, adj_pvalue,
+                     significant)), key=lambda x: (x[3], x[1]))
+    results_df = pd.DataFrame(results, columns=[
+                              "Transcription factor", "p_value", "Benjamini-Hochberg corrected pvalue", "significant?"])
+    results_df.to_csv(f'{out_dir_all}/BH_corrected.csv', index=False)
     return results_df
 
 
@@ -86,7 +89,7 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
 
     summary_file = f'{out_dir}/summary.txt'
 
-    if not os.path.exists(summary_file):
+    if not dir_exist(summary_file):
         subprocess.run(["mcdp2", "single", ref_bed, query_bed, sizes, "-o", out_dir],
                        shell=False, capture_output=True, text=True)  # TODO exception handling
 
@@ -95,8 +98,10 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
         p_value = float(content[3].rstrip().split(":")[1])
     return p_value
 
-def multiple_testing_correction(pvalues,fdr):
-    sig,adj_pvalue,_,_ = sm.multipletests(pvalues, alpha = fdr, method='fdr_bh',is_sorted=False,returnsorted=False)
+
+def multiple_testing_correction(pvalues, fdr):
+    sig, adj_pvalue, _, _ = sm.multipletests(
+        pvalues, alpha=fdr, method='fdr_bh', is_sorted=False, returnsorted=False)
     sig = sig.tolist()
     adj_pvalue = adj_pvalue.tolist()
-    return sig,adj_pvalue
+    return sig, adj_pvalue

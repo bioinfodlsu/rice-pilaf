@@ -91,7 +91,7 @@ def init_callback(app):
 
                     for db in track_db:
                         if db[2] != 'bed':
-                            browse_loci_util.get_data_base_on_loci(
+                            browse_loci_util.write_igv_tracks_to_file(
                                 f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
                     return None, {'display': 'none'}, True, \
                         nb_intervals_str, \
