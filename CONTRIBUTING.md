@@ -1,6 +1,7 @@
 Welcome!
 ## Table of Contents
 ## Reporting Bugs
+## Requesting Features
 ## Contributing Workflow
 1. Read wiki
 2. Fork repository and clone
