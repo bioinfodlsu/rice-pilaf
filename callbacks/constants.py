@@ -19,6 +19,7 @@ class Constants(object):
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
     TEMP_IGV = f'igv'
+    TEMP_COEXPRESSION = f'co_expression'
 
     TEMP_TFBS = f'{TEMP}/tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
