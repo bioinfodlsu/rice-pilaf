@@ -1,8 +1,7 @@
 FROM rocker/r-ver:4.3.0
 
 RUN mkdir -p /app
-COPY requirements.txt /app
-COPY install-libraries-workflow.r /app
+COPY dependencies /app
 WORKDIR /app
 
 RUN set -ex 
@@ -18,8 +17,8 @@ RUN apt-get update \
   python3-dev \
   python3-pip
 
-RUN Rscript --vanilla install-libraries-workflow.r
-RUN pip3 install -r requirements.txt
+RUN Rscript --vanilla dependencies/install-libraries-workflow.r
+RUN pip3 install -r dependencies/requirements.txt
 
 # Install mcdp2
 RUN cd ../ \

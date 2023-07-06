@@ -58,9 +58,6 @@ def init_callback(app):
     )
     def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted, tfbs_submitted_input, tfbs_set):
         if homepage_submitted and tfbs_is_submitted:
-            nb_interval_str_fname = nb_interval_str.replace(
-                ":", "_").replace(";", "__").replace("-", "_")
-
             # TODO this should be moved to lift_over/callbacks.py
             write_promoter_intervals_to_file(
                 lift_over_nb_entire_table, nb_interval_str)

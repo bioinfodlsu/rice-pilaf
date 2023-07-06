@@ -20,7 +20,7 @@ def create_empty_df():
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
     temp_output_folder_dir = get_temp_output_folder_dir(
-        nb_interval_str, const.TEMP_TFBS, '')
+        nb_interval_str, const.TEMP_TFBS)
 
     create_dir(temp_output_folder_dir)
 
