@@ -80,14 +80,14 @@ def init_callback(app):
         except FileNotFoundError:
             abort(404)
 
-    @app.server.route('/annotations_nb/<nb_intervals_str>/<path:filename>/<loci>/<file_format>')
-    def send_annotations_nb_url(nb_intervals_str, filename, loci, file_format):
+    @app.server.route('/annotations_nb/<nb_intervals_str>/<path:foldername>/<selected_interval_str>/<file_format>')
+    def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
         try:
             temp_output_folder_dir = get_temp_output_folder_dir(
-                nb_intervals_str, const.TEMP_IGV, filename)
+                nb_intervals_str, const.TEMP_IGV, foldername)
 
             selected_interval_str_filename = sanitize_text_to_filename_format(
-                loci)
+                selected_interval_str)
 
             selected_interval_str_file = f'{selected_interval_str_filename}.{file_format}'
 
