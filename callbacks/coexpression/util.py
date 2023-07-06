@@ -41,10 +41,6 @@ def get_dir_for_parameter(algo, parameters):
     return int(float(parameters) * ALGOS_MULT[algo])
 
 
-# def convert_genomic_intervals_to_filename(genomic_intervals):
-#    return genomic_intervals.replace(":", "_").replace(";", "_")
-
-
 def write_genes_to_file(genes, genomic_intervals, algo, parameters):
     temp_output_folder_dir = get_temp_output_folder_dir(
         genomic_intervals, const.TEMP_COEXPRESSION, f'{algo}/{parameters}')
