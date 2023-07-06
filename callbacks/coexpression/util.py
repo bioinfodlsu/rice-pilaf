@@ -1,4 +1,5 @@
 from ..constants import Constants
+from ..file_util import *
 import os
 import pickle
 import subprocess
@@ -40,21 +41,22 @@ def get_dir_for_parameter(algo, parameters):
     return int(float(parameters) * ALGOS_MULT[algo])
 
 
-def convert_genomic_intervals_to_filename(genomic_intervals):
-    return genomic_intervals.replace(":", "_").replace(";", "_")
+# def convert_genomic_intervals_to_filename(genomic_intervals):
+#    return genomic_intervals.replace(":", "_").replace(";", "_")
 
 
 def write_genes_to_file(genes, genomic_intervals, algo, parameters):
-    subdirectory = f'{convert_genomic_intervals_to_filename(genomic_intervals)}/{algo}/{parameters}'
+    temp_output_folder_dir = get_temp_output_folder_dir(
+        genomic_intervals, const.TEMP_COEXPRESSION, f'{algo}/{parameters}')
 
-    if not os.path.exists(f'{const.IMPLICATED_GENES}/{subdirectory}'):
-        os.makedirs(f'{const.IMPLICATED_GENES}/{subdirectory}')
+    if not dir_exist(temp_output_folder_dir):
+        create_dir(temp_output_folder_dir)
 
-        with open(f'{const.IMPLICATED_GENES}/{subdirectory}/genes.txt', 'w') as f:
+        with open(f'{temp_output_folder_dir}/genes.txt', 'w') as f:
             f.write('\t'.join(genes))
             f.write('\n')
 
-    return subdirectory
+    return temp_output_folder_dir
 
 
 def fetch_enriched_modules(output_dir):
@@ -72,12 +74,12 @@ def fetch_enriched_modules(output_dir):
 
 def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, algo, parameters):
     genes = list(set(implicated_gene_ids))
-    subdirectory = write_genes_to_file(
+    temp_output_folder_dir = write_genes_to_file(
         genes, genomic_intervals, algo, parameters)
 
-    OUTPUT_DIR = f'{const.IMPLICATED_GENES}/{subdirectory}'
-    if not os.path.exists(f'{OUTPUT_DIR}/enriched_modules'):
-        INPUT_GENES = f'{const.IMPLICATED_GENES}/{subdirectory}/genes.txt'
+    OUTPUT_DIR = temp_output_folder_dir
+    if not dir_exist(f'{OUTPUT_DIR}/enriched_modules'):
+        INPUT_GENES = f'{OUTPUT_DIR}/genes.txt'
         BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY_OS_CX}/all-genes.txt'
         MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 

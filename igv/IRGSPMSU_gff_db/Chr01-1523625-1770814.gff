@@ -1,0 +1,35 @@
+Chr01	MSU_osa1r7	gene	1534135	1539627	.	+	.	ID=LOC_Os01g03710;Name=LOC_Os01g03710;Note=mannose-6-phosphate isomerase%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1549229	1551011	.	-	.	ID=LOC_Os01g03720;Name=LOC_Os01g03720;Note=MYB family transcription factor%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1562612	1566554	.	-	.	ID=LOC_Os01g03740;Name=LOC_Os01g03740;Note=nuclease PA3%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1566138	1569472	.	+	.	ID=LOC_Os01g03730;Name=LOC_Os01g03730;Note=nuclease PA3%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1569585	1570939	.	-	.	ID=LOC_Os01g03750;Name=LOC_Os01g03750;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1571420	1576753	.	-	.	ID=LOC_Os01g03760;Name=LOC_Os01g03760;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1580843	1582345	.	-	.	ID=LOC_Os01g03770;Name=LOC_Os01g03770;Note=hypothetical protein
+Chr01	MSU_osa1r7	gene	1585991	1591955	.	+	.	ID=LOC_Os01g03780;Name=LOC_Os01g03780;Note=retrotransposon protein%2C putative%2C unclassified%2C expressed
+Chr01	MSU_osa1r7	gene	1592575	1592979	.	-	.	ID=LOC_Os01g03790;Name=LOC_Os01g03790;Note=retrotransposon protein%2C putative%2C unclassified
+Chr01	MSU_osa1r7	gene	1593624	1596159	.	+	.	ID=LOC_Os01g03800;Name=LOC_Os01g03800;Note=transposon protein%2C putative%2C Mutator sub-class%2C expressed
+Chr01	MSU_osa1r7	gene	1597486	1598510	.	-	.	ID=LOC_Os01g03810;Name=LOC_Os01g03810;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1597486	1604610	.	+	.	ID=LOC_Os01g03820;Name=LOC_Os01g03820;Note=C2 domain containing protein%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1608984	1617905	.	+	.	ID=LOC_Os01g03830;Name=LOC_Os01g03830;Note=retrotransposon protein%2C putative%2C unclassified%2C expressed
+Chr01	MSU_osa1r7	gene	1625159	1626771	.	+	.	ID=LOC_Os01g03840;Name=LOC_Os01g03840;Note=ZOS1-02 - C2H2 zinc finger protein%2C expressed
+Chr01	MSU_osa1r7	gene	1638107	1639036	.	+	.	ID=LOC_Os01g03860;Name=LOC_Os01g03860;Note=retrotransposon protein%2C putative%2C unclassified%2C expressed
+Chr01	MSU_osa1r7	gene	1641234	1644237	.	-	.	ID=LOC_Os01g03870;Name=LOC_Os01g03870;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1647158	1647415	.	-	.	ID=LOC_Os01g03880;Name=LOC_Os01g03880;Note=retrotransposon protein%2C putative%2C Ty3-gypsy subclass
+Chr01	MSU_osa1r7	gene	1657315	1658388	.	+	.	ID=LOC_Os01g03890;Name=LOC_Os01g03890;Note=DUF260 domain containing protein%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1670322	1670997	.	-	.	ID=LOC_Os01g03900;Name=LOC_Os01g03900;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1673010	1680632	.	-	.	ID=LOC_Os01g03914;Name=LOC_Os01g03914;Note=cation efflux family protein%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1681410	1681813	.	-	.	ID=LOC_Os01g03930;Name=LOC_Os01g03930;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1684741	1685880	.	-	.	ID=LOC_Os01g03940;Name=LOC_Os01g03940;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1698203	1703090	.	+	.	ID=LOC_Os01g03950;Name=LOC_Os01g03950;Note=glycosyl hydrolase%2C family 31%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1707539	1707939	.	+	.	ID=LOC_Os01g03960;Name=LOC_Os01g03960;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1710239	1710550	.	-	.	ID=LOC_Os01g03970;Name=LOC_Os01g03970;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1711930	1712947	.	-	.	ID=LOC_Os01g03980;Name=LOC_Os01g03980;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1718965	1719370	.	+	.	ID=LOC_Os01g03989;Name=LOC_Os01g03989;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1731553	1731945	.	-	.	ID=LOC_Os01g04000;Name=LOC_Os01g04000;Note=hypothetical protein
+Chr01	MSU_osa1r7	gene	1733867	1738307	.	-	.	ID=LOC_Os01g04005;Name=LOC_Os01g04005;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1738965	1739492	.	+	.	ID=LOC_Os01g04010;Name=LOC_Os01g04010;Note=expressed protein
+Chr01	MSU_osa1r7	gene	1746416	1748549	.	+	.	ID=LOC_Os01g04020;Name=LOC_Os01g04020;Note=AP2 domain containing protein%2C expressed
+Chr01	MSU_osa1r7	gene	1754332	1757728	.	+	.	ID=LOC_Os01g04030;Name=LOC_Os01g04030;Note=signal peptidase complex subunit 3%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1757812	1758730	.	-	.	ID=LOC_Os01g04040;Name=LOC_Os01g04040;Note=BBTI11 - Bowman-Birk type bran trypsin inhibitor precursor%2C putative%2C expressed
+Chr01	MSU_osa1r7	gene	1760140	1761135	.	-	.	ID=LOC_Os01g04050;Name=LOC_Os01g04050;Note=BBTI12 - Bowman-Birk type bran trypsin inhibitor precursor%2C expressed
+Chr01	MSU_osa1r7	gene	1765034	1768669	.	+	.	ID=LOC_Os01g04070;Name=LOC_Os01g04070;Note=verticillium wilt disease resistance protein%2C putative%2C expressed
