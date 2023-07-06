@@ -41,4 +41,7 @@ def get_temp_output_folder_dir(genomic_interval, analysis_type, output):
 
     output = sanitize_text_to_foldername_format(output)
 
-    return f'{const.TEMP}/{genomic_interval_filename}/{analysis_type}/{output}'
+    if output:
+        return f'{const.TEMP}/{genomic_interval_filename}/{analysis_type}/{output}'
+
+    return f'{const.TEMP}/{genomic_interval_filename}/{analysis_type}'
