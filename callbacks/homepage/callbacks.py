@@ -1,3 +1,4 @@
+from pages import lift_over, co_expr, tf_enrich, browse_loci
 from dash import Input, Output, State, html, ctx
 from dash.exceptions import PreventUpdate
 from .util import *
@@ -70,7 +71,7 @@ def init_callback(app):
                 None, None, None, \
                 None, None, None
 
-        if 'homepage-submit' == ctx.triggered_id:
+        if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
             if nb_intervals_str:
                 intervals = lift_over_util.get_genomic_intervals_from_input(
                     nb_intervals_str)
@@ -158,3 +159,31 @@ def init_callback(app):
             return False, '/'
         else:
             return True, '/'
+
+    @app.callback(
+        Output('page', 'children'),
+        Output('page', 'style'),
+        # Input('url', 'pathname')
+        # Output('lift-over-container', 'style'),
+        Input('lift-over-link', 'n_clicks'),
+        Input('coexpression-link', 'n_clicks'),
+        Input('tf-enrichment-link', 'n_clicks'),
+        Input('igv-link', 'n_clicks')
+    )
+    def display_specific_analysis_page(lift_over_n_clicks, coexpression_n_clicks, tf_enrichment_n_clicks, igv_n_clicks):
+        # if pathname == '/lift-over':
+        #    return lift_over.layout
+
+        if 'lift-over-link' == ctx.triggered_id:
+            return lift_over.layout, {'display': 'block'}
+
+        elif 'coexpression-link' == ctx.triggered_id:
+            return co_expr.layout, {'display': 'block'}
+
+        elif 'tf-enrichment-link' == ctx.triggered_id:
+            return tf_enrich.layout, {'display': 'block'}
+
+        elif 'igv-link' == ctx.triggered_id:
+            return browse_loci.layout, {'display': 'block'}
+
+        raise PreventUpdate

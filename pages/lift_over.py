@@ -3,7 +3,8 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
 
-dash.register_page(__name__, path='/', name='Lift-Over')
+# dash.register_page(__name__, path='/lift-over',
+#                   name='Lift-Over')
 
 other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
                      {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
