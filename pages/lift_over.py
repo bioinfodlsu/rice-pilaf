@@ -24,7 +24,7 @@ layout = html.Div(id='lift-over-container', children=[
     dcc.Dropdown(
         other_ref_genomes,
         id='lift-over-other-refs',
-        multi=False,
+        multi=True,
         persistence=True,
         persistence_type='memory',
         className='dash-bootstrap'
