@@ -155,7 +155,7 @@ def init_callback(app):
         Input('homepage-genomic-intervals-saved-input', 'data'),
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
-        State('lift-over-other-refs-submitted-input', 'data'),
+        State('lift-over-other-refs-saved-input', 'data'),
     )
     def get_input_lift_over_session_state(nb_interval_str, is_multi_other_refs, homepage_is_submitted, other_refs):
         if homepage_is_submitted:
