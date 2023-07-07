@@ -1,7 +1,6 @@
 FROM rocker/r-ver:4.3.0
 
-RUN mkdir -p /app
-COPY dependencies /app
+ADD dependencies /app/dependencies
 WORKDIR /app
 
 RUN set -ex 
