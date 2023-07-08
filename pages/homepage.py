@@ -19,13 +19,13 @@ genomic_interval = callbacks.homepage.util.example_genomic_intervals[
 sidebar = dbc.Nav(
     [
         dbc.NavItem(dbc.NavLink(
-                    'Lift-Over', id='lift-over-link', className='ms-2')),
+                    'Lift-Over', id='lift-over-link', className='ms-2', active='exact')),
         dbc.NavItem(dbc.NavLink(
-            'Co-Expression Network Analysis', id='coexpression-link', className='ms-2')),
+            'Co-Expression Network Analysis', id='coexpression-link', className='ms-2', active='exact')),
         dbc.NavItem(dbc.NavLink(
-            'Regulatory Feature Enrichment', id='tf-enrichment-link', className='ms-2')),
+            'Regulatory Feature Enrichment', id='tf-enrichment-link', className='ms-2', active='exact')),
         dbc.NavItem(dbc.NavLink(
-            'Browse Loci', id='igv-link', className='ms-2'))
+            'Browse Loci', id='igv-link', className='ms-2', active='exact'))
     ],
     vertical=True,
     pills=True,
