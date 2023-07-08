@@ -1,5 +1,6 @@
 import os
 import shutil
+from ..style_util import *
 from ..constants import Constants
 
 const = Constants()
@@ -15,3 +16,16 @@ def clear_cache_folder():
 
 def get_example_genomic_interval(description):
     return example_genomic_intervals[description]
+
+
+def set_active_class(display_map, active_class):
+    class_names = []
+    for page, layout_link in display_map.items():
+        if page == active_class:
+            class_name = add_class_name('active', layout_link.link_class)
+        else:
+            class_name = remove_class_name('active', layout_link.link_class)
+
+        class_names.append(class_name)
+
+    return tuple(class_names)

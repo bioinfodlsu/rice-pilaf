@@ -1,3 +1,4 @@
+from collections import namedtuple, OrderedDict
 from pages import lift_over, co_expr, tf_enrich, browse_loci
 from dash import Input, Output, State, html, ctx
 from dash.exceptions import PreventUpdate
@@ -5,6 +6,7 @@ from .util import *
 from ..lift_over import util as lift_over_util
 from ..browse_loci import util as browse_loci_util
 from ..constants import Constants
+
 const = Constants()
 
 
@@ -163,27 +165,41 @@ def init_callback(app):
     @app.callback(
         Output('page', 'children'),
         Output('page', 'style'),
+
+        Output('lift-over-link', 'className'),
+        Output('coexpression-link', 'className'),
+        Output('tf-enrichment-link', 'className'),
+        Output('igv-link', 'className'),
+
         # Input('url', 'pathname')
         # Output('lift-over-container', 'style'),
         Input('lift-over-link', 'n_clicks'),
         Input('coexpression-link', 'n_clicks'),
         Input('tf-enrichment-link', 'n_clicks'),
-        Input('igv-link', 'n_clicks')
+        Input('igv-link', 'n_clicks'),
+
+        Input('lift-over-link', 'className'),
+        Input('coexpression-link', 'className'),
+        Input('tf-enrichment-link', 'className'),
+        Input('igv-link', 'className'),
+
+        prevent_initial_call=True
     )
-    def display_specific_analysis_page(lift_over_n_clicks, coexpression_n_clicks, tf_enrichment_n_clicks, igv_n_clicks):
+    def display_specific_analysis_page(lift_over_n_clicks, coexpression_n_clicks, tf_enrichment_n_clicks, igv_n_clicks,
+                                       lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
+                                       igv_class):
         # if pathname == '/lift-over':
         #    return lift_over.layout
+        layout_link = namedtuple('layout_link', 'layout link_class')
 
-        if 'lift-over-link' == ctx.triggered_id:
-            return lift_over.layout, {'display': 'block'}
+        display_map = OrderedDict()
+        display_map['lift-over-link'] = layout_link(
+            lift_over.layout, lift_over_link_class)
+        display_map['coexpression-link'] = layout_link(
+            co_expr.layout, coexpression_link_class)
+        display_map['tf-enrichment-link'] = layout_link(
+            tf_enrich.layout, tf_enrichment_link_class)
+        display_map['igv-link'] = layout_link(
+            browse_loci.layout, igv_class)
 
-        elif 'coexpression-link' == ctx.triggered_id:
-            return co_expr.layout, {'display': 'block'}
-
-        elif 'tf-enrichment-link' == ctx.triggered_id:
-            return tf_enrich.layout, {'display': 'block'}
-
-        elif 'igv-link' == ctx.triggered_id:
-            return browse_loci.layout, {'display': 'block'}
-
-        raise PreventUpdate
+        return display_map[ctx.triggered_id].layout, {'display': 'block'}, *set_active_class(display_map, ctx.triggered_id)
