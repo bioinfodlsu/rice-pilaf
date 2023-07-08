@@ -193,6 +193,9 @@ def init_callback(app):
         layout_link = namedtuple('layout_link', 'layout link_class')
 
         display_map = OrderedDict()
+
+        # IMPORTANT:
+        # The insertion of items should follow the same order as the declaration of the parameters
         display_map['lift-over-link'] = layout_link(
             lift_over.layout, lift_over_link_class)
         display_map['coexpression-link'] = layout_link(
