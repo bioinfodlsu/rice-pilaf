@@ -4,6 +4,7 @@ from dash import dcc, html
 
 import callbacks.homepage.util
 from pages import lift_over, co_expr, tf_enrich, browse_loci
+from navigation import analysis_nav
 
 dash.register_page(__name__, path='/', name='Home')
 
@@ -11,27 +12,6 @@ dash.register_page(__name__, path='/', name='Home')
 genomic_interval = callbacks.homepage.util.example_genomic_intervals[
     'example-preharvest']
 
-
-# ====================
-# Side Navigation Bar
-# ====================
-
-sidebar = dbc.Nav(
-    [
-        dbc.NavItem(dbc.NavLink(
-                    'Lift-Over', id='lift-over-link', className='ps-4')),
-        dbc.NavItem(dbc.NavLink(
-            'Co-Expression Network Analysis', id='coexpression-link', className='ps-4')),
-        dbc.NavItem(dbc.NavLink(
-            'Regulatory Feature Enrichment', id='tf-enrichment-link', className='ps-4')),
-        dbc.NavItem(dbc.NavLink(
-            'Browse Loci', id='igv-link', className='ps-4'))
-    ],
-    vertical=True,
-    pills=True,
-    className='bg-light',
-    id='homepage-dash-nav'
-)
 
 
 # ======
@@ -105,7 +85,7 @@ layout = html.Div(
                  children=[
                     dbc.Row([
                         dbc.Col([html.H5('Post-GWAS Analysis', id='post-gwas-hdr'),
-                                sidebar],
+                                analysis_nav.navbar],
                             xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                         dbc.Col(children=[lift_over.layout, co_expr.layout, tf_enrich.layout, browse_loci.layout],
                             xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,

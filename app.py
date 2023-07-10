@@ -2,6 +2,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
+from navigation import main_nav
+
 import callbacks.homepage.callbacks
 import callbacks.homepage.util
 import callbacks.lift_over.callbacks
@@ -28,24 +30,6 @@ welcome = dcc.Markdown(
     '''
 )
 
-# ===================
-# Top Navigation Bar
-# ===================
-
-navbar = dbc.NavbarSimple(
-    children=[
-        dbc.NavItem(dbc.NavLink('Home', href='/', active='exact',
-                    className='top-navbar-item')),
-        dbc.NavItem(dbc.NavLink(
-                    'Help', href='/help', active='exact', className='top-navbar-item'))
-    ],
-    id='top-navbar',
-    brand=['Rice Pilaf'],
-    brand_href='/',
-    color='#4d987d',
-    dark=True
-)
-
 
 # ============
 # Main Layout
@@ -53,7 +37,7 @@ navbar = dbc.NavbarSimple(
 
 app.layout = dbc.Container(
     [
-        dbc.Row(navbar),
+        dbc.Row(main_nav.navbar),
 
         dash.page_container,
 
