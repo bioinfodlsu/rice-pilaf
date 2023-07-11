@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from navigation import main_nav
+import pages.navigation.main_nav as main_nav
 
 import callbacks.homepage.callbacks
 import callbacks.homepage.util
