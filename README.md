@@ -69,17 +69,20 @@ Start by creating a copy of this repository:
 ### Running Without Docker
 1. Install the necessary Python libraries by running the following command:
    ```
-   python -m pip install -r requirements.txt
+   python -m pip install -r dependencies/requirements.txt
    ```
 
-2. Install the necessary R libraries by running [`install-libraries-app.r`](https://github.com/bioinfodlsu/rice-pilaf/blob/main/install-libraries-app.r).
+2. Install the necessary R libraries by running the following command:
+   ```
+   Rscript --vanilla dependencies/install-libraries-app.r
+   ```
 
-3. Run the following command to start the server:
+4. Run the following command to start the server:
    ```
    python Homepage_dash.py
    ```
    
-4. Open the app by accessing the following URL on your browser:
+5. Open the app by accessing the following URL on your browser:
    ```
    http://localhost:8050/
    ```

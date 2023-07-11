@@ -13,8 +13,13 @@ other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
                      {'value': 'CMeo', 'label': 'CMeo   (japonica CHAO MEO)'}]
 
 layout = html.Div(id='lift-over-container', children=[
-    dbc.Label(
-        'Select a genome to search for homologous regions'),
+    html.P(id='lift-over-genomic-intervals-input'),
+    dcc.Markdown('''
+    Is your GWA study on a population which is evolutionarily closer to a genome below than to Nipponbare?
+    
+    In this page, you can translate your Nipponbare coordinates to that of one of the genomes below.
+    
+    '''),
     dcc.Dropdown(
         other_ref_genomes,
         id='lift-over-other-refs',

@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import subprocess
 import statsmodels.stats.multitest as sm
-
+from ..file_util import *
 from ..constants import Constants
 const = Constants()
 
@@ -18,14 +18,13 @@ def create_empty_df():
 
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
-def write_promoter_intervals_to_file(gene_table, nb_interval_str_fname, upstream_win_len=500, downstream_win_len=100):
-    # if not os.path.exists(const.TEMP_TFBS):
-    #    os.makedirs(const.TEMP_TFBS)
-    if not os.path.exists(os.path.join(const.TEMP_TFBS, nb_interval_str_fname)):
-        os.makedirs(os.path.join(const.TEMP_TFBS,
-                    nb_interval_str_fname))
+def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
+    temp_output_folder_dir = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS)
 
-    with open(f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query', "w") as f:
+    create_dir(temp_output_folder_dir)
+
+    with open(f'{temp_output_folder_dir}/query', "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
                 promoter_start = gene['Start'] - upstream_win_len
@@ -42,65 +41,70 @@ def write_promoter_intervals_to_file(gene_table, nb_interval_str_fname, upstream
     return f
 
 
-def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str_fname):
 
-    out_dir = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/{tfbs_set}/{tfbs_prediction_technique}'
-
-    #already computed everything include adjusted p-value, just display
-    if os.path.exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
-        return pd.read_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
+def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
 
 
+    out_dir = get_temp_output_folder_dir(nb_interval_str,const.TEMP_TFBS,tfbs_set,tfbs_prediction_technique)
 
-    #single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
-    elif os.path.exists(f'{out_dir}/results_before_multiple_corrections.csv'):
-        results_df =  multiple_testing_correction(pd.read_csv(f'{out_dir}/results_before_multiple_corrections.csv'),
-                                                  float(tfbs_fdr))
-        results_df.to_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False) # should this be inside multiple_testing_correction?
+
+    if dir_exist(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
+        results_df = load_csv_from_dir(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
         return results_df
 
-    #if everything needs to be computed afresh
-    elif not os.path.exists(out_dir):
-        os.makedirs(out_dir)
 
-    query_bed = f'{const.TEMP_TFBS}/{nb_interval_str_fname}/query'
+    # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
+    elif dir_exist(f'{out_dir}/results_before_multiple_corrections.csv'):
+        results_before_multiple_corrections = load_csv_from_dir(f'{out_dir}/results_before_multiple_corrections.csv')
+        results_df = multiple_testing_correction(results_before_multiple_corrections,
+                                                  float(tfbs_fdr))
+        results_df.to_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+        return results_df
+
+
+
+    create_dir(out_dir)
+
+
+    query_bed = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS, 'query')
+
     sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
     TF_list = []
-    pvalue_list = [] #keep together using a dict? but BH correction needs a separate list of p_values
+    # keep together using a dict? but BH correction needs a separate list of p_values
+    pvalue_list = []
 
     # perform annotation overlap statistical significance tests
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
         ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
 
+
         out_dir_tf = f'{out_dir}/{tf}'
-        if not os.path.exists(out_dir_tf):
-            os.makedirs(out_dir_tf)
+        create_dir(out_dir_tf)
 
         p_value = perform_enrichment_specific_tf(
-                  ref_bed, query_bed, sizes, out_dir_tf)
+            ref_bed, query_bed, sizes, out_dir_tf)
 
         TF_list.append(tf)
         pvalue_list.append(p_value)
+
 
     results_no_adj_df = pd.DataFrame(list((zip(TF_list,pvalue_list))),columns = ["Transcription factor","p-value"])
     results_no_adj_df.to_csv(f'{out_dir}/results_before_multiple_corrections.csv',index=False)
 
     results_df = multiple_testing_correction(results_no_adj_df,tfbs_fdr)
-    #significant,adj_pvalue = multiple_testing_correction(pvalue_list, 0.25)
-    #results = sorted(list(zip(TF_list,pvalue_list, adj_pvalue,significant)),key=lambda x:(x[3],x[1]))
-    #results_df = pd.DataFrame(results,columns=["Transcription factor","p_value","Benjamini-Hochberg corrected pvalue","significant?"])
+
     results_df.to_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv',index=False)
+
     return results_df
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
-    # COMMAND = f'mcdp2 single {ref_bed} {query_bed} {sizes} -o {out_dir}'
-    # os.system(COMMAND)
 
     summary_file = f'{out_dir}/summary.txt'
 
-    if not os.path.exists(summary_file):
+    if not dir_exist(summary_file):
         subprocess.run(["mcdp2", "single", ref_bed, query_bed, sizes, "-o", out_dir],
                        shell=False, capture_output=True, text=True)  # TODO exception handling
 
@@ -108,6 +112,7 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
         content = f.readlines()
         p_value = float(content[3].rstrip().split(":")[1])
     return p_value
+
 
 def multiple_testing_correction(single_tf_results,fdr):
     pvalues = single_tf_results['p-value'].tolist()
@@ -118,4 +123,4 @@ def multiple_testing_correction(single_tf_results,fdr):
     single_tf_results['significant?'] = sig
     single_tf_results.sort_values(by=['p-value'],inplace=True)
     return single_tf_results
-    #
+

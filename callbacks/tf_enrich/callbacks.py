@@ -3,6 +3,8 @@ from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
 from .util import *
+from ..lift_over import util as lift_over_util
+
 gwas_loci = None
 
 Tfbs_input = namedtuple(
@@ -10,6 +12,20 @@ Tfbs_input = namedtuple(
 
 
 def init_callback(app):
+    @app.callback(
+        Output('tf-enrichment-genomic-intervals-input', 'children'),
+        Input('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-is-submitted', 'data'),
+    )
+    def display_input(nb_intervals_str, homepage_is_submitted):
+        if homepage_is_submitted:
+            if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
+                return [html.B('Your input intervals: '), html.Span(nb_intervals_str)]
+            else:
+                return None
+
+        raise PreventUpdate
+
     @app.callback(
         Output('tfbs-results-container', 'style', allow_duplicate=True),
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
@@ -44,19 +60,16 @@ def init_callback(app):
     )
     def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted,tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
-            nb_interval_str_fname = nb_interval_str.replace(
-                ":", "_").replace(";", "__").replace("-", "_")
-
             # TODO this should be moved to lift_over/callbacks.py
             write_promoter_intervals_to_file(
-                lift_over_nb_entire_table, nb_interval_str_fname)
+                lift_over_nb_entire_table, nb_interval_str)
 
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
             tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
             enrichment_results_df = perform_enrichment_all_tf(
-                tfbs_set, tfbs_prediction_technique, float(tfbs_fdr),nb_interval_str_fname)
+                tfbs_set, tfbs_prediction_technique, float(tfbs_fdr),nb_interval_str)
 
             return enrichment_results_df.to_dict('records')
 

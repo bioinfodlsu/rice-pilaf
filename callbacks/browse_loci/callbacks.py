@@ -8,6 +8,7 @@ from werkzeug.exceptions import HTTPException
 
 from .util import *
 from ..lift_over import util as lift_over_util
+from ..file_util import *
 
 from ..constants import Constants
 const = Constants()
@@ -79,13 +80,18 @@ def init_callback(app):
         except FileNotFoundError:
             abort(404)
 
-    @app.server.route('/annotations_nb/<path:filename>/<loci>/<file_format>')
-    def send_annotations_nb_url(filename, loci, file_format):
+    @app.server.route('/annotations_nb/<nb_intervals_str>/<path:foldername>/<selected_interval_str>/<file_format>')
+    def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
         try:
-            temp_dir = f'{const.TEMP_IGV}/{sanitize_folder_name(filename)}'
-            temp_dir_filename = f'{sanitize_filename(loci)}.{file_format}'
+            temp_output_folder_dir = get_temp_output_folder_dir(
+                nb_intervals_str, const.TEMP_IGV, foldername)
 
-            return send_from_directory(temp_dir, temp_dir_filename)
+            selected_interval_str_filename = sanitize_text_to_filename_format(
+                selected_interval_str)
+
+            selected_interval_str_file = f'{selected_interval_str_filename}.{file_format}'
+
+            return send_from_directory(temp_output_folder_dir, selected_interval_str_file)
 
         except FileNotFoundError:
             abort(404)
@@ -143,16 +149,17 @@ def init_callback(app):
         Input('igv-selected-tracks-submitted-input', 'data'),
         # Input('igv-track-filter', 'value'),
         State('homepage-is-submitted', 'data'),
-        State('igv-is-submitted', 'data')
+        State('igv-is-submitted', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted):
+    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
             track_info = [
                 {
                     "name": "MSU V7 genes",
                     "format": "gff3",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"annotations_nb/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                     "displayMode": "EXPANDED",
                     "height": 200
                 },

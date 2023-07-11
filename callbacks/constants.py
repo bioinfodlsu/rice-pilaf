@@ -18,9 +18,10 @@ class Constants(object):
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
-    TEMP_IGV = f'{TEMP}/igv'
+    TEMP_IGV = f'igv'
+    TEMP_COEXPRESSION = f'co_expression'
 
-    TEMP_TFBS = f'{TEMP}/tf_enrichment'
+    TEMP_TFBS = f'tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
 
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
