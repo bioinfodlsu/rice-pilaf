@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-dash.register_page(__name__, path='/browse-loci', name='Browse Loci')
+# dash.register_page(__name__, path='/browse-loci', name='Browse Loci')
 
 layout = html.Div(id='igv-container', children=[
     # dashbio.Igv(

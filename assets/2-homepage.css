@@ -34,6 +34,7 @@
 
 .nav-link {
     color: var(--bs-body-color) !important;
+    cursor: pointer;
 }
 
 .nav-pills .nav-link.active {

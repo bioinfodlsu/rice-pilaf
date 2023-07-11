@@ -1,13 +1,61 @@
+from collections import namedtuple, OrderedDict
+from pages import lift_over, co_expr, tf_enrich, browse_loci
 from dash import Input, Output, State, html, ctx
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
 from ..browse_loci import util as browse_loci_util
 from ..constants import Constants
+
 const = Constants()
 
 
 def init_callback(app):
+    @app.callback(
+        Output('page', 'children'),
+        Output('page', 'style'),
+
+        Output('lift-over-link', 'className'),
+        Output('coexpression-link', 'className'),
+        Output('tf-enrichment-link', 'className'),
+        Output('igv-link', 'className'),
+
+        # Input('url', 'pathname')
+        # Output('lift-over-container', 'style'),
+
+        State('lift-over-link', 'className'),
+        State('coexpression-link', 'className'),
+        State('tf-enrichment-link', 'className'),
+        State('igv-link', 'className'),
+
+        Input('lift-over-link', 'n_clicks'),
+        Input('coexpression-link', 'n_clicks'),
+        Input('tf-enrichment-link', 'n_clicks'),
+        Input('igv-link', 'n_clicks'),
+
+        prevent_initial_call=True
+    )
+    def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
+                                       igv_class, *_):
+        # if pathname == '/lift-over':
+        #    return lift_over.layout
+
+        layout_link = namedtuple('layout_link', 'layout link_class')
+
+        display_map = OrderedDict()
+
+        # IMPORTANT:
+        # The insertion of items should follow the same order as the declaration of the parameters
+        display_map['lift-over-link'] = layout_link(
+            lift_over.layout, lift_over_link_class)
+        display_map['coexpression-link'] = layout_link(
+            co_expr.layout, coexpression_link_class)
+        display_map['tf-enrichment-link'] = layout_link(
+            tf_enrich.layout, tf_enrichment_link_class)
+        display_map['igv-link'] = layout_link(
+            browse_loci.layout, igv_class)
+
+        return display_map[ctx.triggered_id].layout, {'display': 'block'}, *set_active_class(display_map, ctx.triggered_id)
 
     @app.callback(
         Output('input-error', 'children'),
@@ -70,7 +118,7 @@ def init_callback(app):
                 None, None, None, \
                 None, None, None
 
-        if 'homepage-submit' == ctx.triggered_id:
+        if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
             if nb_intervals_str:
                 intervals = lift_over_util.get_genomic_intervals_from_input(
                     nb_intervals_str)
