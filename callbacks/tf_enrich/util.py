@@ -41,20 +41,34 @@ def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_l
     return f
 
 
-def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_str):
 
-    out_dir_all = get_temp_output_folder_dir(
-        nb_interval_str, const.TEMP_TFBS, 'significance_outdir')
+def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
 
-    # already computed, just display
-    if dir_exist(f'{out_dir_all}/BH_corrected.csv'):
-        results_df = load_csv_from_dir(
-            f'{out_dir_all}/BH_corrected.csv')
+
+    out_dir = get_temp_output_folder_dir(nb_interval_str,const.TEMP_TFBS,tfbs_set,tfbs_prediction_technique)
+
+
+    if dir_exist(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
+        results_df = load_csv_from_dir(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
         return results_df
 
-    create_dir(out_dir_all)
+
+    # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
+    elif dir_exist(f'{out_dir}/results_before_multiple_corrections.csv'):
+        results_before_multiple_corrections = load_csv_from_dir(f'{out_dir}/results_before_multiple_corrections.csv')
+        results_df = multiple_testing_correction(results_before_multiple_corrections,
+                                                  float(tfbs_fdr))
+        results_df.to_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+        return results_df
+
+
+
+    create_dir(out_dir)
+
+
     query_bed = get_temp_output_folder_dir(
         nb_interval_str, const.TEMP_TFBS, 'query')
+
     sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
     TF_list = []
@@ -65,7 +79,8 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_s
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
         ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
 
-        out_dir_tf = f'{out_dir_all}/{tf}'
+
+        out_dir_tf = f'{out_dir}/{tf}'
         create_dir(out_dir_tf)
 
         p_value = perform_enrichment_specific_tf(
@@ -74,18 +89,18 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, nb_interval_s
         TF_list.append(tf)
         pvalue_list.append(p_value)
 
-    significant, adj_pvalue = multiple_testing_correction(pvalue_list, 0.25)
-    results = sorted(list(zip(TF_list, pvalue_list, adj_pvalue,
-                     significant)), key=lambda x: (x[3], x[1]))
-    results_df = pd.DataFrame(results, columns=[
-                              "Transcription factor", "p_value", "Benjamini-Hochberg corrected pvalue", "significant?"])
-    results_df.to_csv(f'{out_dir_all}/BH_corrected.csv', index=False)
+
+    results_no_adj_df = pd.DataFrame(list((zip(TF_list,pvalue_list))),columns = ["Transcription factor","p-value"])
+    results_no_adj_df.to_csv(f'{out_dir}/results_before_multiple_corrections.csv',index=False)
+
+    results_df = multiple_testing_correction(results_no_adj_df,tfbs_fdr)
+
+    results_df.to_csv(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv',index=False)
+
     return results_df
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
-    # COMMAND = f'mcdp2 single {ref_bed} {query_bed} {sizes} -o {out_dir}'
-    # os.system(COMMAND)
 
     summary_file = f'{out_dir}/summary.txt'
 
@@ -99,9 +114,13 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
     return p_value
 
 
-def multiple_testing_correction(pvalues, fdr):
-    sig, adj_pvalue, _, _ = sm.multipletests(
-        pvalues, alpha=fdr, method='fdr_bh', is_sorted=False, returnsorted=False)
+def multiple_testing_correction(single_tf_results,fdr):
+    pvalues = single_tf_results['p-value'].tolist()
+    sig, adj_pvalue, _, _ = sm.multipletests(pvalues, alpha=fdr, method='fdr_bh', is_sorted=False, returnsorted=False)
     sig = sig.tolist()
     adj_pvalue = adj_pvalue.tolist()
-    return sig, adj_pvalue
+    single_tf_results['Benjamini-Hochberg corrected pvalue'] = adj_pvalue
+    single_tf_results['significant?'] = sig
+    single_tf_results.sort_values(by=['p-value'],inplace=True)
+    return single_tf_results
+
