@@ -7,9 +7,5 @@ def add_class_name(class_name, current_class_name):
 
 def remove_class_name(class_name, current_class_name):
     current_classes = current_class_name.split(' ')
-    try:
-        current_classes.remove(class_name)
-    except ValueError:
-        pass
 
-    return ' '.join(current_classes)
+    return ' '.join([current_class for current_class in current_classes if current_class != class_name])

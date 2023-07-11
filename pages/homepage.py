@@ -13,7 +13,6 @@ genomic_interval = callbacks.homepage.util.example_genomic_intervals[
     'example-preharvest']
 
 
-
 # ======
 # Input
 # ======
