@@ -3,8 +3,8 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 
-dash.register_page(__name__, path='/co-expression',
-                   name='Co-Expression Network Analysis')
+# dash.register_page(__name__, path='/co-expression',
+#                   name='Co-Expression Network Analysis')
 
 coach = html.Li(
     [html.B('COACH'),
