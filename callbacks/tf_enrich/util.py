@@ -16,15 +16,12 @@ def create_empty_df():
         'adj. p-value': ['-']
     })
 
-
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
-def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
-    temp_output_folder_dir = get_temp_output_folder_dir(
-        nb_interval_str, const.TEMP_TFBS)
+def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
 
-    create_dir(temp_output_folder_dir)
-
-    with open(f'{temp_output_folder_dir}/query', "w") as f:
+    create_dir(get_temp_output_folder_dir(nb_interval_str, const.TEMP_TFBS))
+    filepath = get_temp_output_folder_dir(nb_interval_str, const.TEMP_TFBS, const.PROMOTER_BED)
+    with open(filepath, "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
                 promoter_start = gene['Start'] - upstream_win_len
@@ -38,20 +35,27 @@ def write_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_l
                 assert promoter_end >= 0
                 f.write("{}\t{}\t{}\n".format(
                     gene['Chromosome'], promoter_end, promoter_start))
-    return f
+    return filepath
+
+def write_query_genome_intervals_to_file(nb_interval_str):
+
+    create_dir(get_temp_output_folder_dir(nb_interval_str, const.TEMP_TFBS))
+    filepath = get_temp_output_folder_dir(nb_interval_str, const.TEMP_TFBS, const.GENOME_WIDE_BED)
+    with open(filepath, "w") as f:
+        for interval in nb_interval_str.split(";"):
+            chrom,range = interval.split(":")
+            beg,end = range.split("-")
+            f.write("{}\t{}\t{}\n".format(chrom,beg,end))
+    return filepath
 
 
-
-def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
-
+def perform_enrichment_all_tf(lift_over_nb_entire_table,tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
 
     out_dir = get_temp_output_folder_dir(nb_interval_str,const.TEMP_TFBS,tfbs_set,tfbs_prediction_technique)
-
-
+    #if previously computed
     if dir_exist(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
         results_df = load_csv_from_dir(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
         return results_df
-
 
     # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
     elif dir_exist(f'{out_dir}/results_before_multiple_corrections.csv'):
@@ -62,14 +66,17 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_
         return results_df
 
 
-
     create_dir(out_dir)
 
-
-    query_bed = get_temp_output_folder_dir(
-        nb_interval_str, const.TEMP_TFBS, 'query')
-
-    sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
+    #construct query BED file
+    out_dir_tf_enrich = get_temp_output_folder_dir(
+        nb_interval_str, const.TEMP_TFBS)
+    if tfbs_set == 'promoters':
+        query_bed = write_query_promoter_intervals_to_file(lift_over_nb_entire_table, nb_interval_str)
+        sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
+    elif tfbs_set == 'genome':
+        query_bed = write_query_genome_intervals_to_file(nb_interval_str)
+        sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
     TF_list = []
     # keep together using a dict? but BH correction needs a separate list of p_values
@@ -77,9 +84,8 @@ def perform_enrichment_all_tf(tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_
 
     # perform annotation overlap statistical significance tests
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
+        #print("computing overlaps for: {}".format(tf))
         ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
-
-
         out_dir_tf = f'{out_dir}/{tf}'
         create_dir(out_dir_tf)
 
