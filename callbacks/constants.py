@@ -23,6 +23,8 @@ class Constants(object):
 
     TEMP_TFBS = f'tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
+    PROMOTER_BED = 'query_promoter_intervals'
+    GENOME_WIDE_BED = 'query_genomic_intervals'
 
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'

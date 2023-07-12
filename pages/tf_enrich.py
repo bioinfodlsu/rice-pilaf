@@ -23,9 +23,9 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         id='tfbs_prediction_technique',
         options=[
             {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-            {'value': 'motif conservation', 'label': 'motif conservation',
+            {'value': 'CE', 'label': 'motif conservation',
              'label_id': 'motif conservation'},
-            {'value': 'motif scan', 'label': 'motif scan',
+            {'value': 'motif', 'label': 'motif scan',
              'label_id': 'motif scan'}
         ],
         value='FunTFBS',
@@ -43,8 +43,8 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         id='tfbs_set',
         options=[
             {'value': 'promoters', 'label': 'promoters', 'label_id': 'promoters'},
-            {'value': 'genome-wide', 'label': 'genome-wide',
-             'label_id': 'genome-wide'}
+            {'value': 'genome', 'label': 'genome',
+             'label_id': 'genome'}
 
         ],
         value='promoters',
