@@ -3,8 +3,11 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 import callbacks.homepage.util
-from pages import lift_over, co_expr, tf_enrich, browse_loci
-from navigation import analysis_nav
+import pages.analysis.lift_over as lift_over
+import pages.analysis.co_expr as co_expr
+import pages.analysis.tf_enrich as tf_enrich
+import pages.analysis.browse_loci as browse_loci
+import pages.navigation.analysis_nav as analysis_nav
 
 dash.register_page(__name__, path='/', name='Home')
 
