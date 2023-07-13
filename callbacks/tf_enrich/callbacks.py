@@ -53,22 +53,16 @@ def init_callback(app):
         State('tfbs-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
         Input('tfbs-submitted-input', 'data'),
-        #Input('tfbs_set', 'value'),
-        #Input('tfbs_prediction_technique', 'value'),
-        #Input('tfbs_fdr', 'value'),
         prevent_initial_call=True
     )
     def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted,tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
-            # TODO this should be moved to lift_over/callbacks.py
-            write_promoter_intervals_to_file(
-                lift_over_nb_entire_table, nb_interval_str)
-
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
             tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
-            enrichment_results_df = perform_enrichment_all_tf(
+
+            enrichment_results_df = perform_enrichment_all_tf( lift_over_nb_entire_table,
                 tfbs_set, tfbs_prediction_technique, float(tfbs_fdr),nb_interval_str)
 
             return enrichment_results_df.to_dict('records')
