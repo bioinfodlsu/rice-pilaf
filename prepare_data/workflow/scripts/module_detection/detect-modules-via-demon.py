@@ -16,7 +16,7 @@ def detect_modules(edge_list_file, module_list_dir, epsilon, min_com_size):
         os.makedirs(module_list_dir)
 
     readwrite.write_community_csv(
-        coms, f'{module_list_dir}/demon-int-module-list-{epsilon * 100}.csv', '\t')
+        coms, f'{module_list_dir}/demon-int-module-list-{int(epsilon * 100)}.csv', '\t')
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def detect_modules(edge_list_file, module_list_dir, density_threshold, affinity_
         os.makedirs(module_list_dir)
 
     readwrite.write_community_csv(
-        coms, f'{module_list_dir}/coach-int-module-list-{affinity_threshold * 1000}.csv', '\t')
+        coms, f'{module_list_dir}/coach-int-module-list-{int(affinity_threshold * 1000)}.csv', '\t')
 
 
 if __name__ == '__main__':
