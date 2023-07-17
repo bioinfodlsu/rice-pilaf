@@ -1,4 +1,3 @@
-import dash
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
@@ -76,5 +75,4 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         )
 
     ])
-]
-)
+])

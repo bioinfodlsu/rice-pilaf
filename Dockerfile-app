@@ -17,7 +17,7 @@ RUN apt-get update \
   python3-pip
 
 RUN Rscript --vanilla dependencies/install-libraries-app.r
-RUN pip3 install -r dependencies/requirements.txt
+RUN pip3 install -r dependencies/requirements-app.txt
 
 # Install mcdp2
 RUN cd ../ \

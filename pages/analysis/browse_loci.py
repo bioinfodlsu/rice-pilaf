@@ -1,4 +1,3 @@
-import dash
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
@@ -44,5 +43,4 @@ layout = html.Div(id='igv-container', children=[
             dcc.Loading(id='igv-display')
         ]
     )
-]
-)
+])
