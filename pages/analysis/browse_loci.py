@@ -9,41 +9,47 @@ layout = html.Div(id='igv-container', children=[
     #      genome='GCF_001433935.1',
     #      minimumBases=100,
     # )
-    html.Div(html.Span(id='igv-genomic-intervals-input'),
-             className='analysis-intro p-3'),
+    html.Div([
+        html.Span('WRITE ME')
+    ], className='analysis-intro p-3'),
 
-    html.Br(),
+    html.Div([
+        html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
+        html.Span(id='igv-genomic-intervals-input'),
 
-    dbc.Label('Select an interval: ',
-              className='mb-2'),
+        html.Br(),
+        html.Br(),
 
-    dcc.Dropdown(
-        id='igv-genomic-intervals',
-    ),
+        dbc.Label('Select an interval: ',
+                  className='mb-2'),
 
-    html.Br(),
+        dcc.Dropdown(
+            id='igv-genomic-intervals',
+        ),
 
-    dbc.Button('Submit',
-               id='igv-submit',
-               n_clicks=0,
-               className='page-button'),
+        html.Br(),
 
-    html.Br(),
-    html.Br(),
+        dbc.Button('Submit',
+                   id='igv-submit',
+                   n_clicks=0,
+                   className='page-button'),
 
-    html.Div(
-        id='igv-results-container',
-        style={'display': 'none'},
-        children=[
-            dbc.Label(id='igv-track-intro'),
+        html.Br(),
+        html.Br(),
 
-            dcc.Loading(dbc.Checklist(id='igv-track-filter',
-                                      inline=True,
-                                      className='ms-3')),
+        html.Div(
+            id='igv-results-container',
+            style={'display': 'none'},
+            children=[
+                dbc.Label(id='igv-track-intro'),
 
-            html.Br(),
+                dcc.Loading(dbc.Checklist(id='igv-track-filter',
+                                          inline=True,
+                                          className='ms-3')),
 
-            dcc.Loading(id='igv-display')
-        ]
-    )
+                html.Br(),
+
+                dcc.Loading(id='igv-display')
+            ]
+        )], className='p-3 mt-2')
 ])

@@ -16,11 +16,19 @@ layout = html.Div(id='lift-over-container', children=[
     html.Div([
         html.P(
             'Is your GWA study on a population which is evolutionarily closer to a genome below than to Nipponbare?'),
-        html.Span('In this page, you can translate your Nipponbare coordinates to that of one of the genomes below.')],
-        className='analysis-intro p-3'),
+        html.Span(
+            'In this page, you can translate your Nipponbare coordinates to that of one of the genomes below.')
+    ], className='analysis-intro p-3'),
 
     html.Div([
-        html.P(id='lift-over-genomic-intervals-input'),
+        html.I(
+            className='bi bi-chevron-bar-right me-2 non-clickable'),
+        html.Span(id='lift-over-genomic-intervals-input'),
+
+        html.Br(),
+        html.Br(),
+
+        dbc.Label('Select a genome', className='mb-2'),
 
         dcc.Dropdown(
             other_ref_genomes,
