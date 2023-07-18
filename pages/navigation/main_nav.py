@@ -11,7 +11,7 @@ navbar = dbc.NavbarSimple(
                     'Help', href='/help', active='exact', className='top-navbar-item'))
     ],
     id='top-navbar',
-    brand=['Rice Pilaf'],
+    brand=['RicePilaf'],
     brand_href='/',
     color='#4d987d',
     dark=True
