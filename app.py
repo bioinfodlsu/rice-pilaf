@@ -19,12 +19,12 @@ app = dash.Dash(__name__, use_pages=True,
                 external_stylesheets=[dbc.themes.BOOTSTRAP,
                                       dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server,
-                title='Rice Pilaf',
+                title='RicePilaf',
                 update_title='Loading...')
 
 welcome = dcc.Markdown(
     '''
-    Welcome ! Rice Pilaf is short for Rice Post-GWAS Dashboard.
+    Welcome ! Rice Pilaf is short for Rice Post-GWAS/QTL Dashboard.
     Ok, we are not good at abbreviations, but like a good pilaf, this dashboard combines many ingredients.
     With this tool, you can do amazing things like ... (write me)
     '''
