@@ -1,7 +1,7 @@
-# Rice Pilaf
-Welcome to Rice Pilaf, a post-GWAS analysis dashboard for rice genomes.
+# RicePilaf
+Welcome to RicePilaf, a post-GWAS/QTL analysis dashboard for rice genomes.
 
-Rice-pilaf takes as input GWAS loci, defined here as genomic intervals obtained from LD-based clumping e.g. using [PLINK](https://zzz.bwh.harvard.edu/plink/clump.shtml).
+RicePilaf takes as input a set of genomic intervals obtained from QTL analysis or from LD-based clumping of significant GWAS SNPs.
 
 It infers possible biological mechanisms by evaluating the enrichment of the loci in co-expression modules and in transcription factors.
 
