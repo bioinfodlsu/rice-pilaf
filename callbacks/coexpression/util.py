@@ -37,6 +37,10 @@ ALGOS_HIGH = {'clusterone': '4 (Dense Modules)',
               'fox': '4 (Cohesive Modules)'}
 
 
+def display_in_sci_notation(number):
+    return '{:.6e}'.format(number)
+
+
 def get_parameters_for_algo(algo):
     param_dict = {}
     parameters = os.listdir(f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')
@@ -73,7 +77,8 @@ def fetch_enriched_modules(output_dir):
             line = line.split('\t')
 
             if line[0] != 'ID':
-                modules.append('Module ' + line[0])
+                modules.append(
+                    f'Module {line[0]} (Adj. p-value = {display_in_sci_notation(float(line[1]))})')
 
     return modules
 
@@ -100,9 +105,6 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, algo, 
 # Utility functions for the display of the tables showing
 # the results of the enrichment analysis
 # ========================================================
-def display_in_sci_notation(number):
-    return '{:.6e}'.format(number)
-
 
 def display_cols_in_sci_notation(result, numeric_columns):
     for column in numeric_columns:
