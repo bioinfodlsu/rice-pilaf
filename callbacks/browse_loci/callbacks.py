@@ -23,7 +23,7 @@ def init_callback(app):
     def display_input(nb_intervals_str, homepage_is_submitted):
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
-                return [html.B('Genomic Intervals: '), html.Span(nb_intervals_str)]
+                return [html.B('Your input intervals: '), html.Span(nb_intervals_str)]
             else:
                 return None
 
