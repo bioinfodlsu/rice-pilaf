@@ -19,3 +19,12 @@
 .rc-slider-track {
     background-color: var(--green-lighter) !important;
 }
+
+#coexpression-parameter-slider-container {
+    display: flex;
+    justify-content: center;
+}
+
+#coexpression-parameter-slider {
+    width: 95%;
+}

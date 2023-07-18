@@ -26,19 +26,29 @@ ALGOS_DEFAULT_PARAM = {'clusterone': 0.3,
                        'demon': 0.25,
                        'fox': 0.01}
 
+ALGOS_LOW = {'clusterone': '1 (Loose Modules)',
+             'coach': '1 (Fewer Modules)',
+             'demon': '1 (Fewer Modules)',
+             'fox': '1 (Loose Modules)'}
+
+ALGOS_HIGH = {'clusterone': '4 (Dense Modules)',
+              'coach': '4 (More Modules)',
+              'demon': '4 (More Modules)',
+              'fox': '4 (Cohesive Modules)'}
+
 
 def get_parameters_for_algo(algo):
     param_dict = {}
     parameters = os.listdir(f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')
-    for parameter in parameters:
-        param_dict[int(parameter)] = str(
-            int(parameter) / ALGOS_MULT[algo])
+    for idx, parameter in enumerate(parameters):
+        if idx == 0:
+            param_dict[int(parameter)] = ALGOS_LOW[algo]
+        elif idx == len(parameters) - 1:
+            param_dict[int(parameter)] = ALGOS_HIGH[algo]
+        else:
+            param_dict[int(parameter)] = str(idx + 1)
 
     return param_dict
-
-
-def get_dir_for_parameter(algo, parameters):
-    return int(float(parameters) * ALGOS_MULT[algo])
 
 
 def write_genes_to_file(genes, genomic_intervals, algo, parameters):

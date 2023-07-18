@@ -129,10 +129,12 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
                    className='bi bi-info-circle mx-2', id='coexpression-parameter-tooltip')],
               className='mb-4'),
 
-    dcc.Slider(id='coexpression-parameter-slider', step=None,
-               marks={0: '0.0', 10: '0.1', 20: '0.2', 30: '0.3', 40: '0.4',
-                      50: '0.5', 60: '0.6', 70: '0.7', 80: '0.8', 90: '0.9', 100: '1.0'},
-               value=30),
+    # Should also be changed if parameter space is changed
+    html.Div([dcc.Slider(id='coexpression-parameter-slider', step=None,
+                         marks={0: '1 (Loose Modules)', 30: '2', 60: '3',
+                                90: '4 (Dense Modules)'},
+                         value=30)],
+             id='coexpression-parameter-slider-container'),
 
     html.Br(),
 
