@@ -3,14 +3,15 @@ from dash import dash_table, dcc, html
 
 
 layout = html.Div(id='tf-enrichment-over-container', children=[
-    html.P(id='tf-enrichment-genomic-intervals-input'),
-    dcc.Markdown('''
-        Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.
-        
-        In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.
-        '''),
-    html.Div(id='TF-enrichment-input-genomic-intervals'),
+    html.Div([html.P(id='tf-enrichment-genomic-intervals-input'),
+              html.P(
+                  'Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.'),
+              html.Span(
+                  'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
+              ],
+             className='analysis-intro p-3'),
 
+    html.Div(id='TF-enrichment-input-genomic-intervals'),
     html.Br(),
     dbc.Label(['Choose TF binding site prediction technique:',
                html.I(
