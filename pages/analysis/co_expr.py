@@ -84,6 +84,26 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS.
     Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.
     '''),
+
+    dbc.Label(['Select the coexpression network',
+               html.I(
+                   className='bi bi-info-circle mx-2', id='coexpression-network-tooltip')]),
+
+    dbc.RadioItems(
+        id='coexpression-network',
+        options=[
+            {'value': 'os-cx', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
+            {'value': 'rcrn',
+                'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
+        ],
+        value='os-cx',
+        inline=True,
+        className='ms-3 mt-1'
+    ),
+
+    html.Br(),
+
+
     dbc.Label(['Select a module detection algorithm ',
                html.I(
                    className='bi bi-info-circle mx-2',
@@ -110,8 +130,7 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     dbc.RadioItems(
         id='coexpression-clustering-algo',
         options=[
-            {'value': 'clusterone', 'label': 'ClusterONE',
-             'label_id': 'clusterone'},
+            {'value': 'clusterone', 'label': 'ClusterONE', 'label_id': 'clusterone'},
             {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
             {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
             {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
@@ -124,7 +143,8 @@ layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
     html.Br(),
 
     dbc.Label(['Select the ',
-               html.Span('parameter', id='coexpression-parameter-name'),
+               html.Span('parameter for running the algorithm',
+                         id='coexpression-parameter-name'),
                html.I(
                    className='bi bi-info-circle mx-2', id='coexpression-parameter-tooltip')],
               className='mb-4'),
