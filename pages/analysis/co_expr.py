@@ -79,11 +79,11 @@ fox = html.Li(
 # ============
 
 layout = dbc.Row(dbc.Col(id='coexpression-container', children=[
-    html.P(id='coexpression-genomic-intervals-input'),
-    dcc.Markdown('''
-    In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS.
-    Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.
-    '''),
+    html.Div([html.P(id='coexpression-genomic-intervals-input'),
+              html.Span('In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')],
+             className='analysis-intro p-3'),
+
+    html.Br(),
 
     dbc.Label(['Select the coexpression network',
                html.I(

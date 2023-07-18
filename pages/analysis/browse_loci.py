@@ -9,7 +9,10 @@ layout = html.Div(id='igv-container', children=[
     #      genome='GCF_001433935.1',
     #      minimumBases=100,
     # )
-    html.P(id='igv-genomic-intervals-input'),
+    html.Div(html.Span(id='igv-genomic-intervals-input'),
+             className='analysis-intro p-3'),
+
+    html.Br(),
 
     dbc.Label('Select an interval: ',
               className='mb-2'),
