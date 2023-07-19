@@ -1,4 +1,4 @@
-from dash import Input, Output, State, dcc, html
+from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -8,7 +8,7 @@ from ..lift_over import util as lift_over_util
 gwas_loci = None
 
 Tfbs_input = namedtuple(
-    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique','tfbs_fdr'])
+    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique', 'tfbs_fdr'])
 
 
 def init_callback(app):
@@ -20,7 +20,7 @@ def init_callback(app):
     def display_input(nb_intervals_str, homepage_is_submitted):
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
-                return [html.B('Your input intervals: '), html.Span(nb_intervals_str)]
+                return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]
             else:
                 return None
 
@@ -34,13 +34,13 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('tfbs_set', 'value'),
         State('tfbs_prediction_technique', 'value'),
-        State('tfbs_fdr','value'),
+        State('tfbs_fdr', 'value'),
         prevent_initial_call=True
     )
-    def display_tfbs_results(tfbs_submitted_n_clicks, homepage_is_submitted, tfbs_set, tfbs_prediction_technique,tfbs_fdr):
+    def display_tfbs_results(tfbs_submitted_n_clicks, homepage_is_submitted, tfbs_set, tfbs_prediction_technique, tfbs_fdr):
         if homepage_is_submitted and tfbs_submitted_n_clicks >= 1:
             submitted_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique,tfbs_fdr)._asdict()
+                tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
 
             return {'display': 'block'}, True, submitted_input
 
@@ -55,15 +55,14 @@ def init_callback(app):
         Input('tfbs-submitted-input', 'data'),
         prevent_initial_call=True
     )
-    def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted,tfbs_submitted_input):
+    def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
             tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
-
-            enrichment_results_df = perform_enrichment_all_tf( lift_over_nb_entire_table,
-                tfbs_set, tfbs_prediction_technique, float(tfbs_fdr),nb_interval_str)
+            enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
+                                                              tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
 
             return enrichment_results_df.to_dict('records')
 
@@ -74,14 +73,14 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Input('tfbs_set', 'value'),
         Input('tfbs_prediction_technique', 'value'),
-        Input('tfbs_fdr','value'),
+        Input('tfbs_fdr', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, tfbs_fdr,homepage_is_submitted):
+    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, tfbs_fdr, homepage_is_submitted):
         if homepage_is_submitted:
             tfbs_saved_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique,tfbs_fdr)._asdict()
+                tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
 
             return tfbs_saved_input
 

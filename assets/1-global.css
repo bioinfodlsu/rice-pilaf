@@ -49,3 +49,11 @@ a:hover {
     background-color: var(--bg-gray-darker);
     border-radius: 10px;
 }
+
+.non-clickable {
+    cursor: default;
+}
+
+.bi-chevron-bar-right {
+    -webkit-text-stroke: 1px;
+}

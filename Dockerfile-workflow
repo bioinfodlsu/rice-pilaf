@@ -29,4 +29,4 @@ RUN cd ../ \
 COPY . /app
 
 EXPOSE 8050
-CMD ["python3", "Homepage_dash.py"]
+CMD ["python3", "app.py"]
