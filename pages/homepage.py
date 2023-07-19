@@ -15,7 +15,7 @@ dash.register_page(__name__, path='/', name='Home')
 # Input
 # ======
 
-submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Analysis',
                                                    id='homepage-submit',
                                                    n_clicks=0,
                                                    className='home-button'),
@@ -39,7 +39,13 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
                                 ], className='pt-2')
 
 genome_ref_input = dbc.Col([
-    html.H5('Enter genomic intervals from GWAS', id='genomic-interval-hdr'),
+    html.Div([
+        html.H5('Enter genomic intervals from GWAS',
+                id='genomic-interval-hdr'),
+        html.I(className='bi bi-info-circle mx-3',
+               id='genomic-interval-tooltip')
+    ], id='genomic-interval-container'),
+
     dbc.Alert(
         id='input-error',
         children='',

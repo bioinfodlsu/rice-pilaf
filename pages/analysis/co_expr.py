@@ -90,9 +90,9 @@ layout = html.Div(id='coexpression-container', children=[
         html.Br(),
         html.Br(),
 
-        dbc.Label(['Select the coexpression network',
+        dbc.Label(['Select the co-expression network',
                    html.I(
-                       className='bi bi-info-circle mx-2', id='coexpression-network-tooltip')]),
+                       className='bi bi-info-circle mx-3', id='coexpression-network-tooltip')]),
 
         dbc.RadioItems(
             id='coexpression-network',
@@ -107,7 +107,6 @@ layout = html.Div(id='coexpression-container', children=[
         ),
 
         html.Br(),
-
 
         dbc.Label(['Select a module detection algorithm ',
                    html.I(

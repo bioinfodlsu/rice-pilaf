@@ -54,8 +54,12 @@
     margin-bottom: 1em;
 }
 
-#genomic-interval-hdr {
+#genomic-interval-container {
     margin-bottom: 0.6em;
+}
+
+#genomic-interval-hdr {
+    display: inline;
 }
 
 .sample-genomic-interval {
