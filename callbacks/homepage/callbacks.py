@@ -4,7 +4,7 @@ import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.browse_loci as browse_loci
 
-from dash import Input, Output, State, html, ctx
+from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
@@ -189,14 +189,15 @@ def init_callback(app):
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
         Input('homepage-reset', 'n_clicks'),
-        Input('example-preharvest', 'n_clicks')
+        Input({'type': 'example-genomic-interval',
+              'description': ALL}, 'n_clicks'),
     )
-    def clear_input_fields(reset, preharvest):
-        if 'homepage-reset' == ctx.triggered_id:
-            return None
+    def set_input_fields(*_):
+        if ctx.triggered_id:
+            if 'homepage-reset' == ctx.triggered_id:
+                return None
 
-        if 'example-preharvest' == ctx.triggered_id:
-            return get_example_genomic_interval('example-preharvest')
+            return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
 

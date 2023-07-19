@@ -6,7 +6,8 @@ from ..constants import Constants
 const = Constants()
 
 example_genomic_intervals = {
-    'example-preharvest': 'Chr01:1523625-1770814;Chr04:4662701-4670717'}
+    'pre-harvest': 'Chr01:1523625-1770814;Chr04:4662701-4670717',
+    'anaerobic-germination': 'Chr07:6000000-6900000'}
 
 
 def clear_cache_folder():

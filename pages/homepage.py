@@ -2,7 +2,6 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-import callbacks.homepage.util
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
@@ -10,10 +9,6 @@ import pages.analysis.browse_loci as browse_loci
 import pages.navigation.analysis_nav as analysis_nav
 
 dash.register_page(__name__, path='/', name='Home')
-
-
-genomic_interval = callbacks.homepage.util.example_genomic_intervals[
-    'example-preharvest']
 
 
 # ======
@@ -54,15 +49,20 @@ genome_ref_input = dbc.Col([
     dbc.Input(
         id='homepage-genomic-intervals',
         type='text',
-        value='',  # genomic_interval,
+        value='',
         persistence=True,
         persistence_type='memory'
     ),
 
     html.Div([html.Span('Or select from these examples:', className='pe-3'),
               html.Span('Pre-Harvest Sprouting (Lee et al., 2021)',
-                        id='example-preharvest', className='sample-genomic-interval pe-3'),
-              html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)', id='example-anerobic', className='sample-genomic-interval')],
+                        id={'type': 'example-genomic-interval',
+                            'description': 'pre-harvest'},
+                        className='sample-genomic-interval pe-3'),
+              html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)',
+                        id={'type': 'example-genomic-interval',
+                            'description': 'anaerobic-germination'},
+                        className='sample-genomic-interval')],
              className='pt-3'),
     html.Br(),
 
