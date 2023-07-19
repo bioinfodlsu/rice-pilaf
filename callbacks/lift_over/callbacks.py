@@ -240,9 +240,5 @@ def init_callback(app):
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value')
     )
-    def reset_table_filters(reset_n_clicks, *_):
-        if 'lift-over-reset-table' == ctx.triggered_id:
-            if reset_n_clicks > 0:
-                return ''
-        else:
-            return ''
+    def reset_table_filters(*_):
+        return ''

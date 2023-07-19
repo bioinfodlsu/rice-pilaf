@@ -297,9 +297,5 @@ def init_callback(app):
         Input('coexpression-modules-pathway', 'active_tab'),
         Input('coexpression-reset-table', 'n_clicks')
     )
-    def reset_table_filters(active_tab, reset_n_clicks):
-        if 'coexpression-reset-table' == ctx.triggered_id:
-            if reset_n_clicks > 0:
-                return ''
-        else:
-            return ''
+    def reset_table_filters(*_):
+        return ''
