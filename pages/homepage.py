@@ -59,9 +59,9 @@ genome_ref_input = dbc.Col([
         persistence_type='memory'
     ),
 
-    html.Div([html.Span('Or select from these examples: ', className='pe-2'),
+    html.Div([html.Span('Or select from these examples:', className='pe-3'),
               html.Span('Pre-Harvest Sprouting (Lee et al., 2021)',
-                        id='example-preharvest', className='sample-genomic-interval'),
+                        id='example-preharvest', className='sample-genomic-interval pe-3'),
               html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)', id='example-anerobic', className='sample-genomic-interval')],
              className='pt-3'),
     html.Br(),
