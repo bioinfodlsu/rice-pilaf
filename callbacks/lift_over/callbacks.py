@@ -45,11 +45,12 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-container',
                'style', allow_duplicate=True),
-        Input('lift-over-other-refs-saved-input', 'data'),
         Input('lift-over-is-submitted', 'data'),
+        Input('lift-over-other-refs-saved-input', 'data'),
+
         prevent_initial_call=True
     )
-    def display_submitted_lift_over_results(other_refs, lift_over_is_submitted):
+    def display_submitted_lift_over_results(lift_over_is_submitted, *_):
         if lift_over_is_submitted:
             return {'display': 'block'}
 
@@ -106,12 +107,12 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-other-refs-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-active-tab', 'data'),
         State('lift-over-is-submitted', 'data'),
+        Input('lift-over-other-refs-submitted-input', 'data')
     )
-    def display_active_tab(other_refs, homepage_is_submitted, saved_active_tab, lift_over_is_submitted):
+    def display_active_tab(homepage_is_submitted, saved_active_tab, lift_over_is_submitted, *_):
         if homepage_is_submitted and lift_over_is_submitted:
             if not saved_active_tab:
                 return 'tab-0'
@@ -152,12 +153,12 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-other-refs', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data')
     )
-    def get_input_lift_over_session_state(nb_interval_str, is_multi_other_refs, homepage_is_submitted, other_refs):
+    def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
         if homepage_is_submitted:
             if not is_multi_other_refs and other_refs:
                 other_refs = other_refs[0]
@@ -234,11 +235,12 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-table', 'filter_query'),
+
+        Input('lift-over-reset-table', 'n_clicks'),
         Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-overlap-table-filter', 'value'),
-        Input('lift-over-reset-table', 'n_clicks')
+        Input('lift-over-overlap-table-filter', 'value')
     )
-    def reset_table_filters(active_tab, filter_rice_variants, reset_n_clicks):
+    def reset_table_filters(reset_n_clicks, *_):
         if 'lift-over-reset-table' == ctx.triggered_id:
             if reset_n_clicks > 0:
                 return ''

@@ -47,12 +47,14 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-results-container', 'style', allow_duplicate=True),
-        Input('igv-genomic-intervals', 'value'),
-        State('homepage-is-submitted', 'data'),
+
         State('igv-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data'),
+
+        Input('igv-genomic-intervals', 'value'),
         prevent_initial_call=True
     )
-    def display_igv_results_saved_state(selected_nb_interval, homepage_is_submitted, igv_is_submitted):
+    def display_igv_results_saved_state(igv_is_submitted, *_):
         if igv_is_submitted:
             return {'display': 'block'}
         else:
@@ -198,12 +200,12 @@ def init_callback(app):
         Output('igv-selected-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
-        Input('igv-track-filter', 'value'),
         State('homepage-is-submitted', 'data'),
+        Input('igv-track-filter', 'value'),
 
         prevent_initial_call=True
     )
-    def set_input_igv_session_state(selected_nb_intervals_str, selected_tracks, homepage_is_submitted):
+    def set_input_igv_session_state(selected_nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return selected_nb_intervals_str
 

@@ -100,15 +100,15 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
 
+        State('homepage-genomic-intervals', 'value'),
+
         Input('homepage-submit', 'n_clicks'),
         Input('homepage-reset', 'n_clicks'),
         Input('homepage-clear-cache', 'n_clicks'),
 
-        State('homepage-genomic-intervals', 'value'),
-
         prevent_initial_call=True
     )
-    def parse_input(n_clicks, reset_n_clicks, clear_cache_n_clicks, nb_intervals_str):
+    def parse_input(nb_intervals_str, n_clicks, *_):
         if 'homepage-clear-cache' == ctx.triggered_id:
             clear_cache_folder()
 

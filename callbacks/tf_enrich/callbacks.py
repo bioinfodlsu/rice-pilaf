@@ -15,7 +15,7 @@ def init_callback(app):
     @app.callback(
         Output('tf-enrichment-genomic-intervals-input', 'children'),
         Input('homepage-genomic-intervals-saved-input', 'data'),
-        State('homepage-is-submitted', 'data'),
+        State('homepage-is-submitted', 'data')
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
         if homepage_is_submitted:
@@ -102,11 +102,11 @@ def init_callback(app):
     @app.callback(
         Output('tfbs_set', 'value'),
         Output('tfbs_prediction_technique', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('tfbs-saved-input', 'data')
+        State('tfbs-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data')
     )
-    def display_submitted_tfbs_input(nb_intervals_str, homepage_is_submitted, tfbs_saved_input):
+    def display_submitted_tfbs_input(homepage_is_submitted, tfbs_saved_input, *_):
         if homepage_is_submitted:
             if not tfbs_saved_input:
                 return 'promoters', 'FunTFBS'
