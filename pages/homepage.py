@@ -61,6 +61,7 @@ genome_ref_input = dbc.Col([
 
     html.Div([html.Span('Or select from these examples: ', className='pe-2'),
               html.Span('Pre-Harvest Sprouting (Lee et al., 2021)', id='example-preharvest', className='sample-genomic-interval')],
+              html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)', id = 'example-anerobic', className='sample-genomic-interval')
              className='pt-3'),
     html.Br(),
 
