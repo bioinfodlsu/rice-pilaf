@@ -79,7 +79,7 @@ Start by creating a copy of this repository:
 
 4. Run the following command to start the server:
    ```
-   python Homepage_dash.py
+   python app.py
    ```
    
 5. Open the app by accessing the following URL on your browser:
