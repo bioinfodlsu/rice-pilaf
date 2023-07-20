@@ -73,6 +73,22 @@ fox = html.Li(
     )],
 )
 
+module_detection_algo_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Module Detection Algorithms')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'Since genes can possibly be involved in multiple biological functions or processes, the algorithms supported by RicePilaf allow for overlapping modules (that is, a given gene may belong to multiple modules):'),
+        html.Ul([
+            clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
+        ])
+    ])],
+    id='coexpression-clustering-algo-modal',
+    is_open=False,
+    size='xl'
+)
+
 
 # ============
 # Main Layout
@@ -90,9 +106,9 @@ layout = html.Div(id='coexpression-container', children=[
         html.Br(),
         html.Br(),
 
-        dbc.Label(['Select the coexpression network',
+        dbc.Label(['Select the co-expression network',
                    html.I(
-                       className='bi bi-info-circle mx-2', id='coexpression-network-tooltip')]),
+                       className='bi bi-info-circle', id='coexpression-network-tooltip')]),
 
         dbc.RadioItems(
             id='coexpression-network',
@@ -108,29 +124,14 @@ layout = html.Div(id='coexpression-container', children=[
 
         html.Br(),
 
-
         dbc.Label(['Select a module detection algorithm ',
                    html.I(
-                       className='bi bi-info-circle mx-2',
+                       className='bi bi-info-circle',
                        id='coexpression-clustering-algo-tooltip',
                        n_clicks=0
                    )]),
 
-        dbc.Modal([
-            dbc.ModalHeader(
-                dbc.ModalTitle('Module Detection Algorithms')
-            ),
-            dbc.ModalBody([
-                html.P(
-                    'All four algorithms supported by this app allow for overlapping modules (that is, genes may belong to more than one module):'),
-                html.Ul([
-                    clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
-                ])
-            ])],
-            id='coexpression-clustering-algo-modal',
-            is_open=False,
-            size='xl',
-        ),
+        module_detection_algo_modal,
 
         dbc.RadioItems(
             id='coexpression-clustering-algo',
@@ -152,7 +153,7 @@ layout = html.Div(id='coexpression-container', children=[
                    html.Span('parameter for running the algorithm',
                              id='coexpression-parameter-name'),
                    html.I(
-                       className='bi bi-info-circle mx-2', id='coexpression-parameter-tooltip')],
+                       className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
                   className='mb-4'),
 
         # Should also be changed if parameter space is changed

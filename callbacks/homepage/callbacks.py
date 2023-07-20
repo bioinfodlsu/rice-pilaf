@@ -1,11 +1,10 @@
 from collections import namedtuple, OrderedDict
-import callbacks.homepage.util
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.browse_loci as browse_loci
 
-from dash import Input, Output, State, html, ctx
+from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
@@ -101,15 +100,15 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
 
+        State('homepage-genomic-intervals', 'value'),
+
         Input('homepage-submit', 'n_clicks'),
         Input('homepage-reset', 'n_clicks'),
         Input('homepage-clear-cache', 'n_clicks'),
 
-        State('homepage-genomic-intervals', 'value'),
-
         prevent_initial_call=True
     )
-    def parse_input(n_clicks, reset_n_clicks, clear_cache_n_clicks, nb_intervals_str):
+    def parse_input(nb_intervals_str, n_clicks, *_):
         if 'homepage-clear-cache' == ctx.triggered_id:
             clear_cache_folder()
 
@@ -190,14 +189,15 @@ def init_callback(app):
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
         Input('homepage-reset', 'n_clicks'),
-        Input('example-preharvest', 'n_clicks')
+        Input({'type': 'example-genomic-interval',
+              'description': ALL}, 'n_clicks'),
     )
-    def clear_input_fields(reset, preharvest):
-        if 'homepage-reset' == ctx.triggered_id:
-            return None
+    def set_input_fields(*_):
+        if ctx.triggered_id:
+            if 'homepage-reset' == ctx.triggered_id:
+                return None
 
-        if 'example-preharvest' == ctx.triggered_id:
-            return get_example_genomic_interval('example-preharvest')
+            return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
 
@@ -211,3 +211,11 @@ def init_callback(app):
             return False, '/'
         else:
             return True, '/'
+
+    @app.callback(
+        Output('genomic-interval-modal', 'is_open'),
+        Input('genomic-interval-tooltip', 'n_clicks')
+    )
+    def open_modals(tooltip_n_clicks):
+        if tooltip_n_clicks > 0:
+            return True

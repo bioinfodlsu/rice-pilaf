@@ -2,7 +2,6 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-import callbacks.homepage.util
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
@@ -12,15 +11,59 @@ import pages.navigation.analysis_nav as analysis_nav
 dash.register_page(__name__, path='/', name='Home')
 
 
-genomic_interval = callbacks.homepage.util.example_genomic_intervals[
-    'example-preharvest']
+# ======
+# Modal
+# ======
 
+genomic_interval_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Genomic Intervals from GWAS')
+    ),
+    dbc.ModalBody([
+        html.P('WRITE ME'),
+        html.P(
+            'We also provide some sample genomic intervals, taken from the following GWA and QTL studies:'),
+        html.Ul([
+            html.Li([
+                html.Div([
+                    html.Span(
+                        'Lee, J. S., Chebotarov, D., McNally, K. L., Pede, V., Setiyono, T. D., Raquid, R., Hyun, W. J., Leung, J. U., Kohli, A., & Mo, Y. (2021). Novel sources of pre-harvest sprouting resistance for Japanoica rice improvement. '),
+                    html.I(
+                        'Plants, 10'),
+                    html.Span(
+                        '(8), 1709. '),
+                    html.A('https://doi.org/10.3390/plants10081709',
+                           href='https://doi.org/10.3390/plants10081709',
+                           target='_blank')],
+                )
+            ])
+        ]),
+        html.Ul([
+            html.Li([
+                html.Div([
+                    html.Span(
+                        'Tnani, H., Chebotarov, D., Thapa, R., Ignacio, J. C. I., Israel, W. K.,  Quilloy, F. A., Dixit, S., & Septiningsih, E. M., & Kretzschmar, T. (2021). Enriched-GWAS and transcriptome analysis to refine and characterize a major QTL for anaerobic germination tolerance in rice. '),
+                    html.I(
+                        'International Journal of Molecular Sciences, 22'),
+                    html.Span(
+                        '(9), 4445. '),
+                    html.A('https://doi.org/10.3390/ijms22094445',
+                           href='https://doi.org/10.3390/ijms22094445',
+                           target='_blank')],
+                )
+            ])
+        ])
+    ])],
+    id='genomic-interval-modal',
+    is_open=False,
+    size='xl'
+)
 
 # ======
 # Input
 # ======
 
-submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Analysis',
                                                    id='homepage-submit',
                                                    n_clicks=0,
                                                    className='home-button'),
@@ -32,19 +75,27 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Post-GWAS Analysis',
                                                    n_clicks=0,
                                                    className='home-button'),
                                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
-                                        style={'marginLeft': '3em'}),
+                                        id='reset-analyses-container'),
                                 dbc.Col(dbc.Button('Clear Cache',
                                                    id='homepage-clear-cache',
                                                    color='danger',
                                                    outline=True,
                                                    n_clicks=0,
                                                    className='home-button'),
-                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
-                                        style={'marginLeft': '3em'}),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                                 ], className='pt-2')
 
 genome_ref_input = dbc.Col([
-    html.H5('Enter genomic intervals from GWAS', id='genomic-interval-hdr'),
+    html.Div([
+        html.H5('Enter genomic intervals from GWAS',
+                id='genomic-interval-hdr'),
+        html.I(className='bi bi-info-circle',
+               id='genomic-interval-tooltip',
+               n_clicks=0)
+    ], id='genomic-interval-container'),
+
+    genomic_interval_modal,
+
     dbc.Alert(
         id='input-error',
         children='',
@@ -54,21 +105,25 @@ genome_ref_input = dbc.Col([
     dbc.Input(
         id='homepage-genomic-intervals',
         type='text',
-        value='',  # genomic_interval,
+        value='',
         persistence=True,
         persistence_type='memory'
     ),
 
     html.Div([html.Span('Or select from these examples:', className='pe-3'),
               html.Span('Pre-Harvest Sprouting (Lee et al., 2021)',
-                        id='example-preharvest', className='sample-genomic-interval pe-3'),
-              html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)', id='example-anerobic', className='sample-genomic-interval')],
+                        id={'type': 'example-genomic-interval',
+                            'description': 'pre-harvest'},
+                        className='sample-genomic-interval pe-3'),
+              html.Span('Anaerobic Germination (Tnani et al., 2021)',
+                        id={'type': 'example-genomic-interval',
+                            'description': 'anaerobic-germination'},
+                        className='sample-genomic-interval')],
              className='pt-3'),
     html.Br(),
 
     submit_clear_buttons
 ])
-
 
 # ============
 # Main Layout

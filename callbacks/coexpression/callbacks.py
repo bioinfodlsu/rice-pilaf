@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html, ctx
+from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -168,12 +168,13 @@ def init_callback(app):
         State('coexpression-submitted-parameter-module', 'data'),
 
         Input('coexpression-graph-layout', 'value'),
-        Input('coexpression-reset-graph', 'n_clicks'),
         State('coexpression-is-submitted', 'data'),
+
+        Input('coexpression-reset-graph', 'n_clicks'),
 
         prevent_initial_call=True
     )
-    def display_table_graph(implicated_gene_ids, module, submitted_algo, submitted_parameter_module, layout, reset_graph_n_clicks, coexpression_is_submitted):
+    def display_table_graph(implicated_gene_ids, module, submitted_algo, submitted_parameter_module, layout, coexpression_is_submitted, *_):
         if coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
@@ -183,32 +184,32 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    # @app.callback(
-    #     Output('coexpression-clustering-algo-saved-input',
-    #            'data', allow_duplicate=True),
-    #     Output('coexpression-parameter-module-saved-input',
-    #            'data', allow_duplicate=True),
-    #     Input('coexpression-clustering-algo', 'value'),
-    #     Input('coexpression-parameter-slider', 'value'),
-    #     State('coexpression-parameter-slider', 'marks'),
-    #     State('homepage-is-submitted', 'data'),
-    #     State('coexpression-parameter-module-saved-input', 'data'),
-    #     prevent_initial_call='True'
-    # )
-    # def set_input_coexpression_session_state(algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_module):
-    #     if homepage_is_submitted:
-    #         input_paramater_module_value = Input_parameter_module(
-    #             parameter_mark, parameter_value)._asdict()
+    @app.callback(
+        Output('coexpression-clustering-algo-saved-input',
+               'data', allow_duplicate=True),
+        Output('coexpression-parameter-module-saved-input',
+               'data', allow_duplicate=True),
+        Input('coexpression-clustering-algo', 'value'),
+        Input('coexpression-parameter-slider', 'value'),
+        State('coexpression-parameter-slider', 'marks'),
+        State('homepage-is-submitted', 'data'),
+        State('coexpression-parameter-module-saved-input', 'data'),
+        prevent_initial_call='True'
+    )
+    def set_input_coexpression_session_state(algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_module):
+        if homepage_is_submitted:
+            input_paramater_module_value = Input_parameter_module(
+                parameter_mark, parameter_value)._asdict()
 
-    #         if input_parameter_module:
-    #             input_parameter_module[algo] = input_paramater_module_value
+            if input_parameter_module:
+                input_parameter_module[algo] = input_paramater_module_value
 
-    #         else:
-    #             input_parameter_module = {algo: input_paramater_module_value}
+            else:
+                input_parameter_module = {algo: input_paramater_module_value}
 
-    #         return algo, input_parameter_module
+            return algo, input_parameter_module
 
-    #     raise PreventUpdate
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-submitted-parameter-module',
@@ -296,9 +297,5 @@ def init_callback(app):
         Input('coexpression-modules-pathway', 'active_tab'),
         Input('coexpression-reset-table', 'n_clicks')
     )
-    def reset_table_filters(active_tab, reset_n_clicks):
-        if 'coexpression-reset-table' == ctx.triggered_id:
-            if reset_n_clicks > 0:
-                return ''
-        else:
-            return ''
+    def reset_table_filters(*_):
+        return ''

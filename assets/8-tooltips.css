@@ -6,3 +6,7 @@
 .reference {
     font-size: small;
 }
+
+i[id$="-tooltip"] {
+    margin-left: 1em;
+}

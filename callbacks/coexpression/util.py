@@ -43,7 +43,9 @@ def display_in_sci_notation(number):
 
 def get_parameters_for_algo(algo):
     param_dict = {}
-    parameters = os.listdir(f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')
+    parameters = sorted(map(int, os.listdir(
+        f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')))
+
     for idx, parameter in enumerate(parameters):
         if idx == 0:
             param_dict[int(parameter)] = ALGOS_LOW[algo]
