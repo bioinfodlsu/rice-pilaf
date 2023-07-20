@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html, ctx
+from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 

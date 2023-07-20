@@ -211,3 +211,11 @@ def init_callback(app):
             return False, '/'
         else:
             return True, '/'
+
+    @app.callback(
+        Output('genomic-interval-modal', 'is_open'),
+        Input('genomic-interval-tooltip', 'n_clicks')
+    )
+    def open_modals(tooltip_n_clicks):
+        if tooltip_n_clicks > 0:
+            return True

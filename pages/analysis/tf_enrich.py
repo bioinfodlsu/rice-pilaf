@@ -19,7 +19,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
 
         dbc.Label(['Choose TF binding site prediction technique:',
                    html.I(
-                       className='bi bi-info-circle mx-2',
+                       className='bi bi-info-circle',
                        id='tf-enrichment-technique-tooltip',
                        n_clicks=0
                    )]),
@@ -39,7 +39,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         html.Br(),
         dbc.Label(['Consider TF binding sites in the following regions:',
                    html.I(
-                       className='bi bi-info-circle mx-2',
+                       className='bi bi-info-circle',
                        id='tf-enrichment-binding-site-tooltip',
                        n_clicks=0
                    )]),

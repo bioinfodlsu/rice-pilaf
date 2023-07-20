@@ -12,6 +12,39 @@ dash.register_page(__name__, path='/', name='Home')
 
 
 # ======
+# Modal
+# ======
+
+genomic_interval_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Genomic Intervals from GWAS')
+    ),
+    dbc.ModalBody([
+        html.P('WRITE ME'),
+        html.P(
+            'We also provide some example genomic intervals, taken from the following papers:'),
+        html.Ul([
+            html.Li([
+                html.Div([
+                    html.Span(
+                        'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
+                    html.I(
+                        'KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining '),
+                    html.Span(
+                        '(pp. 615–623). Association for Computing Machinery. '),
+                    html.A('https://doi.org/10.1145/2339530.2339630',
+                           href='https://doi.org/10.1145/2339530.2339630',
+                           target='_blank')],
+                )
+            ])
+        ])
+    ])],
+    id='genomic-interval-modal',
+    is_open=False,
+    size='xl'
+)
+
+# ======
 # Input
 # ======
 
@@ -42,9 +75,12 @@ genome_ref_input = dbc.Col([
     html.Div([
         html.H5('Enter genomic intervals from GWAS',
                 id='genomic-interval-hdr'),
-        html.I(className='bi bi-info-circle mx-3',
-               id='genomic-interval-tooltip')
+        html.I(className='bi bi-info-circle',
+               id='genomic-interval-tooltip',
+               n_clicks=0)
     ], id='genomic-interval-container'),
+
+    genomic_interval_modal,
 
     dbc.Alert(
         id='input-error',
@@ -74,7 +110,6 @@ genome_ref_input = dbc.Col([
 
     submit_clear_buttons
 ])
-
 
 # ============
 # Main Layout
