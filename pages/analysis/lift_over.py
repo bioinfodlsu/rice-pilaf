@@ -53,10 +53,6 @@ layout = html.Div(id='lift-over-container', children=[
             id='lift-over-results-container',
             style={'display': 'none'},
             children=[
-                html.P(id='lift-over-results-genomic-intervals-input'),
-
-                html.P(id='lift-over-results-other-refs-input'),
-
                 html.Div(id='lift-over-results-intro'),
 
                 html.Br(),
