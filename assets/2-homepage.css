@@ -70,3 +70,8 @@
     text-decoration: underline;
     cursor: pointer;
 }
+
+#reset-analyses-container {
+    margin-left: 3.5em;
+    margin-right: 3.5em;
+}

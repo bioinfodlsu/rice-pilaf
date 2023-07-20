@@ -79,7 +79,7 @@ module_detection_algo_modal = dbc.Modal([
     ),
     dbc.ModalBody([
         html.P(
-            'All four algorithms supported by this app allow for overlapping modules (that is, genes may belong to more than one module):'),
+            'Since genes can possibly be involved in multiple biological functions or processes, the algorithms supported by RicePilaf allow for overlapping modules (that is, a given gene may belong to multiple modules):'),
         html.Ul([
             clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
         ])

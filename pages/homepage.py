@@ -22,18 +22,33 @@ genomic_interval_modal = dbc.Modal([
     dbc.ModalBody([
         html.P('WRITE ME'),
         html.P(
-            'We also provide some example genomic intervals, taken from the following papers:'),
+            'We also provide some sample genomic intervals, taken from the following GWA and QTL studies:'),
         html.Ul([
             html.Li([
                 html.Div([
                     html.Span(
-                        'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
+                        'Lee, J. S., Chebotarov, D., McNally, K. L., Pede, V., Setiyono, T. D., Raquid, R., Hyun, W. J., Leung, J. U., Kohli, A., & Mo, Y. (2021). Novel sources of pre-harvest sprouting resistance for Japanoica rice improvement. '),
                     html.I(
-                        'KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining '),
+                        'Plants, 10'),
                     html.Span(
-                        '(pp. 615–623). Association for Computing Machinery. '),
-                    html.A('https://doi.org/10.1145/2339530.2339630',
-                           href='https://doi.org/10.1145/2339530.2339630',
+                        '(8), 1709. '),
+                    html.A('https://doi.org/10.3390/plants10081709',
+                           href='https://doi.org/10.3390/plants10081709',
+                           target='_blank')],
+                )
+            ])
+        ]),
+        html.Ul([
+            html.Li([
+                html.Div([
+                    html.Span(
+                        'Tnani, H., Chebotarov, D., Thapa, R., Ignacio, J. C. I., Israel, W. K.,  Quilloy, F. A., Dixit, S., & Septiningsih, E. M., & Kretzschmar, T. (2021). Enriched-GWAS and transcriptome analysis to refine and characterize a major QTL for anaerobic germination tolerance in rice. '),
+                    html.I(
+                        'International Journal of Molecular Sciences, 22'),
+                    html.Span(
+                        '(9), 4445. '),
+                    html.A('https://doi.org/10.3390/ijms22094445',
+                           href='https://doi.org/10.3390/ijms22094445',
                            target='_blank')],
                 )
             ])
@@ -60,15 +75,14 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Analysis',
                                                    n_clicks=0,
                                                    className='home-button'),
                                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
-                                        style={'marginLeft': '3em'}),
+                                        id='reset-analyses-container'),
                                 dbc.Col(dbc.Button('Clear Cache',
                                                    id='homepage-clear-cache',
                                                    color='danger',
                                                    outline=True,
                                                    n_clicks=0,
                                                    className='home-button'),
-                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2,
-                                        style={'marginLeft': '3em'}),
+                                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                                 ], className='pt-2')
 
 genome_ref_input = dbc.Col([
@@ -101,7 +115,7 @@ genome_ref_input = dbc.Col([
                         id={'type': 'example-genomic-interval',
                             'description': 'pre-harvest'},
                         className='sample-genomic-interval pe-3'),
-              html.Span('Anaerobic Germination Tolerance (Tnani et al., 2021)',
+              html.Span('Anaerobic Germination (Tnani et al., 2021)',
                         id={'type': 'example-genomic-interval',
                             'description': 'anaerobic-germination'},
                         className='sample-genomic-interval')],
