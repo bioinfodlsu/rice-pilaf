@@ -11,7 +11,7 @@
 }
 
 #homepage-reset:hover, #homepage-clear-cache:hover {
-    background-color: #dc3545;
+    background-color: var(--button-red);
 }
 
 #homepage-submit {
@@ -38,7 +38,7 @@
 }
 
 .nav-pills .nav-link.active {
-    color: #fff !important;
+    color: white !important;
     background-color: var(--green-lightest);
 }
 
@@ -63,7 +63,7 @@
 }
 
 .sample-genomic-interval {
-    color: rgb(107, 107, 185);
+    color: var(--link-blue);
 }
 
 .sample-genomic-interval:hover {

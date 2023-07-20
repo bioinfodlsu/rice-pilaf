@@ -17,11 +17,11 @@ th, td {
 }
 
 .table-button {
-    border: 1px solid rgb(211, 211, 211);
+    border: 1px solid var(--table-button-gray);
     background-color: transparent;
 }
 
 .table-button:hover {
-    border: 1px solid rgb(211, 211, 211);
+    border: 1px solid var(--table-button-gray);
     background-color: var(--td-gray);
 }
