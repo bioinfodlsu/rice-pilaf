@@ -66,9 +66,22 @@ def sanitize_nb_intervals_str(nb_intervals_str):
 # convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
 
 
+def is_one_digit_chromosome(chromosome):
+    # Examples: Chr1, Chr2
+    return len(chromosome) == len('Chr') + 1
+
+
+def pad_one_digit_chromosome(chromosome):
+    # Convert 'Chr1' to 'Chr01'
+    return chromosome[:-1] + '0' + chromosome[-1]
+
+
 def to_genomic_interval(interval_str):
     try:
         chrom, interval = interval_str.split(":")
+        if is_one_digit_chromosome(chrom):
+            chrom = pad_one_digit_chromosome(chrom)
+
     except ValueError:
         return NO_CHROM_INTERVAL_SEP, interval_str
 
