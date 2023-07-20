@@ -61,8 +61,6 @@ def init_callback(app):
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
 
-        Output('lift-over-results-genomic-intervals-input', 'children'),
-
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
@@ -99,9 +97,9 @@ def init_callback(app):
                 else:
                     gene_list_msg += [html.Span('.')]
 
-                return gene_list_msg, tabs_children, [html.B('Nipponbare Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
+                return gene_list_msg, tabs_children, tabs[1:], active_filter
             else:
-                return None, None, None, [], None
+                return None, None, [], None
 
         raise PreventUpdate
 
