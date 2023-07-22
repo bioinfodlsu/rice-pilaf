@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 navbar = dbc.Nav(
     [
         dbc.NavItem(dbc.NavLink(
-                    'Lift-Over', id='lift-over-link', className='ps-4')),
+                    'Gene List and Lift-Over', id='lift-over-link', className='ps-4')),
         dbc.NavItem(dbc.NavLink(
             'Co-Expression Network Analysis', id='coexpression-link', className='ps-4')),
         dbc.NavItem(dbc.NavLink(
