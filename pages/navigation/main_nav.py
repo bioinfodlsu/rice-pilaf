@@ -6,7 +6,7 @@ navbar = dbc.NavbarSimple(
         dbc.NavItem(dbc.NavLink('Home', href='/', active='exact',
                     className='top-navbar-item')),
         dbc.NavItem(dbc.NavLink(
-                    'Help', href='/help', active='exact', className='top-navbar-item'))
+                    'User Guide', href='/user-guide', active='exact', className='top-navbar-item'))
     ],
     id='top-navbar',
     brand=['RicePilaf'],
