@@ -1,6 +1,7 @@
 import csv
 import os
 import sys
+import codecs
 
 maxInt = sys.maxsize
 
@@ -18,7 +19,15 @@ def get_modules(clusterone_results, output_dir):
 
     with open(clusterone_results) as results, open(f'{output_dir}/clusterone-module-list.tsv', 'w') as output:
         csv_reader = csv.reader(results, delimiter=',')
-        next(csv_reader)            # Skip header
+
+        try:
+            next(csv_reader)            # Skip header
+        except Exception as e:
+            # Sometimes the generated CSV has null bytes
+            csv_reader = csv.reader(codecs.open(
+                clusterone_results, 'rU', 'utf-16'))
+            next(csv_reader)
+
         for line in csv_reader:
             modules = line[-1]
             modules = modules.replace(" ", "\t")
