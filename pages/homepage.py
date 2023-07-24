@@ -87,7 +87,7 @@ submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Analysis',
 
 genome_ref_input = dbc.Col([
     html.Div([
-        html.H5('Enter genomic intervals from GWAS',
+        html.H5('Enter your GWAS/QTL intervals',
                 id='genomic-interval-hdr'),
         html.I(className='bi bi-info-circle',
                id='genomic-interval-tooltip',
