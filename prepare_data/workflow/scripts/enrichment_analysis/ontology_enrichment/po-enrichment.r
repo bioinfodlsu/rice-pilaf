@@ -1,4 +1,4 @@
-library(ggplot2)
+# library(ggplot2)
 library(optparse)
 library(clusterProfiler)
 
@@ -49,9 +49,9 @@ if (!dir.exists(paste0(opt$output_dir, "/results"))) {
     dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
 }
 
-if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
-    dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
-}
+# if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
+#     dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
+# }
 
 po_df <- as.data.frame(po)
 write.table(po_df, paste0(opt$output_dir, "/results/po-df-", opt$module_index, ".tsv"),
@@ -59,16 +59,16 @@ write.table(po_df, paste0(opt$output_dir, "/results/po-df-", opt$module_index, "
 )
 
 if (nrow(po_df) > 0) {
-    plot <- dotplot(po,
-        showCategory = nrow(po_df),
-        title = "Enriched PO Terms",
-        font.size = 10
-    )
+    # plot <- dotplot(po,
+    #     showCategory = nrow(po_df),
+    #     title = "Enriched PO Terms",
+    #     font.size = 10
+    # )
 
-    ggsave(plot,
-        filename = paste0(opt$output_dir, "/plots/po-dotplot-", opt$module_index, ".png"),
-        height = max(c(22, nrow(po_df))), width = 22, units = "cm"
-    )
+    # ggsave(plot,
+    #     filename = paste0(opt$output_dir, "/plots/po-dotplot-", opt$module_index, ".png"),
+    #     height = max(c(22, nrow(po_df))), width = 22, units = "cm"
+    # )
 
     print(paste0(
         "Generated data frame and dot plot showing the enriched PO terms for module #",

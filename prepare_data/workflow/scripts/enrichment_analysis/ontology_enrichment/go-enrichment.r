@@ -1,4 +1,4 @@
-library(ggplot2)
+# library(ggplot2)
 library(optparse)
 library(GO.db)
 library(clusterProfiler)
@@ -46,9 +46,9 @@ if (!dir.exists(paste0(opt$output_dir, "/results"))) {
     dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
 }
 
-if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
-    dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
-}
+# if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
+#     dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
+# }
 
 go_df <- as.data.frame(go)
 write.table(go_df, paste0(opt$output_dir, "/results/go-df-", opt$module_index, ".tsv"),
@@ -56,16 +56,16 @@ write.table(go_df, paste0(opt$output_dir, "/results/go-df-", opt$module_index, "
 )
 
 if (nrow(go_df) > 0) {
-    plot <- dotplot(go,
-        showCategory = nrow(go_df),
-        title = "Enriched GO Terms",
-        font.size = 10
-    )
+    # plot <- dotplot(go,
+    #     showCategory = nrow(go_df),
+    #     title = "Enriched GO Terms",
+    #     font.size = 10
+    # )
 
-    ggsave(plot,
-        filename = paste0(opt$output_dir, "/plots/go-dotplot-", opt$module_index, ".png"),
-        height = max(c(22, nrow(go_df))), width = 22, units = "cm"
-    )
+    # ggsave(plot,
+    #     filename = paste0(opt$output_dir, "/plots/go-dotplot-", opt$module_index, ".png"),
+    #     height = max(c(22, nrow(go_df))), width = 22, units = "cm"
+    # )
 
     print(paste0(
         "Generated data frame and dot plot showing the enriched GO terms for module #",
