@@ -14,10 +14,11 @@ other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
 
 layout = html.Div(id='lift-over-container', children=[
     html.Div([
-        html.P(
-            'Is your GWA/QTL study on a population which is evolutionarily closer to a genome below than to Nipponbare?'),
         html.Span(
-            'In this page, you can translate your Nipponbare intervals to that of one or more genomes below.')
+            'In this page, you can obtain the list of genes overlapping your input intervals.'),
+        html.P(
+            'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
+
     ], className='analysis-intro p-3'),
 
     html.Div([
@@ -28,7 +29,7 @@ layout = html.Div(id='lift-over-container', children=[
         html.Br(),
         html.Br(),
 
-        dbc.Label('Select genome(s) to lift-over to (ignore if lift-over is not needed):', className='mb-2'),
+        dbc.Label('Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
 
         dcc.Dropdown(
             other_ref_genomes,
