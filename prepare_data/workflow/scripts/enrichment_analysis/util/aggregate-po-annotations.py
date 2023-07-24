@@ -87,11 +87,5 @@ if __name__ == '__main__':
     annotations_df = get_annotations(args.oryzabase_file)
     id_to_names_df = map_to_id_to_names(args.oryzabase_file)
 
-    print(annotations_df.head())
-    print(annotations_df.tail())
-
-    print(id_to_names_df.head())
-    print(id_to_names_df.tail())
-
     save_annotations_to_csv(annotations_df, args.output_dir)
     save_id_po_names_to_csv(id_to_names_df, args.output_dir)
