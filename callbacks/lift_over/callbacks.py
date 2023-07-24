@@ -240,3 +240,15 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+
+    @app.callback(
+        Output('lift-over-download-df-to-csv', 'data'),
+        Input('lift-over-export-table', 'n_clicks'),
+        State('lift-over-results-table', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(lift_over_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
