@@ -85,12 +85,16 @@ def init_callback(app):
         Output('igv-selected-tracks-submitted-input',
                'data', allow_duplicate=True),
 
+        Output('coexpression-network-saved-input',
+               'data', allow_duplicate=True),
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
 
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
+        Output('coexpression-submitted-network',
+               'data', allow_duplicate=True),
         Output('coexpression-submitted-clustering-algo',
                'data', allow_duplicate=True),
         Output('coexpression-submitted-parameter-module',
@@ -118,8 +122,8 @@ def init_callback(app):
                 None, None, None, \
                 None, None, \
                 None, None, None, None, \
-                None, None, \
                 None, None, None, \
+                None, None, None, None, \
                 None, None, None
 
         if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
@@ -134,8 +138,8 @@ def init_callback(app):
                         None, None, None, \
                         None, None, \
                         None, None, None, None, \
-                        None, None, \
                         None, None, None, \
+                        None, None, None, None, \
                         None, None, None
                 else:
                     track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
@@ -150,8 +154,8 @@ def init_callback(app):
                         None, None, None, \
                         None, None, \
                         None, None, None, None, \
-                        None, None, \
                         None, None, None, \
+                        None, None, None, None, \
                         None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
@@ -160,8 +164,8 @@ def init_callback(app):
                     None, None, None, \
                     None, None, \
                     None, None, None, None, \
-                    None, None, \
                     None, None, None, \
+                    None, None, None, None, \
                     None, None, None
 
         raise PreventUpdate
