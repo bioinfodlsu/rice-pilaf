@@ -30,7 +30,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-results-container', 'style', allow_duplicate=True),
         Output('igv-is-submitted', 'data', allow_duplicate=True),
         Output('igv-selected-genomic-intervals-submitted-input', 'data'),
         Input('igv-submit', 'n_clicks'),
@@ -41,20 +40,15 @@ def init_callback(app):
     )
     def display_igv_results(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return {'display': 'block'}, True, selected_nb_interval
+            return True, selected_nb_interval
 
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-results-container', 'style', allow_duplicate=True),
-
-        State('igv-is-submitted', 'data'),
-        State('homepage-is-submitted', 'data'),
-
-        Input('igv-genomic-intervals', 'value'),
-        prevent_initial_call=True
+        Output('igv-results-container', 'style'),
+        Input('igv-is-submitted', 'data')
     )
-    def display_igv_results_saved_state(igv_is_submitted, *_):
+    def display_igv_results_saved_state(igv_is_submitted):
         if igv_is_submitted:
             return {'display': 'block'}
         else:

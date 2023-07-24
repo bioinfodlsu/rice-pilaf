@@ -27,7 +27,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-results-container', 'style', allow_duplicate=True),
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Input('tfbs-submit', 'n_clicks'),
@@ -42,7 +41,7 @@ def init_callback(app):
             submitted_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
 
-            return {'display': 'block'}, True, submitted_input
+            return True, submitted_input
 
         raise PreventUpdate
 
@@ -53,7 +52,6 @@ def init_callback(app):
         State('tfbs-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
         Input('tfbs-submitted-input', 'data'),
-        prevent_initial_call=True
     )
     def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:

@@ -23,7 +23,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-results-container', 'style', allow_duplicate=True),
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
                'data', allow_duplicate=True),
@@ -38,19 +37,15 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
-            return {'display': 'block'}, True, other_refs, None, None
+            return True, other_refs, None, None
 
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-results-container',
-               'style', allow_duplicate=True),
+        Output('lift-over-results-container', 'style'),
         Input('lift-over-is-submitted', 'data'),
-        Input('lift-over-other-refs-saved-input', 'data'),
-
-        prevent_initial_call=True
     )
-    def display_submitted_lift_over_results(lift_over_is_submitted, *_):
+    def display_submitted_lift_over_results(lift_over_is_submitted):
         if lift_over_is_submitted:
             return {'display': 'block'}
 
