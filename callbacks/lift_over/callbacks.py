@@ -23,7 +23,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-results-container', 'style', allow_duplicate=True),
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
                'data', allow_duplicate=True),
@@ -38,19 +37,15 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
-            return {'display': 'block'}, True, other_refs, None, None
+            return True, other_refs, None, None
 
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-results-container',
-               'style', allow_duplicate=True),
+        Output('lift-over-results-container', 'style'),
         Input('lift-over-is-submitted', 'data'),
-        Input('lift-over-other-refs-saved-input', 'data'),
-
-        prevent_initial_call=True
     )
-    def display_submitted_lift_over_results(lift_over_is_submitted, *_):
+    def display_submitted_lift_over_results(lift_over_is_submitted):
         if lift_over_is_submitted:
             return {'display': 'block'}
 
@@ -60,8 +55,6 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
-
-        Output('lift-over-results-genomic-intervals-input', 'children'),
 
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
@@ -99,9 +92,9 @@ def init_callback(app):
                 else:
                     gene_list_msg += [html.Span('.')]
 
-                return gene_list_msg, tabs_children, [html.B('Nipponbare Intervals: '), html.Span(nb_intervals_str)], tabs[1:], active_filter
+                return gene_list_msg, tabs_children, tabs[1:], active_filter
             else:
-                return None, None, None, [], None
+                return None, None, [], None
 
         raise PreventUpdate
 
@@ -166,7 +159,7 @@ def init_callback(app):
             return other_refs
 
         raise PreventUpdate
-
+        
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'columns'),
@@ -242,3 +235,15 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+
+    @app.callback(
+        Output('lift-over-download-df-to-csv', 'data'),
+        Input('lift-over-export-table', 'n_clicks'),
+        State('lift-over-results-table', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(lift_over_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)

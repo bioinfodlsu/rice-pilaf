@@ -60,7 +60,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         #           marks={0:'0.01', 10: '0.025',  20: '0.05',
         #                  30: '0.1',  40: '0.25'},
         #           value=40),
-        dbc.Input(id="tfbs_fdr", type="number", value=0.25),
+        dbc.Input(id="tfbs_fdr", type="number", value=0.25, persistence=True, persistence_type='memory'),
         html.Br(),
         html.Br(),
         dbc.Button('Run Analysis',
@@ -70,15 +70,30 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
 
         html.Br(),
         html.Br(),
-        html.Div(id='tfbs-results-container', children=[
-            dcc.Loading(
-                dash_table.DataTable(
-                    id='tf_enrichment_result_table',
-                    persistence=True,
-                    persistence_type='memory'
-                )
-            )
+        html.Div(
+            id='tfbs-results-container', 
+            style={'display': 'none'},
+            children=[
+                dcc.Loading([
+                    html.P(
+                        html.Div([
+                            dbc.Button([html.I(
+                                 className='bi bi-download me-2'),
+                                'Export to CSV'],
+                                id='tfbs-export-table',
+                                n_clicks = 0,
+                                color='light', size='sm', className='table-button'),
+                            dcc.Download(id='tfbs-download-df-to-csv')
+                        ], style={'textAlign': 'right'})
+                    ),
 
-        ])
-    ], className='p-3 mt-2')
+                    dash_table.DataTable(
+                        id='tf_enrichment_result_table',
+                        persistence=True,
+                        persistence_type='memory'
+                    )
+            ])
+            ], className='p-3 mt-2')
+    
+    ])
 ])

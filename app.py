@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc, html
+from dash import dcc
 
 import pages.navigation.main_nav as main_nav
 
@@ -105,6 +105,16 @@ app.layout = dbc.Container(
 
         dcc.Store(
             id='igv-is-submitted',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-network-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='coexpression-submitted-network',
             storage_type='session'
         ),
 

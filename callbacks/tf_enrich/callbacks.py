@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -27,7 +27,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-results-container', 'style', allow_duplicate=True),
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Input('tfbs-submit', 'n_clicks'),
@@ -42,20 +41,31 @@ def init_callback(app):
             submitted_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
 
-            return {'display': 'block'}, True, submitted_input
+            return True, submitted_input
 
         raise PreventUpdate
 
     @app.callback(
+        Output('tfbs-results-container', 'style'),
+        Input('tfbs-is-submitted', 'data'),
+    )
+    def display_submitted_tfbs_results(tfbs_is_submitted):
+        if tfbs_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
+
+    @app.callback(
         Output('tf_enrichment_result_table', 'data'),
+        Input('tfbs-is-submitted', 'data'),
         State('lift_over_nb_entire_table', 'data'),
         State('homepage-genomic-intervals-saved-input', 'data'),
-        State('tfbs-is-submitted', 'data'),
+        
         State('homepage-is-submitted', 'data'),
-        Input('tfbs-submitted-input', 'data'),
-        prevent_initial_call=True
+        State('tfbs-submitted-input', 'data')
     )
-    def display_enrichment_results(lift_over_nb_entire_table, nb_interval_str, tfbs_is_submitted, homepage_submitted, tfbs_submitted_input):
+    def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, nb_interval_str, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
@@ -113,4 +123,14 @@ def init_callback(app):
 
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
 
-        raise PreventUpdate
+    
+    @app.callback(
+        Output('tfbs-download-df-to-csv', 'data'),
+        Input('tfbs-export-table', 'n_clicks'),
+        State('tf_enrichment_result_table', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(tfbs_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)

@@ -41,10 +41,10 @@ def display_in_sci_notation(number):
     return '{:.6e}'.format(number)
 
 
-def get_parameters_for_algo(algo):
+def get_parameters_for_algo(algo, network='OS-CX'):
     param_dict = {}
     parameters = sorted(map(int, os.listdir(
-        f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules')))
+        f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules')))
 
     for idx, parameter in enumerate(parameters):
         if idx == 0:
@@ -57,9 +57,9 @@ def get_parameters_for_algo(algo):
     return param_dict
 
 
-def write_genes_to_file(genes, genomic_intervals, algo, parameters):
+def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
     temp_output_folder_dir = get_temp_output_folder_dir(
-        genomic_intervals, const.TEMP_COEXPRESSION, f'{algo}/{parameters}')
+        genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
     if not dir_exist(temp_output_folder_dir):
         create_dir(temp_output_folder_dir)
@@ -85,16 +85,16 @@ def fetch_enriched_modules(output_dir):
     return modules
 
 
-def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, algo, parameters):
+def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, network, algo, parameters):
     genes = list(set(implicated_gene_ids))
     temp_output_folder_dir = write_genes_to_file(
-        genes, genomic_intervals, algo, parameters)
+        genes, genomic_intervals, network, algo, parameters)
 
     OUTPUT_DIR = temp_output_folder_dir
     if not dir_exist(f'{OUTPUT_DIR}/enriched_modules'):
         INPUT_GENES = f'{OUTPUT_DIR}/genes.txt'
-        BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY_OS_CX}/all-genes.txt'
-        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
+        BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY}/{network}/all-genes.txt'
+        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
         # TODO: Add exception handling
         subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
@@ -121,9 +121,9 @@ def create_empty_df(cols):
     return pd.DataFrame(cols_dict)
 
 
-def convert_transcript_to_msu_id(transcript_ids_str):
+def convert_transcript_to_msu_id(transcript_ids_str, network):
     transcript_ids = transcript_ids_str.split('\n')
-    with open(const.TRANSCRIPT_TO_MSU_DICT, 'rb') as f:
+    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.TRANSCRIPT_TO_MSU_DICT}', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
@@ -141,26 +141,27 @@ def get_genes_from_kegg_link(link):
     return '\n'.join(query[1:])
 
 
-def get_genes_in_module(module_idx, algo, parameters):
-    with open(f'{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
+def get_genes_in_module(module_idx, network, algo, parameters):
+    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
         for idx, module in enumerate(f):
             if idx + 1 == int(module_idx):
                 return set(module.split('\t'))
 
 
-def get_genes_in_pathway(pathway_id):
-    with open(const.KEGG_DOSA_GENESET, 'rb') as f:
+def get_genes_in_pathway(pathway_id, network):
+    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.KEGG_DOSA_GENESET}', 'rb') as f:
         genes_in_pathway = pickle.load(f)
 
     return genes_in_pathway[pathway_id]
 
 
-def get_genes_in_module_and_pathway(pathway_id, module_idx, algo, parameters):
-    return '\n'.join(list(get_genes_in_pathway(pathway_id).intersection(get_genes_in_module(module_idx, algo, parameters))))
+def get_genes_in_module_and_pathway(pathway_id, module_idx, network, algo, parameters):
+    return '\n'.join(list(get_genes_in_pathway(pathway_id, network).intersection(
+        get_genes_in_module(module_idx, network, algo, parameters))))
 
 
-def get_kegg_pathway_name(pathway_id):
-    with open(const.KEGG_DOSA_PATHWAY_NAMES) as pathways:
+def get_kegg_pathway_name(pathway_id, network):
+    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.KEGG_DOSA_PATHWAY_NAMES}') as pathways:
         for line in pathways:
             line = line.split('\t')
             if line[0].rstrip() == pathway_id:
@@ -224,7 +225,7 @@ def convert_to_df_po(result):
     return result[cols].dropna()
 
 
-def convert_to_df_ora(result):
+def convert_to_df_ora(result, network):
     cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
             'BG Ratio', 'p-value', 'Adj. p-value', 'Genes', 'View on KEGG']
 
@@ -240,7 +241,9 @@ def convert_to_df_ora(result):
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['Genes'].str.split(
-        '/').str.join('\n').apply(convert_transcript_to_msu_id)
+        '/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -248,7 +251,7 @@ def convert_to_df_ora(result):
     return result[cols].dropna()
 
 
-def convert_to_df_pe(result, module_idx, algo, parameters):
+def convert_to_df_pe(result, module_idx, network, algo, parameters):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
             'Adj. ORA p-value', 'Adj. Perturbation p-value',
             'Adj. Combined p-value', 'Genes', 'View on KEGG']
@@ -259,17 +262,20 @@ def convert_to_df_pe(result, module_idx, algo, parameters):
     # Prettify display of ID
     result['ID'] = result['ID'].str[len('path:'):]
 
-    result['KEGG Pathway'] = result['ID'].apply(get_kegg_pathway_name).apply(
+    result['KEGG Pathway'] = result.apply(
+        lambda x: get_kegg_pathway_name(x['ID'], network), axis=1)
+    result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
 
     result['Genes'] = result.apply(lambda x: get_genes_in_module_and_pathway(
-        x['ID'], module_idx, algo, parameters), axis=1)
+        x['ID'], module_idx, network, algo, parameters), axis=1)
 
     result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
         result['ID'] + '+' + result['Genes'].str.split(
             '\n').str.join('+') + '" target = "_blank">Link</a>'
 
-    result['Genes'] = result['Genes'].apply(convert_transcript_to_msu_id)
+    result['Genes'] = result.apply(
+        lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -277,7 +283,7 @@ def convert_to_df_pe(result, module_idx, algo, parameters):
     return result[cols].dropna()
 
 
-def convert_to_df_spia(result):
+def convert_to_df_spia(result, network):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
             'Adj. Combined p-value', 'Pathway Status', 'Genes', 'View on KEGG']
 
@@ -290,7 +296,9 @@ def convert_to_df_spia(result):
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['View on KEGG'].apply(
-        get_genes_from_kegg_link).apply(convert_transcript_to_msu_id)
+        get_genes_from_kegg_link)
+    result['Genes'] = result.apply(
+        lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
     result['View on KEGG'] = '<a href = "' + \
         result['View on KEGG'] + '" target = "_blank">Link</a>'
@@ -301,16 +309,12 @@ def convert_to_df_spia(result):
     return result[cols].dropna()
 
 
-def convert_to_df(active_tab, module_idx, algo, parameters):
+def convert_to_df(active_tab, module_idx, network, algo, parameters):
     active_tab = active_tab.split('-')[1]
     dir = PATHWAY_TABS[int(active_tab)][1]
     enrichment_type = dir.split('/')[-1]
 
-    try:
-        file = f'{const.ENRICHMENT_ANALYSIS_OUTPUT}/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
-
-    except:
-        file = None
+    file = f'{const.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
     empty = False
     if enrichment_type == 'go':
@@ -363,7 +367,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             result = pd.DataFrame()
             empty = True
 
-        return convert_to_df_ora(result), empty
+        return convert_to_df_ora(result, network), empty
 
     elif enrichment_type == 'pe':
         try:
@@ -378,7 +382,7 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             result = pd.DataFrame()
             empty = True
 
-        return convert_to_df_pe(result, module_idx, algo, parameters), empty
+        return convert_to_df_pe(result, module_idx, network, algo, parameters), empty
 
     elif enrichment_type == 'spia':
         try:
@@ -393,13 +397,13 @@ def convert_to_df(active_tab, module_idx, algo, parameters):
             result = pd.DataFrame()
             empty = True
 
-        return convert_to_df_spia(result), empty
+        return convert_to_df_spia(result, network), empty
 
 
-def load_module_graph(implicated_gene_ids, module, algo, parameters, layout):
+def load_module_graph(implicated_gene_ids, module, network, algo, parameters, layout):
     try:
         module_idx = module.split(' ')[1]
-        coexpress_nw = f'{const.NETWORKS_DISPLAY_OS_CX}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
+        coexpress_nw = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
 
         G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
 

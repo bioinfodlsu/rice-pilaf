@@ -1,7 +1,6 @@
 :root {
     --green-top: #254b5d;
     --green-top-hover: #2d6078;
-    --green: #048A81;
     --green-lighter: #254b5d;
     --green-lightest: #4aa59f;
 
@@ -11,6 +10,10 @@
     
     --th-gray: #e1eeed;
     --td-gray: #eff2f2;
+    --table-button-gray: #d3d3d3;
+
+    --link-blue: #6b6bb9;
+    --button-red: #dc3545;
 }
   
 html, body {

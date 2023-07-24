@@ -14,14 +14,13 @@ class Constants(object):
 
     NETWORKS = f'{RAW_DATA}/networks'
     NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
-    NETWORKS_DISPLAY_OS_CX = f'{NETWORKS_DISPLAY}/OS-CX'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
-    TEMP_IGV = f'igv'
-    TEMP_COEXPRESSION = f'co_expression'
+    TEMP_IGV = 'igv'
+    TEMP_COEXPRESSION = 'co_expression'
 
-    TEMP_TFBS = f'tf_enrichment'
+    TEMP_TFBS = 'tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
     PROMOTER_BED = 'query_promoter_intervals'
     GENOME_WIDE_BED = 'query_genomic_intervals'
@@ -30,10 +29,9 @@ class Constants(object):
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
     ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
 
-    ENRICHMNET_ANALYSIS_DATA = f'{APP_DATA}/enrichment_analysis'
-    ENRICHMENT_ANALYSIS_OUTPUT = f'{ENRICHMNET_ANALYSIS_DATA}/output'
-    ENRICHMENT_ANALYSIS_MAPPING = f'{ENRICHMNET_ANALYSIS_DATA}/mapping'
-    ENRICHMENT_ANALYSIS_MODULES = f'{ENRICHMNET_ANALYSIS_DATA}/modules'
+    ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
+    ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
+    ENRICHMENT_ANALYSIS_MODULES = 'modules'
 
     TRANSCRIPT_TO_MSU_DICT = f'{ENRICHMENT_ANALYSIS_MAPPING}/transcript-to-msu-id.pickle'
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'

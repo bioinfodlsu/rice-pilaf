@@ -54,10 +54,6 @@ layout = html.Div(id='lift-over-container', children=[
             id='lift-over-results-container',
             style={'display': 'none'},
             children=[
-                html.P(id='lift-over-results-genomic-intervals-input'),
-
-                html.P(id='lift-over-results-other-refs-input'),
-
                 html.Div(id='lift-over-results-intro'),
 
                 html.Br(),
@@ -80,7 +76,9 @@ layout = html.Div(id='lift-over-container', children=[
                                  className='bi bi-download me-2'),
                                 'Export to CSV'],
                                 id='lift-over-export-table',
+                                n_clicks = 0,
                                 color='light', size='sm', className='table-button'),
+                            dcc.Download(id='lift-over-download-df-to-csv'),
                             dbc.Button([html.I(
                                 className='bi bi-arrow-clockwise me-2'),
                                 'Reset Table'],
