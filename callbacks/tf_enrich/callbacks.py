@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -112,3 +112,14 @@ def init_callback(app):
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
 
         raise PreventUpdate
+    
+    @app.callback(
+        Output('tfbs-download-df-to-csv', 'data'),
+        Input('tfbs-export-table', 'n_clicks'),
+        State('tf_enrichment_result_table', 'data'),
+        State('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def download_lift_over_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(tfbs_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)

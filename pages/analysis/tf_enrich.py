@@ -71,13 +71,25 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
         html.Br(),
         html.Br(),
         html.Div(id='tfbs-results-container', children=[
-            dcc.Loading(
+            dcc.Loading([
+                html.P(
+                    html.Div([
+                        dbc.Button([html.I(
+                                 className='bi bi-download me-2'),
+                                'Export to CSV'],
+                                id='tfbs-export-table',
+                                n_clicks = 0,
+                                color='light', size='sm', className='table-button'),
+                        dcc.Download(id='tfbs-download-df-to-csv'),
+                    ], style={'textAlign': 'right'})
+                ),
+
                 dash_table.DataTable(
                     id='tf_enrichment_result_table',
                     persistence=True,
                     persistence_type='memory'
                 )
-            )
+            ])
 
         ])
     ], className='p-3 mt-2')
