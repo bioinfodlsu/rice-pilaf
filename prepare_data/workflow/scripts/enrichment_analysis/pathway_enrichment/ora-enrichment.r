@@ -1,4 +1,4 @@
-library(ggplot2)
+# library(ggplot2)
 library(optparse)
 library(clusterProfiler)
 
@@ -41,9 +41,9 @@ if (!dir.exists(paste0(opt$output_dir, "/results"))) {
     dir.create(paste0(opt$output_dir, "/results"), recursive = TRUE)
 }
 
-if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
-    dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
-}
+# if (!dir.exists(paste0(opt$output_dir, "/plots"))) {
+#     dir.create(paste0(opt$output_dir, "/plots"), recursive = TRUE)
+# }
 
 kegg_df <- as.data.frame(kegg)
 write.table(kegg_df, paste0(opt$output_dir, "/results/ora-df-", opt$module_index, ".tsv"),
@@ -51,16 +51,16 @@ write.table(kegg_df, paste0(opt$output_dir, "/results/ora-df-", opt$module_index
 )
 
 if (nrow(kegg_df) > 0) {
-    plot <- dotplot(kegg,
-        showCategory = nrow(kegg_df),
-        title = "Enriched KEGG Pathways",
-        font.size = 10
-    )
+    # plot <- dotplot(kegg,
+    #     showCategory = nrow(kegg_df),
+    #     title = "Enriched KEGG Pathways",
+    #     font.size = 10
+    # )
 
-    ggsave(plot,
-        filename = paste0(opt$output_dir, "/plots/ora-dotplot-", opt$module_index, ".png"),
-        height = max(c(22, nrow(kegg_df))), width = 22, units = "cm"
-    )
+    # ggsave(plot,
+    #     filename = paste0(opt$output_dir, "/plots/ora-dotplot-", opt$module_index, ".png"),
+    #     height = max(c(22, nrow(kegg_df))), width = 22, units = "cm"
+    # )
 
     print(paste0(
         "Generated data frame and dot plot showing the enriched KEGG pathways for module #",
