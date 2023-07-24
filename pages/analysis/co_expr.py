@@ -113,11 +113,11 @@ layout = html.Div(id='coexpression-container', children=[
         dbc.RadioItems(
             id='coexpression-network',
             options=[
-                {'value': 'os-cx', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
-                {'value': 'rcrn',
+                {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
+                {'value': 'RCRN',
                  'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
             ],
-            value='os-cx',
+            value='OS-CX',
             inline=True,
             className='ms-3 mt-1'
         ),

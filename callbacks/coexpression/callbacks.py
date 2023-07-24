@@ -31,18 +31,23 @@ def init_callback(app):
         Output('coexpression-results-container',
                'style',  allow_duplicate=True),
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
+        Output('coexpression-submitted-network',
+               'data', allow_duplicate=True),
         Output('coexpression-submitted-clustering-algo',
                'data', allow_duplicate=True),
         Output('coexpression-submitted-parameter-module',
                'data', allow_duplicate=True),
+
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
+
+        State('coexpression-network', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'marks'),
         State('coexpression-parameter-slider', 'value'),
         prevent_initial_call=True
     )
-    def display_coexpression_results(coexpression_submit_n_clicks, homepage_is_submitted, submitted_algo, submitted_slider_marks, submitted_slider_value):
+    def display_coexpression_results(coexpression_submit_n_clicks, homepage_is_submitted, submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
                 submitted_slider_marks, submitted_slider_value, '', 'circle', 'tab-0')._asdict()
@@ -50,7 +55,7 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            return {'display': 'block'}, True, submitted_algo, submitted_parameter_module
+            return {'display': 'block'}, True, submitted_network, submitted_algo, submitted_parameter_module
 
         raise PreventUpdate
 
@@ -74,18 +79,19 @@ def init_callback(app):
 
         State('lift-over-nb-table', 'data'),
 
+        Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data')
     )
-    def hide_table_graph(implicated_gene_ids, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
+    def hide_table_graph(implicated_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
                 layout = submitted_parameter_module[submitted_algo]['layout']
 
                 return load_module_graph(
-                    implicated_gene_ids, None, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
+                    implicated_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
 
@@ -93,21 +99,24 @@ def init_callback(app):
         Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
+
         State('lift-over-nb-table', 'data'),
         State('homepage-genomic-intervals-saved-input', 'data'),
+
+        Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('homepage-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
         State('coexpression-is-submitted', 'data')
     )
-    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, submitted_algo, homepage_is_submitted, submitted_parameter_module, coexpression_is_submitted):
+    def perform_module_enrichment(implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_module, coexpression_is_submitted):
         if homepage_is_submitted:
             if coexpression_is_submitted:
                 if submitted_algo and submitted_algo in submitted_parameter_module:
                     parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
                     enriched_modules = do_module_enrichment_analysis(
-                        implicated_gene_ids, genomic_intervals, submitted_algo, parameters)
+                        implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, parameters)
 
                     first_module = 'No enriched modules found'
 
@@ -125,24 +134,27 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Output('coexpression-pathways', 'columns'),
+
+        Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         Input('coexpression-modules-pathway', 'active_tab'),
         Input('coexpression-modules', 'value'),
         State('coexpression-submitted-parameter-module', 'data'),
         State('coexpression-is-submitted', 'data')
     )
-    def display_pathways(submitted_algo, active_tab, module, submitted_parameter_module, coexpression_is_submitted):
+    def display_pathways(submitted_network, submitted_algo, active_tab, module, submitted_parameter_module, coexpression_is_submitted):
         if coexpression_is_submitted:
-            if submitted_algo and submitted_algo in submitted_parameter_module:
+            if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
                 try:
                     module_idx = module.split(' ')[1]
                     table, empty = convert_to_df(
-                        active_tab, module_idx, submitted_algo, parameters)
-                except:
+                        active_tab, module_idx, submitted_network, submitted_algo, parameters)
+                except Exception as e:
+                    print(e)
                     table, empty = convert_to_df(
-                        active_tab, None, submitted_algo, parameters)
+                        active_tab, None, submitted_network, submitted_algo, parameters)
 
                 if not empty:
                     columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
@@ -164,6 +176,7 @@ def init_callback(app):
         State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
 
+        State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
 
@@ -174,21 +187,26 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def display_table_graph(implicated_gene_ids, module, submitted_algo, submitted_parameter_module, layout, coexpression_is_submitted, *_):
+    def display_table_graph(implicated_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_module,
+                            layout, coexpression_is_submitted, *_):
         if coexpression_is_submitted:
-            if submitted_algo and submitted_algo in submitted_parameter_module:
+            if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
                 return load_module_graph(
-                    implicated_gene_ids, module, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
+                    implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
 
         raise PreventUpdate
 
     @app.callback(
+        Output('coexpression-network-saved-input',
+               'data', allow_duplicate=True),
         Output('coexpression-clustering-algo-saved-input',
                'data', allow_duplicate=True),
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
+
+        Input('coexpression-network', 'value'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
         State('coexpression-parameter-slider', 'marks'),
@@ -196,7 +214,7 @@ def init_callback(app):
         State('coexpression-parameter-module-saved-input', 'data'),
         prevent_initial_call='True'
     )
-    def set_input_coexpression_session_state(algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_module):
+    def set_input_coexpression_session_state(network, algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_module):
         if homepage_is_submitted:
             input_paramater_module_value = Input_parameter_module(
                 parameter_mark, parameter_value)._asdict()
@@ -207,24 +225,27 @@ def init_callback(app):
             else:
                 input_parameter_module = {algo: input_paramater_module_value}
 
-            return algo, input_parameter_module
+            return network, algo, input_parameter_module
 
         raise PreventUpdate
 
     @app.callback(
         Output('coexpression-submitted-parameter-module',
                'data', allow_duplicate=True),
+
         Input('coexpression-modules', 'value'),
         Input('coexpression-graph-layout', 'value'),
         Input('coexpression-modules-pathway', 'active_tab'),
+
+        State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('homepage-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
         prevent_initial_call=True
     )
-    def set_submitted_coexpression_session_state(module, layout, active_tab, submitted_algo, homepage_is_submitted, submitted_parameter_module):
+    def set_submitted_coexpression_session_state(module, layout, active_tab, submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_module):
         if homepage_is_submitted:
-            if submitted_parameter_module and submitted_algo in submitted_parameter_module:
+            if submitted_network and submitted_parameter_module and submitted_algo in submitted_parameter_module:
                 submitted_parameter_module[submitted_algo]['param_module'] = module
                 submitted_parameter_module[submitted_algo]['layout'] = layout
                 submitted_parameter_module[submitted_algo]['pathway_active_tab'] = active_tab
@@ -234,12 +255,31 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-clustering-algo', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Output('coexpression-network', 'value'),
+
         State('homepage-is-submitted', 'data'),
-        State('coexpression-clustering-algo-saved-input', 'data')
+        State('coexpression-network-saved-input', 'data'),
+
+        Input('homepage-genomic-intervals-saved-input', 'data')
     )
-    def display_selected_clustering_algo(nb_intervals_str, homepage_is_submitted, algo):
+    def display_selected_coexpression_network(homepage_is_submitted, network, *_):
+        if homepage_is_submitted:
+            if not network:
+                return 'OS-CX'
+
+            return network
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-clustering-algo', 'value'),
+
+        State('homepage-is-submitted', 'data'),
+        State('coexpression-clustering-algo-saved-input', 'data'),
+
+        Input('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def display_selected_clustering_algo(homepage_is_submitted, algo, *_):
         if homepage_is_submitted:
             if not algo:
                 return 'clusterone'
@@ -251,13 +291,15 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-graph-layout', 'value'),
         Output('coexpression-modules-pathway', 'active_tab'),
+
+        Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data')
     )
-    def display_selected_graph_layout(submitted_algo, coexpression_is_submitted, submitted_parameter_module):
+    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
-            if submitted_algo and submitted_algo in submitted_parameter_module:
+            if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 layout = 'circle'
                 if submitted_parameter_module[submitted_algo]['layout']:
                     layout = submitted_parameter_module[submitted_algo]['layout']
@@ -273,11 +315,12 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-results-container',
                'style', allow_duplicate=True),
-        Input('coexpression-clustering-algo-saved-input', 'data'),
         Input('coexpression-is-submitted', 'data'),
+        Input('coexpression-clustering-algo-saved-input', 'data'),
+
         prevent_initial_call=True
     )
-    def display_submitted_results(algo, coexpression_is_submitted):
+    def display_submitted_results(coexpression_is_submitted, *_):
         if coexpression_is_submitted:
             return {'display': 'block'}
 
