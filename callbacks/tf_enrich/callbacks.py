@@ -79,6 +79,52 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('tfbs-saved-input',
+               'data', allow_duplicate=True),
+        Input('tfbs_set', 'value'),
+        Input('tfbs_prediction_technique', 'value'),
+        Input('tfbs_fdr', 'value'),
+        State('homepage-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, tfbs_fdr, homepage_is_submitted):
+        if homepage_is_submitted:
+            tfbs_saved_input = Tfbs_input(
+                tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
+
+            return tfbs_saved_input
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('tfbs-results-container', 'style', allow_duplicate=True),
+        Input('tfbs-saved-input', 'data'),
+        Input('tfbs-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def display_submitted_tfbs_results(tfbs_saved_input, tfbs_is_submitted):
+        if tfbs_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
+
+    @app.callback(
+        Output('tfbs_set', 'value'),
+        Output('tfbs_prediction_technique', 'value'),
+        State('homepage-is-submitted', 'data'),
+        State('tfbs-saved-input', 'data'),
+        Input('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def display_submitted_tfbs_input(homepage_is_submitted, tfbs_saved_input, *_):
+        if homepage_is_submitted:
+            if not tfbs_saved_input:
+                return 'promoters', 'FunTFBS'
+
+            return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
+
+    
+    @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
         State('tf_enrichment_result_table', 'data'),
@@ -87,4 +133,4 @@ def init_callback(app):
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
         if download_n_clicks >= 1:
             df = pd.DataFrame(tfbs_df)
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)

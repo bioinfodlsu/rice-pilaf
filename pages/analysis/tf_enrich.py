@@ -33,9 +33,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
                  'label_id': 'motif scan'}
             ],
             value='FunTFBS',
-            inline=True,
-            persistence=True,
-            persistence_type='memory'
+            inline=True
         ),
 
         html.Br(),
@@ -54,9 +52,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
 
             ],
             value='promoters',
-            inline=True,
-            persistence=True,
-            persistence_type='memory'
+            inline=True
         ),
         html.Br(),
         dcc.Markdown("Input threshold for False-Discovery Rate:"),
@@ -97,7 +93,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
                         persistence_type='memory'
                     )
             ])
-            ]
-        )
-    ], className='p-3 mt-2')
+            ], className='p-3 mt-2')
+    
+    ])
 ])

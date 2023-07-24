@@ -46,7 +46,7 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-results-container', 'style'),
-        Input('igv-is-submitted', 'data'),
+        Input('igv-is-submitted', 'data')
     )
     def display_igv_results_saved_state(igv_is_submitted):
         if igv_is_submitted:
