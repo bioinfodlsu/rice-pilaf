@@ -9,7 +9,7 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('lift-over-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -59,7 +59,7 @@ def init_callback(app):
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
-        State('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-other-refs-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
@@ -149,7 +149,7 @@ def init_callback(app):
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs-saved-input', 'data'),
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
         if homepage_is_submitted:
@@ -166,7 +166,7 @@ def init_callback(app):
         Output('lift-over-results-table', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
@@ -241,7 +241,7 @@ def init_callback(app):
         Output('lift-over-download-df-to-csv', 'data'),
         Input('lift-over-export-table', 'n_clicks'),
         State('lift-over-results-table', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data')
+        State('homepage-genomic-intervals-submitted-input', 'data')
     )
     def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
         if download_n_clicks >= 1:

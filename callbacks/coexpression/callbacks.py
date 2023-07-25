@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -15,7 +15,7 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -101,7 +101,7 @@ def init_callback(app):
         Output('coexpression-modules', 'value'),
 
         State('lift-over-nb-table', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -260,7 +260,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-network-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_selected_coexpression_network(homepage_is_submitted, network, *_):
         if homepage_is_submitted:
@@ -277,7 +277,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-clustering-algo-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_selected_clustering_algo(homepage_is_submitted, algo, *_):
         if homepage_is_submitted:
@@ -342,3 +342,26 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+
+    @app.callback(
+        Output('coexpression-download-df-to-csv', 'data'),
+        Input('coexpression-export-table', 'n_clicks'),
+        State('coexpression-pathways', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(coexpression_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
+
+
+    @app.callback(
+        Output('coexpression-download-graph-to-json', 'data'),
+        Input('coexpression-export-graph', 'n_clicks'),
+        State('coexpression-module-graph', 'elements'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
+        if download_n_clicks >= 1:
+            return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
