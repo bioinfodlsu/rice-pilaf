@@ -37,7 +37,16 @@ if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {
     dir.create(paste0(opt$output_dir, "/enriched_modules"), recursive = TRUE)
 }
 
-write.table((as.data.frame(go))[c("ID", "p.adjust")],
-    paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
-    sep = "\t", row.names = FALSE, quote = FALSE
-)
+tryCatch({
+    write.table((as.data.frame(go))[c("ID", "p.adjust")],
+        paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
+        sep = "\t", row.names = FALSE, quote = FALSE
+    )
+}, error = function(err) {
+    df <- data.frame(matrix(nrow = 0, ncol = 2))
+    colnames(df) <- c("ID", "p.adjust")
+    write.table(df,
+        paste0(opt$output_dir, "/enriched_modules/ora-df", ".tsv"),
+        sep = "\t", row.names = FALSE, quote = FALSE
+    )
+})
