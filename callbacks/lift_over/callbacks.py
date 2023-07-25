@@ -87,7 +87,7 @@ def init_callback(app):
                     'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
 
                 if other_refs:
-                    gene_list_msg += [html.Span(' and in homologous regions of '),
+                    gene_list_msg += [html.Span(' and in orthologous regions of '),
                                       html.B(','.join(other_refs)), html.Span('.')]
                 else:
                     gene_list_msg += [html.Span('.')]
