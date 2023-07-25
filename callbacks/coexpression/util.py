@@ -44,7 +44,7 @@ def display_in_sci_notation(number):
 def get_parameters_for_algo(algo, network='OS-CX'):
     param_dict = {}
     parameters = sorted(map(int, os.listdir(
-        f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules')))
+        f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes')))
 
     for idx, parameter in enumerate(parameters):
         if idx == 0:
