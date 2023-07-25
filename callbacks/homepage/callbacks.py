@@ -200,6 +200,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    """
     @app.callback(
         Output('post-gwas-analysis-container', 'hidden'),
         Output('homepage-reset', 'href'),
@@ -210,6 +211,18 @@ def init_callback(app):
             return False, '/'
         else:
             return True, '/'
+    """
+    @app.callback(
+        Output('homepage-results-container','style'),
+        Input('homepage-is-submitted', 'data')
+    )
+    def display_homepage_output(homepage_is_submitted):
+        if homepage_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
+
 
     @app.callback(
         Output('genomic-interval-modal', 'is_open'),
@@ -218,3 +231,5 @@ def init_callback(app):
     def open_modals(tooltip_n_clicks):
         if tooltip_n_clicks > 0:
             return True
+
+        raise PreventUpdate

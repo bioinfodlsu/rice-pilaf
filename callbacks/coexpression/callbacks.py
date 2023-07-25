@@ -349,6 +349,7 @@ def init_callback(app):
             df = pd.DataFrame(coexpression_df)
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
 
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-download-graph-to-json', 'data'),
@@ -359,3 +360,5 @@ def init_callback(app):
     def download_coexpression_table_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
         if download_n_clicks >= 1:
             return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
+
+        raise PreventUpdate

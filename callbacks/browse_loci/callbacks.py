@@ -201,6 +201,8 @@ def init_callback(app):
     def set_input_igv_session_state(selected_nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return selected_nb_intervals_str
+        
+        raise PreventUpdate
 
     @app.callback(
         Output('igv-selected-tracks-submitted-input',
@@ -213,3 +215,5 @@ def init_callback(app):
     def set_submitted_igv_session_state(selected_tracks, homepage_is_submitted, igv_is_submitted):
         if homepage_is_submitted and igv_is_submitted:
             return selected_tracks
+        
+        raise PreventUpdate

@@ -108,6 +108,8 @@ def init_callback(app):
                 return 'promoters', 'FunTFBS'
 
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
+        
+        raise PreventUpdate
 
     @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),
@@ -119,3 +121,5 @@ def init_callback(app):
         if download_n_clicks >= 1:
             df = pd.DataFrame(tfbs_df)
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
+        
+        raise PreventUpdate
