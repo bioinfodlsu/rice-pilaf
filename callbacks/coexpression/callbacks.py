@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -342,3 +342,26 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+
+    @app.callback(
+        Output('coexpression-download-df-to-csv', 'data'),
+        Input('coexpression-export-table', 'n_clicks'),
+        State('coexpression-pathways', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(coexpression_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
+
+
+    @app.callback(
+        Output('coexpression-download-graph-to-json', 'data'),
+        Input('coexpression-export-graph', 'n_clicks'),
+        State('coexpression-module-graph', 'elements'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
+        if download_n_clicks >= 1:
+            return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
