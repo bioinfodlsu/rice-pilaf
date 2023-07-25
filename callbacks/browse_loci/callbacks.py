@@ -38,7 +38,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def display_igv_results(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
+    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
             return True, selected_nb_interval
 
@@ -48,7 +48,7 @@ def init_callback(app):
         Output('igv-results-container', 'style'),
         Input('igv-is-submitted', 'data')
     )
-    def display_igv_results_saved_state(igv_is_submitted):
+    def display_igv_output(igv_is_submitted):
         if igv_is_submitted:
             return {'display': 'block'}
         else:

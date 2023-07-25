@@ -24,9 +24,6 @@ def init_callback(app):
         Output('tf-enrichment-link', 'className'),
         Output('igv-link', 'className'),
 
-        # Input('url', 'pathname')
-        # Output('lift-over-container', 'style'),
-
         State('lift-over-link', 'className'),
         State('coexpression-link', 'className'),
         State('tf-enrichment-link', 'className'),
@@ -41,8 +38,6 @@ def init_callback(app):
     )
     def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
                                        igv_class, *_):
-        # if pathname == '/lift-over':
-        #    return lift_over.layout
 
         layout_link = namedtuple('layout_link', 'layout link_class')
 

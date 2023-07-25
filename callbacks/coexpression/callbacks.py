@@ -28,8 +28,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-results-container',
-               'style',  allow_duplicate=True),
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-network',
                'data', allow_duplicate=True),
@@ -47,7 +45,7 @@ def init_callback(app):
         State('coexpression-parameter-slider', 'value'),
         prevent_initial_call=True
     )
-    def display_coexpression_results(coexpression_submit_n_clicks, homepage_is_submitted, submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
+    def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted, submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
                 submitted_slider_marks, submitted_slider_value, '', 'circle', 'tab-0')._asdict()
@@ -55,9 +53,20 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            return {'display': 'block'}, True, submitted_network, submitted_algo, submitted_parameter_module
+            return True, submitted_network, submitted_algo, submitted_parameter_module
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-results-container','style'),
+        Input('coexpression-is-submitted', 'data'),
+    )
+    def display_coexpression_output(coexpression_is_submitted):
+        if coexpression_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
 
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
@@ -279,7 +288,7 @@ def init_callback(app):
 
         Input('homepage-genomic-intervals-submitted-input', 'data')
     )
-    def display_selected_clustering_algo(homepage_is_submitted, algo, *_):
+    def get_selected_clustering_algo(homepage_is_submitted, algo, *_):
         if homepage_is_submitted:
             if not algo:
                 return 'clusterone'
@@ -311,21 +320,6 @@ def init_callback(app):
                 return layout, active_tab
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-results-container',
-               'style', allow_duplicate=True),
-        Input('coexpression-is-submitted', 'data'),
-        Input('coexpression-clustering-algo-saved-input', 'data'),
-
-        prevent_initial_call=True
-    )
-    def display_submitted_results(coexpression_is_submitted, *_):
-        if coexpression_is_submitted:
-            return {'display': 'block'}
-
-        else:
-            return {'display': 'none'}
 
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),

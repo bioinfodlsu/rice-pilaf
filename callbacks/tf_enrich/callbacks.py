@@ -36,7 +36,7 @@ def init_callback(app):
         State('tfbs_fdr', 'value'),
         prevent_initial_call=True
     )
-    def display_tfbs_results(tfbs_submitted_n_clicks, homepage_is_submitted, tfbs_set, tfbs_prediction_technique, tfbs_fdr):
+    def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, tfbs_set, tfbs_prediction_technique, tfbs_fdr):
         if homepage_is_submitted and tfbs_submitted_n_clicks >= 1:
             submitted_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
@@ -49,7 +49,7 @@ def init_callback(app):
         Output('tfbs-results-container', 'style'),
         Input('tfbs-is-submitted', 'data'),
     )
-    def display_submitted_tfbs_results(tfbs_is_submitted):
+    def display_tfbs_output(tfbs_is_submitted):
         if tfbs_is_submitted:
             return {'display': 'block'}
 
@@ -79,8 +79,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-saved-input',
-               'data', allow_duplicate=True),
+        Output('tfbs-saved-input', 'data', allow_duplicate=True),
         Input('tfbs_set', 'value'),
         Input('tfbs_prediction_technique', 'value'),
         Input('tfbs_fdr', 'value'),
@@ -97,33 +96,19 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-results-container', 'style', allow_duplicate=True),
-        Input('tfbs-saved-input', 'data'),
-        Input('tfbs-is-submitted', 'data'),
-        prevent_initial_call=True
-    )
-    def display_submitted_tfbs_results(tfbs_saved_input, tfbs_is_submitted):
-        if tfbs_is_submitted:
-            return {'display': 'block'}
-
-        else:
-            return {'display': 'none'}
-
-    @app.callback(
         Output('tfbs_set', 'value'),
         Output('tfbs_prediction_technique', 'value'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-saved-input', 'data'),
         Input('homepage-genomic-intervals-submitted-input', 'data')
     )
-    def display_submitted_tfbs_input(homepage_is_submitted, tfbs_saved_input, *_):
+    def get_input_tfbs_session_state(homepage_is_submitted, tfbs_saved_input, *_):
         if homepage_is_submitted:
             if not tfbs_saved_input:
                 return 'promoters', 'FunTFBS'
 
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
 
-    
     @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
