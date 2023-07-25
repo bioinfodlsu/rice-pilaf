@@ -66,7 +66,7 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
 
-        Output('homepage-genomic-intervals-saved-input', 'data'),
+        Output('homepage-genomic-intervals-submitted-input', 'data'),
 
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
@@ -173,7 +173,7 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-nb-table', 'data'),
         Output('lift_over_nb_entire_table', 'data'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data')
     )
     def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):

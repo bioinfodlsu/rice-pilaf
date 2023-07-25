@@ -15,7 +15,7 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -101,7 +101,7 @@ def init_callback(app):
         Output('coexpression-modules', 'value'),
 
         State('lift-over-nb-table', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -260,7 +260,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-network-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_selected_coexpression_network(homepage_is_submitted, network, *_):
         if homepage_is_submitted:
@@ -277,7 +277,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-clustering-algo-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_selected_clustering_algo(homepage_is_submitted, algo, *_):
         if homepage_is_submitted:
