@@ -12,8 +12,9 @@ class Constants(object):
     OPEN_CHROMATIN = f'{APP_DATA}/open_chromatin'
     OPEN_CHROMATIN_PANICLE = f'{OPEN_CHROMATIN}/panicle'
 
-    NETWORKS = f'{RAW_DATA}/networks'
+    NETWORKS = f'{APP_DATA}/networks'
     NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
+    NETWORKS_MODULES = f'{APP_DATA}/networks_modules'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'

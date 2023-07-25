@@ -400,10 +400,50 @@ def convert_to_df(active_tab, module_idx, network, algo, parameters):
         return convert_to_df_spia(result, network), empty
 
 
+def convert_module_to_edge_list(module, network_file, output_dir, filename):
+    module = set(module)
+    selected_nodes = set()
+    with open(network_file) as network, open(f'{output_dir}/{filename}', 'w') as output:
+        for edge in network:
+            edge = edge.rstrip()
+            nodes = edge.split('\t')
+
+            if nodes[0] in module and nodes[1] in module:
+                selected_nodes.add(nodes[0])
+                selected_nodes.add(nodes[1])
+                output.write(f'{nodes[0]}\t{nodes[1]}\n')
+
+    assert len(selected_nodes - module) == 0
+
+
+def convert_modules(network_file, module_file, module_index, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    with open(module_file) as modules:
+        for idx, module in enumerate(modules):
+            if idx == module_index - 1:
+                module = module.rstrip()
+                module = module.split('\t')
+                filename = f'module-{idx + 1}.tsv'
+                convert_module_to_edge_list(
+                    module, network_file, output_dir, filename)
+
+                break
+
+
 def load_module_graph(implicated_gene_ids, module, network, algo, parameters, layout):
     try:
         module_idx = module.split(' ')[1]
-        coexpress_nw = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules/{parameters}/module-{module_idx}.tsv'
+        OUTPUT_DIR = f'{const.TEMP}/{network}/{algo}/modules/{parameters}'
+        coexpress_nw = f'{OUTPUT_DIR}/module-{module_idx}.tsv'
+
+        if not dir_exist(coexpress_nw):
+            NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
+            MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv'
+
+            convert_modules(NETWORK_FILE, MODULE_FILE,
+                            int(module_idx), OUTPUT_DIR)
 
         G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
 
