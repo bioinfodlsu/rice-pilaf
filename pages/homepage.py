@@ -2,11 +2,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-import pages.analysis.lift_over as lift_over
-import pages.analysis.co_expr as co_expr
-import pages.analysis.tf_enrich as tf_enrich
-import pages.analysis.browse_loci as browse_loci
 import pages.navigation.analysis_nav as analysis_nav
+import pages.analysis_layout as analysis_layout
 
 dash.register_page(__name__, path='/', name='Home')
 
@@ -149,13 +146,11 @@ layout = html.Div(
                             dbc.Col([html.H5('Post-GWAS Analysis', id='post-gwas-hdr'),
                                     analysis_nav.navbar],
                                 xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-                            dbc.Col(children=[lift_over.layout, co_expr.layout, tf_enrich.layout, browse_loci.layout],
+                            dbc.Col(children=[analysis_layout.layout],
                                 xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
                                 id='page', style={'display': 'none'})
                         ], className='ps-5 py-2')]
-                    ),
-
-            html.Div(id='page-content', children=[])
+                    )
         ])
     ],
     # fluid=True
