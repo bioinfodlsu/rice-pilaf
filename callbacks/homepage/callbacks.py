@@ -24,9 +24,6 @@ def init_callback(app):
         Output('tf-enrichment-link', 'className'),
         Output('igv-link', 'className'),
 
-        # Input('url', 'pathname')
-        # Output('lift-over-container', 'style'),
-
         State('lift-over-link', 'className'),
         State('coexpression-link', 'className'),
         State('tf-enrichment-link', 'className'),
@@ -41,8 +38,6 @@ def init_callback(app):
     )
     def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
                                        igv_class, *_):
-        # if pathname == '/lift-over':
-        #    return lift_over.layout
 
         layout_link = namedtuple('layout_link', 'layout link_class')
 
@@ -66,7 +61,7 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
 
-        Output('homepage-genomic-intervals-saved-input', 'data'),
+        Output('homepage-genomic-intervals-submitted-input', 'data'),
 
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-other-refs-submitted-input',
@@ -173,7 +168,7 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-nb-table', 'data'),
         Output('lift_over_nb_entire_table', 'data'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data')
     )
     def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):
@@ -205,6 +200,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    """
     @app.callback(
         Output('post-gwas-analysis-container', 'hidden'),
         Output('homepage-reset', 'href'),
@@ -215,6 +211,18 @@ def init_callback(app):
             return False, '/'
         else:
             return True, '/'
+    """
+    @app.callback(
+        Output('homepage-results-container','style'),
+        Input('homepage-is-submitted', 'data')
+    )
+    def display_homepage_output(homepage_is_submitted):
+        if homepage_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
+
 
     @app.callback(
         Output('genomic-interval-modal', 'is_open'),
@@ -223,3 +231,5 @@ def init_callback(app):
     def open_modals(tooltip_n_clicks):
         if tooltip_n_clicks > 0:
             return True
+
+        raise PreventUpdate

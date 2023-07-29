@@ -9,7 +9,7 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('lift-over-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -33,7 +33,7 @@ def init_callback(app):
         State('lift-over-other-refs', 'value'),
         prevent_initial_call=True
     )
-    def display_lift_over_results(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
+    def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
@@ -45,7 +45,7 @@ def init_callback(app):
         Output('lift-over-results-container', 'style'),
         Input('lift-over-is-submitted', 'data'),
     )
-    def display_submitted_lift_over_results(lift_over_is_submitted):
+    def display_lift_over_output(lift_over_is_submitted):
         if lift_over_is_submitted:
             return {'display': 'block'}
 
@@ -59,7 +59,7 @@ def init_callback(app):
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
-        State('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-other-refs-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
@@ -115,8 +115,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-other-refs-saved-input',
-               'data', allow_duplicate=True),
+        Output('lift-over-other-refs-saved-input', 'data', allow_duplicate=True),
         Input('lift-over-other-refs', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
@@ -138,7 +137,7 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data'),
         prevent_initial_call=True,
     )
-    def set_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
+    def get_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
             return active_tab, filter_rice_variants
 
@@ -149,7 +148,7 @@ def init_callback(app):
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs-saved-input', 'data'),
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
         if homepage_is_submitted:
@@ -166,7 +165,7 @@ def init_callback(app):
         Output('lift-over-results-table', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
 
@@ -241,9 +240,11 @@ def init_callback(app):
         Output('lift-over-download-df-to-csv', 'data'),
         Input('lift-over-export-table', 'n_clicks'),
         State('lift-over-results-table', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data')
+        State('homepage-genomic-intervals-submitted-input', 'data')
     )
     def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
         if download_n_clicks >= 1:
             df = pd.DataFrame(lift_over_df)
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
+
+        raise PreventUpdate

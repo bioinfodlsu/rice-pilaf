@@ -11,6 +11,7 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
     ], className='analysis-intro p-3'),
 
     html.Div([
+        html.Br(),
         html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
         html.Span(id='tf-enrichment-genomic-intervals-input'),
 

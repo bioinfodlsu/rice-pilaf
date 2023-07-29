@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html
+from dash import Input, Output, State, html, dcc
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -15,7 +15,7 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -28,8 +28,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-results-container',
-               'style',  allow_duplicate=True),
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-network',
                'data', allow_duplicate=True),
@@ -47,7 +45,7 @@ def init_callback(app):
         State('coexpression-parameter-slider', 'value'),
         prevent_initial_call=True
     )
-    def display_coexpression_results(coexpression_submit_n_clicks, homepage_is_submitted, submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
+    def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted, submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
                 submitted_slider_marks, submitted_slider_value, '', 'circle', 'tab-0')._asdict()
@@ -55,9 +53,20 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            return {'display': 'block'}, True, submitted_network, submitted_algo, submitted_parameter_module
+            return True, submitted_network, submitted_algo, submitted_parameter_module
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-results-container','style'),
+        Input('coexpression-is-submitted', 'data'),
+    )
+    def display_coexpression_output(coexpression_is_submitted):
+        if coexpression_is_submitted:
+            return {'display': 'block'}
+
+        else:
+            return {'display': 'none'}
 
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
@@ -101,7 +110,7 @@ def init_callback(app):
         Output('coexpression-modules', 'value'),
 
         State('lift-over-nb-table', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -260,7 +269,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-network-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_selected_coexpression_network(homepage_is_submitted, network, *_):
         if homepage_is_submitted:
@@ -277,9 +286,9 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('coexpression-clustering-algo-saved-input', 'data'),
 
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data')
     )
-    def display_selected_clustering_algo(homepage_is_submitted, algo, *_):
+    def get_selected_clustering_algo(homepage_is_submitted, algo, *_):
         if homepage_is_submitted:
             if not algo:
                 return 'clusterone'
@@ -313,21 +322,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-results-container',
-               'style', allow_duplicate=True),
-        Input('coexpression-is-submitted', 'data'),
-        Input('coexpression-clustering-algo-saved-input', 'data'),
-
-        prevent_initial_call=True
-    )
-    def display_submitted_results(coexpression_is_submitted, *_):
-        if coexpression_is_submitted:
-            return {'display': 'block'}
-
-        else:
-            return {'display': 'none'}
-
-    @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
         Input('coexpression-clustering-algo-tooltip', 'n_clicks')
     )
@@ -342,3 +336,29 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+
+    @app.callback(
+        Output('coexpression-download-df-to-csv', 'data'),
+        Input('coexpression-export-table', 'n_clicks'),
+        State('coexpression-pathways', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(coexpression_df)
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-download-graph-to-json', 'data'),
+        Input('coexpression-export-graph', 'n_clicks'),
+        State('coexpression-module-graph', 'elements'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
+        if download_n_clicks >= 1:
+            return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
+
+        raise PreventUpdate

@@ -17,7 +17,7 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
     )
     def display_input(nb_intervals_str, homepage_is_submitted):
@@ -38,7 +38,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def display_igv_results(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
+    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
             return True, selected_nb_interval
 
@@ -48,7 +48,7 @@ def init_callback(app):
         Output('igv-results-container', 'style'),
         Input('igv-is-submitted', 'data')
     )
-    def display_igv_results_saved_state(igv_is_submitted):
+    def display_igv_output(igv_is_submitted):
         if igv_is_submitted:
             return {'display': 'block'}
         else:
@@ -103,7 +103,7 @@ def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
         Output('igv-genomic-intervals', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
         State('igv-selected-genomic-intervals-saved-input', 'data')
@@ -145,7 +145,7 @@ def init_callback(app):
         Input('igv-selected-tracks-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('igv-is-submitted', 'data'),
-        State('homepage-genomic-intervals-saved-input', 'data')
+        State('homepage-genomic-intervals-submitted-input', 'data')
     )
     def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
@@ -201,6 +201,8 @@ def init_callback(app):
     def set_input_igv_session_state(selected_nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return selected_nb_intervals_str
+        
+        raise PreventUpdate
 
     @app.callback(
         Output('igv-selected-tracks-submitted-input',
@@ -213,3 +215,5 @@ def init_callback(app):
     def set_submitted_igv_session_state(selected_tracks, homepage_is_submitted, igv_is_submitted):
         if homepage_is_submitted and igv_is_submitted:
             return selected_tracks
+        
+        raise PreventUpdate

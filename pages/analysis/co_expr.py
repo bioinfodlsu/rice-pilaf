@@ -219,7 +219,9 @@ layout = html.Div(id='coexpression-container', children=[
                                      className='bi bi-download me-2'),
                                     'Export to CSV'],
                                     id='coexpression-export-table',
+                                    n_clicks=0,
                                     color='light', size='sm', className='table-button'),
+                                dcc.Download(id='coexpression-download-df-to-csv'),
                                 dbc.Button([html.I(
                                     className='bi bi-arrow-clockwise me-2'),
                                     'Reset Table'],
@@ -268,7 +270,9 @@ layout = html.Div(id='coexpression-container', children=[
                                     'Export to JSON'],
                                     id='coexpression-export-graph',
                                     color='light', size='sm',
+                                    n_clicks=0,
                                     className='table-button'),
+                                dcc.Download(id='coexpression-download-graph-to-json'),
                                 dbc.Button([html.I(
                                     className='bi bi-arrow-clockwise me-2'),
                                     'Reset Graph'],
