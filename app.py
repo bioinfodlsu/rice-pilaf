@@ -59,6 +59,11 @@ app.layout = dbc.Container(
         ),
 
         dcc.Store(
+            id='homepage-genomic-intervals-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
             id='homepage-genomic-intervals-submitted-input',
             storage_type='session'
         ),

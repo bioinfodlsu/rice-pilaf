@@ -186,12 +186,14 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-genomic-intervals', 'value'),
+        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        #Output('homepage-genomic-intervals', 'value'),
         Input('homepage-reset', 'n_clicks'),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
+        prevent_initial_call=True
     )
-    def set_input_fields(*_):
+    def set_input_fields(*_):    
         if ctx.triggered_id:
             if 'homepage-reset' == ctx.triggered_id:
                 return None
@@ -214,16 +216,31 @@ def init_callback(app):
     """
     @app.callback(
         Output('homepage-results-container','style'),
-        Input('homepage-is-submitted', 'data')
+        Input('homepage-is-submitted', 'data'),
+        Input('homepage-submit', 'n_clicks')
     )
-    def display_homepage_output(homepage_is_submitted):
+    def display_homepage_output(homepage_is_submitted, *_):
         if homepage_is_submitted:
             return {'display': 'block'}
 
         else:
             return {'display': 'none'}
 
-
+    @app.callback(
+        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        Input('homepage-genomic-intervals', 'value'),
+        prevent_initial_call=True
+    )
+    def set_input_homepage_session_state(genomic_intervals):
+        return genomic_intervals
+    
+    @app.callback(
+        Output('homepage-genomic-intervals', 'value'),
+        Input('homepage-genomic-intervals-saved-input', 'data')
+    )
+    def get_input_homepage_session_state(genomic_intervals):
+        return genomic_intervals
+    
     @app.callback(
         Output('genomic-interval-modal', 'is_open'),
         Input('genomic-interval-tooltip', 'n_clicks')
