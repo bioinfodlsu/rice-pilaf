@@ -37,7 +37,7 @@ welcome = dcc.Markdown(
 
 app.layout = dbc.Container(
     [
-        dbc.Row(main_nav.navbar),
+        dbc.Row(main_nav.navbar()),
 
         dash.page_container,
 
@@ -55,6 +55,11 @@ app.layout = dbc.Container(
 
         dcc.Store(
             id='lift-over-active-tab',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='homepage-genomic-intervals-saved-input',
             storage_type='session'
         ),
 

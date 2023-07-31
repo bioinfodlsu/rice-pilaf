@@ -4,7 +4,7 @@ from dash import dcc, html
 
 import pages.navigation.user_guide_nav as user_guide_nav
 
-dash.register_page(__name__, path='/topic2subgroup', name='Topic 2 Subgroup')
+dash.register_page(__name__, path='/topic2subgroup', name='Topic 2 Subgroup', location='help-sidebar')
 
 layout = html.Div(id='topic1-container', children=[
     html.Div(
