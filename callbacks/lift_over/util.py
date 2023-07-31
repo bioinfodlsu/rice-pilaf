@@ -260,7 +260,11 @@ def get_genes_from_Nb(Nb_intervals):
 
     # Return empty dataframe if there are no results to concatenate
     try:
-        table = pd.concat(dfs, ignore_index=True)
+        table_gene_ids = pd.concat(dfs, ignore_index=True)
+        #read in dataframe containing gene descriptions
+        gene_description_df = pd.read_csv(f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
+        table = pd.merge(gene_description_df,table_gene_ids,left_on='Gene_ID',right_on='Name')
+
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
 
