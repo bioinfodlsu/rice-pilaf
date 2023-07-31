@@ -3,7 +3,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 from .navigation import user_guide_nav 
 
-dash.register_page(__name__, path='/user-guide', name='User Guide')
+dash.register_page(__name__, path='/user-guide', name='User Guide', location='app-topbar')
 
 
 layout = html.Div(id='user-guide-container', children=[
