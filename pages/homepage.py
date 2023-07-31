@@ -5,7 +5,7 @@ from dash import dcc, html
 import pages.navigation.analysis_nav as analysis_nav
 import pages.analysis_layout as analysis_layout
 
-dash.register_page(__name__, path='/', name='Home')
+dash.register_page(__name__, path='/', name='Home', location='app-topbar')
 
 
 # ======

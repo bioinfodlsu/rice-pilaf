@@ -37,7 +37,7 @@ welcome = dcc.Markdown(
 
 app.layout = dbc.Container(
     [
-        dbc.Row(main_nav.navbar),
+        dbc.Row(main_nav.navbar()),
 
         dash.page_container,
 
