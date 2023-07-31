@@ -187,17 +187,21 @@ def init_callback(app):
 
     @app.callback(
         Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
-        #Output('homepage-genomic-intervals', 'value'),
+        Input('homepage-genomic-intervals', 'value'),
+        #Output('homepage-genomic-intervals', 'value', allow_duplicate=True),
         Input('homepage-reset', 'n_clicks'),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
     )
-    def set_input_fields(*_):    
+    def set_input_fields(genomic_intervals, *_):    
         if ctx.triggered_id:
             if 'homepage-reset' == ctx.triggered_id:
                 return None
 
+            if 'homepage-genomic-intervals' == ctx.triggered_id:
+                return genomic_intervals
+                
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
@@ -225,18 +229,20 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
-
+    """
     @app.callback(
-        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        #Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        Output('homepage-genomic-intervals-saved-input', 'data'),
         Input('homepage-genomic-intervals', 'value'),
-        prevent_initial_call=True
+        #prevent_initial_call=True
     )
     def set_input_homepage_session_state(genomic_intervals):
         return genomic_intervals
+    """
     
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data')
+        Input('homepage-genomic-intervals-saved-input', 'data'),
     )
     def get_input_homepage_session_state(genomic_intervals):
         return genomic_intervals
