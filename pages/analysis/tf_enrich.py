@@ -5,7 +5,7 @@ from dash import dash_table, dcc, html
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'index': 2
+        'label': 'tf-enrich'
     }, 
     hidden=True,
     children=[

@@ -97,7 +97,7 @@ module_detection_algo_modal = dbc.Modal([
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'index': 1
+        'label': 'co-expression'
     }, 
     hidden=True,
     

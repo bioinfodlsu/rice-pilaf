@@ -3,6 +3,7 @@ import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.browse_loci as browse_loci
+import pages.analysis_layout as analysis_layout
 
 from dash import Input, Output, State, html, ctx, ALL, MATCH
 from dash.exceptions import PreventUpdate
@@ -19,19 +20,20 @@ const = Constants()
 def init_callback(app):
 
     @app.callback(
-        Output({'type': 'analysis-nav', 'index': ALL}, 'className'),
-        Output({'type': 'analysis-layout', 'index': ALL}, 'hidden'),
-        State({'type': 'analysis-nav', 'index': ALL}, 'className'),
-        State({'type': 'analysis-layout', 'index': ALL}, 'hidden'),
-        Input({'type': 'analysis-nav', 'index': ALL}, 'n_clicks')
+        Output({'type': 'analysis-nav', 'label': ALL}, 'className'),
+        Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
+        State({'type': 'analysis-nav', 'label': ALL}, 'className'),
+        State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
+        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
     def display_specific_analysis_page(nav_className, layout_hidden, *_):
         if ctx.triggered_id:
             update_nav_class_name = []
             update_layout_hidden = []
-
+            analysis_layout_dict = list(analysis_layout.get_analaysis_layout_dictionary().keys())
+           
             for i in range(len(nav_className)): 
-                if i == ctx.triggered_id.index:
+                if analysis_layout_dict[i] == ctx.triggered_id.label:
                     nav_classes = add_class_name('active', nav_className[i])
                     hide_layout = False
                 else:
@@ -44,50 +46,6 @@ def init_callback(app):
             return update_nav_class_name, update_layout_hidden
 
         raise PreventUpdate     
-    
-
-    """
-    @app.callback(
-        Output('page', 'children'),
-        Output('page', 'style'),
-
-        Output('lift-over-link', 'className'),
-        Output('coexpression-link', 'className'),
-        Output('tf-enrichment-link', 'className'),
-        Output('igv-link', 'className'),
-
-        State('lift-over-link', 'className'),
-        State('coexpression-link', 'className'),
-        State('tf-enrichment-link', 'className'),
-        State('igv-link', 'className'),
-
-        Input('lift-over-link', 'n_clicks'),
-        Input('coexpression-link', 'n_clicks'),
-        Input('tf-enrichment-link', 'n_clicks'),
-        Input('igv-link', 'n_clicks'),
-
-        prevent_initial_call=True
-    )
-    def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
-                                       igv_class, *_):
-
-        layout_link = namedtuple('layout_link', 'layout link_class')
-
-        display_map = OrderedDict()
-
-        # IMPORTANT:
-        # The insertion of items should follow the same order as the declaration of the parameters
-        display_map['lift-over-link'] = layout_link(
-            lift_over.layout, lift_over_link_class)
-        display_map['coexpression-link'] = layout_link(
-            co_expr.layout, coexpression_link_class)
-        display_map['tf-enrichment-link'] = layout_link(
-            tf_enrich.layout, tf_enrichment_link_class)
-        display_map['igv-link'] = layout_link(
-            browse_loci.layout, igv_class)
-
-        return display_map[ctx.triggered_id].layout, {'display': 'block'}, *set_active_class(display_map, ctx.triggered_id)
-    """
 
     @app.callback(
         Output('input-error', 'children'),

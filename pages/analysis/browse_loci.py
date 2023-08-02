@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'index': 3
+        'label': 'browse-loci'
     }, 
     hidden=True,
     children=[

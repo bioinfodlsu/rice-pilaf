@@ -15,7 +15,7 @@ other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'index': 0
+        'label': 'lift-over'
     },  
     hidden=True,
     children=[
