@@ -91,7 +91,8 @@ layout = html.Div(id='tf-enrichment-over-container', children=[
                     dash_table.DataTable(
                         id='tf_enrichment_result_table',
                         persistence=True,
-                        persistence_type='memory'
+                        persistence_type='memory',
+                        cell_selectable = False
                     )
             ])
             ], className='p-3 mt-2')

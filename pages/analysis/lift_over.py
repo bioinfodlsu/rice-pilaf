@@ -91,6 +91,7 @@ layout = html.Div(id='lift-over-container', children=[
                         id='lift-over-results-table',
                         persistence=True,
                         persistence_type='memory',
+                        cell_selectable=False,
                         style_cell={
                             'whiteSpace': 'pre-line',
                             'font-family': 'sans-serif'
