@@ -4,17 +4,49 @@ import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.browse_loci as browse_loci
 
-from dash import Input, Output, State, html, ctx, ALL
+from dash import Input, Output, State, html, ctx, ALL, MATCH
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
 from ..browse_loci import util as browse_loci_util
 from ..constants import Constants
 
+from ..style_util import *
+
 const = Constants()
 
 
 def init_callback(app):
+
+    @app.callback(
+        Output({'type': 'analysis-nav', 'index': ALL}, 'className'),
+        Output({'type': 'analysis-layout', 'index': ALL}, 'hidden'),
+        State({'type': 'analysis-nav', 'index': ALL}, 'className'),
+        State({'type': 'analysis-layout', 'index': ALL}, 'hidden'),
+        Input({'type': 'analysis-nav', 'index': ALL}, 'n_clicks')
+    )
+    def display_specific_analysis_page(nav_className, layout_hidden, *_):
+        if ctx.triggered_id:
+            update_nav_class_name = []
+            update_layout_hidden = []
+
+            for i in range(len(nav_className)): 
+                if i == ctx.triggered_id.index:
+                    nav_classes = add_class_name('active', nav_className[i])
+                    hide_layout = False
+                else:
+                    nav_classes = remove_class_name('active', nav_className[i])
+                    hide_layout = True
+                
+                update_nav_class_name.append(nav_classes)
+                update_layout_hidden.append(hide_layout)
+
+            return update_nav_class_name, update_layout_hidden
+
+        raise PreventUpdate     
+    
+
+    """
     @app.callback(
         Output('page', 'children'),
         Output('page', 'style'),
@@ -55,6 +87,7 @@ def init_callback(app):
             browse_loci.layout, igv_class)
 
         return display_map[ctx.triggered_id].layout, {'display': 'block'}, *set_active_class(display_map, ctx.triggered_id)
+    """
 
     @app.callback(
         Output('input-error', 'children'),

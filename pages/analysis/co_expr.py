@@ -94,7 +94,14 @@ module_detection_algo_modal = dbc.Modal([
 # Main Layout
 # ============
 
-layout = html.Div(id='coexpression-container', children=[
+layout = html.Div(
+    id={
+        'type': 'analysis-layout',
+        'index': 1
+    }, 
+    hidden=True,
+    
+    children=[
     html.Div([
         html.Span('In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
     ], className='analysis-intro p-3'),
