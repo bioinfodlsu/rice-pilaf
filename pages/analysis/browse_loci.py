@@ -1,8 +1,6 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 
-# dash.register_page(__name__, path='/browse-loci', name='Browse Loci')
-
 layout = html.Div(
     id={
         'type': 'analysis-layout',
@@ -10,11 +8,6 @@ layout = html.Div(
     }, 
     hidden=True,
     children=[
-        # dashbio.Igv(
-        #      id='igv-Nipponbare',
-        #      genome='GCF_001433935.1',
-        #      minimumBases=100,
-        # )
         html.Div([
             html.Span('WRITE ME')
         ], className='analysis-intro p-3'),

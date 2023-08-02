@@ -1,11 +1,7 @@
 from collections import namedtuple, OrderedDict
-import pages.analysis.lift_over as lift_over
-import pages.analysis.co_expr as co_expr
-import pages.analysis.tf_enrich as tf_enrich
-import pages.analysis.browse_loci as browse_loci
 import pages.analysis_layout as analysis_layout
 
-from dash import Input, Output, State, html, ctx, ALL, MATCH
+from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
