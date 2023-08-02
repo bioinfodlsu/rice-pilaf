@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
-
+from callbacks.constants import Constants
+const = Constants()
 
 other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
                      {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
@@ -12,7 +13,7 @@ other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': 'lift-over'
+        'label': const.LIFT_OVER
     },  
     hidden=True,
     children=[
