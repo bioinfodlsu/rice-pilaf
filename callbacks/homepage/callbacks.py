@@ -35,7 +35,7 @@ def init_callback(app):
         Input('lift-over-link', 'n_clicks'),
         Input('coexpression-link', 'n_clicks'),
         Input('tf-enrichment-link', 'n_clicks'),
-        Input('text-mining-link', 'className'),
+        Input('text-mining-link', 'n_clicks'),
         Input('igv-link', 'n_clicks'),
 
         prevent_initial_call=True
