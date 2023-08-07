@@ -3,8 +3,9 @@ from dash import dash_table, dcc, html
 
 layout = html.Div(id='text-mining-container', children=[
     html.Div([
-        html.Span('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from text-mined PubMed abstracts. '
-                  'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'),
+        html.Span('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
+                  #'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
+        ),
     ], className='analysis-intro p-3'),
 
     html.Div([
@@ -32,11 +33,7 @@ layout = html.Div(id='text-mining-container', children=[
                             id={'type': 'example-text-mining',
                                 'description': 'anaerobic germination'},
                             className='sample-genomic-interval ms-3'),
-                  html.Span(',', className='sample-genomic-interval'),
-                  html.Span('LOC_xxxxxx',
-                            id={'type': 'example-text-mining',
-                                'description': 'LOC_xxxxxx'},
-                            className='sample-genomic-interval ms-3')
+                  html.Span(',', className='sample-genomic-interval')
                   ],
                  className='pt-3'),
         html.Br(),
