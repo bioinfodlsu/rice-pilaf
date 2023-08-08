@@ -1,4 +1,10 @@
 class Constants(object):
+    LIFT_OVER = 'lift-over'
+    COEXPRESSION = 'co-expression'
+    TFBS = 'tf-enrichment'
+    IGV = 'browse-loci'
+    TEXT_MINING = 'text-mining'
+
     DATA = 'static'
     APP_DATA = f'{DATA}/app_data'
     RAW_DATA = f'{DATA}/raw_data'
