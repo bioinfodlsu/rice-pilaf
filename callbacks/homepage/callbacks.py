@@ -86,6 +86,10 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
 
+        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Output('text-mining-query-submitted-input', 'data', allow_duplicate=True),
+        Output('text-mining-is-submitted', 'data', allow_duplicate=True),
+        
         State('homepage-genomic-intervals', 'value'),
 
         Input('homepage-submit', 'n_clicks'),
@@ -106,6 +110,7 @@ def init_callback(app):
                 None, None, None, None, \
                 None, None, None, \
                 None, None, None, None, \
+                None, None, None, \
                 None, None, None
 
         if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
@@ -122,6 +127,7 @@ def init_callback(app):
                         None, None, None, None, \
                         None, None, None, \
                         None, None, None, None, \
+                        None, None, None, \
                         None, None, None
                 else:
                     track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
@@ -138,6 +144,7 @@ def init_callback(app):
                         None, None, None, None, \
                         None, None, None, \
                         None, None, None, None, \
+                        None, None, None, \
                         None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
@@ -148,6 +155,7 @@ def init_callback(app):
                     None, None, None, None, \
                     None, None, None, \
                     None, None, None, None, \
+                    None, None, None, \
                     None, None, None
 
         raise PreventUpdate
