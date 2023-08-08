@@ -66,7 +66,12 @@ layout = html.Div(id='text-mining-container', children=[
                     dash_table.DataTable(
                         id='text_mining_result_table',
                         persistence=True,
-                        persistence_type='memory'
+                        persistence_type='memory',
+                        style_data={
+                            'whiteSpace': 'normal',
+                            'height': 'auto',
+                            'textAlign': 'left'
+                        }
                     )
                 ])
             ], className='p-3 mt-2')

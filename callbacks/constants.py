@@ -40,7 +40,7 @@ class Constants(object):
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
 
-    TEXT_MINING_ANNOTATED_ABSTRACTS = f'{TEXT_MINING}/annotated_abstracts.200.tsv'
+    TEXT_MINING_ANNOTATED_ABSTRACTS = f'{TEXT_MINING}/annotated_abstracts.tsv'
 
     def __init__(self):
         pass
