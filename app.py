@@ -10,6 +10,7 @@ import callbacks.lift_over.callbacks
 import callbacks.browse_loci.callbacks
 import callbacks.coexpression.callbacks
 import callbacks.tf_enrich.callbacks
+import callbacks.text_mining.callbacks
 
 
 from flask import Flask
@@ -161,7 +162,22 @@ app.layout = dbc.Container(
         dcc.Store(
             id='tfbs-is-submitted',
             storage_type='session'
-        )
+        ),
+
+        dcc.Store(
+            id='text-mining-query-saved-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='text-mining-query-submitted-input',
+            storage_type='session'
+        ),
+
+        dcc.Store(
+            id='text-mining-is-submitted',
+            storage_type='session'
+        ),
 
     ],
     fluid=True
@@ -173,6 +189,7 @@ callbacks.lift_over.callbacks.init_callback(app)
 callbacks.browse_loci.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
 callbacks.tf_enrich.callbacks.init_callback(app)
+callbacks.text_mining.callbacks.init_callback(app)
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port='8050', debug=True)

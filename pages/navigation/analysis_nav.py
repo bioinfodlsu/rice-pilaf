@@ -16,7 +16,7 @@ def navbar():
             n_clicks = 0
         ))
         nav_list.append(item)
-
+    
     return dbc.Nav(
         [
             item for item in nav_list

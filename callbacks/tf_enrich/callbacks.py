@@ -5,7 +5,7 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 
-gwas_loci = None
+#gwas_loci = None
 
 Tfbs_input = namedtuple(
     'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique', 'tfbs_fdr'])
