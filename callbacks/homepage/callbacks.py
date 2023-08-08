@@ -3,6 +3,7 @@ import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.browse_loci as browse_loci
+import pages.analysis.text_mining as text_mining
 
 from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
@@ -22,22 +23,25 @@ def init_callback(app):
         Output('lift-over-link', 'className'),
         Output('coexpression-link', 'className'),
         Output('tf-enrichment-link', 'className'),
+        Output('text-mining-link', 'className'),
         Output('igv-link', 'className'),
 
         State('lift-over-link', 'className'),
         State('coexpression-link', 'className'),
         State('tf-enrichment-link', 'className'),
+        State('text-mining-link', 'className'),
         State('igv-link', 'className'),
 
         Input('lift-over-link', 'n_clicks'),
         Input('coexpression-link', 'n_clicks'),
         Input('tf-enrichment-link', 'n_clicks'),
+        Input('text-mining-link', 'n_clicks'),
         Input('igv-link', 'n_clicks'),
 
         prevent_initial_call=True
     )
     def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
-                                       igv_class, *_):
+                                       text_mining_link_class,igv_class, *_):
 
         layout_link = namedtuple('layout_link', 'layout link_class')
 
@@ -51,6 +55,8 @@ def init_callback(app):
             co_expr.layout, coexpression_link_class)
         display_map['tf-enrichment-link'] = layout_link(
             tf_enrich.layout, tf_enrichment_link_class)
+        display_map['text-mining-link'] = layout_link(
+            text_mining.layout, text_mining_link_class)
         display_map['igv-link'] = layout_link(
             browse_loci.layout, igv_class)
 
