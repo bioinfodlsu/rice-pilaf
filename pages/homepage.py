@@ -14,12 +14,14 @@ dash.register_page(__name__, path='/', name='Home', location='app-topbar')
 
 genomic_interval_modal = dbc.Modal([
     dbc.ModalHeader(
-        dbc.ModalTitle('Genomic Intervals from GWAS')
+        dbc.ModalTitle('Genomic Intervals from GWAS/QTL')
     ),
     dbc.ModalBody([
-        html.P('WRITE ME'),
+        html.P('Enter genomic intervals like so: Chr01:100000-200000.'
+               'Multiple intervals should be separated by a semicolon like so: Chr01:100000-200000;Chr02:300000-400000'
+               'These are obtained from QTL analysis or from LD-based clumping of significant GWAS SNPs.'),
         html.P(
-            'We also provide some sample genomic intervals, taken from the following GWA and QTL studies:'),
+            'We also provide some sample genomic intervals, taken from the following GWAS/QTL analysis:'),
         html.Ul([
             html.Li([
                 html.Div([
@@ -60,7 +62,7 @@ genomic_interval_modal = dbc.Modal([
 # Input
 # ======
 
-submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Start Analysis',
+submit_clear_buttons = dbc.Row([dbc.Col(dbc.Button('Show Analyses Menu',
                                                    id='homepage-submit',
                                                    n_clicks=0,
                                                    className='home-button'),
