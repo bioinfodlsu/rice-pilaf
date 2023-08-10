@@ -14,17 +14,17 @@ const = Constants()
 def get_analaysis_layout_dictionary():
     return OrderedDict({
         const.LIFT_OVER: 'Gene List and Lift-Over',
+        const.TEXT_MINING: 'Gene Retrieval by Text Mining',
         const.COEXPRESSION: 'Co-Expression Network Analysis',
         const.TFBS: 'Regulatory Feature Enrichment',
-        const.IGV: 'Browse Loci',
-        const.TEXT_MINING: 'Text Mining'
+        const.IGV: 'Browse Loci'
     })
 
 layout = html.Div(children=[
-    lift_over.layout, 
+    lift_over.layout,
+    text_mining.layout,
     co_expr.layout, 
     tf_enrich.layout, 
-    browse_loci.layout,
-    text_mining.layout
+    browse_loci.layout
 ])
 

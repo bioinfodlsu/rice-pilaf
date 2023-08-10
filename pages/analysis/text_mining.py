@@ -24,7 +24,7 @@ layout = html.Div(
             html.Br(),
             html.Br(),
 
-            dbc.Label('Enter your query trait or gene:', className='mb-2'),
+            dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
             dbc.Input(
                 id='text-mining-query',
                 type='text',
