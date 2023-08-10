@@ -1,4 +1,10 @@
 class Constants(object):
+    LIFT_OVER = 'lift-over'
+    COEXPRESSION = 'co-expression'
+    TFBS = 'tf-enrichment'
+    IGV = 'browse-loci'
+    TEXT_MINING = 'text-mining'
+
     DATA = 'static'
     APP_DATA = f'{DATA}/app_data'
     RAW_DATA = f'{DATA}/raw_data'
@@ -6,6 +12,8 @@ class Constants(object):
     ANNOTATIONS = f'{APP_DATA}/annotations'
     ALIGNMENTS = f'{APP_DATA}/alignments'
     OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
+    GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
+    TEXT_MINING = f'{APP_DATA}/text_mining'
 
     GENOMES_NIPPONBARE = f'{APP_DATA}/genomes/Nipponbare'
     ANNOTATIONS_NB = f'{ANNOTATIONS}/Nb'
@@ -37,6 +45,8 @@ class Constants(object):
     TRANSCRIPT_TO_MSU_DICT = f'{ENRICHMENT_ANALYSIS_MAPPING}/transcript-to-msu-id.pickle'
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
+
+    TEXT_MINING_ANNOTATED_ABSTRACTS = f'{TEXT_MINING}/annotated_abstracts.tsv'
 
     def __init__(self):
         pass

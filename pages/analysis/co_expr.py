@@ -1,9 +1,8 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
-
-# dash.register_page(__name__, path='/co-expression',
-#                   name='Co-Expression Network Analysis')
+from callbacks.constants import Constants
+const = Constants()
 
 coach = html.Li(
     [html.B('COACH'),
@@ -94,7 +93,14 @@ module_detection_algo_modal = dbc.Modal([
 # Main Layout
 # ============
 
-layout = html.Div(id='coexpression-container', children=[
+layout = html.Div(
+    id={
+        'type': 'analysis-layout',
+        'label': const.COEXPRESSION
+    }, 
+    hidden=True,
+    
+    children=[
     html.Div([
         html.Span('In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
     ], className='analysis-intro p-3'),
