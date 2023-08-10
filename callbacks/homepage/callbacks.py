@@ -1,8 +1,5 @@
 from collections import namedtuple, OrderedDict
-import pages.analysis.lift_over as lift_over
-import pages.analysis.co_expr as co_expr
-import pages.analysis.tf_enrich as tf_enrich
-import pages.analysis.browse_loci as browse_loci
+import pages.analysis_layout as analysis_layout
 
 from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
@@ -11,50 +8,40 @@ from ..lift_over import util as lift_over_util
 from ..browse_loci import util as browse_loci_util
 from ..constants import Constants
 
+from ..style_util import *
+
 const = Constants()
 
 
 def init_callback(app):
+
     @app.callback(
-        Output('page', 'children'),
-        Output('page', 'style'),
-
-        Output('lift-over-link', 'className'),
-        Output('coexpression-link', 'className'),
-        Output('tf-enrichment-link', 'className'),
-        Output('igv-link', 'className'),
-
-        State('lift-over-link', 'className'),
-        State('coexpression-link', 'className'),
-        State('tf-enrichment-link', 'className'),
-        State('igv-link', 'className'),
-
-        Input('lift-over-link', 'n_clicks'),
-        Input('coexpression-link', 'n_clicks'),
-        Input('tf-enrichment-link', 'n_clicks'),
-        Input('igv-link', 'n_clicks'),
-
-        prevent_initial_call=True
+        Output({'type': 'analysis-nav', 'label': ALL}, 'className'),
+        Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
+        State({'type': 'analysis-nav', 'label': ALL}, 'className'),
+        State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
+        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
-    def display_specific_analysis_page(lift_over_link_class, coexpression_link_class, tf_enrichment_link_class,
-                                       igv_class, *_):
+    def display_specific_analysis_page(nav_className, layout_hidden, *_):
+        if ctx.triggered_id:
+            update_nav_class_name = []
+            update_layout_hidden = []
+            analysis_layout_dict = list(analysis_layout.get_analaysis_layout_dictionary().keys())
+           
+            for i in range(len(nav_className)): 
+                if analysis_layout_dict[i] == ctx.triggered_id.label:
+                    nav_classes = add_class_name('active', nav_className[i])
+                    hide_layout = False
+                else:
+                    nav_classes = remove_class_name('active', nav_className[i])
+                    hide_layout = True
+                
+                update_nav_class_name.append(nav_classes)
+                update_layout_hidden.append(hide_layout)
 
-        layout_link = namedtuple('layout_link', 'layout link_class')
+            return update_nav_class_name, update_layout_hidden
 
-        display_map = OrderedDict()
-
-        # IMPORTANT:
-        # The insertion of items should follow the same order as the declaration of the parameters
-        display_map['lift-over-link'] = layout_link(
-            lift_over.layout, lift_over_link_class)
-        display_map['coexpression-link'] = layout_link(
-            co_expr.layout, coexpression_link_class)
-        display_map['tf-enrichment-link'] = layout_link(
-            tf_enrich.layout, tf_enrichment_link_class)
-        display_map['igv-link'] = layout_link(
-            browse_loci.layout, igv_class)
-
-        return display_map[ctx.triggered_id].layout, {'display': 'block'}, *set_active_class(display_map, ctx.triggered_id)
+        raise PreventUpdate     
 
     @app.callback(
         Output('input-error', 'children'),
@@ -99,6 +86,10 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
 
+        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Output('text-mining-query-submitted-input', 'data', allow_duplicate=True),
+        Output('text-mining-is-submitted', 'data', allow_duplicate=True),
+        
         State('homepage-genomic-intervals', 'value'),
 
         Input('homepage-submit', 'n_clicks'),
@@ -119,6 +110,7 @@ def init_callback(app):
                 None, None, None, None, \
                 None, None, None, \
                 None, None, None, None, \
+                None, None, None, \
                 None, None, None
 
         if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
@@ -135,6 +127,7 @@ def init_callback(app):
                         None, None, None, None, \
                         None, None, None, \
                         None, None, None, None, \
+                        None, None, None, \
                         None, None, None
                 else:
                     track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
@@ -151,6 +144,7 @@ def init_callback(app):
                         None, None, None, None, \
                         None, None, None, \
                         None, None, None, None, \
+                        None, None, None, \
                         None, None, None
             else:
                 return [f'Error: Input for genomic interval should not be empty.'], \
@@ -161,6 +155,7 @@ def init_callback(app):
                     None, None, None, None, \
                     None, None, None, \
                     None, None, None, None, \
+                    None, None, None, \
                     None, None, None
 
         raise PreventUpdate
