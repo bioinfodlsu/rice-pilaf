@@ -19,6 +19,12 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
                 ('Pathway-Express', 'pathway_enrichment/pe'),
                 ('SPIA', 'pathway_enrichment/spia')]
 
+# Settings for the module detection algorithms:
+# - multiplier: Value multiplied to the parameter to get the name of the directory
+#               For example, results of running clusterone at param=0.3 are saved in 30
+# - default_param: Default parameter of the module detection algorithm
+# - low: User-facing display for the lowest parameter
+# - high: User-facing display for the highest parameter
 Module_detection_algo = namedtuple('Module_detection_algo', [
                                    'multiplier', 'default_param', 'low', 'high'])
 module_detection_algos = {
@@ -65,6 +71,19 @@ def get_parameters_for_algo(algo, network='OS-CX'):
 
 
 def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
+    """
+    Writes the accessions of the GWAS-implicated genes to a file
+
+    Parameters:
+    - genes: Accessions of the genes implicated by GWAS
+    - genomic_intervals: Genomic interval entered by the user
+    - network: Coexpression network
+    - algo: Module detection algorithm
+    - parameters: Parameter at which module detection algorithm is run
+
+    Returns:
+    - Parent directory of the file to which the accessions of the GWAS-implicated genes are written
+    """
     temp_output_folder_dir = get_path_to_temp(
         genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
@@ -105,21 +124,31 @@ def fetch_enriched_modules(output_dir):
 
 
 def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, network, algo, parameters):
+    """
+    Parameters:
+    - implicated_gene_ids: Accessions of the genes implicated by GWAS
+    - genomic_intervals: Genomic interval entered by the user
+    - network: Coexpression network
+    - algo: Module detection algorithm
+    - parameters: Parameter at which module detection algorithm is run
+
+    Returns:
+    - Enriched modules (i.e., their respectives indices and adjust p-values)
+    """
     genes = list(set(implicated_gene_ids))
-    temp_output_folder_dir = write_genes_to_file(
+    INPUT_GENES_DIR = write_genes_to_file(
         genes, genomic_intervals, network, algo, parameters)
 
-    OUTPUT_DIR = temp_output_folder_dir
-    if not path_exists(f'{OUTPUT_DIR}/enriched_modules'):
-        INPUT_GENES = f'{OUTPUT_DIR}/genes.txt'
+    if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules'):
+        INPUT_GENES = f'{INPUT_GENES_DIR}/genes.txt'
         BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY}/{network}/all-genes.txt'
         MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
         # TODO: Add exception handling
         subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
-                        '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', OUTPUT_DIR])
+                        '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', INPUT_GENES_DIR])
 
-    return fetch_enriched_modules(OUTPUT_DIR)
+    return fetch_enriched_modules(INPUT_GENES_DIR)
 
 
 # ===============================================================================================

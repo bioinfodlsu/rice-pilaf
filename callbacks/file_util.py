@@ -34,8 +34,7 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
     analysis_type = convert_text_to_dirname(analysis_type)
 
     temp_dir = f'{const.TEMP}/{genomic_interval_foldername}/{analysis_type}'
-    for arg in args:
-        folder = convert_text_to_dirname(arg)
-        temp_dir += f'/{folder}'
+    for folder in args:
+        temp_dir += f'/{convert_text_to_dirname(folder)}'
 
     return temp_dir
