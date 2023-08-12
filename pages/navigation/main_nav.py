@@ -9,7 +9,14 @@ def navbar():
             dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki', target='_blank', className='top-navbar-item')),
         ],
         id='top-navbar',
-        brand=['RicePilaf'],
+        brand=[dbc.Row(
+                    [
+                        dbc.Col(html.Img(src='assets/logo.png', height='20px', className='mx-auto'), className='d-flex align-items-center'),
+                        dbc.Col(dbc.NavbarBrand('RicePilaf', className='ms-2')),
+                    ],
+                    align="center",
+                    className="g-0",
+                )],
         brand_href='/',
         color='#4d987d',
         dark=True,
