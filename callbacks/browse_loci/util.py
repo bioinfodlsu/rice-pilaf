@@ -16,7 +16,7 @@ def write_igv_tracks_to_file(nb_intervals_str):
     for db in track_db:
         file_ext = db[2]
 
-        if file_ext != 'bed':
+        if file_ext == 'gff':
             source_dir = f'{db[0]}/{db[1]}'
             source_file = db[1]
 
