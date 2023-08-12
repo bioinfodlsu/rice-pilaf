@@ -360,6 +360,20 @@ def convert_to_df_spia(result, network):
 
 
 def convert_to_df(active_tab, module_idx, network, algo, parameters):
+    """
+    Returns the results of ontology and pathway enrichment analysis as a data frame
+
+    Parameters:
+    - active_tab: ID of the tab corresponding to the selected enrichment analysis
+    - module_idx: Index of the selected module
+    - network: Coexpression network
+    - algo: Module detection algorithm
+    - parameters: Parameter at which module detection algorithm is run
+
+    Returns:
+    - Data frame containing the results of ontology and pathway enrichment analysis
+    - True if the data frame is empty; False, otherwise
+    """
     dir = enrichment_tabs[get_tab_index(active_tab)].path
     enrichment_type = dir.split('/')[-1]
 
@@ -459,6 +473,11 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
     - algo: Module detection algorithm
     - parameters: Parameter at which module detection algorithm is run
     - layout: Layout of the graph display
+
+    Returns:
+    - Elements (nodes and edges) of the graph
+    - Dictionary storing the layout of the graph
+    - Dictionary storing the visibility, width, and height of the graph
     """
     try:
         # Ignore the word "Module" at the start
