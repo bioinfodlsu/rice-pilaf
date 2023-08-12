@@ -1,20 +1,16 @@
-import json
-from timeit import default_timer as timer
 import pandas as pd
 import os
 import subprocess
 import statsmodels.stats.multitest as sm
 from ..file_util import *
 from ..constants import Constants
+from ..general_util import *
+
 const = Constants()
 
 
 def create_empty_df():
-    return pd.DataFrame({
-        'Transcription Factor': ['-'],
-        'p-value': ['-'],
-        'adj. p-value': ['-']
-    })
+    return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 
