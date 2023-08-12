@@ -14,13 +14,13 @@ layout = html.Div(
     id={
         'type': 'analysis-layout',
         'label': const.LIFT_OVER
-    },  
+    },
     hidden=True,
     children=[
         html.Div([
-            html.Span(
-                'In this page, you can obtain the list of genes overlapping your input intervals.'),
             html.P(
+                'In this page, you can obtain the list of genes overlapping your input intervals.'),
+            html.Span(
                 'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
 
         ], className='analysis-intro p-3'),
@@ -33,7 +33,8 @@ layout = html.Div(
             html.Br(),
             html.Br(),
 
-            dbc.Label('Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
+            dbc.Label(
+                'Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
 
             dcc.Dropdown(
                 other_ref_genomes,
@@ -47,9 +48,9 @@ layout = html.Div(
             html.Br(),
 
             dbc.Button('Show gene list',
-                    id='lift-over-submit',
-                    className='page-button',
-                    n_clicks=0),
+                       id='lift-over-submit',
+                       className='page-button',
+                       n_clicks=0),
 
             html.Br(),
             html.Br(),
@@ -69,8 +70,8 @@ layout = html.Div(
                     dbc.Label(id='lift-over-results-gene-intro'),
 
                     dbc.Checklist(id='lift-over-overlap-table-filter',
-                                inline=True,
-                                className='ms-3'),
+                                  inline=True,
+                                  className='ms-3'),
 
 
                     dcc.Loading([
@@ -80,9 +81,10 @@ layout = html.Div(
                                     className='bi bi-download me-2'),
                                     'Export to CSV'],
                                     id='lift-over-export-table',
-                                    n_clicks = 0,
+                                    n_clicks=0,
                                     color='light', size='sm', className='table-button'),
-                                dcc.Download(id='lift-over-download-df-to-csv'),
+                                dcc.Download(
+                                    id='lift-over-download-df-to-csv'),
                                 dbc.Button([html.I(
                                     className='bi bi-arrow-clockwise me-2'),
                                     'Reset Table'],
@@ -108,4 +110,4 @@ layout = html.Div(
                         )])
                 ])
         ], className='p-3 mt-2')
-])
+    ])
