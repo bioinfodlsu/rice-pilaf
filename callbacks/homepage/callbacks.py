@@ -20,22 +20,26 @@ def init_callback(app):
         Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
         State({'type': 'analysis-nav', 'label': ALL}, 'className'),
         State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
+        State({'type': 'analysis-nav', 'label': ALL}, 'id'),
+        State({'type': 'analysis-layout', 'label': ALL}, 'id'),
         Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
-    def display_specific_analysis_page(nav_className, layout_hidden, *_):
+    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, *_):
         if ctx.triggered_id:
             update_nav_class_name = []
             update_layout_hidden = []
-            analysis_layout_dict = list(analysis_layout.get_analaysis_layout_dictionary().keys())
-           
-            for i in range(len(nav_className)): 
-                if analysis_layout_dict[i] == ctx.triggered_id.label:
-                    nav_classes = add_class_name('active', nav_className[i])
-                    hide_layout = False
+
+            for i in range(len(analysis_nav_id)): 
+                if analysis_nav_id[i]['label'] == ctx.triggered_id.label:
+                    nav_classes = add_class_name('active', nav_className[i])  
                 else:
                     nav_classes = remove_class_name('active', nav_className[i])
+        
+                if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
+                    hide_layout = False
+                else:
                     hide_layout = True
-                
+            
                 update_nav_class_name.append(nav_classes)
                 update_layout_hidden.append(hide_layout)
 
