@@ -34,13 +34,15 @@ def init_callback(app):
                     nav_classes = add_class_name('active', nav_className[i])  
                 else:
                     nav_classes = remove_class_name('active', nav_className[i])
-        
+                
+                update_nav_class_name.append(nav_classes)
+            
+            for i in range(len(analysis_layout_id)):
                 if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
                     hide_layout = False
                 else:
                     hide_layout = True
-            
-                update_nav_class_name.append(nav_classes)
+        
                 update_layout_hidden.append(hide_layout)
 
             return update_nav_class_name, update_layout_hidden
