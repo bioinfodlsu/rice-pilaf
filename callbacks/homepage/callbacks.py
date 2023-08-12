@@ -72,9 +72,8 @@ def init_callback(app):
 
         if 'homepage-reset' == ctx.triggered_id:
             # clear data for items in dcc.Store found in session-container 
-            for i in range(len(dccStore_children)):
-                dccStore_children[i]['props']['data'] = None
-
+            dccStore_children = get_cleared_dccStore_data(dccStore_children)
+            
             return dccStore_children, None, {'display': 'none'}, False, ''
     
 
@@ -88,18 +87,9 @@ def init_callback(app):
                         {'display': 'block'}, False, nb_intervals_str
                 else:
                     # clear data for items in dcc.Store found in session-container
-                    for i in range(len(dccStore_children)):
-                        dccStore_children[i]['props']['data'] = None
-
-                    # tracks found in igv
-                    track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
-                                [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
-
-                    # write to file the data for igv
-                    for db in track_db:
-                        if db[2] != 'bed':
-                            browse_loci_util.write_igv_tracks_to_file(
-                                f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
+                    dccStore_children = get_cleared_dccStore_data(dccStore_children)
+            
+                    browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
                     return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str
             else:

@@ -7,35 +7,49 @@ from ..constants import Constants
 
 const = Constants()
 
+def write_igv_tracks_to_file(nb_intervals_str):
+    # tracks found in igv
+    track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
+                [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
 
-def write_igv_tracks_to_file(input_dir, input_dir_filename, nb_intervals_str, file_format):
-    if os.path.exists(input_dir):
-        nb_intervals_options = nb_intervals_str.split(';')
-        nb_intervals = util.get_genomic_intervals_from_input(
-            nb_intervals_str)
+    # write to file the data for igv
+    for db in track_db:
+        file_ext = db[2]
 
-        temp_output_folder_dir = get_path_to_temp(
-            nb_intervals_str, const.TEMP_IGV, f'{input_dir_filename}')
-        make_dir(temp_output_folder_dir)
+        if file_ext != 'bed':
+            source_dir = f'{db[0]}/{db[1]}'
+            source_file = db[1]
 
-        i = 0
-        for Nb_interval in nb_intervals:
-            if i < len(nb_intervals_options):
-                cur_nb_interval_options = nb_intervals_options[i]
+            write_gff_igv_track_to_file(
+                source_dir, source_file, nb_intervals_str)
 
-                cur_nb_interval_options_filename = convert_text_to_filename(
-                    cur_nb_interval_options)
-                temp_output_dir = f'{temp_output_folder_dir}/{cur_nb_interval_options_filename}.{file_format}'
 
-                if not path_exists(temp_output_dir):
-                    db = gffutils.FeatureDB(
-                        f'{input_dir}', keep_order=True)
+def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
+    if path_exists(source_dir):
+        loci_list = nb_intervals_str.split(';')
+        genomic_interval_list = util.get_genomic_intervals_from_input(nb_intervals_str)
 
-                    genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
-                                                       completely_within=False, featuretype='gene'))
+        temp_folder = get_path_to_temp(nb_intervals_str, const.TEMP_IGV, source_file)
+        make_dir(temp_folder)
 
-                    with open(temp_output_dir, 'w') as fp:
-                        for line in genes_in_interval:
-                            fp.write('%s\n' % line)
+        for i in range(len(loci_list)):
+            cur_loci = loci_list[i]
 
-            i += 1
+            dest_file = f'{convert_text_to_filename(cur_loci)}.gff'
+            dest_dir = f'{temp_folder}/{dest_file}'
+
+            if not path_exists(dest_dir):
+                genes_in_interval = get_loci_data_in_gff_file(source_dir, genomic_interval_list[i])
+
+                with open(dest_dir, 'w') as fp:
+                    for line in genes_in_interval:
+                        fp.write('%s\n' % line)
+
+
+def get_loci_data_in_gff_file(source_dir, Nb_interval):
+    db = gffutils.FeatureDB(f'{source_dir}', keep_order=True)
+
+    genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+                                        completely_within=False, featuretype='gene'))
+
+    return genes_in_interval
