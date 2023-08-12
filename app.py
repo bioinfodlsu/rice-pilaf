@@ -42,6 +42,7 @@ app.layout = dbc.Container(
 
         dash.page_container,
 
+        # Session storage
         dcc.Store(
             id='homepage-genomic-intervals-saved-input',
             storage_type='session'
@@ -50,7 +51,6 @@ app.layout = dbc.Container(
         html.Div(
             id='session-container',
             children=[
-                # Session storage
                 dcc.Store(
                     id='homepage-is-submitted',
                     storage_type='session'
