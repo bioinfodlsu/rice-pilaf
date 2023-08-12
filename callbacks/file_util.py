@@ -4,44 +4,38 @@ from .constants import Constants
 const = Constants()
 
 
-def dir_exist(directory):
+def path_exists(directory):
     return os.path.exists(directory)
 
 
-def create_dir(directory):
-    if not dir_exist(directory):
+def make_dir(directory):
+    if not path_exists(directory):
         os.makedirs(directory)
 
 
-def write_df_to_csv(df, directory):
-    create_dir(directory)
-
-    df.to_csv(f'{directory}')
+def read_csv(file):
+    return pd.read_csv(file)
 
 
-def load_csv_from_dir(directory):
-    return pd.read_csv(directory)
-
-
-def sanitize_text_to_foldername_format(text):
+def convert_text_to_dirname(text):
     return text.replace(
         ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
 
 
-def sanitize_text_to_filename_format(text):
+def convert_text_to_filename(text):
     return text.replace(
         ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
 
 
-def get_temp_output_folder_dir(genomic_interval, analysis_type, *args):
-    genomic_interval_foldername = sanitize_text_to_foldername_format(
+def get_path_to_temp(genomic_interval, analysis_type, *args):
+    genomic_interval_foldername = convert_text_to_dirname(
         genomic_interval)
 
-    analysis_type = sanitize_text_to_foldername_format(analysis_type)
+    analysis_type = convert_text_to_dirname(analysis_type)
 
     temp_dir = f'{const.TEMP}/{genomic_interval_foldername}/{analysis_type}'
     for arg in args:
-        folder = sanitize_text_to_foldername_format(arg)
+        folder = convert_text_to_dirname(arg)
         temp_dir += f'/{folder}'
 
     return temp_dir

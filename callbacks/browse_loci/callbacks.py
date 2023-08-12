@@ -79,10 +79,10 @@ def init_callback(app):
     @app.server.route('/annotations_nb/<nb_intervals_str>/<path:foldername>/<selected_interval_str>/<file_format>')
     def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
         try:
-            temp_output_folder_dir = get_temp_output_folder_dir(
+            temp_output_folder_dir = get_path_to_temp(
                 nb_intervals_str, const.TEMP_IGV, foldername)
 
-            selected_interval_str_filename = sanitize_text_to_filename_format(
+            selected_interval_str_filename = convert_text_to_filename(
                 selected_interval_str)
 
             selected_interval_str_file = f'{selected_interval_str_filename}.{file_format}'
@@ -201,7 +201,7 @@ def init_callback(app):
     def set_input_igv_session_state(selected_nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return selected_nb_intervals_str
-        
+
         raise PreventUpdate
 
     @app.callback(
@@ -215,5 +215,5 @@ def init_callback(app):
     def set_submitted_igv_session_state(selected_tracks, homepage_is_submitted, igv_is_submitted):
         if homepage_is_submitted and igv_is_submitted:
             return selected_tracks
-        
+
         raise PreventUpdate

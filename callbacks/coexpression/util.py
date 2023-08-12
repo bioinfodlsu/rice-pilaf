@@ -1,5 +1,6 @@
 from ..constants import Constants
 from ..file_util import *
+from ..general_util import *
 import os
 import pickle
 import subprocess
@@ -37,19 +38,6 @@ ALGOS_HIGH = {'clusterone': '4 (Dense Modules)',
               'fox': '4 (Cohesive Modules)'}
 
 
-def display_in_sci_notation(number):
-    """
-    Returns the given number in scientific notation n * 10^m, where n is rounded to 6 decimal places
-
-    Parameters:
-    - number (float): number whose equivalent in scientific notation is to be returned
-
-    Returns:
-    - string: number in scientific notation
-    """
-    return '{:.6e}'.format(number)
-
-
 def get_parameters_for_algo(algo, network='OS-CX'):
     param_dict = {}
     parameters = sorted(map(int, os.listdir(
@@ -67,11 +55,11 @@ def get_parameters_for_algo(algo, network='OS-CX'):
 
 
 def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
-    temp_output_folder_dir = get_temp_output_folder_dir(
+    temp_output_folder_dir = get_path_to_temp(
         genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
-    if not dir_exist(temp_output_folder_dir):
-        create_dir(temp_output_folder_dir)
+    if not path_exists(temp_output_folder_dir):
+        make_dir(temp_output_folder_dir)
 
         with open(f'{temp_output_folder_dir}/genes.txt', 'w') as f:
             f.write('\t'.join(genes))
@@ -100,7 +88,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, networ
         genes, genomic_intervals, network, algo, parameters)
 
     OUTPUT_DIR = temp_output_folder_dir
-    if not dir_exist(f'{OUTPUT_DIR}/enriched_modules'):
+    if not path_exists(f'{OUTPUT_DIR}/enriched_modules'):
         INPUT_GENES = f'{OUTPUT_DIR}/genes.txt'
         BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY}/{network}/all-genes.txt'
         MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
@@ -447,7 +435,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
         OUTPUT_DIR = f'{const.TEMP}/{network}/{algo}/modules/{parameters}'
         coexpress_nw = f'{OUTPUT_DIR}/module-{module_idx}.tsv'
 
-        if not dir_exist(coexpress_nw):
+        if not path_exists(coexpress_nw):
             NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
             MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv'
 

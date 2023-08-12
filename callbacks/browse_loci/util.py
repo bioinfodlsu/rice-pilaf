@@ -14,20 +14,20 @@ def write_igv_tracks_to_file(input_dir, input_dir_filename, nb_intervals_str, fi
         nb_intervals = util.get_genomic_intervals_from_input(
             nb_intervals_str)
 
-        temp_output_folder_dir = get_temp_output_folder_dir(
+        temp_output_folder_dir = get_path_to_temp(
             nb_intervals_str, const.TEMP_IGV, f'{input_dir_filename}')
-        create_dir(temp_output_folder_dir)
+        make_dir(temp_output_folder_dir)
 
         i = 0
         for Nb_interval in nb_intervals:
             if i < len(nb_intervals_options):
                 cur_nb_interval_options = nb_intervals_options[i]
 
-                cur_nb_interval_options_filename = sanitize_text_to_filename_format(
+                cur_nb_interval_options_filename = convert_text_to_filename(
                     cur_nb_interval_options)
                 temp_output_dir = f'{temp_output_folder_dir}/{cur_nb_interval_options_filename}.{file_format}'
 
-                if not dir_exist(temp_output_dir):
+                if not path_exists(temp_output_dir):
                     db = gffutils.FeatureDB(
                         f'{input_dir}', keep_order=True)
 
