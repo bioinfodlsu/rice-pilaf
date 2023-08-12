@@ -1,5 +1,4 @@
 import os
-import pandas as pd
 from .constants import Constants
 const = Constants()
 
@@ -26,21 +25,6 @@ def make_dir(directory):
     """
     if not path_exists(directory):
         os.makedirs(directory)
-
-
-def read_csv(file, sep=',', encoding='utf-8'):
-    """
-    Reads given CSV file into a data frame
-
-    Parameters:
-    - file: Path to the CSV file
-    - sep: Delimiter of the CSV file
-    - encoding: Encoding of the CSV file
-
-    Returns:
-    - Data frame containing the contents of the CSV file
-    """
-    return pd.read_csv(file, sep=sep, encoding=encoding)
 
 
 def convert_text_to_path(text):

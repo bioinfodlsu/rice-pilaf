@@ -1,3 +1,7 @@
+table tr td {
+    vertical-align: top;
+}
+
 th:not(.dash-filter) {
     font-weight: bold !important;
     background-color: var(--th-gray) !important;

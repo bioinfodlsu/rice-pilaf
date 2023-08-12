@@ -12,13 +12,6 @@ from collections import namedtuple
 
 const = Constants()
 
-PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
-                ('Trait Ontology', 'ontology_enrichment/to'),
-                ('Plant Ontology', 'ontology_enrichment/po'),
-                ('Pathways (Overrepresentation)', 'pathway_enrichment/ora'),
-                ('Pathway-Express', 'pathway_enrichment/pe'),
-                ('SPIA', 'pathway_enrichment/spia')]
-
 # Settings for the module detection algorithms:
 # - multiplier: Value multiplied to the parameter to get the name of the directory
 #               For example, results of running clusterone at param=0.3 are saved in 30
@@ -38,6 +31,15 @@ module_detection_algos = {
     'fox': Module_detection_algo(
         100, 0.01, '1 (Loose Modules)', '4 (Cohesive Modules)'),
 }
+
+Enrichment_tab = namedtuple('Enrichment_tab', ['enrichment', 'path'])
+enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
+                   Enrichment_tab('Trait Ontology', 'ontology_enrichment/to'),
+                   Enrichment_tab('Plant Ontology', 'ontology_enrichment/po'),
+                   Enrichment_tab('Pathways (Overrepresentation)',
+                                  'pathway_enrichment/ora'),
+                   Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
+                   Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
 
 
 def get_parameters_for_algo(algo, network='OS-CX'):
@@ -126,6 +128,8 @@ def fetch_enriched_modules(output_dir):
 
 def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, network, algo, parameters):
     """
+    Determine which modules are enriched given the set of GWAS-implicated genes
+
     Parameters:
     - implicated_gene_ids: Accessions of the genes implicated by GWAS
     - genomic_intervals: Genomic interval entered by the user
@@ -158,11 +162,21 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, networ
 
 
 def convert_transcript_to_msu_id(transcript_ids_str, network):
-    transcript_ids = transcript_ids_str.split('\n')
+    """
+    Converts given KEGG transcript IDs to their respective MSU accessions.
+
+    Parameters:
+    - transcript_ids_str: KEGG transcript IDs
+    - network: Coexpression network
+
+    Returns:
+    - Equivalent MSU accessions of the KEGG transcript IDs
+    """
     with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.TRANSCRIPT_TO_MSU_DICT}', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
+    transcript_ids = transcript_ids_str.split('\n')
     for transcript_id in transcript_ids:
         for msu_id in mapping_dict[transcript_id]:
             output_str += f'{msu_id}\n({transcript_id})\n\n'
@@ -346,93 +360,59 @@ def convert_to_df_spia(result, network):
 
 
 def convert_to_df(active_tab, module_idx, network, algo, parameters):
-    active_tab = active_tab.split('-')[1]
-    dir = PATHWAY_TABS[int(active_tab)][1]
+    dir = enrichment_tabs[get_tab_index(active_tab)].path
     enrichment_type = dir.split('/')[-1]
 
     file = f'{const.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
-    empty = False
-    if enrichment_type == 'go':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['ID', 'Gene Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Counts'],
-                                 skiprows=1)
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
+    columns = {'go': ['ID', 'Gene Ontology Term', 'Gene Ratio',
+                      'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
+               'to': ['ID', 'Trait Ontology Term', 'Gene Ratio',
+                      'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
+               'po': ['ID', 'Plant Ontology Term', 'Gene Ratio',
+                      'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
+               'ora': ['ID', 'KEGG Pathway', 'Gene Ratio',
+                       'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
+               'pe': ['ID', 'totalAcc', 'totalPert', 'totalAccNorm', 'totalPertNorm',
+                      'Perturbation p-value',	'pAcc',	'ORA p-value', 'Combined p-value',
+                      'Adj. Perturbation p-value', 'Adj. Accumulation p-value',
+                      'Adj. ORA p-value', 'Adj. Combined p-value'],
+               'spia': ['KEGG Pathway',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
+                        'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value',
+                        'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG']}
 
+    try:
+        result = pd.read_csv(file, delimiter='\t',
+                             names=columns[enrichment_type], skiprows=1)
+
+        # SPIA is a special case
+        if enrichment_type == 'SPIA':
+            # Add dtype argument to preserve leading 0 in KEGG pathway ID
+            result = pd.read_csv(file, delimiter='\t',
+                                 names=columns[enrichment_type], skiprows=1, dtype={'ID': object})
+
+        empty = result.empty
+    except:
+        result = pd.DataFrame()
+        empty = True
+
+    # Return results data frame and whether it is empty
+    if enrichment_type == 'go':
         return convert_to_df_go(result), empty
 
     elif enrichment_type == 'to':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['ID', 'Trait Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
-                                 skiprows=1)
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
-
         return convert_to_df_to(result), empty
 
     elif enrichment_type == 'po':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['ID', 'Plant Ontology Term', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
-                                 skiprows=1)
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
-
         return convert_to_df_po(result), empty
 
     elif enrichment_type == 'ora':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['ID', 'KEGG Pathway', 'Gene Ratio',
-                                        'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
-                                 skiprows=1)
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
-
         return convert_to_df_ora(result, network), empty
 
     elif enrichment_type == 'pe':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['ID', 'totalAcc', 'totalPert', 'totalAccNorm', 'totalPertNorm',
-                                        'Perturbation p-value',	'pAcc',	'ORA p-value', 'Combined p-value',
-                                        'Adj. Perturbation p-value', 'Adj. Accumulation p-value',
-                                        'Adj. ORA p-value', 'Adj. Combined p-value'],
-                                 skiprows=1)
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
-
         return convert_to_df_pe(result, module_idx, network, algo, parameters), empty
 
     elif enrichment_type == 'spia':
-        try:
-            result = pd.read_csv(file, delimiter='\t',
-                                 names=['KEGG Pathway',	'ID', 'pSize', 'NDE', 'ORA p-value', 'tA',
-                                        'Perturbation p-value', 'Combined p-value', 'Adj. Combined p-value',
-                                        'Adj. Combined p-value (Bonferroni)', 'Pathway Status', 'View on KEGG'],
-                                 skiprows=1,
-                                 dtype={'ID': object})      # Preserve leading 0 in KEGG pathway ID
-            empty = result.empty
-        except:
-            result = pd.DataFrame()
-            empty = True
-
         return convert_to_df_spia(result, network), empty
 
 

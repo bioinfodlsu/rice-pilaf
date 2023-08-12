@@ -56,13 +56,13 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
         nb_interval_str, const.TEMP_TFBS, tfbs_set, tfbs_prediction_technique)
     # if previously computed
     if path_exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
-        results_df = read_csv(
+        results_df = pd.read_csv(
             f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
         return results_df
 
     # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
     elif path_exists(f'{out_dir}/results_before_multiple_corrections.csv'):
-        results_before_multiple_corrections = read_csv(
+        results_before_multiple_corrections = pd.read_csv(
             f'{out_dir}/results_before_multiple_corrections.csv')
         results_df = multiple_testing_correction(results_before_multiple_corrections,
                                                  float(tfbs_fdr))

@@ -25,3 +25,7 @@ def create_empty_df_with_cols(cols):
         cols_dict[col] = ['-']
 
     return pd.DataFrame(cols_dict)
+
+
+def get_tab_index(tab_id):
+    return int(tab_id.split('-')[1])
