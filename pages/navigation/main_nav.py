@@ -4,6 +4,19 @@ import dash_bootstrap_components as dbc
 
 def navbar():
     return dbc.NavbarSimple(
+        children=[ 
+            dbc.NavItem(dbc.NavLink('Home', active='exact', href='/', className='top-navbar-item')),
+            dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki', target='_blank', className='top-navbar-item')),
+        ],
+        id='top-navbar',
+        brand=['RicePilaf'],
+        brand_href='/',
+        color='#4d987d',
+        dark=True,
+    )
+
+    """
+    return dbc.NavbarSimple(
         children=[
             dbc.NavItem(
                 dbc.NavLink([
@@ -22,3 +35,6 @@ def navbar():
         color='#4d987d',
         dark=True
     )
+    """
+    
+
