@@ -13,6 +13,8 @@ def navbar():
         brand_href='/',
         color='#4d987d',
         dark=True,
+        fluid=True,
+        className='px-5',
     )
 
     """
