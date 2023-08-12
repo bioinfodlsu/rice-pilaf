@@ -25,6 +25,7 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
 # - default_param: Default parameter of the module detection algorithm
 # - low: User-facing display for the lowest parameter
 # - high: User-facing display for the highest parameter
+
 Module_detection_algo = namedtuple('Module_detection_algo', [
                                    'multiplier', 'default_param', 'low', 'high'])
 module_detection_algos = {
@@ -155,18 +156,6 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, networ
 # Utility functions for the display of the tables showing the results of the enrichment analysis
 # ===============================================================================================
 
-def display_cols_in_sci_notation(result, numeric_columns):
-    for column in numeric_columns:
-        result[column] = result[column].apply(display_in_sci_notation)
-
-
-def create_empty_df(cols):
-    cols_dict = {}
-    for col in cols:
-        cols_dict[col] = ['-']
-
-    return pd.DataFrame(cols_dict)
-
 
 def convert_transcript_to_msu_id(transcript_ids_str, network):
     transcript_ids = transcript_ids_str.split('\n')
@@ -178,6 +167,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
         for msu_id in mapping_dict[transcript_id]:
             output_str += f'{msu_id}\n({transcript_id})\n\n'
 
+    # Remove trailing newline characters
     return output_str[:-2]
 
 
@@ -218,10 +208,9 @@ def get_kegg_pathway_name(pathway_id, network):
 def remove_rap_db_info_in_pathway_name(pathway_name):
     return pathway_name[:-len(' - Oryza sativa japonica (Japanese rice) (RAPDB)')]
 
-# ================================================
-# Functions for the display of the tables showing
-# the results of the enrichment analysis
-# ================================================
+# =======================================================================================
+# Functions for the display of the tables showing the results of the enrichment analysis
+# =======================================================================================
 
 
 def convert_to_df_go(result):
@@ -229,7 +218,7 @@ def convert_to_df_go(result):
             'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
@@ -245,7 +234,7 @@ def convert_to_df_to(result):
             'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
@@ -261,7 +250,7 @@ def convert_to_df_po(result):
             'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
@@ -277,7 +266,7 @@ def convert_to_df_ora(result, network):
             'BG Ratio', 'p-value', 'Adj. p-value', 'Genes', 'View on KEGG']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
@@ -304,7 +293,7 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
             'Adj. Combined p-value', 'Genes', 'View on KEGG']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     # Prettify display of ID
     result['ID'] = result['ID'].str[len('path:'):]
@@ -335,7 +324,7 @@ def convert_to_df_spia(result, network):
             'Adj. Combined p-value', 'Pathway Status', 'Genes', 'View on KEGG']
 
     if result.empty:
-        return create_empty_df(cols)
+        return create_empty_df_with_cols(cols)
 
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']

@@ -82,7 +82,7 @@ def init_callback(app):
             temp_output_folder_dir = get_path_to_temp(
                 nb_intervals_str, const.TEMP_IGV, foldername)
 
-            selected_interval_str_filename = convert_text_to_filename(
+            selected_interval_str_filename = convert_text_to_path(
                 selected_interval_str)
 
             selected_interval_str_file = f'{selected_interval_str_filename}.{file_format}'

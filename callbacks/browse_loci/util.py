@@ -1,6 +1,5 @@
 from ..lift_over import util
 import gffutils
-import pandas as pd
 import os
 from ..file_util import *
 from ..constants import Constants
@@ -23,7 +22,7 @@ def write_igv_tracks_to_file(input_dir, input_dir_filename, nb_intervals_str, fi
             if i < len(nb_intervals_options):
                 cur_nb_interval_options = nb_intervals_options[i]
 
-                cur_nb_interval_options_filename = convert_text_to_filename(
+                cur_nb_interval_options_filename = convert_text_to_path(
                     cur_nb_interval_options)
                 temp_output_dir = f'{temp_output_folder_dir}/{cur_nb_interval_options_filename}.{file_format}'
 
