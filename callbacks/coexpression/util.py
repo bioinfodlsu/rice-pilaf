@@ -432,7 +432,7 @@ def convert_module_to_edge_list(module, network_file, output_dir, filename):
     assert len(selected_nodes - module) == 0
 
 
-def convert_modules(network_file, module_file, module_index, output_dir):
+def convert_modules_to_edgelist(network_file, module_file, module_index, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -449,8 +449,20 @@ def convert_modules(network_file, module_file, module_index, output_dir):
 
 
 def load_module_graph(implicated_gene_ids, module, network, algo, parameters, layout):
+    """
+    Displays the subgraph induced by the module
+
+    Parameters:
+    - implicated_gene_ids: Accessions of the genes implicated by GWAS
+    - module: Gene module
+    - network: Coexpression network
+    - algo: Module detection algorithm
+    - parameters: Parameter at which module detection algorithm is run
+    - layout: Layout of the graph display
+    """
     try:
-        module_idx = module.split(' ')[1]
+        # Ignore the word "Module" at the start
+        module_idx = int(module.split(' ')[1])
         OUTPUT_DIR = f'{const.TEMP}/{network}/{algo}/modules/{parameters}'
         coexpress_nw = f'{OUTPUT_DIR}/module-{module_idx}.tsv'
 
@@ -458,11 +470,12 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
             NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
             MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv'
 
-            convert_modules(NETWORK_FILE, MODULE_FILE,
-                            int(module_idx), OUTPUT_DIR)
+            convert_modules_to_edgelist(
+                NETWORK_FILE, MODULE_FILE, module_idx, OUTPUT_DIR)
 
-        G = nx.read_edgelist(coexpress_nw, data=(("coexpress", float),))
+        G = nx.read_edgelist(coexpress_nw, data=(('coexpress', float)))
 
+        # Highlight the GWAS-implicated genes
         elements = nx.cytoscape_data(G)['elements']
         for node in elements['nodes']:
             if node['data']['id'] in implicated_gene_ids:
@@ -471,5 +484,5 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
         return elements, {'name': layout}, {'visibility': 'visible', 'width': '100%', 'height': '100vh'}
 
     # Triggered when there are no enriched modules
-    except:  # FileNotFoundError:
+    except:
         return {}, {'name': layout}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
