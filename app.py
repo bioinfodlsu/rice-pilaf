@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc
+from dash import dcc, html
 
 import pages.navigation.main_nav as main_nav
 
@@ -42,143 +42,148 @@ app.layout = dbc.Container(
 
         dash.page_container,
 
-
-        # Session storage
-        dcc.Store(
-            id='homepage-is-submitted',
-            storage_type='session'
-        ),
-
-        dcc.Store(
-            id='lift-over-is-submitted',
-            storage_type='session'
-        ),
-
-        dcc.Store(
-            id='lift-over-active-tab',
-            storage_type='session'
-        ),
-
         dcc.Store(
             id='homepage-genomic-intervals-saved-input',
             storage_type='session'
         ),
+        
+        html.Div(
+            id='session-container',
+            children=[
+                # Session storage
+                dcc.Store(
+                    id='homepage-is-submitted',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='homepage-genomic-intervals-submitted-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-is-submitted',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='lift-over-other-refs-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-active-tab',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='lift-over-other-refs-submitted-input',
-            storage_type='session'
-        ),
+                
+                dcc.Store(
+                    id='homepage-genomic-intervals-submitted-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='lift-over-active-filter',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-other-refs-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='lift-over-nb-table',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-other-refs-submitted-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='lift_over_nb_entire_table',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-active-filter',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='igv-selected-genomic-intervals-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift-over-nb-table',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='igv-selected-genomic-intervals-submitted-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='lift_over_nb_entire_table',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='igv-selected-tracks-submitted-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='igv-selected-genomic-intervals-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='igv-is-submitted',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='igv-selected-genomic-intervals-submitted-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-network-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='igv-selected-tracks-submitted-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-submitted-network',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='igv-is-submitted',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-clustering-algo-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-network-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-submitted-clustering-algo',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-submitted-network',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-submitted-parameter-module',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-clustering-algo-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-parameter-module-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-submitted-clustering-algo',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='coexpression-is-submitted',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-submitted-parameter-module',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='tfbs-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-parameter-module-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='tfbs-submitted-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='coexpression-is-submitted',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='tfbs-is-submitted',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='tfbs-saved-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='text-mining-query-saved-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='tfbs-submitted-input',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='text-mining-query-submitted-input',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='tfbs-is-submitted',
+                    storage_type='session'
+                ),
 
-        dcc.Store(
-            id='text-mining-is-submitted',
-            storage_type='session'
-        ),
+                dcc.Store(
+                    id='text-mining-query-saved-input',
+                    storage_type='session'
+                ),
 
+                dcc.Store(
+                    id='text-mining-query-submitted-input',
+                    storage_type='session'
+                ),
+
+                dcc.Store(
+                    id='text-mining-is-submitted',
+                    storage_type='session'
+                ),
+
+            ])
+        
     ],
     fluid=True
 )

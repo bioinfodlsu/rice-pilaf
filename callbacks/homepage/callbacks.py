@@ -50,74 +50,33 @@ def init_callback(app):
         raise PreventUpdate     
 
     @app.callback(
+        Output('session-container', 'children'),
         Output('input-error', 'children'),
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
-
         Output('homepage-genomic-intervals-submitted-input', 'data'),
-
-        Output('lift-over-is-submitted', 'data', allow_duplicate=True),
-        Output('lift-over-other-refs-submitted-input',
-               'data', allow_duplicate=True),
-        Output('lift-over-other-refs-saved-input',
-               'data', allow_duplicate=True),
-
-        Output('lift-over-active-tab', 'data', allow_duplicate=True),
-        Output('lift-over-active-filter', 'data', allow_duplicate=True),
-
-        Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-selected-genomic-intervals-saved-input',
-               'data', allow_duplicate=True),
-        Output('igv-selected-genomic-intervals-submitted-input',
-               'data', allow_duplicate=True),
-        Output('igv-selected-tracks-submitted-input',
-               'data', allow_duplicate=True),
-
-        Output('coexpression-network-saved-input',
-               'data', allow_duplicate=True),
-        Output('coexpression-clustering-algo-saved-input',
-               'data', allow_duplicate=True),
-        Output('coexpression-parameter-module-saved-input',
-               'data', allow_duplicate=True),
-
-        Output('coexpression-is-submitted', 'data', allow_duplicate=True),
-        Output('coexpression-submitted-network',
-               'data', allow_duplicate=True),
-        Output('coexpression-submitted-clustering-algo',
-               'data', allow_duplicate=True),
-        Output('coexpression-submitted-parameter-module',
-               'data', allow_duplicate=True),
-
-        Output('tfbs-is-submitted', 'data', allow_duplicate=True),
-        Output('tfbs-submitted-input', 'data', allow_duplicate=True),
-        Output('tfbs-saved-input', 'data', allow_duplicate=True),
-
-        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
-        Output('text-mining-query-submitted-input', 'data', allow_duplicate=True),
-        Output('text-mining-is-submitted', 'data', allow_duplicate=True),
         
         State('homepage-genomic-intervals', 'value'),
-
+    
         Input('homepage-submit', 'n_clicks'),
+        State('session-container', 'children'),
+
         Input('homepage-reset', 'n_clicks'),
         Input('homepage-clear-cache', 'n_clicks'),
 
         prevent_initial_call=True
     )
-    def parse_input(nb_intervals_str, n_clicks, *_):
+    def parse_input(nb_intervals_str, n_clicks, dccStore_children, *_):
         if 'homepage-clear-cache' == ctx.triggered_id:
             clear_cache_folder()
 
         if 'homepage-reset' == ctx.triggered_id:
-            return None, {'display': 'none'}, False, \
-                '', \
-                None, None, None, \
-                None, None, \
-                None, None, None, None, \
-                None, None, None, \
-                None, None, None, None, \
-                None, None, None, \
-                None, None, None
+            # clear data for items in dcc.Store found in session-container 
+            for i in range(len(dccStore_children)):
+                dccStore_children[i]['props']['data'] = None
+
+            return dccStore_children, None, {'display': 'none'}, False, ''
+    
 
         if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
             if nb_intervals_str:
@@ -125,44 +84,27 @@ def init_callback(app):
                     nb_intervals_str)
 
                 if lift_over_util.is_error(intervals):
-                    return [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, False, \
-                        nb_intervals_str, \
-                        None, None, None, \
-                        None, None, \
-                        None, None, None, None, \
-                        None, None, None, \
-                        None, None, None, None, \
-                        None, None, None, \
-                        None, None, None
+                    return dccStore_children, [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
+                        {'display': 'block'}, False, nb_intervals_str
                 else:
+                    # clear data for items in dcc.Store found in session-container
+                    for i in range(len(dccStore_children)):
+                        dccStore_children[i]['props']['data'] = None
+
+                    # tracks found in igv
                     track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
                                 [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
 
+                    # write to file the data for igv
                     for db in track_db:
                         if db[2] != 'bed':
                             browse_loci_util.write_igv_tracks_to_file(
                                 f'{db[0]}/{db[1]}', db[1], nb_intervals_str, db[2])
-                    return None, {'display': 'none'}, True, \
-                        nb_intervals_str, \
-                        None, None, None, \
-                        None, None, \
-                        None, None, None, None, \
-                        None, None, None, \
-                        None, None, None, None, \
-                        None, None, None, \
-                        None, None, None
+
+                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str
             else:
-                return [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, False, \
-                    nb_intervals_str, \
-                    None, None, None, \
-                    None, None, \
-                    None, None, None, None, \
-                    None, None, None, \
-                    None, None, None, None, \
-                    None, None, None, \
-                    None, None, None
+                return dccStore_children, [f'Error: Input for genomic interval should not be empty.'], \
+                    {'display': 'block'}, False, nb_intervals_str
 
         raise PreventUpdate
 
@@ -207,18 +149,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    """
-    @app.callback(
-        Output('post-gwas-analysis-container', 'hidden'),
-        Output('homepage-reset', 'href'),
-        Input('homepage-is-submitted', 'data')
-    )
-    def hide_side_bars(homepage_is_submitted):
-        if homepage_is_submitted:
-            return False, '/'
-        else:
-            return True, '/'
-    """
+
     @app.callback(
         Output('homepage-results-container','style'),
         Input('homepage-is-submitted', 'data'),
