@@ -38,6 +38,15 @@ ALGOS_HIGH = {'clusterone': '4 (Dense Modules)',
 
 
 def display_in_sci_notation(number):
+    """
+    Returns the given number in scientific notation n * 10^m, where n is rounded to 6 decimal places
+
+    Parameters:
+    - number (float): number whose equivalent in scientific notation is to be returned
+
+    Returns:
+    - string: number in scientific notation
+    """
     return '{:.6e}'.format(number)
 
 
