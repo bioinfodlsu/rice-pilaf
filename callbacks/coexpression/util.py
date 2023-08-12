@@ -8,6 +8,8 @@ import subprocess
 import pandas as pd
 import networkx as nx
 
+from collections import namedtuple
+
 const = Constants()
 
 PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
@@ -17,41 +19,49 @@ PATHWAY_TABS = [('Gene Ontology', 'ontology_enrichment/go'),
                 ('Pathway-Express', 'pathway_enrichment/pe'),
                 ('SPIA', 'pathway_enrichment/spia')]
 
-ALGOS_MULT = {'clusterone': 100,
-              'coach': 1000,
-              'demon': 100,
-              'fox': 100}
-
-ALGOS_DEFAULT_PARAM = {'clusterone': 0.3,
-                       'coach': 0.225,
-                       'demon': 0.25,
-                       'fox': 0.01}
-
-ALGOS_LOW = {'clusterone': '1 (Loose Modules)',
-             'coach': '1 (Fewer Modules)',
-             'demon': '1 (Fewer Modules)',
-             'fox': '1 (Loose Modules)'}
-
-ALGOS_HIGH = {'clusterone': '4 (Dense Modules)',
-              'coach': '4 (More Modules)',
-              'demon': '4 (More Modules)',
-              'fox': '4 (Cohesive Modules)'}
+Module_detection_algo = namedtuple('Module_detection_algo', [
+                                   'multiplier', 'default_param', 'low', 'high'])
+module_detection_algos = {
+    'clusterone': Module_detection_algo(
+        100, 0.3, '1 (Loose Modules)', '4 (Dense Modules)'),
+    'coach': Module_detection_algo(
+        1000, 0.225, '1 (Fewer Modules)', '4 (More Modules)'),
+    'demon': Module_detection_algo(
+        100, 0.25, '1 (Fewer Modules)', '4 (More Modules)'),
+    'fox': Module_detection_algo(
+        100, 0.01, '1 (Loose Modules)', '4 (Cohesive Modules)'),
+}
 
 
 def get_parameters_for_algo(algo, network='OS-CX'):
+    """
+    Returns the user-facing parameters for the module detection algorithms
+
+    Parameters:
+    - algo: Module detection algorithm
+    - network: Any of the coexpression networks supported by the app
+
+    Returns:
+    - User-facing parameters for the module detection algorithms
+    """
     param_dict = {}
     parameters = sorted(map(int, os.listdir(
         f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes')))
 
+    # Display the user-facing parameters for the module detection algorithms
     for idx, parameter in enumerate(parameters):
         if idx == 0:
-            param_dict[int(parameter)] = ALGOS_LOW[algo]
+            param_dict[int(parameter)] = module_detection_algos[algo].low
         elif idx == len(parameters) - 1:
-            param_dict[int(parameter)] = ALGOS_HIGH[algo]
+            param_dict[int(parameter)] = module_detection_algos[algo].high
         else:
             param_dict[int(parameter)] = str(idx + 1)
 
     return param_dict
+
+# =================================================
+# Utility functions for module enrichment analysis
+# =================================================
 
 
 def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
@@ -69,15 +79,27 @@ def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
 
 
 def fetch_enriched_modules(output_dir):
+    """
+    Fetches the enriched modules from the output file of the module enrichment analysis
+
+    Parameters:
+    - output_dir: Parent directory of the output file of the module enrichment analysis
+
+    Returns:
+    - Enriched modules (i.e., their respectives indices and adjust p-values)
+    """
     modules = []
     with open(f'{output_dir}/enriched_modules/ora-df.tsv') as modules_file:
-        for line in modules_file:
-            line = line.rstrip()
-            line = line.split('\t')
+        # Ignore header
+        next(modules_file)
 
-            if line[0] != 'ID':
-                modules.append(
-                    f'Module {line[0]} (Adj. p-value = {display_in_sci_notation(float(line[1]))})')
+        for line in modules_file:
+            line = line.rstrip().split('\t')
+            idx = line[0]
+            p_value = float(line[1])
+
+            modules.append(
+                f'Module {idx} (Adj. p-value = {display_in_sci_notation(p_value)})')
 
     return modules
 
@@ -100,10 +122,9 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, networ
     return fetch_enriched_modules(OUTPUT_DIR)
 
 
-# ========================================================
-# Utility functions for the display of the tables showing
-# the results of the enrichment analysis
-# ========================================================
+# ===============================================================================================
+# Utility functions for the display of the tables showing the results of the enrichment analysis
+# ===============================================================================================
 
 def display_cols_in_sci_notation(result, numeric_columns):
     for column in numeric_columns:

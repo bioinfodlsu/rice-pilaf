@@ -58,7 +58,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-results-container','style'),
+        Output('coexpression-results-container', 'style'),
         Input('coexpression-is-submitted', 'data'),
     )
     def display_coexpression_output(coexpression_is_submitted):
@@ -78,7 +78,7 @@ def init_callback(app):
         if parameter_module and algo in parameter_module:
             return parameter_module[algo]['param_slider_marks'], parameter_module[algo]['param_slider_value']
 
-        return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
+        return get_parameters_for_algo(algo), module_detection_algos[algo].default_param * module_detection_algos[algo].multiplier
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
@@ -336,7 +336,6 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
-
 
     @app.callback(
         Output('coexpression-download-df-to-csv', 'data'),
