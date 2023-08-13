@@ -67,9 +67,9 @@ def init_callback(app):
     )
     def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, nb_interval_str, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
-            tfbs_set = tfbs_submitted_input['tfbs-set']
-            tfbs_prediction_technique = tfbs_submitted_input['tfbs-prediction-technique']
-            tfbs_fdr = tfbs_submitted_input['tfbs-fdr']
+            tfbs_set = tfbs_submitted_input['tfbs_set']
+            tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
+            tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
             enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
@@ -115,7 +115,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-results-table', 'filter_query'),
+        Output('tf-enrichment-result-table', 'filter_query'),
         Input('tfbs-reset-table', 'n_clicks')
     )
     def reset_table_filters(*_):
