@@ -153,7 +153,7 @@ app.layout = dbc.Container(
                 ),
 
                 dcc.Store(
-                    id='tfbs_saved_input',
+                    id='tfbs-saved-input',
                     storage_type='session'
                 ),
 
