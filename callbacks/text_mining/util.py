@@ -1,5 +1,6 @@
 import pandas as pd
 from ..constants import Constants
+from ..general_util import *
 import regex as re
 import ftfy
 
@@ -47,6 +48,8 @@ def text_mining_query_search(query_string):
                         Sentence = Title
                     df.loc[len(df.index)] = [
                         Entity, PMID, Title, Sentence, score]
+
+    display_cols_in_fixed_dec_places(df, ['Score'])
 
     if len(df.index) > 0:
         return df
