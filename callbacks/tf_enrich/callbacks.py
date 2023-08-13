@@ -5,8 +5,6 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 
-#gwas_loci = None
-
 Tfbs_input = namedtuple(
     'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique', 'tfbs_fdr'])
 
@@ -58,10 +56,12 @@ def init_callback(app):
 
     @app.callback(
         Output('tf_enrichment_result_table', 'data'),
+        Output('tf_enrichment_result_tble', 'coolumns'),
+
         Input('tfbs-is-submitted', 'data'),
         State('lift_over_nb_entire_table', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data'),
-        
+
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-input', 'data')
     )
@@ -74,7 +74,10 @@ def init_callback(app):
             enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
 
-            return enrichment_results_df.to_dict('records')
+            columns = [{'id': x, 'name': x}
+                       for x in enrichment_results_df.columns]
+
+            return enrichment_results_df.to_dict('records'), columns
 
         raise PreventUpdate
 
@@ -108,7 +111,7 @@ def init_callback(app):
                 return 'promoters', 'FunTFBS'
 
             return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
-        
+
         raise PreventUpdate
 
     @app.callback(
@@ -121,5 +124,5 @@ def init_callback(app):
         if download_n_clicks >= 1:
             df = pd.DataFrame(tfbs_df)
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
-        
+
         raise PreventUpdate

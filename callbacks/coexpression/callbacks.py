@@ -161,7 +161,6 @@ def init_callback(app):
                     table, empty = convert_to_df(
                         active_tab, module_idx, submitted_network, submitted_algo, parameters)
                 except Exception as e:
-                    print(e)
                     table, empty = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
