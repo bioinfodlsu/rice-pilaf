@@ -9,33 +9,40 @@ from ..general_util import *
 
 const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
+Error_message = namedtuple('Error_message', ['code', 'message'])
 
-# Error codes for genomic interval input
-NO_CHROM_INTERVAL_SEP = 1
-NO_START_STOP_SEP = 2
-START_STOP_NOT_INT = 3
-START_GREATER_THAN_STOP = 4
-
-error_messages = {
-    NO_CHROM_INTERVAL_SEP: 'A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals',
-    NO_START_STOP_SEP: 'Specify a valid start and end for the genomic interval',
-    START_STOP_NOT_INT: 'The start and end of a genomic interval should be integers',
-    START_GREATER_THAN_STOP: 'The start of a genomic interval should not be past the end'
+errors = {
+    'NO_CHROM_INTERVAL_SEP': Error_message(1, 'A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals'),
+    'NO_START_STOP_SEP': Error_message(2, 'Specify a valid start and end for the genomic interval'),
+    'START_STOP_NOT_INT': Error_message(3, 'The start and end of a genomic interval should be integers'),
+    'START_GREATER_THAN_STOP': Error_message(4, 'The start of a genomic interval should not be past the end')
 }
 
 
 def create_empty_df():
+    """
+    Returns an empty data frame if there are no results
+
+    Returns:
+    - Empty data frame
+    """
     return create_empty_df_with_cols(['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand'])
 
-# The first element is the error code and the second element is the malformed interval
+# =====================================================
+# Utility functions for parsing input genomic interval
+# =====================================================
 
 
 def is_error(intervals):
+    """
+    Returns True if the genomic interval entered by the user 
+    """
+    # The first element is the error code and the second element is the malformed interval
     return isinstance(intervals[0], int)
 
 
 def get_error_message(error_code):
-    return error_messages[error_code]
+    return errors[error_code].message
 
 
 def sanitize_other_refs(other_refs):
@@ -77,21 +84,21 @@ def to_genomic_interval(interval_str):
             chrom = pad_one_digit_chromosome(chrom)
 
     except ValueError:
-        return NO_CHROM_INTERVAL_SEP, interval_str
+        return errors['NO_CHROM_INTERVAL_SEP'].code, interval_str
 
     try:
         start, stop = interval.split("-")
     except ValueError:
-        return NO_START_STOP_SEP, interval_str
+        return errors['NO_START_STOP_SEP'].code, interval_str
 
     try:
         start = int(start)
         stop = int(stop)
     except ValueError:
-        return START_STOP_NOT_INT, interval_str
+        return errors['START_STOP_NOT_INT'].code, interval_str
 
     if start > stop:
-        return START_GREATER_THAN_STOP, interval_str
+        return errors['START_GREATER_THAN_STOP'].code, interval_str
 
     return Genomic_interval(chrom, start, stop)
 
@@ -115,19 +122,31 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 
     return nb_intervals
 
+# ================================
+# Utility functions for lift-over
+# ================================
 
-def get_ogi_nb(Nb_intervals):
-    if is_error(Nb_intervals):
-        Nb_intervals = []
+
+def sanitize_gene_id(gene_id):
+    # Remove 'gene' prefix from gene IDs (e.g., from N22)
+    if gene_id[:len('gene:')] == 'gene:':
+        return gene_id[len('gene:'):]
+
+    return gene_id
+
+
+def get_ogi_nb(nb_intervals):
+    if is_error(nb_intervals):
+        nb_intervals = []
 
     final_ogi_set = set()
     final_ogi_dict = defaultdict(set)
 
-    for Nb_interval in Nb_intervals:
+    for nb_interval in nb_intervals:
         # load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
             f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
-        genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+        genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
         ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
@@ -143,20 +162,20 @@ def get_ogi_nb(Nb_intervals):
     return final_ogi_set, final_ogi_dict
 
 
-def get_ogi_other_ref(ref, Nb_intervals):
+def get_ogi_other_ref(ref, nb_intervals):
     db_align = gffutils.FeatureDB(
         f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
     db_annotation = gffutils.FeatureDB(
         f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
     # get corresponding intervals on ref
-    if is_error(Nb_intervals):
-        Nb_intervals = []
+    if is_error(nb_intervals):
+        nb_intervals = []
 
     final_ogi_set = set()
     final_ogi_dict = defaultdict(set)
 
-    for Nb_interval in Nb_intervals:
-        gff_intersections = list(db_align.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+    for nb_interval in nb_intervals:
+        gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                                  completely_within=False))
         for intersection in gff_intersections:
             ref_interval = to_genomic_interval(
@@ -177,21 +196,21 @@ def get_ogi_other_ref(ref, Nb_intervals):
     return final_ogi_set, final_ogi_dict
 
 
-def get_overlapping_ogi(refs, Nb_intervals):
+def get_overlapping_ogi(refs, nb_intervals):
     ogi_list = []
     accession_list = []
 
-    ogi_nb = get_ogi_nb(Nb_intervals)
+    ogi_nb_set, ogi_nb_dict = get_ogi_nb(nb_intervals)
     ogi_other_refs = []
 
     if 'Nb' in refs:
-        ogi_list.append(ogi_nb[0])
-        accession_list.append(ogi_nb[1])
+        ogi_list.append(ogi_nb_set)
+        accession_list.append(ogi_nb_dict)
 
     idx = 0
     for ref in refs:
         if ref != 'Nb':
-            ogi_other_refs.append(get_ogi_other_ref(ref, Nb_intervals))
+            ogi_other_refs.append(get_ogi_other_ref(ref, nb_intervals))
             ogi_list.append(ogi_other_refs[idx][0])
             accession_list.append(ogi_other_refs[idx][1])
 
@@ -219,19 +238,16 @@ def get_overlapping_ogi(refs, Nb_intervals):
     return df
 
 
-# getting genes from Nipponbare
-
-
-def get_genes_from_Nb(Nb_intervals):
+def get_genes_from_Nb(nb_intervals):
     dfs = []
-    if is_error(Nb_intervals):
-        Nb_intervals = []
+    if is_error(nb_intervals):
+        nb_intervals = []
 
-    for Nb_interval in Nb_intervals:
+    for nb_interval in nb_intervals:
         # load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
             f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
-        genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+        genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
         ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
@@ -270,28 +286,19 @@ def get_genes_from_Nb(Nb_intervals):
         return create_empty_df(), table['Name'].values.tolist()
 
 
-# Remove 'gene' prefix from gene IDs (e.g., from N22)
-def sanitize_gene_id(gene_id):
-    if gene_id[:len('gene:')] == 'gene:':
-        return gene_id[len('gene:'):]
-
-    return gene_id
-
-# get intervals from other refs that align to (parts) of the input loci
-
-
-def get_genes_from_other_ref(ref, Nb_intervals):
+def get_genes_from_other_ref(ref, nb_intervals):
+    # get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
         f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
     db_annotation = gffutils.FeatureDB(
         f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db")
     # get corresponding intervals on ref
     dfs = []
-    if is_error(Nb_intervals):
-        Nb_intervals = []
+    if is_error(nb_intervals):
+        nb_intervals = []
 
-    for Nb_interval in Nb_intervals:
-        gff_intersections = list(db_align.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+    for nb_interval in nb_intervals:
+        gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                                  completely_within=False))
         for intersection in gff_intersections:
             ref_interval = to_genomic_interval(
