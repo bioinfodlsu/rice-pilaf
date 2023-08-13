@@ -58,7 +58,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-results-container','style'),
+        Output('coexpression-results-container', 'style'),
         Input('coexpression-is-submitted', 'data'),
     )
     def display_coexpression_output(coexpression_is_submitted):
@@ -78,7 +78,7 @@ def init_callback(app):
         if parameter_module and algo in parameter_module:
             return parameter_module[algo]['param_slider_marks'], parameter_module[algo]['param_slider_value']
 
-        return get_parameters_for_algo(algo), ALGOS_DEFAULT_PARAM[algo] * ALGOS_MULT[algo]
+        return get_parameters_for_algo(algo), module_detection_algos[algo].default_param * module_detection_algos[algo].multiplier
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
@@ -161,7 +161,6 @@ def init_callback(app):
                     table, empty = convert_to_df(
                         active_tab, module_idx, submitted_network, submitted_algo, parameters)
                 except Exception as e:
-                    print(e)
                     table, empty = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
@@ -169,8 +168,7 @@ def init_callback(app):
                     columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
                                'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
                 else:
-                    columns = [{'id': x, 'name': x}
-                               for x in table.columns]
+                    columns = [{'id': x, 'name': x} for x in table.columns]
 
                 return table.to_dict('records'), columns
 
@@ -336,7 +334,6 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
-
 
     @app.callback(
         Output('coexpression-download-df-to-csv', 'data'),

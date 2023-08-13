@@ -1,3 +1,7 @@
+table tr td {
+    vertical-align: top;
+}
+
 th:not(.dash-filter) {
     font-weight: bold !important;
     background-color: var(--th-gray) !important;
@@ -9,6 +13,7 @@ tr:nth-of-type(odd) td {
 
 th, td {
     padding: 0.5em !important;
+    font-family: sans-serif;
 }
 
 .page-number, .current-page {

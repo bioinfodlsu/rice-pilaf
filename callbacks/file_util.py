@@ -1,47 +1,66 @@
 import os
-import pandas as pd
 from .constants import Constants
 const = Constants()
 
 
-def dir_exist(directory):
-    return os.path.exists(directory)
+def path_exists(path):
+    """
+    Checks if given path exists
+
+    Parameters:
+    - path: Path to be checked if it exists
+
+    Returns:
+    - True if the path exists; False, otherwise
+    """
+    return os.path.exists(path)
 
 
-def create_dir(directory):
-    if not dir_exist(directory):
+def make_dir(directory):
+    """
+    Creates given directory if it does not yet exist
+
+    Parameters:
+    - directory: Directory to be created
+    """
+    if not path_exists(directory):
         os.makedirs(directory)
 
 
-def write_df_to_csv(df, directory):
-    create_dir(directory)
+def convert_text_to_path(text):
+    """
+    Converts given text into a well-formed path
 
-    df.to_csv(f'{directory}')
+    Parameters:
+    - text: Text to be converted into a well-formed path
 
-
-def load_csv_from_dir(directory):
-    return pd.read_csv(directory)
-
-
-def sanitize_text_to_foldername_format(text):
+    Returns:
+    - Well-formed path
+    """
     return text.replace(
         ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
 
 
-def sanitize_text_to_filename_format(text):
-    return text.replace(
-        ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
+def get_path_to_temp(genomic_interval, analysis_type, *args):
+    """
+    Forms the path to temporary (file-cached) results of given post-GWAS analysis
+    This function returns only the path name. It does not create the actual file or directory
 
+    Parameters:
+    - genomic_interval: Genomic interval entered by the user
+    - analysis_type: Post-GWAS analysis
+    - args: Subfolder names appended to the path
 
-def get_temp_output_folder_dir(genomic_interval, analysis_type, *args):
-    genomic_interval_foldername = sanitize_text_to_foldername_format(
+    Returns:
+    - Path to temporary (file-cached) results of post-GWAS analysis
+    """
+    genomic_interval_foldername = convert_text_to_path(
         genomic_interval)
 
-    analysis_type = sanitize_text_to_foldername_format(analysis_type)
+    analysis_type = convert_text_to_path(analysis_type)
 
     temp_dir = f'{const.TEMP}/{genomic_interval_foldername}/{analysis_type}'
-    for arg in args:
-        folder = sanitize_text_to_foldername_format(arg)
-        temp_dir += f'/{folder}'
+    for folder in args:
+        temp_dir += f'/{convert_text_to_path(folder)}'
 
     return temp_dir

@@ -1,8 +1,33 @@
-import dash
 from dash import html
 import dash_bootstrap_components as dbc
 
+
 def navbar():
+    return dbc.NavbarSimple(
+        children=[
+            dbc.NavItem(dbc.NavLink('Home', active='exact',
+                        href='/', className='top-navbar-item')),
+            dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki',
+                        target='_blank', className='top-navbar-item')),
+        ],
+        id='top-navbar',
+        brand=[dbc.Row(
+            [
+                dbc.Col(html.Img(src='assets/logo.png', height='20px',
+                        className='mx-auto'), className='d-flex align-items-center'),
+                dbc.Col(dbc.NavbarBrand('RicePilaf', className='ms-3')),
+            ],
+            align="center",
+            className="g-0",
+        )],
+        brand_href='/',
+        color='#4d987d',
+        dark=True,
+        fluid=True,
+        className='px-5',
+    )
+
+    """
     return dbc.NavbarSimple(
         children=[
             dbc.NavItem(
@@ -22,3 +47,4 @@ def navbar():
         color='#4d987d',
         dark=True
     )
+    """

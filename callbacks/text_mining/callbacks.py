@@ -1,10 +1,9 @@
-from dash import Input, Output,State,ctx,ALL, html
+from dash import Input, Output, State, ctx, ALL, html
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
-
 
 
 Text_mining_input = namedtuple(
@@ -13,7 +12,7 @@ Text_mining_input = namedtuple(
 
 def init_callback(app):
 
-    #to display user input interval in the top nav
+    # to display user input interval in the top nav
     @app.callback(
         Output('text-mining-genomic-intervals-input', 'children'),
         Input('homepage-genomic-intervals-submitted-input', 'data'),
@@ -28,14 +27,13 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     @app.callback(
         Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
         Input('text-mining-query', 'value'),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
-     )
+    )
     def set_input_fields(query_string, *_):
         if ctx.triggered_id:
 
@@ -53,16 +51,16 @@ def init_callback(app):
     def get_input_homepage_session_state(query):
         return query
 
-
     @app.callback(
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
-        Output('text-mining-query-submitted-input', 'data', allow_duplicate=True),
+        Output('text-mining-query-submitted-input',
+               'data', allow_duplicate=True),
         Input('text-mining-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query', 'value'),
         prevent_initial_call=True
     )
-    def submit_text_mining_input(text_mining_submitted_n_clicks, homepage_is_submitted,text_mining_query):
+    def submit_text_mining_input(text_mining_submitted_n_clicks, homepage_is_submitted, text_mining_query):
         if homepage_is_submitted and text_mining_submitted_n_clicks >= 1:
             submitted_input = Text_mining_input(
                 text_mining_query)._asdict()
@@ -82,17 +80,28 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
-        Output('text_mining_result_table', 'data'),
+        Output('text-mining-result-table', 'data'),
+        Output('text-mining-result-table', 'columns'),
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query-submitted-input', 'data')
     )
     def display_text_mining_results(text_mining_is_submitted, homepage_submitted,
-                                   text_mining_query_submitted_input):
+                                    text_mining_query_submitted_input):
         if homepage_submitted and text_mining_is_submitted:
             query_string = text_mining_query_submitted_input['text_mining_query']
             text_mining_results_df = text_mining_query_search(query_string)
 
-            return text_mining_results_df.to_dict('records')
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                       for x in text_mining_results_df.columns]
+
+            return text_mining_results_df.to_dict('records'), columns
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('text-mining-result-table', 'filter_query'),
+        Input('text-mining-reset-table', 'n_clicks')
+    )
+    def reset_table_filters(*_):
+        return ''

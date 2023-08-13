@@ -5,6 +5,7 @@ import gffutils
 import pandas as pd
 
 from ..constants import Constants
+from ..general_util import *
 
 const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
@@ -24,14 +25,7 @@ error_messages = {
 
 
 def create_empty_df():
-    return pd.DataFrame({
-        'OGI': ['-'],
-        'Name': ['-'],
-        'Chromosome': ['-'],
-        'Start': ['-'],
-        'End': ['-'],
-        'Strand': ['-']
-    })
+    return create_empty_df_with_cols(['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand'])
 
 # The first element is the error code and the second element is the malformed interval
 
@@ -261,9 +255,11 @@ def get_genes_from_Nb(Nb_intervals):
     # Return empty dataframe if there are no results to concatenate
     try:
         table_gene_ids = pd.concat(dfs, ignore_index=True)
-        #read in dataframe containing gene descriptions
-        gene_description_df = pd.read_csv(f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
-        table = pd.merge(gene_description_df,table_gene_ids,left_on='Gene_ID',right_on='Name')
+        # read in dataframe containing gene descriptions
+        gene_description_df = pd.read_csv(
+            f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
+        table = pd.merge(gene_description_df, table_gene_ids,
+                         left_on='Gene_ID', right_on='Name')
 
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
