@@ -169,8 +169,7 @@ def init_callback(app):
                     columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
                                'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
                 else:
-                    columns = [{'id': x, 'name': x}
-                               for x in table.columns]
+                    columns = [{'id': x, 'name': x} for x in table.columns]
 
                 return table.to_dict('records'), columns
 
