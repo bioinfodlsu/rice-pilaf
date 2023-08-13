@@ -20,9 +20,8 @@ layout = html.Div(
         html.Div([
             html.P(
                 'In this page, you can obtain the list of genes overlapping your input intervals.'),
-            html.Span(
+            html.P(
                 'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
-
         ], className='analysis-intro p-3'),
 
         html.Div([

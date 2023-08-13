@@ -2,6 +2,11 @@ table tr td {
     vertical-align: top;
 }
 
+table tr td p {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 th:not(.dash-filter) {
     font-weight: bold !important;
     background-color: var(--th-gray) !important;

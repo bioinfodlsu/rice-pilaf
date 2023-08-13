@@ -53,6 +53,11 @@ a:hover {
     border-radius: 10px;
 }
 
+.analysis-intro p:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 .non-clickable {
     cursor: default;
 }

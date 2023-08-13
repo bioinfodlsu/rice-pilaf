@@ -13,7 +13,7 @@ layout = html.Div(
         html.Div([
             html.P(
                 'Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.'),
-            html.Span(
+            html.P(
                 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
         ], className='analysis-intro p-3'),
 
@@ -68,7 +68,7 @@ layout = html.Div(
             dbc.Input(id='tfbs-fdr', type='number', value=0.25, min=0, max=1, step=0.05,
                       persistence=True, persistence_type='memory'),
             html.Br(),
-            html.Br(),
+
             dbc.Button('Run Analysis',
                        id='tfbs-submit',
                        n_clicks=0,

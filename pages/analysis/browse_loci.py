@@ -7,11 +7,11 @@ layout = html.Div(
     id={
         'type': 'analysis-layout',
         'label': const.IGV
-    }, 
+    },
     hidden=True,
     children=[
         html.Div([
-            html.Span('WRITE ME')
+            html.P('WRITE ME')
         ], className='analysis-intro p-3'),
 
         html.Div([
@@ -22,7 +22,7 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label('Select an interval: ',
-                    className='mb-2'),
+                      className='mb-2'),
 
             dcc.Dropdown(
                 id='igv-genomic-intervals',
@@ -31,9 +31,9 @@ layout = html.Div(
             html.Br(),
 
             dbc.Button('Submit',
-                    id='igv-submit',
-                    n_clicks=0,
-                    className='page-button'),
+                       id='igv-submit',
+                       n_clicks=0,
+                       className='page-button'),
 
             html.Br(),
             html.Br(),
@@ -45,8 +45,8 @@ layout = html.Div(
                     dbc.Label(id='igv-track-intro'),
 
                     dcc.Loading(dbc.Checklist(id='igv-track-filter',
-                                            inline=True,
-                                            className='ms-3')),
+                                              inline=True,
+                                              className='ms-3')),
 
                     html.Br(),
 
