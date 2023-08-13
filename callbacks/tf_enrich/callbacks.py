@@ -56,7 +56,7 @@ def init_callback(app):
 
     @app.callback(
         Output('tf_enrichment_result_table', 'data'),
-        Output('tf_enrichment_result_tble', 'coolumns'),
+        Output('tf_enrichment_result_table', 'coolumns'),
 
         Input('tfbs-is-submitted', 'data'),
         State('lift_over_nb_entire_table', 'data'),
