@@ -1,8 +1,36 @@
 import pandas as pd
 from ..constants import Constants
-import re
+import regex as re
+import ftfy
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
+
+
+def sanitize_text(text):
+    # Sanitization of HTML tags should come first
+    text = re.sub(r'<\s+', '<', text)
+    text = re.sub(r'\s+>', '>', text)
+    text = re.sub(r'</\s+', '</', text)
+    text = re.sub(r'(?<!</\w+)>\s+', '>', text)
+
+    text = re.sub(r'\s+<su', '<su', text)
+
+    text = re.sub(r'\(\s+', '(', text)
+    text = re.sub(r'\s+\)', ')', text)
+    text = re.sub(r'\[\s+', '[', text)
+    text = re.sub(r'\s+\]', ']', text)
+
+    text = re.sub(r'-\s+', '-', text)
+    text = re.sub(r'\s+-', '-', text)
+
+    text = re.sub(r'\s+\.', '.', text)
+    text = re.sub(r'\s+,', ',', text)
+    text = re.sub(r'\s+:', ':', text)
+    text = re.sub(r'\s+;', ';', text)
+
+    text = ftfy.fix_text(text)
+
+    return text
 
 
 def text_mining_query_search(query_string):
@@ -11,8 +39,8 @@ def text_mining_query_search(query_string):
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
         for line in f:
             if re.search(query_regex, line):
-                PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = line.split(
-                    "\t")
+                PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = map(sanitize_text, line.split(
+                    '\t'))
 
                 if Type == 'Gene':
                     if Sentence == 'None':
@@ -23,5 +51,5 @@ def text_mining_query_search(query_string):
     if len(df.index) > 0:
         return df
     else:
-        df.loc[len(df.index)] = ['-']*len(COLNAMES)
+        df.loc[len(df.index)] = ['-'] * len(COLNAMES)
         return df

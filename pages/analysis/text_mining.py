@@ -68,17 +68,23 @@ layout = html.Div(
                                     n_clicks=0,
                                     color='light', size='sm', className='table-button'),
                                 dcc.Download(
-                                    id='text-mining-download-df-to-csv')
+                                    id='text-mining-download-df-to-csv'),
+                                dbc.Button([html.I(
+                                    className='bi bi-arrow-clockwise me-2'),
+                                    'Reset Table'],
+                                    id='text-mining-reset-table',
+                                    color='light', size='sm', className='ms-3 table-button')
                             ], style={'textAlign': 'right'})
                         ),
 
                         dash_table.DataTable(
-                            id='text_mining_result_table',
+                            id='text-mining-result-table',
                             style_data={
                                 'whiteSpace': 'normal',
                                 'height': 'auto',
                                 'textAlign': 'left'
                             },
+                            markdown_options={'html': True},
                             sort_action='native',
                             filter_action='native',
                             filter_options={'case': 'insensitive',
@@ -88,7 +94,7 @@ layout = html.Div(
                             cell_selectable=False
                         )
                     ])
-                ], className='p-3 mt-2')
+                ], className='mt-2')
 
         ])
     ], className='p-3 mt-2')
