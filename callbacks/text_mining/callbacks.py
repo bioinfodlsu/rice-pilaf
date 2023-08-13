@@ -80,8 +80,8 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
-        Output('text_mining_result_table', 'data'),
-        Output('text_mining_result_table', 'columns'),
+        Output('text-mining-result-table', 'data'),
+        Output('text-mining-result-table', 'columns'),
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query-submitted-input', 'data')
@@ -92,9 +92,16 @@ def init_callback(app):
             query_string = text_mining_query_submitted_input['text_mining_query']
             text_mining_results_df = text_mining_query_search(query_string)
 
-            columns = [{'id': x, 'name': x}
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in text_mining_results_df.columns]
 
             return text_mining_results_df.to_dict('records'), columns
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('text-mining-result-table', 'filter_query'),
+        Input('text-mining-reset-table', 'n_clicks')
+    )
+    def reset_table_filters(*_):
+        return ''
