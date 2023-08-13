@@ -9,8 +9,9 @@ from ..general_util import *
 
 const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
-Error_message = namedtuple('Error_message', ['code', 'message'])
 
+# Error codes and messages triggered by a malformed genomic interval entered by the user
+Error_message = namedtuple('Error_message', ['code', 'message'])
 errors = {
     'NO_CHROM_INTERVAL_SEP': Error_message(1, 'A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals'),
     'NO_START_STOP_SEP': Error_message(2, 'Specify a valid start and end for the genomic interval'),
@@ -33,79 +34,130 @@ def create_empty_df():
 # =====================================================
 
 
-def is_error(intervals):
+def is_error(genomic_interval):
     """
-    Returns True if the genomic interval entered by the user 
+    Returns True if given genomic interval is malformed; False, otherwise
+
+    This function assumes that genomic_interval is the return value of to_genomic_interval()
+
+    Parameters:
+    - genomic_interval: If its first element is an integer (i.e., the error code),
+                        then the given genomic interval is malformed
+
+    Returns:
+    - True if given genomic interval is malformed; False, otherwise
     """
-    # The first element is the error code and the second element is the malformed interval
-    return isinstance(intervals[0], int)
+    return isinstance(genomic_interval[0], int)
 
 
 def get_error_message(error_code):
-    return errors[error_code].message
+    """
+    Returns the message associated with the error code if the user inputs a malformed genomic interval
 
+    Parameters:
+    - error_code: Error code triggered by the malformed genomic interval
 
-def sanitize_other_refs(other_refs):
-    if other_refs:
-        if isinstance(other_refs, str):
-            return [other_refs]
-        else:
-            return other_refs
-
-    return []
-
-
-def sanitize_nb_intervals_str(nb_intervals_str):
-    # Remove spaces
-    nb_intervals_str = nb_intervals_str.replace(' ', '')
-
-    # Remove trailing semicolons
-    nb_intervals_str = nb_intervals_str.rstrip(';')
-
-    return nb_intervals_str
-
-# convert 'Chr01:10000-25000' to a Genomic_Interval named tuple
+    Returns:
+    - Message associated with the given error code
+    """
+    for _, code_message in errors.items():
+        if code_message.code == error_code:
+            return code_message.message
 
 
 def is_one_digit_chromosome(chromosome):
+    """
+    Checks if given chromosome only has a single digit (e.g., Chr1, Chr2)
+
+    Parameters:
+    - chromosome: Chromosome to be checked
+
+    Returns:
+    - True if given chromosome only has a single digit; False, otherwise
+    """
     # Examples: Chr1, Chr2
     return len(chromosome) == len('Chr') + 1
 
 
 def pad_one_digit_chromosome(chromosome):
-    # Convert 'Chr1' to 'Chr01'
+    """
+    Prepends a 0 to the chromosome number if it only has a single digit
+    For example, if the input is 'Chr1', it returns 'Chr01'
+
+    This function assumes that the given chromosome only has a single digit
+
+    Parameters:
+    - chromosome: Chromosome to be padded
+
+    Returns:
+    - Chromosome with a leading 0 prepended
+    """
     return chromosome[:-1] + '0' + chromosome[-1]
 
 
-def to_genomic_interval(interval_str):
+def to_genomic_interval(genomic_interval_str):
+    """
+    Converts a genomic interval extracted from the user input into a Genomic_interval tuple
+    If the genomic interval is malformed, it returns the error code, alongside the genomic interval
+
+    Parameters:
+    - genomic_interval_str: Genomic interval extracted from the user input
+
+    Returns:
+    - If the genomic interval is valid: Genomic_interval tuple
+    - Otherwise: Tuple containing the triggered error code and the genomic interval
+    """
     try:
-        chrom, interval = interval_str.split(":")
+        chrom, interval = genomic_interval_str.split(":")
         if is_one_digit_chromosome(chrom):
             chrom = pad_one_digit_chromosome(chrom)
 
     except ValueError:
-        return errors['NO_CHROM_INTERVAL_SEP'].code, interval_str
+        return errors['NO_CHROM_INTERVAL_SEP'].code, genomic_interval_str
 
     try:
         start, stop = interval.split("-")
     except ValueError:
-        return errors['NO_START_STOP_SEP'].code, interval_str
+        return errors['NO_START_STOP_SEP'].code, genomic_interval_str
 
     try:
         start = int(start)
         stop = int(stop)
     except ValueError:
-        return errors['START_STOP_NOT_INT'].code, interval_str
+        return errors['START_STOP_NOT_INT'].code, genomic_interval_str
 
     if start > stop:
-        return errors['START_GREATER_THAN_STOP'].code, interval_str
+        return errors['START_GREATER_THAN_STOP'].code, genomic_interval_str
 
     return Genomic_interval(chrom, start, stop)
 
-# Split 'Chr01:10000-25000;;Chr01:22000-25000'
+
+def sanitize_nb_intervals_str(nb_intervals_str):
+    """
+    Sanitizes the genomic intervals entered by the user by removing spaces and removing trailing semicolons
+
+    Parameters:
+    - nb_intervals_str: Genomic intervals entered by the user
+
+    Returns:
+    - Sanitized genomic interval
+    """
+    nb_intervals_str = nb_intervals_str.replace(' ', '')
+    nb_intervals_str = nb_intervals_str.rstrip(';')
+
+    return nb_intervals_str
 
 
 def get_genomic_intervals_from_input(nb_intervals_str):
+    """
+    Extracts the Genomic_interval tuples from the genomic intervals entered by the user
+
+    Parameters:
+    - nb_intervals_str: Genomic intervals entered by the user
+
+    Returns:
+    - List of Genomic_interval tuples
+    """
     nb_intervals_str = sanitize_nb_intervals_str(nb_intervals_str)
     nb_intervals = []
 
@@ -114,7 +166,7 @@ def get_genomic_intervals_from_input(nb_intervals_str):
     for interval_str in nb_intervals_split:
         interval = to_genomic_interval(interval_str)
 
-        # Check if interval is malformed
+        # Trap if at least one of the genomic intervals is malformed
         if is_error(interval):
             return interval
         else:
@@ -125,6 +177,22 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 # ================================
 # Utility functions for lift-over
 # ================================
+
+
+def sanitize_other_refs(other_refs):
+    """
+
+
+    Parameters:
+    - other_refs: 
+    """
+    if other_refs:
+        if isinstance(other_refs, str):
+            return [other_refs]
+        else:
+            return other_refs
+
+    return []
 
 
 def sanitize_gene_id(gene_id):
