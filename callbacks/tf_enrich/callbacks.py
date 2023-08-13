@@ -29,9 +29,9 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Input('tfbs-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
-        State('tfbs_set', 'value'),
-        State('tfbs_prediction_technique', 'value'),
-        State('tfbs_fdr', 'value'),
+        State('tfbs-set', 'value'),
+        State('tfbs-prediction-technique', 'value'),
+        State('tfbs-fdr', 'value'),
         prevent_initial_call=True
     )
     def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, tfbs_set, tfbs_prediction_technique, tfbs_fdr):
@@ -55,8 +55,8 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
-        Output('tf_enrichment_result_table', 'data'),
-        Output('tf_enrichment_result_table', 'columns'),
+        Output('tf-enrichment-result-table', 'data'),
+        Output('tf-enrichment-result-table', 'columns'),
 
         Input('tfbs-is-submitted', 'data'),
         State('lift_over_nb_entire_table', 'data'),
@@ -67,9 +67,9 @@ def init_callback(app):
     )
     def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, nb_interval_str, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
-            tfbs_set = tfbs_submitted_input['tfbs_set']
-            tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
-            tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
+            tfbs_set = tfbs_submitted_input['tfbs-set']
+            tfbs_prediction_technique = tfbs_submitted_input['tfbs-prediction-technique']
+            tfbs_fdr = tfbs_submitted_input['tfbs-fdr']
 
             enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
@@ -83,9 +83,9 @@ def init_callback(app):
 
     @app.callback(
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
-        Input('tfbs_set', 'value'),
-        Input('tfbs_prediction_technique', 'value'),
-        Input('tfbs_fdr', 'value'),
+        Input('tfbs-set', 'value'),
+        Input('tfbs-prediction-technique', 'value'),
+        Input('tfbs-fdr', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
@@ -99,8 +99,8 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs_set', 'value'),
-        Output('tfbs_prediction_technique', 'value'),
+        Output('tfbs-set', 'value'),
+        Output('tfbs-prediction-technique', 'value'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-saved-input', 'data'),
         Input('homepage-genomic-intervals-submitted-input', 'data')
@@ -110,14 +110,21 @@ def init_callback(app):
             if not tfbs_saved_input:
                 return 'promoters', 'FunTFBS'
 
-            return tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
+            return tfbs_saved_input['tfbs-set'], tfbs_saved_input['tfbs-prediction-technique']
 
         raise PreventUpdate
 
     @app.callback(
+        Output('tfbs-results-table', 'filter_query'),
+        Input('tfbs-reset-table', 'n_clicks')
+    )
+    def reset_table_filters(*_):
+        return ''
+
+    @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
-        State('tf_enrichment_result_table', 'data'),
+        State('tf-enrichment-result-table', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data')
     )
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):

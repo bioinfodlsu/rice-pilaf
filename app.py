@@ -47,7 +47,7 @@ app.layout = dbc.Container(
             id='homepage-genomic-intervals-saved-input',
             storage_type='session'
         ),
-        
+
         html.Div(
             id='session-container',
             children=[
@@ -66,7 +66,7 @@ app.layout = dbc.Container(
                     storage_type='session'
                 ),
 
-                
+
                 dcc.Store(
                     id='homepage-genomic-intervals-submitted-input',
                     storage_type='session'
@@ -153,7 +153,7 @@ app.layout = dbc.Container(
                 ),
 
                 dcc.Store(
-                    id='tfbs-saved-input',
+                    id='tfbs_saved_input',
                     storage_type='session'
                 ),
 
@@ -183,7 +183,7 @@ app.layout = dbc.Container(
                 ),
 
             ])
-        
+
     ],
     fluid=True
 )

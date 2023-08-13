@@ -32,7 +32,7 @@ layout = html.Div(
                            n_clicks=0
                        )]),
             dbc.RadioItems(
-                id='tfbs_prediction_technique',
+                id='tfbs-prediction-technique',
                 options=[
                     {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
                     {'value': 'CE', 'label': 'motif conservation',
@@ -52,7 +52,7 @@ layout = html.Div(
                            n_clicks=0
                        )]),
             dbc.RadioItems(
-                id='tfbs_set',
+                id='tfbs-set',
                 options=[
                     {'value': 'promoters', 'label': 'promoters',
                         'label_id': 'promoters'},
@@ -65,10 +65,6 @@ layout = html.Div(
             ),
             html.Br(),
             dcc.Markdown("Input threshold for False-Discovery Rate:"),
-            # dcc.Slider(id='tfbs_fdr', step=None,
-            #           marks={0:'0.01', 10: '0.025',  20: '0.05',
-            #                  30: '0.1',  40: '0.25'},
-            #           value=40),
             dbc.Input(id="tfbs_fdr", type="number", value=0.25,
                       persistence=True, persistence_type='memory'),
             html.Br(),
@@ -93,12 +89,17 @@ layout = html.Div(
                                     id='tfbs-export-table',
                                     n_clicks=0,
                                     color='light', size='sm', className='table-button'),
-                                dcc.Download(id='tfbs-download-df-to-csv')
+                                dcc.Download(id='tfbs-download-df-to-csv'),
+                                dbc.Button([html.I(
+                                    className='bi bi-arrow-clockwise me-2'),
+                                    'Reset Table'],
+                                    id='tfbs-reset-table',
+                                    color='light', size='sm', className='ms-3 table-button')
                             ], style={'textAlign': 'right'})
                         ),
 
                         dash_table.DataTable(
-                            id='tf_enrichment_result_table',
+                            id='tf-enrichment-result-table',
                             style_cell={
                                 'whiteSpace': 'pre-line'
                             },
