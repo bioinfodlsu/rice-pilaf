@@ -96,15 +96,15 @@ layout = html.Div(
                         dash_table.DataTable(
                             id='lift-over-results-table',
                             style_cell={
-                                'whiteSpace': 'pre-line',
-                                'font-family': 'sans-serif'
+                                'whiteSpace': 'pre-line'
                             },
                             sort_action='native',
                             filter_action='native',
                             filter_options={'case': 'insensitive',
                                             'placeholder_text': 'Search column'},
                             page_action='native',
-                            page_size=15
+                            page_size=15,
+                            cell_selectable=False
                         )])
                 ])
         ], className='p-3 mt-2')

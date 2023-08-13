@@ -77,15 +77,15 @@ layout = html.Div(
                             style_data={
                                 'whiteSpace': 'normal',
                                 'height': 'auto',
-                                'textAlign': 'left',
-                                'font-family': 'sans-serif'
+                                'textAlign': 'left'
                             },
                             sort_action='native',
                             filter_action='native',
                             filter_options={'case': 'insensitive',
                                             'placeholder_text': 'Search column'},
                             page_action='native',
-                            page_size=10
+                            page_size=10,
+                            cell_selectable=False
                         )
                     ])
                 ], className='p-3 mt-2')

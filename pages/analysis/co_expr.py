@@ -240,8 +240,7 @@ layout = html.Div(
                             dash_table.DataTable(
                                 id='coexpression-pathways',
                                 style_cell={
-                                    'whiteSpace': 'pre-line',
-                                    'font-family': 'sans-serif'
+                                    'whiteSpace': 'pre-line'
                                 },
                                 markdown_options={'html': True},
                                 sort_action='native',
@@ -249,7 +248,8 @@ layout = html.Div(
                                 filter_options={'case': 'insensitive',
                                                 'placeholder_text': 'Search column'},
                                 page_action='native',
-                                page_size=15
+                                page_size=15,
+                                cell_selectable=False
                             ),
 
                             html.Br(),

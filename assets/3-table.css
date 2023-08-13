@@ -13,6 +13,7 @@ tr:nth-of-type(odd) td {
 
 th, td {
     padding: 0.5em !important;
+    font-family: sans-serif;
 }
 
 .page-number, .current-page {
