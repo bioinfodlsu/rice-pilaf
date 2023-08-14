@@ -359,7 +359,7 @@ def get_ogi_other_ref(ref, nb_intervals):
 # ========================
 
 
-def get_genes_from_Nb(nb_intervals):
+def get_genes_in_Nb(nb_intervals):
     """
     Returns a data frame containing the genes in Nipponbare
 
@@ -405,6 +405,10 @@ def get_genes_from_Nb(nb_intervals):
         table = pd.merge(gene_description_df, table_gene_ids,
                          left_on='Gene_ID', right_on='Name')
 
+        # Display only columns of interest
+        table = table[['OGI', 'Name', 'UniProtKB/Swiss-Prot',
+                       'Description', 'Chromosome', 'Start', 'End', 'Strand']]
+
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
 
@@ -414,10 +418,10 @@ def get_genes_from_Nb(nb_intervals):
         return create_empty_df(), table['Name'].values.tolist()
 
 
-def get_genes_from_other_ref(ref, nb_intervals):
+def get_genes_in_other_ref(ref, nb_intervals):
     """
     Returns a data frame containing the genes in references other than Nipponbare
-    Nipponbare is handled by get_genes_from_Nb()
+    Nipponbare is handled by get_genes_in_Nb()
 
     Parameters:
     - ref: Reference
@@ -476,7 +480,7 @@ def get_genes_from_other_ref(ref, nb_intervals):
         return create_empty_df()
 
 
-def get_overlapping_ogi(refs, nb_intervals):
+def get_common_genes(refs, nb_intervals):
     """
     Returns a data frame containing the genes common to the given references
 
@@ -527,3 +531,16 @@ def get_overlapping_ogi(refs, nb_intervals):
     df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
 
     return df
+
+
+def get_unique_genes_in_other_ref(ref, nb_intervals):
+    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
+    genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
+
+    genes_in_nb = genes_in_nb[['OGI', 'Name',
+                               'Chromosome', 'Start', 'End', 'Strand']]
+
+    unique_genes = pd.concat([genes_in_other_ref, genes_in_nb]).drop_duplicates(
+        subset=['OGI'], keep=False)
+
+    return unique_genes

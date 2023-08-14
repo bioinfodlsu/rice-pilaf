@@ -182,7 +182,7 @@ def init_callback(app):
                     nb_intervals_str)
 
                 if not is_error(nb_intervals):
-                    genes_from_Nb = get_genes_from_Nb(
+                    genes_from_Nb = get_genes_in_Nb(
                         nb_intervals)
                     df_nb_complete = genes_from_Nb[0].to_dict('records')
 
@@ -190,7 +190,7 @@ def init_callback(app):
                                for key in genes_from_Nb[0].columns]
 
                     if active_tab == get_tab_id('All Genes'):
-                        df_nb_raw = get_overlapping_ogi(
+                        df_nb_raw = get_common_genes(
                             filter_rice_variants, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
@@ -199,8 +199,9 @@ def init_callback(app):
 
                         return 'The table below lists all the implicated genes:', \
                             columns, df_nb, {'display': 'none'}
-                    if active_tab == get_tab_id('Common Genes'):
-                        df_nb_raw = get_overlapping_ogi(
+
+                    elif active_tab == get_tab_id('Common Genes'):
+                        df_nb_raw = get_common_genes(
                             filter_rice_variants, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
@@ -216,16 +217,16 @@ def init_callback(app):
 
                     else:
                         tab_number = get_tab_index(active_tab)
-                        other_ref = children[tab_number]["props"]["value"]
+                        other_ref = children[tab_number]['props']['value']
 
-                        df_nb_raw = get_genes_from_other_ref(
+                        df_nb_raw = get_unique_genes_in_other_ref(
                             other_ref, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'The table below lists the genes from homologous regions in {other_ref}.', \
+                        return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
                             columns, df_nb, {'display': 'none'}
 
                 else:

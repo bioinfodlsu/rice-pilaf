@@ -1,5 +1,3 @@
-from collections import namedtuple, OrderedDict
-import pages.analysis_layout as analysis_layout
 
 from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
@@ -29,25 +27,25 @@ def init_callback(app):
             update_nav_class_name = []
             update_layout_hidden = []
 
-            for i in range(len(analysis_nav_id)): 
+            for i in range(len(analysis_nav_id)):
                 if analysis_nav_id[i]['label'] == ctx.triggered_id.label:
-                    nav_classes = add_class_name('active', nav_className[i])  
+                    nav_classes = add_class_name('active', nav_className[i])
                 else:
                     nav_classes = remove_class_name('active', nav_className[i])
-                
+
                 update_nav_class_name.append(nav_classes)
-            
+
             for i in range(len(analysis_layout_id)):
                 if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
                     hide_layout = False
                 else:
                     hide_layout = True
-        
+
                 update_layout_hidden.append(hide_layout)
 
             return update_nav_class_name, update_layout_hidden
 
-        raise PreventUpdate     
+        raise PreventUpdate
 
     @app.callback(
         Output('session-container', 'children'),
@@ -55,9 +53,9 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
         Output('homepage-genomic-intervals-submitted-input', 'data'),
-        
+
         State('homepage-genomic-intervals', 'value'),
-    
+
         Input('homepage-submit', 'n_clicks'),
         State('session-container', 'children'),
 
@@ -71,11 +69,10 @@ def init_callback(app):
             clear_cache_folder()
 
         if 'homepage-reset' == ctx.triggered_id:
-            # clear data for items in dcc.Store found in session-container 
+            # clear data for items in dcc.Store found in session-container
             dccStore_children = get_cleared_dccStore_data(dccStore_children)
-            
+
             return dccStore_children, None, {'display': 'none'}, False, ''
-    
 
         if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
             if nb_intervals_str:
@@ -87,8 +84,9 @@ def init_callback(app):
                         {'display': 'block'}, False, nb_intervals_str
                 else:
                     # clear data for items in dcc.Store found in session-container
-                    dccStore_children = get_cleared_dccStore_data(dccStore_children)
-            
+                    dccStore_children = get_cleared_dccStore_data(
+                        dccStore_children)
+
                     browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
                     return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str
@@ -111,7 +109,7 @@ def init_callback(app):
                     nb_intervals_str)
 
                 if not lift_over_util.is_error(nb_intervals):
-                    genes_from_Nb = lift_over_util.get_genes_from_Nb(
+                    genes_from_Nb = lift_over_util.get_genes_in_Nb(
                         nb_intervals)
 
                     return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
@@ -119,29 +117,29 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
         Input('homepage-genomic-intervals', 'value'),
-        #Output('homepage-genomic-intervals', 'value', allow_duplicate=True),
+        # Output('homepage-genomic-intervals', 'value', allow_duplicate=True),
         Input('homepage-reset', 'n_clicks'),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
     )
-    def set_input_fields(genomic_intervals, *_):    
+    def set_input_fields(genomic_intervals, *_):
         if ctx.triggered_id:
             if 'homepage-reset' == ctx.triggered_id:
                 return None
 
             if 'homepage-genomic-intervals' == ctx.triggered_id:
                 return genomic_intervals
-                
+
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
 
-
     @app.callback(
-        Output('homepage-results-container','style'),
+        Output('homepage-results-container', 'style'),
         Input('homepage-is-submitted', 'data'),
         Input('homepage-submit', 'n_clicks')
     )
@@ -161,14 +159,14 @@ def init_callback(app):
     def set_input_homepage_session_state(genomic_intervals):
         return genomic_intervals
     """
-    
+
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
         Input('homepage-genomic-intervals-saved-input', 'data'),
     )
     def get_input_homepage_session_state(genomic_intervals):
         return genomic_intervals
-    
+
     @app.callback(
         Output('genomic-interval-modal', 'is_open'),
         Input('genomic-interval-tooltip', 'n_clicks')
