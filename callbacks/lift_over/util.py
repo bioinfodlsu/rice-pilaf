@@ -496,15 +496,18 @@ def get_common_genes(refs, nb_intervals):
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
-    list_genes_in_other_ref = [genes_in_nb]
+    common_genes = genes_in_nb
     for ref in refs:
         if ref != 'Nb':
             genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
-            list_genes_in_other_ref.append(genes_in_other_ref)
+            common_genes = pd.merge(
+                common_genes, genes_in_other_ref, on='OGI', how='outer')
 
-    common_genes = reduce(lambda left, right: pd.merge(
-        left, right, on=['OGI'], how='outer'), list_genes_in_other_ref).dropna()
+            common_genes = common_genes.rename(
+                columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
+
+    common_genes = common_genes.dropna()
 
     return common_genes
 
