@@ -163,6 +163,7 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
+        Output('lift-over-results-gene-statistics', 'children'),
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
@@ -184,11 +185,11 @@ def init_callback(app):
 
                 if not is_error(nb_intervals):
                     genes_from_Nb = get_genes_in_Nb(
-                        nb_intervals)
-                    df_nb_complete = genes_from_Nb[0].to_dict('records')
+                        nb_intervals)[0]
+                    df_nb_complete = genes_from_Nb.to_dict('records')
 
                     columns = [{'id': key, 'name': key}
-                               for key in genes_from_Nb[0].columns]
+                               for key in genes_from_Nb.columns]
 
                     if active_tab == get_tab_id('All Genes'):
                         df_nb_raw = get_all_genes(other_refs, nb_intervals)
@@ -198,6 +199,7 @@ def init_callback(app):
                                    for key in df_nb_raw.columns]
 
                         return 'The table below lists all the implicated genes.', \
+                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                             columns, df_nb, {'display': 'none'}
 
                     elif active_tab == get_tab_id('Common Genes'):
@@ -209,10 +211,12 @@ def init_callback(app):
                                    for key in df_nb_raw.columns]
 
                         return 'The table below lists the implicated genes that are common to:', \
+                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                             columns, df_nb, {'display': 'block'}
 
                     elif active_tab == get_tab_id('Nipponbare'):
                         return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
+                            f'{genes_from_Nb["OGI"].nunique()} genes have been found.', \
                             columns, df_nb_complete, {'display': 'none'}
 
                     else:
@@ -227,12 +231,13 @@ def init_callback(app):
                                    for key in df_nb_raw.columns]
 
                         return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
+                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                             columns, df_nb, {'display': 'none'}
 
                 else:
-                    return None, None, None, {'display': 'none'}
+                    return None, None, None, None, {'display': 'none'}
             else:
-                return None, None, None, {'display': 'none'}
+                return None, None, None, None, {'display': 'none'}
 
         raise PreventUpdate
 
