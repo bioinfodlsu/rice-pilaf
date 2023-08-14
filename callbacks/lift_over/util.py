@@ -174,17 +174,47 @@ def get_genomic_intervals_from_input(nb_intervals_str):
 
     return nb_intervals
 
-# ================================
-# Utility functions for lift-over
-# ================================
+# ============================================================================
+# Utility functions for displaying lift-over results and sanitizng accessions
+# ============================================================================
+
+
+def get_tabs():
+    """
+    Returns the tabs to be displayed in the liftover results
+    The tabs do not include those that are specific to a reference
+
+    Returns:
+    - Tabs to be displayed in the liftover results (except those specific to a reference)
+    """
+    return ['All Genes', 'Common Genes', 'Nb']
+
+
+def get_tab_id(tab):
+    """
+    Returns the index of given tab with respect to the tabs to be displayed in the liftover results
+
+    Parameters:
+    - tab: Tab whose idnex is to be returned
+
+    Returns:
+    - Index of given tab with respect to the tabs to be displayed in the liftover results
+    """
+    return f'tab-{get_tabs().index(tab)}'
 
 
 def sanitize_other_refs(other_refs):
     """
+    Returns the references (other than Nipponbare) selected by the user
 
+    The need for this function is motivated by the fact that, when the user only chooses one reference,
+    the data type of this chosen value is string (not list)
 
     Parameters:
-    - other_refs: 
+    - other_refs: References (other than Nipponbare) selected by the user
+
+    Returns:
+    - List of references (other than Nipponbare) selected by the user
     """
     if other_refs:
         if isinstance(other_refs, str):
@@ -196,27 +226,70 @@ def sanitize_other_refs(other_refs):
 
 
 def sanitize_gene_id(gene_id):
-    # Remove 'gene' prefix from gene IDs (e.g., from N22)
+    """
+    Removes "gene:" prefix in given accession
+
+    Parameters:
+    - gene_id: Accession
+
+    Returns:
+    - Accession without the "gene:" prefix
+    """
     if gene_id[:len('gene:')] == 'gene:':
         return gene_id[len('gene:'):]
 
     return gene_id
 
 
-def get_ogi_nb(nb_intervals):
-    if is_error(nb_intervals):
-        nb_intervals = []
+# ===============================================
+# Utility functions for OGI-to-reference mapping
+# ===============================================
 
+
+def get_ogi_list(accession_ids, ogi_mapping):
+    """
+    Returns the list of equivalent OGIs of given accessions
+
+    Parameters:
+    - accession_ids: Accessions
+    - ogi_mapping: OGI-to-accession mapping dictionary
+
+    Returns:
+    - list of equivalent OGIs of given accessions
+    """
+    ogi_list = []
+    for accession_id in accession_ids:
+        ogi_list.append(ogi_mapping[accession_id])
+
+    return ogi_list
+
+
+def get_ogi_nb(nb_intervals):
+    """
+    Maps Nipponbare accessions (obtained from a list of Genomic_interval tuples) to their respective OGIs
+
+    Parameters:
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Set containing all unique OGIs after performing OGI-to-Nipponbare mapping
+    - OGI-to-Nipponbare mapping dictionary
+    """
+
+    # All unique OGIs
     final_ogi_set = set()
+
+    # OGI-to-NB mapping dictionary (one OGI can map to multiple NB accessions)
     final_ogi_dict = defaultdict(set)
 
     for nb_interval in nb_intervals:
-        # load and search GFF_DB of Nipponbare
+        # Load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
             f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
+        # Map Nipponbare accessions to OGIs
         ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
@@ -231,16 +304,33 @@ def get_ogi_nb(nb_intervals):
 
 
 def get_ogi_other_ref(ref, nb_intervals):
+    """
+    Maps reference-specific accessions (obtained from a list of Genomic_interval tuples) to their respective OGIs
+    "Reference" refers to a reference other than Nipponbare
+    Nipponbare reference is handled by get_ogi_nb()
+
+    Parameters:
+    - ref: Reference
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Set containing all unique OGIs after performing OGI-to-reference mapping
+    - OGI-to-reference mapping dictionary
+    """
+
+    # All unique OGIs
+    final_ogi_set = set()
+
+    # OGI-to-NB mapping dictionary (one OGI can map to multiple NB accessions)
+    final_ogi_dict = defaultdict(set)
+
+    # Get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
         f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
+
+    # Get corresponding intervals on ref
     db_annotation = gffutils.FeatureDB(
         f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
-    # get corresponding intervals on ref
-    if is_error(nb_intervals):
-        nb_intervals = []
-
-    final_ogi_set = set()
-    final_ogi_dict = defaultdict(set)
 
     for nb_interval in nb_intervals:
         gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
@@ -251,6 +341,7 @@ def get_ogi_other_ref(ref, nb_intervals):
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
+            # Map reference-specific accessions to OGIs
             ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
@@ -263,69 +354,39 @@ def get_ogi_other_ref(ref, nb_intervals):
 
     return final_ogi_set, final_ogi_dict
 
-
-def get_overlapping_ogi(refs, nb_intervals):
-    ogi_list = []
-    accession_list = []
-
-    ogi_nb_set, ogi_nb_dict = get_ogi_nb(nb_intervals)
-    ogi_other_refs = []
-
-    if 'Nb' in refs:
-        ogi_list.append(ogi_nb_set)
-        accession_list.append(ogi_nb_dict)
-
-    idx = 0
-    for ref in refs:
-        if ref != 'Nb':
-            ogi_other_refs.append(get_ogi_other_ref(ref, nb_intervals))
-            ogi_list.append(ogi_other_refs[idx][0])
-            accession_list.append(ogi_other_refs[idx][1])
-
-            idx += 1
-
-    overlapping_ogi = []
-    if ogi_list:
-        overlapping_ogi = list(set.intersection(*ogi_list))
-
-    df_matrix = []
-    for ogi in overlapping_ogi:
-        ogi_row = [ogi]
-        idx = 0
-        for ref in refs:
-            ogi_row.append(', '.join(accession_list[idx][ogi]))
-            idx += 1
-
-        df_matrix.append(ogi_row)
-
-    if not df_matrix:
-        df_matrix.append(['-' for _ in range(len(refs) + 1)])
-
-    df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
-
-    return df
+# ========================
+# Functions for lift-over
+# ========================
 
 
 def get_genes_from_Nb(nb_intervals):
+    """
+    Returns a data frame containing the genes in Nipponbare
+
+    Parameters:
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Data frame containing the genes in Nipponbare
+    """
     dfs = []
-    if is_error(nb_intervals):
-        nb_intervals = []
 
     for nb_interval in nb_intervals:
-        # load and search GFF_DB of Nipponbare
+        # Load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
             f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
+        # Map accessions to their respective OGIs
         ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
         ogi_list = []
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
-            ogi_list = get_ogi([sanitize_gene_id(gene.id)
-                                for gene in genes_in_interval], ogi_mapping)
+            ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
+                                     for gene in genes_in_interval], ogi_mapping)
 
-        # TODO should be a better way to do this?
+        # Construct the data frame
         df = pd.DataFrame({
             'OGI': ogi_list,
             'Name': [gene.id for gene in genes_in_interval],
@@ -336,10 +397,9 @@ def get_genes_from_Nb(nb_intervals):
         })
         dfs.append(df)
 
-    # Return empty dataframe if there are no results to concatenate
     try:
         table_gene_ids = pd.concat(dfs, ignore_index=True)
-        # read in dataframe containing gene descriptions
+        # Read in dataframe containing gene descriptions
         gene_description_df = pd.read_csv(
             f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
         table = pd.merge(gene_description_df, table_gene_ids,
@@ -350,20 +410,32 @@ def get_genes_from_Nb(nb_intervals):
 
         return table, table['Name'].values.tolist()
 
-    except ValueError:
+    except ValueError:      # No results to concatenate
         return create_empty_df(), table['Name'].values.tolist()
 
 
 def get_genes_from_other_ref(ref, nb_intervals):
-    # get intervals from other refs that align to (parts) of the input loci
+    """
+    Returns a data frame containing the genes in references other than Nipponbare
+    Nipponbare is handled by get_genes_from_Nb()
+
+    Parameters:
+    - ref: Reference
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Data frame containing the genes in references other than Nipponbare
+    """
+
+    # Get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
         f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
+
+    # Get corresponding intervals on ref
     db_annotation = gffutils.FeatureDB(
         f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db")
-    # get corresponding intervals on ref
+
     dfs = []
-    if is_error(nb_intervals):
-        nb_intervals = []
 
     for nb_interval in nb_intervals:
         gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
@@ -374,16 +446,18 @@ def get_genes_from_other_ref(ref, nb_intervals):
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
+            # Map accessions to their respective OGIs
             ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
             ogi_list = []
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
-                ogi_list = get_ogi([sanitize_gene_id(gene.id)
-                                    for gene in genes_in_interval], ogi_mapping)
+                ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
+                                         for gene in genes_in_interval], ogi_mapping)
 
+            # Construct the data frame
             df = pd.DataFrame({
                 'OGI': ogi_list,
-                'Name': [gene.id for gene in genes_in_interval],
+                'Name': [sanitize_gene_id(gene.id) for gene in genes_in_interval],
                 'Chromosome': [gene.chrom for gene in genes_in_interval],
                 'Start': [gene.start for gene in genes_in_interval],
                 'End': [gene.end for gene in genes_in_interval],
@@ -391,7 +465,6 @@ def get_genes_from_other_ref(ref, nb_intervals):
             })
             dfs.append(df)
 
-    # Return empty dataframe if there are no results to concatenate
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
@@ -399,13 +472,58 @@ def get_genes_from_other_ref(ref, nb_intervals):
 
         return table
 
-    except ValueError:
+    except ValueError:      # No results to concatenate
         return create_empty_df()
 
 
-def get_ogi(accession_ids, ogi_mapping):
-    ogi_list = []
-    for accession_id in accession_ids:
-        ogi_list.append(ogi_mapping[accession_id])
+def get_overlapping_ogi(refs, nb_intervals):
+    """
+    Returns a data frame containing the genes common to the given references
 
-    return ogi_list
+    Parameters:
+    - ref: References
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Data frame containing the genes common to the given references
+    """
+
+    # List containing the unique OGIs per reference
+    ogi_list = []
+
+    # List containing the OGI-to-accession mapping dictionaries per reference
+    accession_list = []
+
+    ogi_nb_set, ogi_nb_dict = get_ogi_nb(nb_intervals)
+
+    if 'Nb' in refs:
+        ogi_list.append(ogi_nb_set)
+        accession_list.append(ogi_nb_dict)
+
+    for ref in refs:
+        if ref != 'Nb':
+            ogi_other_ref_set, ogi_other_ref_dict = get_ogi_other_ref(
+                ref, nb_intervals)
+            ogi_list.append(ogi_other_ref_set)
+            accession_list.append(ogi_other_ref_dict)
+
+    # Get the genes common to references
+    overlapping_ogi = []
+    if ogi_list:
+        overlapping_ogi = list(set.intersection(*ogi_list))
+
+    df_matrix = []
+    for ogi in overlapping_ogi:
+        ogi_row = [ogi]
+        for idx, ref in enumerate(refs):
+            ogi_row.append(', '.join(accession_list[idx][ogi]))
+
+        df_matrix.append(ogi_row)
+
+    # Handle empty data frame (e.g., no genes common to references)
+    if not df_matrix:
+        df_matrix.append(['-'] * (len(refs) + 1))
+
+    df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
+
+    return df
