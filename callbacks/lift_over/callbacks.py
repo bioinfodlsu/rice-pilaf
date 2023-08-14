@@ -170,12 +170,13 @@ def init_callback(app):
         Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
+        Input('lift-over-other-refs-submitted-input', 'data'),
 
         State('lift-over-results-tabs', 'children'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-is-submitted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, homepage_is_submitted, lift_over_is_submitted):
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, other_refs, children, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
@@ -190,8 +191,7 @@ def init_callback(app):
                                for key in genes_from_Nb[0].columns]
 
                     if active_tab == get_tab_id('All Genes'):
-                        df_nb_raw = get_common_genes(
-                            filter_rice_variants, nb_intervals)
+                        df_nb_raw = get_all_genes(other_refs, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
                         columns = [{'id': key, 'name': key}

@@ -7,7 +7,6 @@ import pandas as pd
 from ..constants import Constants
 from ..general_util import *
 
-from functools import reduce
 
 const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
@@ -507,12 +506,54 @@ def get_common_genes(refs, nb_intervals):
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
 
+    common_genes = common_genes.rename(columns={'Name': 'Nb'})
     common_genes = common_genes.dropna()
 
     return common_genes
 
 
+def get_all_genes(refs, nb_intervals):
+    """
+    Returns a data frame containing all the genes (i.e., the set-theoretic union of all the genes)
+
+    Parameters:
+    - ref: References
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Data frame containing all the genes
+    """
+    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
+    genes_in_nb = genes_in_nb[['OGI', 'Name']]
+
+    common_genes = genes_in_nb
+    for ref in refs:
+        if ref != 'Nb':
+            genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
+            genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
+            common_genes = pd.merge(
+                common_genes, genes_in_other_ref, on='OGI', how='outer')
+
+            common_genes = common_genes.rename(
+                columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
+
+    common_genes = common_genes.rename(columns={'Name': 'Nb'})
+    common_genes = common_genes.fillna('-')
+
+    return common_genes
+
+
 def get_unique_genes_in_other_ref(ref, nb_intervals):
+    """
+    Returns a data frame containing the genes in a reference that are not present in Nipponbare
+
+    Parameters:
+    - ref: References
+    - nb_intervals: List of Genomic_interval tuples
+
+    Returns:
+    - Data frame containing the genes in a reference that are not present in Nipponbare
+    """
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
 
