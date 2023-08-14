@@ -50,10 +50,10 @@ def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
                         fp.write('%s\n' % line)
 
 
-def get_loci_data_in_gff_file(source_dir, Nb_interval):
+def get_loci_data_in_gff_file(source_dir, nb_interval):
     db = gffutils.FeatureDB(f'{source_dir}', keep_order=True)
 
-    genes_in_interval = list(db.region(region=(Nb_interval.chrom, Nb_interval.start, Nb_interval.stop),
+    genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                        completely_within=False, featuretype='gene'))
 
     return genes_in_interval

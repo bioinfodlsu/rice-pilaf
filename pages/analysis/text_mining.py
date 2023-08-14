@@ -11,9 +11,9 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.Span('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
-                      # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
-                      ),
+            html.P('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
+                   # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
+                   ),
         ], className='analysis-intro p-3'),
 
         html.Div([

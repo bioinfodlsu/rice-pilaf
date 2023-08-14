@@ -101,7 +101,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
         pvalue_list.append(p_value)
 
     results_no_adj_df = pd.DataFrame(list((zip(TF_list, pvalue_list))), columns=[
-                                     "Transcription factor", "p-value"])
+                                     "Transcription Factor", "p-value"])
     results_no_adj_df.to_csv(
         f'{out_dir}/results_before_multiple_corrections.csv', index=False)
 
@@ -109,6 +109,8 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+
+    display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
     return results_df
 
@@ -132,8 +134,9 @@ def multiple_testing_correction(single_tf_results, fdr):
     sig, adj_pvalue, _, _ = sm.multipletests(
         pvalues, alpha=fdr, method='fdr_bh', is_sorted=False, returnsorted=False)
     sig = sig.tolist()
+    sig = list(map(str, sig))
     adj_pvalue = adj_pvalue.tolist()
-    single_tf_results['Benjamini-Hochberg corrected pvalue'] = adj_pvalue
-    single_tf_results['significant?'] = sig
+    single_tf_results['Adj. p-value'] = adj_pvalue
+    single_tf_results['Significant?'] = sig
     single_tf_results.sort_values(by=['p-value'], inplace=True)
     return single_tf_results

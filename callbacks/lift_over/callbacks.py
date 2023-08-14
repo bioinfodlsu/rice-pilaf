@@ -70,18 +70,19 @@ def init_callback(app):
     def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
-                tabs = ['Summary', 'Nb']
+                tabs = get_tabs()
 
                 other_refs = sanitize_other_refs(other_refs)
 
                 if other_refs:
                     tabs = tabs + other_refs
 
-                tabs_children = [dcc.Tab(label=tab, value=tab)
-                                 for tab in tabs]
+                tabs_children = [dcc.Tab(label=tab, value=tab) if idx < len(get_tabs())
+                                 else dcc.Tab(label=f'Unique to {tab}', value=tab)
+                                 for idx, tab in enumerate(tabs)]
 
                 if not active_filter:
-                    active_filter = tabs[1:]
+                    active_filter = tabs[len(get_tabs()) - 1:]
 
                 gene_list_msg = [html.Span(
                     'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
@@ -92,7 +93,7 @@ def init_callback(app):
                 else:
                     gene_list_msg += [html.Span('.')]
 
-                return gene_list_msg, tabs_children, tabs[1:], active_filter
+                return gene_list_msg, tabs_children, tabs[len(get_tabs()) - 1:], active_filter
             else:
                 return None, None, [], None
 
@@ -115,7 +116,8 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-other-refs-saved-input', 'data', allow_duplicate=True),
+        Output('lift-over-other-refs-saved-input',
+               'data', allow_duplicate=True),
         Input('lift-over-other-refs', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
@@ -158,7 +160,7 @@ def init_callback(app):
             return other_refs
 
         raise PreventUpdate
-        
+
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-results-table', 'columns'),
@@ -168,29 +170,38 @@ def init_callback(app):
         Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
+        Input('lift-over-other-refs-submitted-input', 'data'),
 
         State('lift-over-results-tabs', 'children'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-is-submitted', 'data')
     )
-    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, children, homepage_is_submitted, lift_over_is_submitted):
+    def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, other_refs, children, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
             if nb_intervals_str:
                 nb_intervals = get_genomic_intervals_from_input(
                     nb_intervals_str)
 
                 if not is_error(nb_intervals):
-                    SUMMARY_TAB = 'tab-0'
-                    NB_TAB = 'tab-1'
-                    genes_from_Nb = get_genes_from_Nb(
+                    genes_from_Nb = get_genes_in_Nb(
                         nb_intervals)
                     df_nb_complete = genes_from_Nb[0].to_dict('records')
 
                     columns = [{'id': key, 'name': key}
                                for key in genes_from_Nb[0].columns]
 
-                    if active_tab == SUMMARY_TAB:
-                        df_nb_raw = get_overlapping_ogi(
+                    if active_tab == get_tab_id('All Genes'):
+                        df_nb_raw = get_all_genes(other_refs, nb_intervals)
+                        df_nb = df_nb_raw.to_dict('records')
+
+                        columns = [{'id': key, 'name': key}
+                                   for key in df_nb_raw.columns]
+
+                        return 'The table below lists all the implicated genes.', \
+                            columns, df_nb, {'display': 'none'}
+
+                    elif active_tab == get_tab_id('Common Genes'):
+                        df_nb_raw = get_common_genes(
                             filter_rice_variants, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
@@ -200,22 +211,22 @@ def init_callback(app):
                         return 'The table below lists the implicated genes that are common to:', \
                             columns, df_nb, {'display': 'block'}
 
-                    elif active_tab == NB_TAB:
+                    elif active_tab == get_tab_id('Nb'):
                         return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
                             columns, df_nb_complete, {'display': 'none'}
 
                     else:
-                        tab_number = int(active_tab[len('tab-'):])
-                        other_ref = children[tab_number]["props"]["value"]
+                        tab_number = get_tab_index(active_tab)
+                        other_ref = children[tab_number]['props']['value']
 
-                        df_nb_raw = get_genes_from_other_ref(
+                        df_nb_raw = get_unique_genes_in_other_ref(
                             other_ref, nb_intervals)
                         df_nb = df_nb_raw.to_dict('records')
 
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return f'The table below lists the genes from homologous regions in {other_ref}.', \
+                        return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
                             columns, df_nb, {'display': 'none'}
 
                 else:
@@ -234,7 +245,6 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
-
 
     @app.callback(
         Output('lift-over-download-df-to-csv', 'data'),
