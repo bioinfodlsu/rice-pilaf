@@ -1,0 +1,20 @@
+name: Mirror 'main' to 'demo'
+
+on:
+  workflow_run:
+    workflows: [Check for syntax errors]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  mirror_job:
+      runs-on: ubuntu-latest
+      name: Mirror main branch to demo branch
+      steps:
+      - name: Mirror action step
+        id: mirror
+        uses: google/mirror-branch-action@v1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          source: 'main'
+          dest: 'demo'
