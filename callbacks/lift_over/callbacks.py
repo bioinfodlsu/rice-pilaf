@@ -211,7 +211,7 @@ def init_callback(app):
                         return 'The table below lists the implicated genes that are common to:', \
                             columns, df_nb, {'display': 'block'}
 
-                    elif active_tab == get_tab_id('Nb'):
+                    elif active_tab == get_tab_id('Nipponbare'):
                         return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
                             columns, df_nb_complete, {'display': 'none'}
 

@@ -188,7 +188,7 @@ def get_tabs():
     Returns:
     - Tabs to be displayed in the liftover results (except those specific to a reference)
     """
-    return ['All Genes', 'Common Genes', 'Nb']
+    return ['All Genes', 'Common Genes', 'Nipponbare']
 
 
 def get_tab_id(tab):
