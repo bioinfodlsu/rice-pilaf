@@ -69,7 +69,7 @@ Start by creating a copy of this repository:
 ### Running Without Docker
 1. Install the necessary Python libraries by running the following command:
    ```
-   python -m pip install -r dependencies/requirements.txt
+   python -m pip install -r dependencies/requirements-app.txt
    ```
 
 2. Install the necessary R libraries by running the following command:
