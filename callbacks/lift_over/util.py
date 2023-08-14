@@ -7,6 +7,8 @@ import pandas as pd
 from ..constants import Constants
 from ..general_util import *
 
+from functools import reduce
+
 const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
 
@@ -491,46 +493,20 @@ def get_common_genes(refs, nb_intervals):
     Returns:
     - Data frame containing the genes common to the given references
     """
+    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
+    genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
-    # List containing the unique OGIs per reference
-    ogi_list = []
-
-    # List containing the OGI-to-accession mapping dictionaries per reference
-    accession_list = []
-
-    ogi_nb_set, ogi_nb_dict = get_ogi_nb(nb_intervals)
-
-    if 'Nb' in refs:
-        ogi_list.append(ogi_nb_set)
-        accession_list.append(ogi_nb_dict)
-
+    list_genes_in_other_ref = [genes_in_nb]
     for ref in refs:
         if ref != 'Nb':
-            ogi_other_ref_set, ogi_other_ref_dict = get_ogi_other_ref(
-                ref, nb_intervals)
-            ogi_list.append(ogi_other_ref_set)
-            accession_list.append(ogi_other_ref_dict)
+            genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
+            genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
+            list_genes_in_other_ref.append(genes_in_other_ref)
 
-    # Get the genes common to references
-    overlapping_ogi = []
-    if ogi_list:
-        overlapping_ogi = list(set.intersection(*ogi_list))
+    common_genes = reduce(lambda left, right: pd.merge(
+        left, right, on=['OGI'], how='outer'), list_genes_in_other_ref).dropna()
 
-    df_matrix = []
-    for ogi in overlapping_ogi:
-        ogi_row = [ogi]
-        for idx, ref in enumerate(refs):
-            ogi_row.append(', '.join(accession_list[idx][ogi]))
-
-        df_matrix.append(ogi_row)
-
-    # Handle empty data frame (e.g., no genes common to references)
-    if not df_matrix:
-        df_matrix.append(['-'] * (len(refs) + 1))
-
-    df = pd.DataFrame(df_matrix, columns=['OGI'] + refs)
-
-    return df
+    return common_genes
 
 
 def get_unique_genes_in_other_ref(ref, nb_intervals):
@@ -540,7 +516,8 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     genes_in_nb = genes_in_nb[['OGI', 'Name',
                                'Chromosome', 'Start', 'End', 'Strand']]
 
-    unique_genes = pd.concat([genes_in_other_ref, genes_in_nb]).drop_duplicates(
+    # Get set difference
+    unique_genes = pd.concat([genes_in_other_ref, genes_in_nb, genes_in_nb]).drop_duplicates(
         subset=['OGI'], keep=False)
 
     return unique_genes
