@@ -1,4 +1,4 @@
-# RicePilaf
+# RicePilaf - Demo
 Welcome to RicePilaf, a post-GWAS/QTL analysis dashboard for rice genomes.
 
 RicePilaf takes as input a set of genomic intervals obtained from QTL analysis or from LD-based clumping of significant GWAS SNPs.
