@@ -197,7 +197,7 @@ def init_callback(app):
                         columns = [{'id': key, 'name': key}
                                    for key in df_nb_raw.columns]
 
-                        return 'The table below lists all the implicated genes:', \
+                        return 'The table below lists all the implicated genes.', \
                             columns, df_nb, {'display': 'none'}
 
                     elif active_tab == get_tab_id('Common Genes'):
