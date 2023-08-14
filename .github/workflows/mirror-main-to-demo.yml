@@ -1,4 +1,4 @@
-name: Mirror 'main' to 'demo'
+name: Mirror main to demo branch
 
 on:
   workflow_run:
@@ -13,7 +13,7 @@ jobs:
       steps:
       - name: Mirror action step
         id: mirror
-        uses: google/mirror-branch-action@v1.0
+        uses: google/mirror-branch-action@v2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           source: 'main'
