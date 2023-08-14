@@ -17,7 +17,6 @@ RUN apt-get update \
   python3-pip \
   r-base
 
-RUN Rscript --vanilla dependencies/install-libraries-workflow.r
 RUN pip3 install -r dependencies/requirements-workflow.txt
 
 # Install mcdp2
@@ -28,3 +27,5 @@ RUN cd ../ \
   && cd ../app
 
 COPY . /app
+
+RUN Rscript --vanilla dependencies/install-libraries-workflow.r
