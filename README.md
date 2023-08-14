@@ -32,7 +32,7 @@ Start by creating a copy of this repository:
 
 4. Spin up a container from the Docker image by running the following command:
    ```
-   docker run -v path/to/static/in/local:/app/static -p 8050:8050 ghcr.io/bioinfodlsu/rice-pilaf/app:main
+   docker run -d -v path/to/static/in/local:/app/static -p 8050:80 ghcr.io/bioinfodlsu/rice-pilaf/app:main
    ```
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
@@ -56,7 +56,7 @@ Start by creating a copy of this repository:
 
 4. Spin up a container from the Docker image by running the following command:
    ```
-   docker run -v path/to/static/in/local:/app/static -p 8050:8050 rice-pilaf
+   docker run -d -v path/to/static/in/local:/app/static -p 8050:80 rice-pilaf
    ```
 
    Replace `path/to/static/in/local` with the path to the `static` folder (i.e., the folder containing the data) in your local machine. It may be more convenient to use the absolute path. If you are using Windows, make sure to replace the backward slashes (`\`) in the path with forward slashes (`/`).
