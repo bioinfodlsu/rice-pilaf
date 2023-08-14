@@ -66,14 +66,13 @@ layout = html.Div(
 
                     html.Br(),
 
-                    dbc.Label(id='lift-over-results-gene-intro'),
-
-                    dbc.Checklist(id='lift-over-overlap-table-filter',
-                                  inline=True,
-                                  className='ms-3'),
-
-
                     dcc.Loading([
+                        dbc.Label(id='lift-over-results-gene-intro'),
+
+                        dbc.Checklist(id='lift-over-overlap-table-filter',
+                                      inline=True,
+                                      className='ms-3'),
+
                         html.P(
                             html.Div([
                                 dbc.Button([html.I(
