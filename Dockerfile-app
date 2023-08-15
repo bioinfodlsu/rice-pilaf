@@ -1,6 +1,6 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.10
 
-ADD dependencies /app/dependencies
+COPY . /app
 WORKDIR /app
 
 RUN set -ex 
@@ -25,7 +25,5 @@ RUN cd ../ \
   && cd mcdp2 \
   && pip3 install . \
   && cd ../app
-
-COPY . /app
 
 RUN Rscript --vanilla dependencies/install-libraries-app.r
