@@ -1,6 +1,6 @@
-FROM rocker/r-ver:4.3.0
+FROM tiangolo/uwsgi-nginx-flask:python3.10
 
-ADD dependencies /app/dependencies
+COPY . /app
 WORKDIR /app
 
 RUN set -ex 
@@ -14,9 +14,9 @@ RUN apt-get update \
   libssl-dev \
   libxml2-dev \
   python3-dev \
-  python3-pip
+  python3-pip \
+  r-base
 
-RUN Rscript --vanilla dependencies/install-libraries-app.r
 RUN pip3 install -r dependencies/requirements-app.txt
 
 # Install mcdp2
@@ -26,7 +26,4 @@ RUN cd ../ \
   && pip3 install . \
   && cd ../app
 
-COPY . /app
-
-EXPOSE 8050
-CMD ["python3", "app.py"]
+RUN Rscript --vanilla dependencies/install-libraries-app.r

@@ -30,7 +30,9 @@ go <- enricher(
     universe = unlist(strsplit(readLines(opt$background_genes), "\t")),
     TERM2GENE = read.table(opt$module_to_gene_mapping,
         sep = "\t", stringsAsFactors = FALSE
-    )
+    ),
+    minGSSize = 2,
+    maxGSSize = 100000
 )
 
 if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {

@@ -188,7 +188,7 @@ def get_tabs():
     Returns:
     - Tabs to be displayed in the liftover results (except those specific to a reference)
     """
-    return ['All Genes', 'Common Genes', 'Nb']
+    return ['All Genes', 'Common Genes', 'Nipponbare']
 
 
 def get_tab_id(tab):
@@ -497,7 +497,7 @@ def get_common_genes(refs, nb_intervals):
 
     common_genes = genes_in_nb
     for ref in refs:
-        if ref != 'Nb':
+        if ref != 'Nipponbare':
             genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
             common_genes = pd.merge(
@@ -528,7 +528,7 @@ def get_all_genes(refs, nb_intervals):
 
     common_genes = genes_in_nb
     for ref in refs:
-        if ref != 'Nb':
+        if ref != 'Nipponbare':
             genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
             common_genes = pd.merge(

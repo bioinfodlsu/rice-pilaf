@@ -32,6 +32,11 @@
     width: 100%;
 }
 
+.nav-item:hover {
+    background-color: var(--bg-gray-darkest);
+    border-radius: 10px;
+}
+
 .nav-link {
     color: var(--bs-body-color) !important;
     cursor: pointer;
