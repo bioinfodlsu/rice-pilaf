@@ -37,13 +37,14 @@ welcome = dcc.Markdown(
 # ============
 
 app.layout = dbc.Container(
-    [   
+    [
         dbc.Row(
             html.Div(
                 children=[
                     html.P('Demo Version', className='my-auto')
                 ],
-                className='banner d-flex justify-content-center py-1 text-white'
+                className='banner d-flex justify-content-center py-1 text-white',
+                id='demo-banner'
             )
         ),
 
@@ -206,4 +207,4 @@ callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port='8050', debug=True)
+    app.run_server(port='8050', debug=True)
