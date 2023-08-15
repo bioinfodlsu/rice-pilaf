@@ -37,7 +37,16 @@ welcome = dcc.Markdown(
 # ============
 
 app.layout = dbc.Container(
-    [
+    [   
+        dbc.Row(
+            html.Div(
+                children=[
+                    html.P('Demo Version', className='my-auto')
+                ],
+                className='banner d-flex justify-content-center py-1 text-white'
+            )
+        ),
+
         dbc.Row(main_nav.navbar()),
 
         dash.page_container,

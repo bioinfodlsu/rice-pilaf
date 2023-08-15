@@ -66,3 +66,7 @@ a:hover {
 .bi-chevron-bar-right {
     -webkit-text-stroke: 1px;
 }
+
+.banner {
+    background-color: #214151; 
+}
