@@ -32,6 +32,10 @@
     width: 100%;
 }
 
+#homepage-dash-nav {
+    border-radius: 10px;
+}
+
 .nav-item:hover {
     background-color: var(--bg-gray-darkest);
     border-radius: 10px;
@@ -81,6 +85,14 @@
     margin-right: 3.5em;
 }
 
+.banner {
+    background-color: #214151; 
+}
+
 #demo-banner {
     border-bottom: 1px solid white;
+}
+
+#page {
+    margin-left: 3em;
 }
