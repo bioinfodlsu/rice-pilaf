@@ -201,4 +201,4 @@ prepare_data/**/LazyFox
 .github/
 .vscode/
 .git/
-Dockerfile
+Dockerfile*
