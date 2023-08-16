@@ -35,3 +35,7 @@ th, td {
     border: 1px solid var(--table-button-gray);
     background-color: var(--td-gray);
 }
+
+#text-mining-result-table th {
+    text-align: center;
+}

@@ -17,7 +17,6 @@ layout = html.Div(
         ], className='analysis-intro p-3'),
 
         html.Div([
-            html.Br(),
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
             html.Span(id='text-mining-genomic-intervals-input'),
 
@@ -95,6 +94,5 @@ layout = html.Div(
                         )
                     ])
                 ], className='mt-2')
-
-        ])
-    ], className='p-3 mt-2')
+        ], className='p-3 mt-2')
+    ])
