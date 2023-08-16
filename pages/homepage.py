@@ -17,9 +17,9 @@ genomic_interval_modal = dbc.Modal([
         dbc.ModalTitle('Genomic Intervals from GWAS/QTL')
     ),
     dbc.ModalBody([
-        html.P('Enter genomic intervals like so: Chr01:100000-200000.'
-               'Multiple intervals should be separated by a semicolon like so: Chr01:100000-200000;Chr02:300000-400000'
-               'These are obtained from QTL analysis or from LD-based clumping of significant GWAS SNPs.'),
+        html.P('Enter genomic intervals like so: Chr01:100000-200000. '
+               'Multiple intervals should be separated by a semicolon like so: Chr01:100000-200000;Chr02:300000-400000. '
+               'These intervals are obtained from LD-based clumping of significant GWAS SNPs or from QTL mapping studies.'),
         html.P(
             'We also provide some sample genomic intervals, taken from the following GWAS/QTL analysis:'),
         html.Ul([
