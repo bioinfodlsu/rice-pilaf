@@ -33,10 +33,6 @@ html, body {
     border-color: var(--green-top-hover);
 }
 
-#page {
-    margin-left: 3em;
-}
-
 i {
     cursor: pointer;
 }
@@ -49,24 +45,10 @@ a:hover {
     color: var(--bs-body-color);
 }
 
-.analysis-intro {
-    background-color: var(--bg-gray-darker);
-    border-radius: 10px;
-}
-
-.analysis-intro p:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
 .non-clickable {
     cursor: default;
 }
 
 .bi-chevron-bar-right {
     -webkit-text-stroke: 1px;
-}
-
-.banner {
-    background-color: #214151; 
 }
