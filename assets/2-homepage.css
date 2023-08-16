@@ -36,7 +36,7 @@
     border-radius: 10px;
 }
 
-.nav-item:hover {
+#homepage-dash-nav .nav-item:hover {
     background-color: var(--bg-gray-darkest);
     border-radius: 10px;
 }
