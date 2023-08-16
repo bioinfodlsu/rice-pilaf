@@ -407,8 +407,8 @@ def get_genes_in_Nb(nb_intervals):
                          left_on='Gene_ID', right_on='Name')
 
         # Display only columns of interest
-        table = table[['OGI', 'Name', 'UniProtKB/Swiss-Prot',
-                       'Description', 'Chromosome', 'Start', 'End', 'Strand']]
+        table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
+                       'Chromosome', 'Start', 'End', 'Strand']]
 
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
