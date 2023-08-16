@@ -26,8 +26,8 @@ RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
 # Install mcdp2
 RUN cd ../ \
   && git clone https://github.com/fmfi-compbio/mcdp2 \
-  && git reset --hard fd7c69f5e97db8c1052df859cb02d86533287e64 \
   && cd mcdp2 \
+  && git reset --hard fd7c69f5e97db8c1052df859cb02d86533287e64 \
   && pip3 install . \
   && cd ../app
 
