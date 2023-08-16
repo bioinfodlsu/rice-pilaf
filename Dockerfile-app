@@ -21,11 +21,12 @@ RUN apt-get clean \
   python3-pip \
   r-base
 
-RUN pip3 install -r dependencies/requirements-app.txt
+RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
 
 # Install mcdp2
 RUN cd ../ \
   && git clone https://github.com/fmfi-compbio/mcdp2 \
+  && git reset --hard fd7c69f5e97db8c1052df859cb02d86533287e64 \
   && cd mcdp2 \
   && pip3 install . \
   && cd ../app
