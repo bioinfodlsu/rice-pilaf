@@ -179,65 +179,60 @@ def init_callback(app):
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, other_refs, children, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
-            if nb_intervals_str:
-                nb_intervals = get_genomic_intervals_from_input(
-                    nb_intervals_str)
+            nb_intervals = get_genomic_intervals_from_input(
+                nb_intervals_str)
 
-                if not is_error(nb_intervals):
-                    genes_from_Nb = get_genes_in_Nb(
-                        nb_intervals)[0]
-                    df_nb_complete = genes_from_Nb.to_dict('records')
+            if active_tab == get_tab_id('All Genes'):
+                df_nb_raw = get_all_genes(other_refs, nb_intervals)
+                df_nb = df_nb_raw.to_dict('records')
 
-                    columns = [{'id': key, 'name': key}
-                               for key in genes_from_Nb.columns]
+                columns = [{'id': key, 'name': key}
+                           for key in df_nb_raw.columns]
 
-                    if active_tab == get_tab_id('All Genes'):
-                        df_nb_raw = get_all_genes(other_refs, nb_intervals)
-                        df_nb = df_nb_raw.to_dict('records')
+                return 'The table below lists all the implicated genes.', \
+                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
+                    columns, df_nb, {'display': 'none'}
 
-                        columns = [{'id': key, 'name': key}
-                                   for key in df_nb_raw.columns]
+            elif active_tab == get_tab_id('Common Genes'):
+                df_nb_raw = get_common_genes(
+                    filter_rice_variants, nb_intervals)
+                df_nb = df_nb_raw.to_dict('records')
 
-                        return 'The table below lists all the implicated genes.', \
-                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                            columns, df_nb, {'display': 'none'}
+                columns = [{'id': key, 'name': key}
+                           for key in df_nb_raw.columns]
 
-                    elif active_tab == get_tab_id('Common Genes'):
-                        df_nb_raw = get_common_genes(
-                            filter_rice_variants, nb_intervals)
-                        df_nb = df_nb_raw.to_dict('records')
+                return 'The table below lists the implicated genes that are common to:', \
+                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
+                    columns, df_nb, {'display': 'block'}
 
-                        columns = [{'id': key, 'name': key}
-                                   for key in df_nb_raw.columns]
+            elif active_tab == get_tab_id('Nipponbare'):
+                genes_from_Nb = get_genes_in_Nb(
+                    nb_intervals)[0].drop(
+                    ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
+                           else {'id': x, 'name': x} for x in genes_from_Nb.columns]
 
-                        return 'The table below lists the implicated genes that are common to:', \
-                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                            columns, df_nb, {'display': 'block'}
+                df_nb_complete = genes_from_Nb.to_dict('records')
 
-                    elif active_tab == get_tab_id('Nipponbare'):
-                        return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
-                            f'{genes_from_Nb["OGI"].nunique()} genes have been found.', \
-                            columns, df_nb_complete, {'display': 'none'}
+                return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
+                    f'{genes_from_Nb["OGI"].nunique()} genes have been found.', \
+                    columns, df_nb_complete, {'display': 'none'}
 
-                    else:
-                        tab_number = get_tab_index(active_tab)
-                        other_ref = children[tab_number]['props']['value']
-
-                        df_nb_raw = get_unique_genes_in_other_ref(
-                            other_ref, nb_intervals)
-                        df_nb = df_nb_raw.to_dict('records')
-
-                        columns = [{'id': key, 'name': key}
-                                   for key in df_nb_raw.columns]
-
-                        return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
-                            f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                            columns, df_nb, {'display': 'none'}
-
-                else:
-                    return None, None, None, None, {'display': 'none'}
             else:
-                return None, None, None, None, {'display': 'none'}
+                tab_number = get_tab_index(active_tab)
+                other_ref = children[tab_number]['props']['value']
+
+                df_nb_raw = get_unique_genes_in_other_ref(
+                    other_ref, nb_intervals).drop(
+                    ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+                df_nb = df_nb_raw.to_dict('records')
+
+                columns = [{'id': key, 'name': key}
+                           for key in df_nb_raw.columns]
+
+                return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
+                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
+                    columns, df_nb, {'display': 'none'}
 
         raise PreventUpdate
 

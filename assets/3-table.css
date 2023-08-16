@@ -2,9 +2,10 @@ table tr td {
     vertical-align: top;
 }
 
-table tr td p {
+table tr td p, table tr td div p {
     margin-bottom: 0;
     padding-bottom: 0;
+    display: inline;
 }
 
 th:not(.dash-filter) {

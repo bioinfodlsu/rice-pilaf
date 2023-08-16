@@ -410,6 +410,11 @@ def get_genes_in_Nb(nb_intervals):
         table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
                        'Chromosome', 'Start', 'End', 'Strand']]
 
+        table['UniProtKB/Swiss-Prot'] = '<a href = "https://www.uniprot.org/uniprotkb/' + \
+            table['UniProtKB/Swiss-Prot'] + \
+            '/entry" target = "_blank">' + \
+            table['UniProtKB/Swiss-Prot'] + '</a>'
+
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
 
@@ -557,8 +562,7 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
 
-    genes_in_nb = genes_in_nb[['OGI', 'Name',
-                               'Chromosome', 'Start', 'End', 'Strand']]
+    genes_in_nb = genes_in_nb[['OGI', 'Name', 'Chromosome']]
 
     # Get set difference
     unique_genes = pd.concat([genes_in_other_ref, genes_in_nb, genes_in_nb]).drop_duplicates(

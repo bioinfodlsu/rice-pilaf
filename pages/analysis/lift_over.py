@@ -96,8 +96,10 @@ layout = html.Div(
                         dash_table.DataTable(
                             id='lift-over-results-table',
                             style_cell={
-                                'whiteSpace': 'pre-line'
+                                'whiteSpace': 'pre-line',
+                                'height': 'auto'
                             },
+                            markdown_options={'html': True},
                             sort_action='native',
                             filter_action='native',
                             filter_options={'case': 'insensitive',
