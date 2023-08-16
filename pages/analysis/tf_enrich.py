@@ -112,8 +112,7 @@ layout = html.Div(
                             cell_selectable=False
                         )
                     ])
-                ], className='p-3 mt-2')
-
-        ])
+                ])
+        ], className='p-3 mt-2')
     ]
 )
