@@ -7,7 +7,7 @@ def navbar():
         children=[
             dbc.NavItem(dbc.NavLink('Home', active='exact',
                         href='/', className='top-navbar-item')),
-            dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki',
+            dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.-User-Guide',
                         target='_blank', className='top-navbar-item')),
         ],
         id='top-navbar',
