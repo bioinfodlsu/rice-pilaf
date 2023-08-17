@@ -8,6 +8,10 @@ table tr td p, table tr td div p {
     display: inline;
 }
 
+table tr td div {
+    text-align: right !important;
+}
+
 th:not(.dash-filter) {
     font-weight: bold !important;
     background-color: var(--th-gray) !important;
@@ -39,4 +43,8 @@ th, td {
 
 #text-mining-result-table th {
     text-align: center;
+}
+
+#text-mining-result-table table tr td div {
+    text-align: left !important;
 }
