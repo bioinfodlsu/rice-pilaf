@@ -289,7 +289,7 @@ def convert_to_df_po(result):
 
 def convert_to_df_ora(result, network):
     cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes', 'View on KEGG']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
@@ -297,9 +297,10 @@ def convert_to_df_ora(result, network):
     result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
 
-    result['View on KEGG'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split(
-            '/').str.join('+') + '" target = "_blank">Link</a>'
+    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
+        '" target = "_blank">' + \
+        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['Genes'].str.split(
@@ -350,7 +351,7 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
 
 def convert_to_df_spia(result, network):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
-            'Adj. Combined p-value', 'Pathway Status', 'Genes', 'View on KEGG']
+            'Adj. Combined p-value', 'Pathway Status', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
@@ -365,8 +366,10 @@ def convert_to_df_spia(result, network):
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
-    result['View on KEGG'] = '<a style="white-space:nowrap" href="' + \
-        result['View on KEGG'] + '" target = "_blank">Link</a>'
+    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
+        '" target = "_blank">' + \
+        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
