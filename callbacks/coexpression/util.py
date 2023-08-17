@@ -400,7 +400,7 @@ def convert_to_df(active_tab, module_idx, network, algo, parameters):
                              names=columns[enrichment_type], skiprows=1)
 
         # SPIA is a special case
-        if enrichment_type == 'SPIA':
+        if enrichment_type.lower() == 'spia':
             # Add dtype argument to preserve leading 0 in KEGG pathway ID
             result = pd.read_csv(file, delimiter='\t',
                                  names=columns[enrichment_type], skiprows=1, dtype={'ID': object})
