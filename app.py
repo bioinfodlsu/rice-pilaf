@@ -50,10 +50,10 @@ def get_active_branch_name():
 
 
 def show_if_in_demo_branch():
-    if get_active_branch_name() != 'demo':
-        return {'display': 'none'}
+    if get_active_branch_name() == 'demo':
+        return {'display': 'block'}
 
-    return {'display': 'block'}
+    return {'display': 'none'}
 
 
 app.layout = lambda: dbc.Container(
@@ -61,7 +61,8 @@ app.layout = lambda: dbc.Container(
         dbc.Row(
             html.Div(
                 children=[
-                    html.P('Demo Version', className='my-auto')
+                    html.P(['This is a demo version. Click ', dcc.Link('here', href='https://github.com/bioinfodlsu/rice-pilaf/wiki',
+                         className='top-navbar-item') ,' to install.'], className='my-auto')
                 ],
                 className='banner d-flex justify-content-center py-1 text-white',
                 id='demo-banner'
