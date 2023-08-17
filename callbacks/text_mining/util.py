@@ -4,6 +4,7 @@ from ..general_util import *
 import regex as re
 import ftfy
 
+
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
 
@@ -64,8 +65,17 @@ def text_mining_query_search(query_string):
 
     display_cols_in_fixed_dec_places(df, ['Score'])
 
-    if len(df.index) > 0:
-        return df
-    else:
-        df.loc[len(df.index)] = ['-'] * len(COLNAMES)
-        return df
+    if len(df.index) == 0:
+        return create_empty_df_with_cols(COLNAMES, html_markdown=True)
+
+    return df
+
+
+def is_error(input):
+    try:
+        if len(input.strip()) == 0:
+            return True, 'Please enter a query trait/phenotype.'
+    except:
+        pass
+
+    return False, None

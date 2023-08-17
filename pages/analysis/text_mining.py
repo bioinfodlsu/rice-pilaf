@@ -24,6 +24,12 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
+
+            dbc.Alert(
+                id='text-mining-input-error',
+                color='danger',
+                style={'display': 'none'}
+            ),
             dbc.Input(
                 id='text-mining-query',
                 type='text',
