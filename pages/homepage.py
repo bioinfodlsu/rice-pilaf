@@ -1,6 +1,6 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc, html
+from dash import html
 
 import pages.navigation.analysis_nav as analysis_nav
 import pages.analysis_layout as analysis_layout
@@ -98,7 +98,6 @@ genome_ref_input = dbc.Col([
 
     dbc.Alert(
         id='input-error',
-        children='',
         color='danger',
         style={'display': 'none'}
     ),
