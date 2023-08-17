@@ -146,18 +146,17 @@ layout = html.Div([
         children=[
             html.Div(
                 id='post-gwas-analysis-container',
-                children=[
-                    dbc.Row([
-                            dbc.Col(
-                                [html.H5('Select an analysis:', id='post-gwas-hdr'),
-                                 analysis_nav.navbar()],
-                                xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-                            dbc.Col(
-                                children=[analysis_layout.layout],
-                                xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
-                                id='page',
-                            )
-                            ], className='ps-5 py-2')]
+                children=[dbc.Row([
+                    dbc.Col(
+                        [html.H5('Select an analysis:', id='post-gwas-hdr'),
+                         analysis_nav.navbar()],
+                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                    dbc.Col(
+                        children=[analysis_layout.layout],
+                        xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
+                        id='page',
+                    )
+                ], className='ps-5 py-2')]
             )
         ]
     )
