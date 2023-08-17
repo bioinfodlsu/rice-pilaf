@@ -52,3 +52,7 @@ a:hover {
 .bi-chevron-bar-right {
     -webkit-text-stroke: 1px;
 }
+
+hr {
+    margin: 0;
+}

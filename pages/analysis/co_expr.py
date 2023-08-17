@@ -186,8 +186,8 @@ layout = html.Div(
                     dcc.Loading(
                         id='coexpression-loading',
                         children=[
-                            dbc.Label(
-                                'Select an enriched module'),
+                            html.Hr(className='mt-3 mb-4'),
+                            dbc.Label('Select an enriched module'),
 
                             dcc.Dropdown(
                                 id='coexpression-modules',
