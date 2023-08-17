@@ -205,8 +205,8 @@ layout = html.Div(
                                                   value='Trait Ontology'),
                                           dcc.Tab(label='Plant Ontology',
                                                   value='Plant Ontology'),
-                                          dcc.Tab(label='Pathways (Overrepresentation)',
-                                                  value='Pathways (Overrepresentation)'),
+                                          dcc.Tab(label='Pathways (Over-Representation)',
+                                                  value='Pathways (Over-Representation)'),
                                           dcc.Tab(label='Pathway-Express',
                                                   value='Pathway-Express'),
                                           dcc.Tab(label='SPIA', value='SPIA')])
