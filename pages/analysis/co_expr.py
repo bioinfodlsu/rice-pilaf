@@ -189,10 +189,7 @@ layout = html.Div(
                             html.Hr(className='mt-3 mb-4'),
                             dbc.Label('Select an enriched module'),
 
-                            dcc.Dropdown(
-                                id='coexpression-modules',
-                                style={'display': 'none'}
-                            ),
+                            dcc.Dropdown(id='coexpression-modules'),
 
                             html.Br(),
 
