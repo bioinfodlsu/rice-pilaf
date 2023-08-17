@@ -36,7 +36,7 @@ Enrichment_tab = namedtuple('Enrichment_tab', ['enrichment', 'path'])
 enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Trait Ontology', 'ontology_enrichment/to'),
                    Enrichment_tab('Plant Ontology', 'ontology_enrichment/po'),
-                   Enrichment_tab('Pathways (Overrepresentation)',
+                   Enrichment_tab('Pathways (Over-Representation)',
                                   'pathway_enrichment/ora'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
