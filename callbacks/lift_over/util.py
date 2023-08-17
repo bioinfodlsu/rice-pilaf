@@ -413,7 +413,10 @@ def get_genes_in_Nb(nb_intervals):
         table['UniProtKB/Swiss-Prot'] = '<a href = "https://www.uniprot.org/uniprotkb/' + \
             table['UniProtKB/Swiss-Prot'] + \
             '/entry" target = "_blank">' + \
-            table['UniProtKB/Swiss-Prot'] + '</a>'
+            table['UniProtKB/Swiss-Prot'] + \
+            '</a> &nbsp;&nbsp;<a style = "text-decoration: none;" href = "https://www.uniprot.org/uniprotkb/' + \
+            table['UniProtKB/Swiss-Prot'] + \
+            '/entry" target = "_blank"><i class="fa-solid fa-up-right-from-square fa-xs"></i>'
 
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
