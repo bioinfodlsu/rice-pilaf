@@ -57,7 +57,7 @@ def text_mining_query_search(query_string):
                     df.loc[len(df.index)] = [
                         Entity, PMID, Title, Sentence, score]
 
-    df['PMID'] = '<a href = "https://pubmed.ncbi.nlm.nih.gov/' + \
+    df['PMID'] = '<a style="white-space:nowrap" href="https://pubmed.ncbi.nlm.nih.gov/' + \
         df['PMID'] + \
         '/entry" target = "_blank">' + \
         df['PMID'] + \

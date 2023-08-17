@@ -410,7 +410,7 @@ def get_genes_in_Nb(nb_intervals):
         table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
                        'Chromosome', 'Start', 'End', 'Strand']]
 
-        table['UniProtKB/Swiss-Prot'] = '<a href = "https://www.uniprot.org/uniprotkb/' + \
+        table['UniProtKB/Swiss-Prot'] = '<a style="white-space:nowrap" href="https://www.uniprot.org/uniprotkb/' + \
             table['UniProtKB/Swiss-Prot'] + \
             '/entry" target = "_blank">' + \
             table['UniProtKB/Swiss-Prot'] + \
