@@ -38,7 +38,8 @@ i {
 }
 
 a {
-    color: var(--green-top);
+    color: var(--link-blue);
+    text-decoration: none;
 }
 
 a:hover {

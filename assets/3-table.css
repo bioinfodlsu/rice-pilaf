@@ -48,3 +48,7 @@ th, td {
 #text-mining-result-table table tr td div {
     text-align: left !important;
 }
+
+.dash-cell-value {
+    overflow-y: hidden !important;
+}

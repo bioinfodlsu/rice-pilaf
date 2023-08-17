@@ -34,6 +34,12 @@ def sanitize_text(text):
     return text
 
 
+def addl_sanitize_gene(text):
+    text = re.sub(r'<$', '', text)
+
+    return text
+
+
 def text_mining_query_search(query_string):
     df = pd.DataFrame(columns=COLNAMES)
     query_regex = re.compile(query_string, re.IGNORECASE)
@@ -42,12 +48,19 @@ def text_mining_query_search(query_string):
             if re.search(query_regex, line):
                 PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = map(sanitize_text, line.split(
                     '\t'))
+                Entity = addl_sanitize_gene(Entity)
 
                 if Type == 'Gene':
                     if Sentence == 'None':
                         Sentence = Title
                     df.loc[len(df.index)] = [
                         Entity, PMID, Title, Sentence, score]
+
+    df['PMID'] = '<a href = "https://pubmed.ncbi.nlm.nih.gov/' + \
+        df['PMID'] + \
+        '/entry" target = "_blank">' + \
+        df['PMID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_fixed_dec_places(df, ['Score'])
 

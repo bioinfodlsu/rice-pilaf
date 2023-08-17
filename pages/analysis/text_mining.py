@@ -39,9 +39,7 @@ layout = html.Div(
                       html.Span('anaerobic germination',
                                 id={'type': 'example-text-mining',
                                     'description': 'anaerobic germination'},
-                                className='sample-genomic-interval ms-3'),
-                      html.Span(',', className='sample-genomic-interval')
-                      ],
+                                className='sample-genomic-interval ms-3')],
                      className='pt-3'),
             html.Br(),
 
