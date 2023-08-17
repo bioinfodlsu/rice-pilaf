@@ -97,7 +97,7 @@ def init_callback(app):
         if homepage_submitted and text_mining_is_submitted:
             query_string = text_mining_query_submitted_input['text_mining_query']
 
-            is_there_error, message = is_error(query_string)
+            is_there_error, _ = is_error(query_string)
             if not is_there_error:
                 text_mining_results_df = text_mining_query_search(query_string)
 
