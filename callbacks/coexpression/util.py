@@ -237,6 +237,10 @@ def convert_to_df_go(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
+    result['ID'] = '<a href = "https://amigo.geneontology.org/amigo/term/' + \
+        result['ID'] + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -253,6 +257,10 @@ def convert_to_df_to(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
+    result['ID'] = '<a href = "https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
+        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -268,6 +276,10 @@ def convert_to_df_po(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+
+    result['ID'] = '<a href = "https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
+        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])

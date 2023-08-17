@@ -165,7 +165,7 @@ def init_callback(app):
 
                 if not empty:
                     columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
-                               'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
+                               'ID' else {'id': x, 'name': x} for x in table.columns]
                 else:
                     columns = [{'id': x, 'name': x} for x in table.columns]
 
