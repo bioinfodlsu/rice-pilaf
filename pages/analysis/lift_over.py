@@ -58,9 +58,9 @@ layout = html.Div(
                 id='lift-over-results-container',
                 style={'display': 'none'},
                 children=[
-                    html.Div(id='lift-over-results-intro'),
+                    html.P(id='lift-over-results-intro'),
 
-                    html.Br(),
+                    html.P(id='lift-over-results-statistics'),
 
                     dbc.Tabs(id='lift-over-results-tabs', active_tab='tab-0'),
 
@@ -71,9 +71,7 @@ layout = html.Div(
                         dbc.Checklist(id='lift-over-overlap-table-filter',
                                       inline=True,
                                       className='ms-3'),
-
                         html.Br(),
-                        dbc.Label(id='lift-over-results-gene-statistics'),
 
                         html.P(
                             html.Div([
