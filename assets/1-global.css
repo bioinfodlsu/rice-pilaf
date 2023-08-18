@@ -38,7 +38,8 @@ i {
 }
 
 a {
-    color: var(--green-top);
+    color: var(--link-blue);
+    text-decoration: none;
 }
 
 a:hover {
@@ -51,4 +52,8 @@ a:hover {
 
 .bi-chevron-bar-right {
     -webkit-text-stroke: 1px;
+}
+
+hr {
+    margin: 0;
 }

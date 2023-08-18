@@ -105,7 +105,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-modules', 'style'),
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
 
@@ -136,7 +135,7 @@ def init_callback(app):
                         if submitted_parameter_module[submitted_algo]['param_module']:
                             first_module = submitted_parameter_module[submitted_algo]['param_module']
 
-                    return {'display': 'block'}, enriched_modules, first_module
+                    return enriched_modules, first_module
 
         raise PreventUpdate
 
@@ -166,7 +165,7 @@ def init_callback(app):
 
                 if not empty:
                     columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
-                               'View on KEGG' else {'id': x, 'name': x} for x in table.columns]
+                               'ID' else {'id': x, 'name': x} for x in table.columns]
                 else:
                     columns = [{'id': x, 'name': x} for x in table.columns]
 

@@ -29,14 +29,13 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
-        Input('text-mining-query', 'value'),
+        State('text-mining-query', 'value'),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
     )
     def set_input_fields(query_string, *_):
         if ctx.triggered_id:
-
             if 'text-mining-query' == ctx.triggered_id:
                 return query_string
 
@@ -71,13 +70,21 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-results-container', 'style'),
+        Output('text-mining-input-error', 'style'),
+        Output('text-mining-input-error', 'children'),
+
+        State('text-mining-query', 'value'),
         Input('text-mining-is-submitted', 'data'),
     )
-    def display_text_mining_output(text_mining_is_submitted):
+    def display_text_mining_output(text_mining_query, text_mining_is_submitted):
+        is_there_error, message = is_error(text_mining_query)
         if text_mining_is_submitted:
-            return {'display': 'block'}
-        else:
-            return {'display': 'none'}
+            if not is_there_error:
+                return {'display': 'block'}, {'display': 'none'}, message
+            else:
+                return {'display': 'none'}, {'display': 'block'}, message
+
+        return {'display': 'none'}, {'display': 'none'}, message
 
     @app.callback(
         Output('text-mining-result-table', 'data'),
@@ -86,16 +93,18 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('text-mining-query-submitted-input', 'data')
     )
-    def display_text_mining_results(text_mining_is_submitted, homepage_submitted,
-                                    text_mining_query_submitted_input):
+    def display_text_mining_results(text_mining_is_submitted, homepage_submitted, text_mining_query_submitted_input):
         if homepage_submitted and text_mining_is_submitted:
             query_string = text_mining_query_submitted_input['text_mining_query']
-            text_mining_results_df = text_mining_query_search(query_string)
 
-            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
-                       for x in text_mining_results_df.columns]
+            is_there_error, _ = is_error(query_string)
+            if not is_there_error:
+                text_mining_results_df = text_mining_query_search(query_string)
 
-            return text_mining_results_df.to_dict('records'), columns
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in text_mining_results_df.columns]
+
+                return text_mining_results_df.to_dict('records'), columns
 
         raise PreventUpdate
 

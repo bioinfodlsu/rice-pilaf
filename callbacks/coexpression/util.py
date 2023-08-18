@@ -36,7 +36,7 @@ Enrichment_tab = namedtuple('Enrichment_tab', ['enrichment', 'path'])
 enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Trait Ontology', 'ontology_enrichment/to'),
                    Enrichment_tab('Plant Ontology', 'ontology_enrichment/po'),
-                   Enrichment_tab('Pathways (Overrepresentation)',
+                   Enrichment_tab('Pathways (Over-Representation)',
                                   'pathway_enrichment/ora'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
@@ -237,6 +237,10 @@ def convert_to_df_go(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
+    result['ID'] = '<a style="white-space:nowrap" href="https://amigo.geneontology.org/amigo/term/' + \
+        result['ID'] + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -252,6 +256,10 @@ def convert_to_df_to(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+
+    result['ID'] = '<a style="white-space:nowrap" href="https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
+        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -269,6 +277,10 @@ def convert_to_df_po(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
+    result['ID'] = '<a style="white-space:nowrap" href="https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
+        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -277,7 +289,7 @@ def convert_to_df_po(result):
 
 def convert_to_df_ora(result, network):
     cols = ['ID', 'KEGG Pathway', 'Gene Ratio',
-            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes', 'View on KEGG']
+            'BG Ratio', 'p-value', 'Adj. p-value', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
@@ -285,9 +297,10 @@ def convert_to_df_ora(result, network):
     result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
 
-    result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split(
-            '/').str.join('+') + '" target = "_blank">Link</a>'
+    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
+        '" target = "_blank">' + \
+        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['Genes'].str.split(
@@ -304,10 +317,12 @@ def convert_to_df_ora(result, network):
 def convert_to_df_pe(result, module_idx, network, algo, parameters):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
             'Adj. ORA p-value', 'Adj. Perturbation p-value',
-            'Adj. Combined p-value', 'Genes', 'View on KEGG']
+            'Adj. Combined p-value', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
+
+    # IMPORTANT: Do not change ordering of instructions
 
     # Prettify display of ID
     result['ID'] = result['ID'].str[len('path:'):]
@@ -320,9 +335,10 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     result['Genes'] = result.apply(lambda x: get_genes_in_module_and_pathway(
         x['ID'], module_idx, network, algo, parameters), axis=1)
 
-    result['View on KEGG'] = '<a href = "http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split(
-            '\n').str.join('+') + '" target = "_blank">Link</a>'
+    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
+        '" target = "_blank">' + \
+        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
@@ -335,7 +351,7 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
 
 def convert_to_df_spia(result, network):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
-            'Adj. Combined p-value', 'Pathway Status', 'Genes', 'View on KEGG']
+            'Adj. Combined p-value', 'Pathway Status', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
@@ -350,8 +366,10 @@ def convert_to_df_spia(result, network):
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
-    result['View on KEGG'] = '<a href = "' + \
-        result['View on KEGG'] + '" target = "_blank">Link</a>'
+    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
+        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
+        '" target = "_blank">' + \
+        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -400,7 +418,7 @@ def convert_to_df(active_tab, module_idx, network, algo, parameters):
                              names=columns[enrichment_type], skiprows=1)
 
         # SPIA is a special case
-        if enrichment_type == 'SPIA':
+        if enrichment_type.lower() == 'spia':
             # Add dtype argument to preserve leading 0 in KEGG pathway ID
             result = pd.read_csv(file, delimiter='\t',
                                  names=columns[enrichment_type], skiprows=1, dtype={'ID': object})

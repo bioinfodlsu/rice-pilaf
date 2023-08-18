@@ -24,6 +24,12 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
+
+            dbc.Alert(
+                id='text-mining-input-error',
+                color='danger',
+                style={'display': 'none'}
+            ),
             dbc.Input(
                 id='text-mining-query',
                 type='text',
@@ -39,9 +45,7 @@ layout = html.Div(
                       html.Span('anaerobic germination',
                                 id={'type': 'example-text-mining',
                                     'description': 'anaerobic germination'},
-                                className='sample-genomic-interval ms-3'),
-                      html.Span(',', className='sample-genomic-interval')
-                      ],
+                                className='sample-genomic-interval ms-3')],
                      className='pt-3'),
             html.Br(),
 

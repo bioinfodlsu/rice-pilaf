@@ -57,7 +57,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
     # if previously computed
     if path_exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
         results_df = pd.read_csv(
-            f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv')
+            f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', dtype=object)
         return results_df
 
     # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
@@ -106,17 +106,15 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
         f'{out_dir}/results_before_multiple_corrections.csv', index=False)
 
     results_df = multiple_testing_correction(results_no_adj_df, tfbs_fdr)
+    display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
-
-    display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
     return results_df
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
-
     summary_file = f'{out_dir}/summary.txt'
 
     if not path_exists(summary_file):

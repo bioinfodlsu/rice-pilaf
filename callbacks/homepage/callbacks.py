@@ -119,7 +119,7 @@ def init_callback(app):
     @app.callback(
         Output('homepage-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
-        Input('homepage-genomic-intervals', 'value'),
+        State('homepage-genomic-intervals', 'value'),
         # Output('homepage-genomic-intervals', 'value', allow_duplicate=True),
         Input('homepage-reset', 'n_clicks'),
         Input({'type': 'example-genomic-interval',

@@ -186,13 +186,10 @@ layout = html.Div(
                     dcc.Loading(
                         id='coexpression-loading',
                         children=[
-                            dbc.Label(
-                                'Select an enriched module'),
+                            html.Hr(className='mt-3 mb-4'),
+                            dbc.Label('Select an enriched module'),
 
-                            dcc.Dropdown(
-                                id='coexpression-modules',
-                                style={'display': 'none'}
-                            ),
+                            dcc.Dropdown(id='coexpression-modules'),
 
                             html.Br(),
 
@@ -205,8 +202,8 @@ layout = html.Div(
                                                   value='Trait Ontology'),
                                           dcc.Tab(label='Plant Ontology',
                                                   value='Plant Ontology'),
-                                          dcc.Tab(label='Pathways (Overrepresentation)',
-                                                  value='Pathways (Overrepresentation)'),
+                                          dcc.Tab(label='Pathways (Over-Representation)',
+                                                  value='Pathways (Over-Representation)'),
                                           dcc.Tab(label='Pathway-Express',
                                                   value='Pathway-Express'),
                                           dcc.Tab(label='SPIA', value='SPIA')])

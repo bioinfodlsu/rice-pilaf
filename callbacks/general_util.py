@@ -28,10 +28,13 @@ def display_cols_in_fixed_dec_places(result, numeric_columns):
         result[column] = result[column].apply(display_in_fixed_dec_places)
 
 
-def create_empty_df_with_cols(cols):
+def create_empty_df_with_cols(cols, html_markdown=False):
     cols_dict = {}
     for col in cols:
-        cols_dict[col] = ['-']
+        if not html_markdown:
+            cols_dict[col] = ['-']
+        else:
+            cols_dict[col] = ['&hyphen;']
 
     return pd.DataFrame(cols_dict)
 

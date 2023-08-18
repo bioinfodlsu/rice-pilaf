@@ -2,9 +2,14 @@ table tr td {
     vertical-align: top;
 }
 
-table tr td p {
+table tr td p, table tr td div p {
     margin-bottom: 0;
     padding-bottom: 0;
+    display: inline;
+}
+
+table tr td div {
+    text-align: right !important;
 }
 
 th:not(.dash-filter) {
@@ -38,4 +43,12 @@ th, td {
 
 #text-mining-result-table th {
     text-align: center;
+}
+
+#text-mining-result-table table tr td div {
+    text-align: left !important;
+}
+
+.dash-cell-value {
+    overflow-y: hidden !important;
 }
