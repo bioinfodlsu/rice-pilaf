@@ -512,8 +512,8 @@ def get_common_genes(refs, nb_intervals):
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
 
-    common_genes = common_genes.rename(columns={'Name': 'Nb'})
-    common_genes = common_genes.dropna()
+    common_genes = common_genes.rename(
+        columns={'Name': 'Nb'}).dropna().drop_duplicates()
 
     return common_genes
 
@@ -543,8 +543,8 @@ def get_all_genes(refs, nb_intervals):
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
 
-    common_genes = common_genes.rename(columns={'Name': 'Nb'})
-    common_genes = common_genes.fillna('-')
+    common_genes = common_genes.rename(
+        columns={'Name': 'Nb'}).fillna('-').drop_duplicates()
 
     return common_genes
 

@@ -163,7 +163,6 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
-        Output('lift-over-results-gene-statistics', 'children'),
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
         Output('lift-over-overlap-table-filter', 'style'),
@@ -190,7 +189,6 @@ def init_callback(app):
                            for key in df_nb_raw.columns]
 
                 return 'The table below lists all the implicated genes.', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                     columns, df_nb, {'display': 'none'}
 
             elif active_tab == get_tab_id('Common Genes'):
@@ -202,7 +200,6 @@ def init_callback(app):
                            for key in df_nb_raw.columns]
 
                 return 'The table below lists the implicated genes that are common to:', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                     columns, df_nb, {'display': 'block'}
 
             elif active_tab == get_tab_id('Nipponbare'):
@@ -215,7 +212,6 @@ def init_callback(app):
                 df_nb_complete = genes_from_Nb.to_dict('records')
 
                 return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
-                    f'{genes_from_Nb["OGI"].nunique()} genes have been found.', \
                     columns, df_nb_complete, {'display': 'none'}
 
             else:
@@ -231,7 +227,6 @@ def init_callback(app):
                            for key in df_nb_raw.columns]
 
                 return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
                     columns, df_nb, {'display': 'none'}
 
         raise PreventUpdate
