@@ -11,56 +11,60 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.P('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
-                   # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
-                   ),
-        ], className='analysis-intro p-3'),
-
-        html.Div([
-            html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='text-mining-genomic-intervals-input'),
+            html.Div([
+                html.P('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
+                    # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
+                    ),
+            ], className='analysis-intro p-3'),
 
             html.Br(),
-            html.Br(),
 
-            dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
+            html.Div([
+                html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
+                html.Span(id='text-mining-genomic-intervals-input'),
 
-            dbc.Alert(
-                id='text-mining-input-error',
-                color='danger',
-                style={'display': 'none'}
-            ),
-            dbc.Input(
-                id='text-mining-query',
-                type='text',
-                value=''
-            ),
+                html.Br(),
+                html.Br(),
 
-            html.Div([html.Span('Examples:', className='pe-3'),
-                      html.Span('pre-harvest sprouting',
-                                id={'type': 'example-text-mining',
-                                    'description': 'pre-harvest sprouting'},
-                                className='sample-genomic-interval'),
-                      html.Span(',', className='sample-genomic-interval'),
-                      html.Span('anaerobic germination',
-                                id={'type': 'example-text-mining',
-                                    'description': 'anaerobic germination'},
-                                className='sample-genomic-interval ms-3')],
-                     className='pt-3'),
-            html.Br(),
+                dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
 
-            dbc.Button('Search',
-                       id='text-mining-submit',
-                       className='page-button',
-                       n_clicks=0),
+                dbc.Alert(
+                    id='text-mining-input-error',
+                    color='danger',
+                    style={'display': 'none'}
+                ),
+                dbc.Input(
+                    id='text-mining-query',
+                    type='text',
+                    value=''
+                ),
 
-            html.Br(),
+                html.Div([html.Span('Examples:', className='pe-3'),
+                        html.Span('pre-harvest sprouting',
+                                    id={'type': 'example-text-mining',
+                                        'description': 'pre-harvest sprouting'},
+                                    className='sample-genomic-interval'),
+                        html.Span(',', className='sample-genomic-interval'),
+                        html.Span('anaerobic germination',
+                                    id={'type': 'example-text-mining',
+                                        'description': 'anaerobic germination'},
+                                    className='sample-genomic-interval ms-3')],
+                        className='pt-3'),
+                html.Br(),
+
+                dbc.Button('Search',
+                        id='text-mining-submit',
+                        className='page-button',
+                        n_clicks=0),
+            ], className='analysis-intro p-3'),
+                      
             html.Br(),
 
             html.Div(
                 id='text-mining-results-container',
                 style={'display': 'none'},
                 children=[
+                    html.Hr(className='mt-3 mb-4'),
                     dcc.Loading([
                         html.P(
                             html.Div([

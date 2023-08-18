@@ -102,81 +102,85 @@ layout = html.Div(
 
     children=[
         html.Div([
-            html.P('In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
-        ], className='analysis-intro p-3'),
-
-        html.Div([
-            html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='coexpression-genomic-intervals-input'),
-
-            html.Br(),
-            html.Br(),
-
-            dbc.Label(['Select the co-expression network',
-                       html.I(
-                           className='bi bi-info-circle', id='coexpression-network-tooltip')]),
-
-            dbc.RadioItems(
-                id='coexpression-network',
-                options=[
-                    {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
-                    {'value': 'RCRN',
-                     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
-                ],
-                value='OS-CX',
-                inline=True,
-                className='ms-3 mt-1'
-            ),
+            html.Div([
+                html.P('In this page, you can search for modules (a.k.a. communities, clusters) of co-expressing genes in the rice co-expression network RiceNet v2 that are significantly enriched in the genes implicated in your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
+            ], className='analysis-intro p-3'),
 
             html.Br(),
 
-            dbc.Label(['Select a module detection algorithm ',
-                       html.I(
-                           className='bi bi-info-circle',
-                           id='coexpression-clustering-algo-tooltip',
-                           n_clicks=0
-                       )]),
+            html.Div([
+                html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
+                html.Span(id='coexpression-genomic-intervals-input'),
 
-            module_detection_algo_modal,
+                html.Br(),
+                html.Br(),
 
-            dbc.RadioItems(
-                id='coexpression-clustering-algo',
-                options=[
-                    {'value': 'clusterone', 'label': 'ClusterONE',
-                     'label_id': 'clusterone'},
-                    {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
-                    {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
-                    {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
-                ],
-                value='clusterone',
-                inline=True,
-                className='ms-3 mt-1'
-            ),
+                dbc.Label(['Select the co-expression network',
+                        html.I(
+                            className='bi bi-info-circle', id='coexpression-network-tooltip')]),
 
-            html.Br(),
+                dbc.RadioItems(
+                    id='coexpression-network',
+                    options=[
+                        {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
+                        {'value': 'RCRN',
+                        'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
+                    ],
+                    value='OS-CX',
+                    inline=True,
+                    className='ms-3 mt-1'
+                ),
 
-            dbc.Label(['Select the ',
-                       html.Span('parameter for running the algorithm',
-                                 id='coexpression-parameter-name'),
-                       html.I(
-                           className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
-                      className='mb-4'),
+                html.Br(),
 
-            # Should also be changed if parameter space is changed
-            html.Div([dcc.Slider(id='coexpression-parameter-slider', step=None,
-                                 marks={0: '1 (Loose Modules)', 30: '2', 60: '3',
-                                        90: '4 (Dense Modules)'},
-                                 value=30)],
-                     id='coexpression-parameter-slider-container'),
+                dbc.Label(['Select a module detection algorithm ',
+                        html.I(
+                            className='bi bi-info-circle',
+                            id='coexpression-clustering-algo-tooltip',
+                            n_clicks=0
+                        )]),
 
-            html.Br(),
+                module_detection_algo_modal,
 
-            dbc.Button('Run Analysis',
-                       id='coexpression-submit',
-                       className='page-button',
-                       n_clicks=0),
+                dbc.RadioItems(
+                    id='coexpression-clustering-algo',
+                    options=[
+                        {'value': 'clusterone', 'label': 'ClusterONE',
+                        'label_id': 'clusterone'},
+                        {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
+                        {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
+                        {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
+                    ],
+                    value='clusterone',
+                    inline=True,
+                    className='ms-3 mt-1'
+                ),
 
-            html.Br(),
+                html.Br(),
+
+                dbc.Label(['Select the ',
+                        html.Span('parameter for running the algorithm',
+                                    id='coexpression-parameter-name'),
+                        html.I(
+                            className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
+                        className='mb-4'),
+
+                # Should also be changed if parameter space is changed
+                html.Div([dcc.Slider(id='coexpression-parameter-slider', step=None,
+                                    marks={0: '1 (Loose Modules)', 30: '2', 60: '3',
+                                            90: '4 (Dense Modules)'},
+                                    value=30)],
+                        id='coexpression-parameter-slider-container'),
+
+                html.Br(),
+
+                dbc.Button('Run Analysis',
+                        id='coexpression-submit',
+                        className='page-button',
+                        n_clicks=0),
+            ], className='analysis-intro p-3'),
+            
+
             html.Br(),
 
             html.Div(

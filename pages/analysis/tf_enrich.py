@@ -10,76 +10,81 @@ layout = html.Div(
     },
     hidden=True,
     children=[
+        
         html.Div([
-            html.P(
-                'Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.'),
-            html.P(
-                'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
-        ], className='analysis-intro p-3'),
-
-        html.Div([
-            html.Br(),
-            html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='tf-enrichment-genomic-intervals-input'),
+            html.Div([
+                html.P(
+                    'Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.'),
+                html.P(
+                    'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
+            ], className='analysis-intro p-3'),
 
             html.Br(),
+
+            html.Div([
+                html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
+                html.Span(id='tf-enrichment-genomic-intervals-input'),
+
+                html.Br(),
+                html.Br(),
+
+                dbc.Label(['Choose TF binding site prediction technique:',
+                        html.I(
+                            className='bi bi-info-circle',
+                            id='tf-enrichment-technique-tooltip',
+                            n_clicks=0
+                        )]),
+                dbc.RadioItems(
+                    id='tfbs-prediction-technique',
+                    options=[
+                        {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
+                        {'value': 'CE', 'label': 'motif conservation',
+                        'label_id': 'motif conservation'},
+                        {'value': 'motif', 'label': 'motif scan',
+                        'label_id': 'motif scan'}
+                    ],
+                    value='FunTFBS',
+                    inline=True
+                ),
+
+                html.Br(),
+                dbc.Label(['Consider TF binding sites in the following regions:',
+                        html.I(
+                            className='bi bi-info-circle',
+                            id='tf-enrichment-binding-site-tooltip',
+                            n_clicks=0
+                        )]),
+                dbc.RadioItems(
+                    id='tfbs-set',
+                    options=[
+                        {'value': 'promoters', 'label': 'promoters',
+                            'label_id': 'promoters'},
+                        {'value': 'genome', 'label': 'genome',
+                        'label_id': 'genome'}
+
+                    ],
+                    value='promoters',
+                    inline=True
+                ),
+                html.Br(),
+                dcc.Markdown("Input threshold for False-Discovery Rate:"),
+                dbc.Input(id='tfbs-fdr', type='number', value=0.25, min=0, max=1, step=0.05,
+                        persistence=True, persistence_type='memory'),
+                html.Br(),
+
+                dbc.Button('Run Analysis',
+                        id='tfbs-submit',
+                        n_clicks=0,
+                        className='page-button'),
+            ], className='analysis-intro p-3'),
+            
             html.Br(),
 
-            dbc.Label(['Choose TF binding site prediction technique:',
-                       html.I(
-                           className='bi bi-info-circle',
-                           id='tf-enrichment-technique-tooltip',
-                           n_clicks=0
-                       )]),
-            dbc.RadioItems(
-                id='tfbs-prediction-technique',
-                options=[
-                    {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-                    {'value': 'CE', 'label': 'motif conservation',
-                     'label_id': 'motif conservation'},
-                    {'value': 'motif', 'label': 'motif scan',
-                     'label_id': 'motif scan'}
-                ],
-                value='FunTFBS',
-                inline=True
-            ),
-
-            html.Br(),
-            dbc.Label(['Consider TF binding sites in the following regions:',
-                       html.I(
-                           className='bi bi-info-circle',
-                           id='tf-enrichment-binding-site-tooltip',
-                           n_clicks=0
-                       )]),
-            dbc.RadioItems(
-                id='tfbs-set',
-                options=[
-                    {'value': 'promoters', 'label': 'promoters',
-                        'label_id': 'promoters'},
-                    {'value': 'genome', 'label': 'genome',
-                     'label_id': 'genome'}
-
-                ],
-                value='promoters',
-                inline=True
-            ),
-            html.Br(),
-            dcc.Markdown("Input threshold for False-Discovery Rate:"),
-            dbc.Input(id='tfbs-fdr', type='number', value=0.25, min=0, max=1, step=0.05,
-                      persistence=True, persistence_type='memory'),
-            html.Br(),
-
-            dbc.Button('Run Analysis',
-                       id='tfbs-submit',
-                       n_clicks=0,
-                       className='page-button'),
-
-            html.Br(),
-            html.Br(),
             html.Div(
                 id='tfbs-results-container',
                 style={'display': 'none'},
                 children=[
+                    html.Hr(className='mt-3 mb-4'),
                     dcc.Loading([
                         html.P(
                             html.Div([

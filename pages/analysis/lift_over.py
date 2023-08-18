@@ -18,46 +18,51 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.P(
-                'In this page, you can obtain the list of genes overlapping your input intervals.'),
-            html.P(
-                'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
-        ], className='analysis-intro p-3'),
-
-        html.Div([
-            html.I(
-                className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='lift-over-genomic-intervals-input'),
-
-            html.Br(),
-            html.Br(),
-
-            dbc.Label(
-                'Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
-
-            dcc.Dropdown(
-                other_ref_genomes,
-                id='lift-over-other-refs',
-                multi=True,
-                persistence=True,
-                persistence_type='memory',
-                className='dash-bootstrap'
-            ),
+            html.Div([
+                html.P(
+                    'In this page, you can obtain the list of genes overlapping your input intervals.'),
+                html.P(
+                    'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
+            ], className='analysis-intro p-3'),
 
             html.Br(),
 
-            dbc.Button('Show gene list',
-                       id='lift-over-submit',
-                       className='page-button',
-                       n_clicks=0),
+            html.Div([
+                html.I(
+                    className='bi bi-chevron-bar-right me-2 non-clickable'),
+                html.Span(id='lift-over-genomic-intervals-input'),
 
-            html.Br(),
+                html.Br(),
+                html.Br(),
+
+                dbc.Label(
+                    'Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
+
+                dcc.Dropdown(
+                    other_ref_genomes,
+                    id='lift-over-other-refs',
+                    multi=True,
+                    persistence=True,
+                    persistence_type='memory',
+                    className='dash-bootstrap'
+                ),
+
+                html.Br(),
+
+                dbc.Button('Show gene list',
+                        id='lift-over-submit',
+                        className='page-button',
+                        n_clicks=0),
+
+            ], className='analysis-intro p-3'),
+            
             html.Br(),
 
             html.Div(
                 id='lift-over-results-container',
                 style={'display': 'none'},
                 children=[
+                    html.Hr(className='mt-3 mb-4'),
                     html.Div(id='lift-over-results-intro'),
 
                     html.Br(),
