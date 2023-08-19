@@ -1,14 +1,9 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
+from callbacks.lift_over.util import *
 from callbacks.constants import Constants
 const = Constants()
 
-other_ref_genomes = [{'value': 'N22', 'label': 'N22   (aus Nagina-22)'},
-                     {'value': 'MH63', 'label': 'MH63   (indica Minghui-63)'},
-                     {'value': 'Azu', 'label': 'Azu   (japonica Azucena)'},
-                     {'value': 'ARC', 'label': 'ARC   (basmati ARC)'},
-                     {'value': 'IR64', 'label': 'IR64   (indica IR64)'},
-                     {'value': 'CMeo', 'label': 'CMeo   (japonica CHAO MEO)'}]
 
 layout = html.Div(
     id={
@@ -41,7 +36,7 @@ layout = html.Div(
             ),
 
             dcc.Dropdown(
-                other_ref_genomes,
+                construct_options_other_ref_genomes(),
                 id='lift-over-other-refs',
                 multi=True,
                 persistence=True,
@@ -68,11 +63,14 @@ layout = html.Div(
             children=[
                 html.Hr(className='mt-3 mb-4'),
                 html.P(id='lift-over-results-intro'),
-                dcc.Loading(
-                    html.P(id='lift-over-results-statistics', className='mb-4')
-                ),
 
-                dbc.Tabs(id='lift-over-results-tabs', active_tab='tab-0'),
+                dcc.Loading([
+                    html.Ul(id='lift-over-results-statistics'),
+                    html.Br()
+                ]),
+
+                dbc.Tabs(id='lift-over-results-tabs',
+                         active_tab='tab-0'),
                 html.Br(),
 
                 dbc.Label(
@@ -95,14 +93,17 @@ layout = html.Div(
                                 'Export to CSV'],
                                 id='lift-over-export-table',
                                 n_clicks=0,
-                                color='light', size='sm', className='table-button'),
+                                color='light', size='sm', className='table-button'
+                            ),
                             dcc.Download(
-                                id='lift-over-download-df-to-csv'),
+                                id='lift-over-download-df-to-csv'
+                            ),
                             dbc.Button([html.I(
                                 className='bi bi-arrow-clockwise me-2'),
                                 'Reset Table'],
                                 id='lift-over-reset-table',
-                                color='light', size='sm', className='ms-3 table-button')
+                                color='light', size='sm', className='ms-3 table-button'
+                            )
                         ], style={'textAlign': 'right'})
                     ),
 

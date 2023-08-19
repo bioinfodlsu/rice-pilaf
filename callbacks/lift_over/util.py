@@ -20,6 +20,21 @@ errors = {
     'START_GREATER_THAN_STOP': Error_message(4, 'The start of a genomic interval should not be past the end')
 }
 
+other_ref_genomes = {'N22': 'aus Nagina-22',
+                     'MH63': 'indica Minghui-63',
+                     'Azu': 'japonica Azucena',
+                     'ARC': 'basmati ARC',
+                     'IR64': 'indica IR64',
+                     'CMeo': 'japonica CHAO MEO'}
+
+
+def construct_options_other_ref_genomes():
+    other_refs = []
+    for symbol, name in other_ref_genomes.items():
+        other_refs.append({'value': symbol, 'label': f'{symbol} ({name})'})
+
+    return other_refs
+
 
 def create_empty_df():
     """

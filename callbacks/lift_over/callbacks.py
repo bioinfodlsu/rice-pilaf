@@ -94,14 +94,16 @@ def init_callback(app):
                     elif len(other_refs) > 2:
                         for idx, other_ref in enumerate(other_refs[1:]):
                             if idx != len(other_refs) - 2:
-                                other_refs_str += f', {other_ref}'
+                                other_refs_str += f', '
                             else:
-                                other_refs_str += f', and {other_ref}'
+                                other_refs_str += f', and '
+
+                            other_refs_str += f'{other_ref}'
 
                     gene_list_msg += [html.Span(' and in orthologous regions of '),
                                       html.B(other_refs_str)]
 
-                gene_list_msg += [html.Span('.')]
+                gene_list_msg += [html.Span(':')]
 
                 return gene_list_msg, tabs_children, tabs[len(get_tabs()) - 1:], active_filter
             else:
@@ -213,36 +215,44 @@ def init_callback(app):
             nb_intervals = get_genomic_intervals_from_input(
                 nb_intervals_str)
 
-            genes_from_Nb_raw = get_genes_in_Nb(
-                nb_intervals)[0].drop(
-                ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+            genes_from_Nb_raw = get_genes_in_Nb(nb_intervals)[0]
 
-            gene_statistics = f'In summary, {genes_from_Nb_raw["OGI"].nunique()} genes were found in Nipponbare'
-
+            gene_statistics_nb = f'{genes_from_Nb_raw["OGI"].nunique()} genes were found in Nipponbare'
             for idx, other_ref in enumerate(other_refs):
                 common_genes_raw = get_common_genes([other_ref], nb_intervals)
-
                 if idx == len(other_refs) - 1:
-                    gene_statistics += f', and {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    gene_statistics_nb += f', and {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
                 else:
-                    gene_statistics += f', {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    gene_statistics_nb += f', {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+
+            gene_statistics_nb += '. '
+            gene_statistics_items = [html.Li(gene_statistics_nb)]
 
             if other_refs:
-                gene_statistics += f'. Among these'
+                other_refs.append('Nipponbare')
+                genes_common = get_common_genes(other_refs, nb_intervals)
+                gene_statistics_common = f'Among these, {genes_common["OGI"].nunique()} genes are common to all cultivars.'
+                gene_statistics_items.append(
+                    html.Li(gene_statistics_common))
 
-            for idx, other_ref in enumerate(other_refs):
-                genes_from_other_ref_raw = get_unique_genes_in_other_ref(
-                    other_ref, nb_intervals).drop(
-                    ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+                gene_statistics_other_ref = f''
+                other_refs.pop()            # Remove added Nipponbare
+                for idx, other_ref in enumerate(other_refs):
+                    genes_from_other_ref_raw = get_unique_genes_in_other_ref(
+                        other_ref, nb_intervals)
 
-                if len(other_refs) > 1 and idx == len(other_refs) - 1:
-                    gene_statistics += f', and {genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
-                else:
-                    gene_statistics += f', {genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
+                    if len(other_refs) > 1 and idx == len(other_refs) - 1:
+                        gene_statistics_other_ref += f', and '
+                    elif idx != 0:
+                        gene_statistics_other_ref += f', '
 
-            gene_statistics += '.'
+                    gene_statistics_other_ref += f'{genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
 
-            return gene_statistics
+                gene_statistics_other_ref += '.'
+                gene_statistics_items.append(
+                    html.Li(gene_statistics_other_ref))
+
+            return gene_statistics_items
 
         raise PreventUpdate
 
