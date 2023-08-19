@@ -63,6 +63,8 @@ def text_mining_query_search(query_string):
         df['PMID'] + \
         '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
+    df = df.sort_values('Score', ascending=False)
+
     display_cols_in_fixed_dec_places(df, ['Score'])
 
     if len(df.index) == 0:
