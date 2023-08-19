@@ -311,13 +311,12 @@ def init_callback(app):
                 other_ref = children[tab_number]['props']['value']
 
                 genes_from_other_ref_raw = get_unique_genes_in_other_ref(
-                    other_ref, nb_intervals).drop(
-                    ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+                    other_ref, nb_intervals)
                 genes_from_other_ref = genes_from_other_ref_raw.to_dict(
                     'records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in genes_from_other_ref_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
+                           else {'id': x, 'name': x} for x in genes_from_other_ref_raw.columns]
 
                 return columns, genes_from_other_ref
 

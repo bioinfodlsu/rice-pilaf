@@ -27,6 +27,8 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
                      'IR64': 'indica IR64',
                      'CMeo': 'japonica CHAO MEO'}
 
+FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
+
 
 def construct_options_other_ref_genomes():
     other_refs = []
@@ -44,6 +46,10 @@ def create_empty_df():
     - Empty data frame
     """
     return create_empty_df_with_cols(['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand'])
+
+
+def create_empty_front_facing_df():
+    return create_empty_df_with_cols(FRONT_FACING_COLUMNS)
 
 # =====================================================
 # Utility functions for parsing input genomic interval
@@ -584,10 +590,26 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
 
-    genes_in_nb = genes_in_nb[['OGI', 'Name', 'Chromosome']]
+    genes_in_nb = genes_in_nb[['OGI']]
 
     # Get set difference
     unique_genes = pd.concat([genes_in_other_ref, genes_in_nb, genes_in_nb]).drop_duplicates(
         subset=['OGI'], keep=False)
+
+    gene_description_df = pd.read_csv(
+        f'{const.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
+    unique_genes = pd.merge(gene_description_df, unique_genes,
+                            left_on='Gene_ID', right_on='Name')
+
+    unique_genes = unique_genes[FRONT_FACING_COLUMNS]
+
+    unique_genes['UniProtKB/Swiss-Prot'] = '<a style="white-space:nowrap" href="https://www.uniprot.org/uniprotkb/' + \
+        unique_genes['UniProtKB/Swiss-Prot'] + \
+        '/entry" target = "_blank">' + \
+        unique_genes['UniProtKB/Swiss-Prot'] + \
+        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+
+    if unique_genes.shape[0] == 0:
+        return create_empty_front_facing_df()
 
     return unique_genes
