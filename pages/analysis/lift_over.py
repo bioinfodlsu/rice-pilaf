@@ -70,7 +70,8 @@ layout = html.Div(
                 ]),
 
                 dbc.Tabs(id='lift-over-results-tabs',
-                         active_tab='tab-0'),
+                         active_tab='tab-0',
+                         className='mt-3'),
                 html.Br(),
 
                 dbc.Label(

@@ -98,7 +98,7 @@ def init_callback(app):
                             else:
                                 other_refs_str += f', and '
 
-                            other_refs_str += f'{other_ref}'
+                            other_refs_str += f'{other_ref} ({other_ref_genomes[other_ref]})'
 
                     gene_list_msg += [html.Span(' and in orthologous regions of '),
                                       html.B(other_refs_str)]
@@ -203,6 +203,7 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-statistics', 'children'),
+        Output('lift-over-results-tabs', 'className'),
 
         Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-other-refs-submitted-input', 'data'),
@@ -252,7 +253,8 @@ def init_callback(app):
                 gene_statistics_items.append(
                     html.Li(gene_statistics_other_ref))
 
-            return gene_statistics_items
+            # Setting the class name of lift-over-results-tabs to None is for removing the top margin during loading
+            return gene_statistics_items, None
 
         raise PreventUpdate
 
