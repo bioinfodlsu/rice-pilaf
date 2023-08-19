@@ -498,19 +498,24 @@ def get_common_genes(refs, nb_intervals):
     Returns:
     - Data frame containing the genes common to the given references
     """
-    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
-    genes_in_nb = genes_in_nb[['OGI', 'Name']]
-
-    common_genes = genes_in_nb
+    common_genes = None
     for ref in refs:
         if ref != 'Nipponbare':
-            genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
-            genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
-            common_genes = pd.merge(
-                common_genes, genes_in_other_ref, on='OGI', how='outer')
+            genes_in_ref = get_genes_in_other_ref(ref, nb_intervals)
+        else:
+            genes_in_ref = get_genes_in_Nb(nb_intervals)[0]
 
-            common_genes = common_genes.rename(
-                columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
+        genes_in_ref = genes_in_ref[['OGI', 'Name']]
+
+        try:
+            common_genes = pd.merge(
+                common_genes, genes_in_ref, on='OGI', how='outer')
+        # First instance of merging (that is, common_genes is still None)
+        except TypeError:
+            common_genes = genes_in_ref
+
+        common_genes = common_genes.rename(
+            columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
         columns={'Name': 'Nb'}).dropna().drop_duplicates()
@@ -521,9 +526,10 @@ def get_common_genes(refs, nb_intervals):
 def get_all_genes(refs, nb_intervals):
     """
     Returns a data frame containing all the genes (i.e., the set-theoretic union of all the genes)
+    in Nipponbare, as well as orthologous genes in the given references
 
     Parameters:
-    - ref: References
+    - ref: References (other than Nipponbare)
     - nb_intervals: List of Genomic_interval tuples
 
     Returns:

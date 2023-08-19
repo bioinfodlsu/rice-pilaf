@@ -17,7 +17,6 @@ layout = html.Div(
     },
     hidden=True,
     children=[
-
         html.Div([
             html.P(
                 'In this page, you can obtain the list of genes overlapping your input intervals.'),
@@ -29,14 +28,17 @@ layout = html.Div(
 
         html.Div([
             html.I(
-                className='bi bi-chevron-bar-right me-2 non-clickable'),
+                className='bi bi-chevron-bar-right me-2 non-clickable'
+            ),
             html.Span(id='lift-over-genomic-intervals-input'),
 
             html.Br(),
             html.Br(),
 
             dbc.Label(
-                'Select genome(s) for lift-over (ignore if lift-over is not needed):', className='mb-2'),
+                'Select genome(s) for lift-over (ignore if lift-over is not needed):',
+                className='mb-2'
+            ),
 
             dcc.Dropdown(
                 other_ref_genomes,
@@ -49,13 +51,15 @@ layout = html.Div(
 
             html.Br(),
 
-            dbc.Button('Show gene list',
-                    id='lift-over-submit',
-                    className='page-button',
-                    n_clicks=0),
+            dbc.Button(
+                'Show gene list',
+                id='lift-over-submit',
+                className='page-button',
+                n_clicks=0
+            ),
 
         ], className='analysis-intro p-3'),
-        
+
         html.Br(),
 
         html.Div(
@@ -64,20 +68,26 @@ layout = html.Div(
             children=[
                 html.Hr(className='mt-3 mb-4'),
                 html.P(id='lift-over-results-intro'),
-
-                html.P(id='lift-over-results-statistics'),
+                dcc.Loading(
+                    html.P(id='lift-over-results-statistics', className='mb-4')
+                ),
 
                 dbc.Tabs(id='lift-over-results-tabs', active_tab='tab-0'),
+                html.Br(),
+
+                dbc.Label(
+                    id='lift-over-results-gene-intro'
+                ),
+
+                dbc.Checklist(
+                    id='lift-over-overlap-table-filter',
+                    inline=True,
+                    className='ms-3'
+                ),
 
                 html.Br(),
 
                 dcc.Loading([
-                    dbc.Label(id='lift-over-results-gene-intro'),
-                    dbc.Checklist(id='lift-over-overlap-table-filter',
-                                    inline=True,
-                                    className='ms-3'),
-                    html.Br(),
-
                     html.P(
                         html.Div([
                             dbc.Button([html.I(
@@ -110,6 +120,8 @@ layout = html.Div(
                         page_action='native',
                         page_size=15,
                         cell_selectable=False
-                    )])
-            ])
-    ], className='p-3 mt-2')
+                    )
+                ])
+            ]
+        )
+    ], className='mt-2')
