@@ -530,10 +530,10 @@ def get_common_genes(refs, nb_intervals):
             common_genes = genes_in_ref
 
         common_genes = common_genes.rename(
-            columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
+            columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
-        columns={'Name': 'Nb'}).dropna().drop_duplicates()
+        columns={'Name': 'Nipponbare'}).dropna().drop_duplicates()
 
     return common_genes
 
@@ -562,10 +562,10 @@ def get_all_genes(refs, nb_intervals):
                 common_genes, genes_in_other_ref, on='OGI', how='outer')
 
             common_genes = common_genes.rename(
-                columns={'Name_x': 'Nb', 'Name_y': ref, 'Name': ref})
+                columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
-        columns={'Name': 'Nb'}).fillna('-').drop_duplicates()
+        columns={'Name': 'Nipponbare'}).fillna('-').drop_duplicates()
 
     return common_genes
 

@@ -85,7 +85,7 @@ def init_callback(app):
                     active_filter = tabs[len(get_tabs()) - 1:]
 
                 gene_list_msg = [html.Span(
-                    'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
+                    'The tabs below show the implicated genes in '), html.B('Nipponbare')]
 
                 if other_refs:
                     other_refs_str = other_refs[0]
