@@ -27,19 +27,19 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label(['Choose TF binding site prediction technique:',
-                    html.I(
-                        className='bi bi-info-circle',
-                        id='tf-enrichment-technique-tooltip',
-                        n_clicks=0
-                    )]),
+                       html.I(
+                           className='bi bi-info-circle',
+                           id='tf-enrichment-technique-tooltip',
+                           n_clicks=0
+                       )]),
             dbc.RadioItems(
                 id='tfbs-prediction-technique',
                 options=[
                     {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
                     {'value': 'CE', 'label': 'motif conservation',
-                    'label_id': 'motif conservation'},
+                     'label_id': 'motif conservation'},
                     {'value': 'motif', 'label': 'motif scan',
-                    'label_id': 'motif scan'}
+                     'label_id': 'motif scan'}
                 ],
                 value='FunTFBS',
                 inline=True
@@ -47,18 +47,18 @@ layout = html.Div(
 
             html.Br(),
             dbc.Label(['Consider TF binding sites in the following regions:',
-                    html.I(
-                        className='bi bi-info-circle',
-                        id='tf-enrichment-binding-site-tooltip',
-                        n_clicks=0
-                    )]),
+                       html.I(
+                           className='bi bi-info-circle',
+                           id='tf-enrichment-binding-site-tooltip',
+                           n_clicks=0
+                       )]),
             dbc.RadioItems(
                 id='tfbs-set',
                 options=[
                     {'value': 'promoters', 'label': 'promoters',
                         'label_id': 'promoters'},
                     {'value': 'genome', 'label': 'genome',
-                    'label_id': 'genome'}
+                     'label_id': 'genome'}
 
                 ],
                 value='promoters',
@@ -67,15 +67,15 @@ layout = html.Div(
             html.Br(),
             dcc.Markdown("Input threshold for False-Discovery Rate:"),
             dbc.Input(id='tfbs-fdr', type='number', value=0.25, min=0, max=1, step=0.05,
-                    persistence=True, persistence_type='memory'),
+                      persistence=True, persistence_type='memory'),
             html.Br(),
 
             dbc.Button('Run Analysis',
-                    id='tfbs-submit',
-                    n_clicks=0,
-                    className='page-button'),
+                       id='tfbs-submit',
+                       n_clicks=0,
+                       className='page-button'),
         ], className='analysis-intro p-3'),
-        
+
         html.Br(),
 
         html.Div(
@@ -116,5 +116,5 @@ layout = html.Div(
                     )
                 ])
             ])
-    ], className='p-3 mt-2'
+    ], className='mt-2'
 )

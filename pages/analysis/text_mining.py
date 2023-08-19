@@ -13,8 +13,8 @@ layout = html.Div(
 
         html.Div([
             html.P('In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. from a database constructed from text-mined PubMed abstracts. '
-                # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
-                ),
+                   # 'Conversely, you can retrieve literature that associates your gene of interest to some phenotype.'
+                   ),
         ], className='analysis-intro p-3'),
 
         html.Br(),
@@ -40,24 +40,24 @@ layout = html.Div(
             ),
 
             html.Div([html.Span('Examples:', className='pe-3'),
-                    html.Span('pre-harvest sprouting',
+                      html.Span('pre-harvest sprouting',
                                 id={'type': 'example-text-mining',
                                     'description': 'pre-harvest sprouting'},
                                 className='sample-genomic-interval'),
-                    html.Span(',', className='sample-genomic-interval'),
-                    html.Span('anaerobic germination',
+                      html.Span(',', className='sample-genomic-interval'),
+                      html.Span('anaerobic germination',
                                 id={'type': 'example-text-mining',
                                     'description': 'anaerobic germination'},
                                 className='sample-genomic-interval ms-3')],
-                    className='pt-3'),
+                     className='pt-3'),
             html.Br(),
 
             dbc.Button('Search',
-                    id='text-mining-submit',
-                    className='page-button',
-                    n_clicks=0),
+                       id='text-mining-submit',
+                       className='page-button',
+                       n_clicks=0),
         ], className='analysis-intro p-3'),
-                    
+
         html.Br(),
 
         html.Div(
@@ -102,5 +102,5 @@ layout = html.Div(
                     )
                 ])
             ], className='mt-2')
-    
-    ], className='p-3 mt-2')
+
+    ], className='mt-2')

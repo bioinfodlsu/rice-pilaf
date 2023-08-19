@@ -116,15 +116,15 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label(['Select the co-expression network',
-                    html.I(
-                        className='bi bi-info-circle', id='coexpression-network-tooltip')]),
+                       html.I(
+                           className='bi bi-info-circle', id='coexpression-network-tooltip')]),
 
             dbc.RadioItems(
                 id='coexpression-network',
                 options=[
                     {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
                     {'value': 'RCRN',
-                    'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
+                     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
                 ],
                 value='OS-CX',
                 inline=True,
@@ -134,11 +134,11 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label(['Select a module detection algorithm ',
-                    html.I(
-                        className='bi bi-info-circle',
-                        id='coexpression-clustering-algo-tooltip',
-                        n_clicks=0
-                    )]),
+                       html.I(
+                           className='bi bi-info-circle',
+                           id='coexpression-clustering-algo-tooltip',
+                           n_clicks=0
+                       )]),
 
             module_detection_algo_modal,
 
@@ -146,7 +146,7 @@ layout = html.Div(
                 id='coexpression-clustering-algo',
                 options=[
                     {'value': 'clusterone', 'label': 'ClusterONE',
-                    'label_id': 'clusterone'},
+                     'label_id': 'clusterone'},
                     {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
                     {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
                     {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
@@ -159,27 +159,27 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label(['Select the ',
-                    html.Span('parameter for running the algorithm',
-                                id='coexpression-parameter-name'),
-                    html.I(
-                        className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
-                    className='mb-4'),
+                       html.Span('parameter for running the algorithm',
+                                 id='coexpression-parameter-name'),
+                       html.I(
+                           className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
+                      className='mb-4'),
 
             # Should also be changed if parameter space is changed
             html.Div([dcc.Slider(id='coexpression-parameter-slider', step=None,
-                                marks={0: '1 (Loose Modules)', 30: '2', 60: '3',
+                                 marks={0: '1 (Loose Modules)', 30: '2', 60: '3',
                                         90: '4 (Dense Modules)'},
-                                value=30)],
-                    id='coexpression-parameter-slider-container'),
+                                 value=30)],
+                     id='coexpression-parameter-slider-container'),
 
             html.Br(),
 
             dbc.Button('Run Analysis',
-                    id='coexpression-submit',
-                    className='page-button',
-                    n_clicks=0),
+                       id='coexpression-submit',
+                       className='page-button',
+                       n_clicks=0),
         ], className='analysis-intro p-3'),
-        
+
 
         html.Br(),
 
@@ -201,16 +201,16 @@ layout = html.Div(
                             id='coexpression-modules-pathway',
                             active_tab='tab-0',
                             children=[dcc.Tab(label='Gene Ontology',
-                                                value='Gene Ontology'),
-                                        dcc.Tab(label='Trait Ontology',
-                                                value='Trait Ontology'),
-                                        dcc.Tab(label='Plant Ontology',
-                                                value='Plant Ontology'),
-                                        dcc.Tab(label='Pathways (Over-Representation)',
-                                                value='Pathways (Over-Representation)'),
-                                        dcc.Tab(label='Pathway-Express',
-                                                value='Pathway-Express'),
-                                        dcc.Tab(label='SPIA', value='SPIA')])
+                                              value='Gene Ontology'),
+                                      dcc.Tab(label='Trait Ontology',
+                                              value='Trait Ontology'),
+                                      dcc.Tab(label='Plant Ontology',
+                                              value='Plant Ontology'),
+                                      dcc.Tab(label='Pathways (Over-Representation)',
+                                              value='Pathways (Over-Representation)'),
+                                      dcc.Tab(label='Pathway-Express',
+                                              value='Pathway-Express'),
+                                      dcc.Tab(label='SPIA', value='SPIA')])
                     ]),
 
 
@@ -294,7 +294,7 @@ layout = html.Div(
                             id='coexpression-module-graph',
                             layout={'name': 'circle'},
                             style={'width': '100%',
-                                    'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
+                                   'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
                             stylesheet=[
                                 {
                                     'selector': 'node',
@@ -323,6 +323,6 @@ layout = html.Div(
                             ]
                         )
                     ])
-            ])
-        
-    ], className='p-3 mt-2')
+            ]
+        )
+    ], className='mt-2')

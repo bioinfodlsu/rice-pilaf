@@ -24,7 +24,7 @@ layout = html.Div(
             html.Br(),
 
             dbc.Label('Select an interval: ',
-                    className='mb-2'),
+                      className='mb-2'),
 
             dcc.Dropdown(
                 id='igv-genomic-intervals',
@@ -33,11 +33,11 @@ layout = html.Div(
             html.Br(),
 
             dbc.Button('Submit',
-                    id='igv-submit',
-                    n_clicks=0,
-                    className='page-button'),
+                       id='igv-submit',
+                       n_clicks=0,
+                       className='page-button'),
         ], className='analysis-intro p-3'),
-        
+
         html.Br(),
 
         html.Div(
@@ -48,13 +48,13 @@ layout = html.Div(
                 dbc.Label(id='igv-track-intro'),
 
                 dcc.Loading(dbc.Checklist(id='igv-track-filter',
-                                            inline=True,
-                                            className='ms-3')),
+                                          inline=True,
+                                          className='ms-3')),
 
                 html.Br(),
 
                 dcc.Loading(id='igv-display')
             ]
         )
-    ], className='p-3 mt-2'
+    ], className='mt-2'
 )
