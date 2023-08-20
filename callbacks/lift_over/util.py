@@ -6,6 +6,7 @@ import pandas as pd
 
 from ..constants import Constants
 from ..general_util import *
+from ..links_util import *
 
 
 const = Constants()
@@ -431,11 +432,8 @@ def get_genes_in_Nb(nb_intervals):
         table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
                        'Chromosome', 'Start', 'End', 'Strand']]
 
-        table['UniProtKB/Swiss-Prot'] = '<a style="white-space:nowrap" href="https://www.uniprot.org/uniprotkb/' + \
-            table['UniProtKB/Swiss-Prot'] + \
-            '/entry" target = "_blank">' + \
-            table['UniProtKB/Swiss-Prot'] + \
-            '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+        table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
+            table, 'UniProtKB/Swiss-Prot')
 
         if table.shape[0] == 0:
             return create_empty_df(), table['Name'].values.tolist()
@@ -603,11 +601,8 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS]
 
-    unique_genes['UniProtKB/Swiss-Prot'] = '<a style="white-space:nowrap" href="https://www.uniprot.org/uniprotkb/' + \
-        unique_genes['UniProtKB/Swiss-Prot'] + \
-        '/entry" target = "_blank">' + \
-        unique_genes['UniProtKB/Swiss-Prot'] + \
-        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
+        unique_genes, 'UniProtKB/Swiss-Prot')
 
     if unique_genes.shape[0] == 0:
         return create_empty_front_facing_df()
