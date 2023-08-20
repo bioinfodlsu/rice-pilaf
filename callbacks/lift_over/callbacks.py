@@ -85,13 +85,25 @@ def init_callback(app):
                     active_filter = tabs[len(get_tabs()) - 1:]
 
                 gene_list_msg = [html.Span(
-                    'The tabs below show the implicated genes in '), html.B('Nipponbare (Nb)')]
+                    'The tabs below show the implicated genes in '), html.B('Nipponbare')]
 
                 if other_refs:
+                    other_refs_str = other_refs[0]
+                    if len(other_refs) == 2:
+                        other_refs_str += f' and {other_refs[1]}'
+                    elif len(other_refs) > 2:
+                        for idx, other_ref in enumerate(other_refs[1:]):
+                            if idx != len(other_refs) - 2:
+                                other_refs_str += f', '
+                            else:
+                                other_refs_str += f', and '
+
+                            other_refs_str += f'{other_ref} ({other_ref_genomes[other_ref]})'
+
                     gene_list_msg += [html.Span(' and in orthologous regions of '),
-                                      html.B(','.join(other_refs)), html.Span('.')]
-                else:
-                    gene_list_msg += [html.Span('.')]
+                                      html.B(other_refs_str)]
+
+                gene_list_msg += [html.Span(':')]
 
                 return gene_list_msg, tabs_children, tabs[len(get_tabs()) - 1:], active_filter
             else:
@@ -163,10 +175,92 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
-        Output('lift-over-results-gene-statistics', 'children'),
+        Output('lift-over-overlap-table-filter', 'style'),
+
+        Input('lift-over-results-tabs', 'active_tab'),
+        State('lift-over-results-tabs', 'children'),
+        State('homepage-is-submitted', 'data'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_gene_intro(active_tab, children, homepage_is_submitted, lift_over_is_submitted):
+        if homepage_is_submitted and lift_over_is_submitted:
+            if active_tab == get_tab_id('All Genes'):
+                return 'The table below lists all the implicated genes.', {'display': 'none'}
+
+            elif active_tab == get_tab_id('Common Genes'):
+                return 'The table below lists the implicated genes that are common to:', {'display': 'block'}
+
+            elif active_tab == get_tab_id('Nipponbare'):
+                return 'The table below lists the genes overlapping the site in the Nipponbare reference.', {'display': 'none'}
+
+            else:
+                tab_number = get_tab_index(active_tab)
+                other_ref = children[tab_number]['props']['value']
+
+                return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', {'display': 'none'}
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('lift-over-results-statistics', 'children'),
+        Output('lift-over-results-tabs', 'className'),
+
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('lift-over-other-refs-submitted-input', 'data'),
+
+        State('homepage-is-submitted', 'data'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_gene_statistics(nb_intervals_str, other_refs, homepage_is_submitted, lift_over_is_submitted):
+        if homepage_is_submitted and lift_over_is_submitted:
+            nb_intervals = get_genomic_intervals_from_input(
+                nb_intervals_str)
+
+            genes_from_Nb_raw = get_genes_in_Nb(nb_intervals)[0]
+
+            gene_statistics_nb = f'{genes_from_Nb_raw["OGI"].nunique()} genes were found in Nipponbare'
+            for idx, other_ref in enumerate(other_refs):
+                common_genes_raw = get_common_genes([other_ref], nb_intervals)
+                if idx == len(other_refs) - 1:
+                    gene_statistics_nb += f', and {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                else:
+                    gene_statistics_nb += f', {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+
+            gene_statistics_nb += '. '
+            gene_statistics_items = [html.Li(gene_statistics_nb)]
+
+            if other_refs:
+                other_refs.append('Nipponbare')
+                genes_common = get_common_genes(other_refs, nb_intervals)
+                gene_statistics_common = f'Among these, {genes_common["OGI"].nunique()} genes are common to all cultivars.'
+                gene_statistics_items.append(
+                    html.Li(gene_statistics_common))
+
+                gene_statistics_other_ref = f''
+                other_refs.pop()            # Remove added Nipponbare
+                for idx, other_ref in enumerate(other_refs):
+                    genes_from_other_ref_raw = get_unique_genes_in_other_ref(
+                        other_ref, nb_intervals)
+
+                    if len(other_refs) > 1 and idx == len(other_refs) - 1:
+                        gene_statistics_other_ref += f', and '
+                    elif idx != 0:
+                        gene_statistics_other_ref += f', '
+
+                    gene_statistics_other_ref += f'{genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
+
+                gene_statistics_other_ref += '.'
+                gene_statistics_items.append(
+                    html.Li(gene_statistics_other_ref))
+
+            # Setting the class name of lift-over-results-tabs to None is for removing the top margin during loading
+            return gene_statistics_items, None
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
-        Output('lift-over-overlap-table-filter', 'style'),
 
         Input('homepage-genomic-intervals-submitted-input', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
@@ -183,56 +277,48 @@ def init_callback(app):
                 nb_intervals_str)
 
             if active_tab == get_tab_id('All Genes'):
-                df_nb_raw = get_all_genes(other_refs, nb_intervals)
-                df_nb = df_nb_raw.to_dict('records')
+                all_genes_raw = get_all_genes(other_refs, nb_intervals)
+                all_genes = all_genes_raw.to_dict('records')
 
                 columns = [{'id': key, 'name': key}
-                           for key in df_nb_raw.columns]
+                           for key in all_genes_raw.columns]
 
-                return 'The table below lists all the implicated genes.', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                    columns, df_nb, {'display': 'none'}
+                return columns, all_genes
 
             elif active_tab == get_tab_id('Common Genes'):
-                df_nb_raw = get_common_genes(
+                common_genes_raw = get_common_genes(
                     filter_rice_variants, nb_intervals)
-                df_nb = df_nb_raw.to_dict('records')
+                common_genes = common_genes_raw.to_dict('records')
 
                 columns = [{'id': key, 'name': key}
-                           for key in df_nb_raw.columns]
+                           for key in common_genes_raw.columns]
 
-                return 'The table below lists the implicated genes that are common to:', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                    columns, df_nb, {'display': 'block'}
+                return columns, common_genes
 
             elif active_tab == get_tab_id('Nipponbare'):
-                genes_from_Nb = get_genes_in_Nb(
+                genes_from_Nb_raw = get_genes_in_Nb(
                     nb_intervals)[0].drop(
                     ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
-                           else {'id': x, 'name': x} for x in genes_from_Nb.columns]
+                genes_from_Nb = genes_from_Nb_raw.to_dict('records')
 
-                df_nb_complete = genes_from_Nb.to_dict('records')
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x in ['UniProtKB/Swiss-Prot', 'QTL Studies']
+                           else {'id': x, 'name': x} for x in genes_from_Nb_raw.columns]
 
-                return 'The table below lists the genes overlapping the site in the Nipponbare reference.', \
-                    f'{genes_from_Nb["OGI"].nunique()} genes have been found.', \
-                    columns, df_nb_complete, {'display': 'none'}
+                return columns, genes_from_Nb
 
             else:
                 tab_number = get_tab_index(active_tab)
                 other_ref = children[tab_number]['props']['value']
 
-                df_nb_raw = get_unique_genes_in_other_ref(
-                    other_ref, nb_intervals).drop(
-                    ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
-                df_nb = df_nb_raw.to_dict('records')
+                genes_from_other_ref_raw = get_unique_genes_in_other_ref(
+                    other_ref, nb_intervals)
+                genes_from_other_ref = genes_from_other_ref_raw.to_dict(
+                    'records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in df_nb_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
+                           else {'id': x, 'name': x} for x in genes_from_other_ref_raw.columns]
 
-                return f'The table below lists the genes from homologous regions in {other_ref} that are not in Nipponbare.', \
-                    f'{df_nb_raw["OGI"].nunique()} genes have been found.', \
-                    columns, df_nb, {'display': 'none'}
+                return columns, genes_from_other_ref
 
         raise PreventUpdate
 

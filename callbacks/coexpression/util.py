@@ -1,6 +1,7 @@
 from ..constants import Constants
 from ..file_util import *
 from ..general_util import *
+from ..links_util import *
 import os
 import pickle
 import subprocess
@@ -185,13 +186,6 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     return output_str[:-2]
 
 
-def get_genes_from_kegg_link(link):
-    idx = link.find('?')
-    query = link[idx:].split('+')
-
-    return '\n'.join(query[1:])
-
-
 def get_genes_in_module(module_idx, network, algo, parameters):
     with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
         for idx, module in enumerate(f):
@@ -237,9 +231,7 @@ def convert_to_df_go(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
-    result['ID'] = '<a style="white-space:nowrap" href="https://amigo.geneontology.org/amigo/term/' + \
-        result['ID'] + '" target = "_blank">' + result['ID'] + \
-        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    result['ID'] = get_go_link(result, 'ID')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -257,9 +249,7 @@ def convert_to_df_to(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
-    result['ID'] = '<a style="white-space:nowrap" href="https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
-        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
-        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    result['ID'] = get_to_po_link(result, 'ID')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -277,9 +267,7 @@ def convert_to_df_po(result):
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
-    result['ID'] = '<a style="white-space:nowrap" href="https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
-        result['ID'].str.replace(':', '_') + '" target = "_blank">' + result['ID'] + \
-        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    result['ID'] = get_to_po_link(result, 'ID')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -297,10 +285,8 @@ def convert_to_df_ora(result, network):
     result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
 
-    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
-        '" target = "_blank">' + \
-        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    # Construct link before appending the MSU accession
+    result['ID'] = get_kegg_link(result, 'ID', 'Genes')
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['Genes'].str.split(
@@ -335,10 +321,8 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     result['Genes'] = result.apply(lambda x: get_genes_in_module_and_pathway(
         x['ID'], module_idx, network, algo, parameters), axis=1)
 
-    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
-        '" target = "_blank">' + \
-        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    # Construct link before appending the MSU accession
+    result['ID'] = get_kegg_link(result, 'ID', 'Genes')
 
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
@@ -363,13 +347,12 @@ def convert_to_df_spia(result, network):
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['View on KEGG'].apply(
         get_genes_from_kegg_link)
+
+    # Construct link before appending the MSU accession
+    result['ID'] = get_kegg_link(result, 'ID', 'Genes')
+
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
-
-    result['ID'] = '<a style="white-space:nowrap" href="http://www.genome.jp/dbget-bin/show_pathway?' + \
-        result['ID'] + '+' + result['Genes'].str.split('\n').str.join('+') + \
-        '" target = "_blank">' + \
-        result['ID'] + '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])

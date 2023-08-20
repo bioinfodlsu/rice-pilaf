@@ -1,6 +1,7 @@
 import pandas as pd
 from ..constants import Constants
 from ..general_util import *
+from ..links_util import *
 import regex as re
 import ftfy
 
@@ -57,11 +58,9 @@ def text_mining_query_search(query_string):
                     df.loc[len(df.index)] = [
                         Entity, PMID, Title, Sentence, score]
 
-    df['PMID'] = '<a style="white-space:nowrap" href="https://pubmed.ncbi.nlm.nih.gov/' + \
-        df['PMID'] + \
-        '/entry" target = "_blank">' + \
-        df['PMID'] + \
-        '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+    df['PMID'] = get_pubmed_link(df, 'PMID')
+
+    df = df.sort_values('Score', ascending=False)
 
     display_cols_in_fixed_dec_places(df, ['Score'])
 

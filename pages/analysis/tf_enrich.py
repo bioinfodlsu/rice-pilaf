@@ -17,8 +17,9 @@ layout = html.Div(
                 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
         ], className='analysis-intro p-3'),
 
+        html.Br(),
+
         html.Div([
-            html.Br(),
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
             html.Span(id='tf-enrichment-genomic-intervals-input'),
 
@@ -73,46 +74,47 @@ layout = html.Div(
                        id='tfbs-submit',
                        n_clicks=0,
                        className='page-button'),
+        ], className='analysis-intro p-3'),
 
-            html.Br(),
-            html.Br(),
-            html.Div(
-                id='tfbs-results-container',
-                style={'display': 'none'},
-                children=[
-                    dcc.Loading([
-                        html.P(
-                            html.Div([
-                                dbc.Button([html.I(
-                                    className='bi bi-download me-2'),
-                                    'Export to CSV'],
-                                    id='tfbs-export-table',
-                                    n_clicks=0,
-                                    color='light', size='sm', className='table-button'),
-                                dcc.Download(id='tfbs-download-df-to-csv'),
-                                dbc.Button([html.I(
-                                    className='bi bi-arrow-clockwise me-2'),
-                                    'Reset Table'],
-                                    id='tfbs-reset-table',
-                                    color='light', size='sm', className='ms-3 table-button')
-                            ], style={'textAlign': 'right'})
-                        ),
+        html.Br(),
 
-                        dash_table.DataTable(
-                            id='tf-enrichment-result-table',
-                            style_cell={
-                                'whiteSpace': 'pre-line'
-                            },
-                            sort_action='native',
-                            filter_action='native',
-                            filter_options={'case': 'insensitive',
-                                            'placeholder_text': 'Search column'},
-                            page_action='native',
-                            page_size=15,
-                            cell_selectable=False
-                        )
-                    ])
+        html.Div(
+            id='tfbs-results-container',
+            style={'display': 'none'},
+            children=[
+                html.Hr(className='mt-3 mb-4'),
+                dcc.Loading([
+                    html.P(
+                        html.Div([
+                            dbc.Button([html.I(
+                                className='bi bi-download me-2'),
+                                'Export to CSV'],
+                                id='tfbs-export-table',
+                                n_clicks=0,
+                                color='light', size='sm', className='table-button'),
+                            dcc.Download(id='tfbs-download-df-to-csv'),
+                            dbc.Button([html.I(
+                                className='bi bi-arrow-clockwise me-2'),
+                                'Reset Table'],
+                                id='tfbs-reset-table',
+                                color='light', size='sm', className='ms-3 table-button')
+                        ], style={'textAlign': 'right'})
+                    ),
+
+                    dash_table.DataTable(
+                        id='tf-enrichment-result-table',
+                        style_cell={
+                            'whiteSpace': 'pre-line'
+                        },
+                        sort_action='native',
+                        filter_action='native',
+                        filter_options={'case': 'insensitive',
+                                        'placeholder_text': 'Search column'},
+                        page_action='native',
+                        page_size=15,
+                        cell_selectable=False
+                    )
                 ])
-        ], className='p-3 mt-2')
-    ]
+            ])
+    ], className='mt-2'
 )
