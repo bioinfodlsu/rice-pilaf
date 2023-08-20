@@ -4,12 +4,12 @@ import os
 import pickle
 
 
-def default_to_regular(d):
+def convert_default_to_vanilla_dict(d):
     """
     Lifted from https://stackoverflow.com/questions/26496831/how-to-convert-defaultdict-of-defaultdicts-of-defaultdicts-to-dict-of-dicts-o
     """
     if isinstance(d, defaultdict):
-        d = {k: default_to_regular(v) for k, v in d.items()}
+        d = {k: convert_default_to_vanilla_dict(v) for k, v in d.items()}
     return d
 
 
@@ -27,7 +27,7 @@ def prepare_qtaro_mapping(annotation_file):
 
     print("Generated dictionary from QTARO annotation file")
 
-    return default_to_regular(mapping)
+    return convert_default_to_vanilla_dict(mapping)
 
 
 def export_mapping(mapping, output_dir):
