@@ -377,6 +377,26 @@ def get_ogi_other_ref(ref, nb_intervals):
 
     return final_ogi_set, final_ogi_dict
 
+# ==================================
+# Utility function related to QTARO
+# ==================================
+
+
+def get_qtaro_entry(mapping, gene):
+    try:
+        return str(mapping[gene])
+    except KeyError:
+        return '-'
+
+
+def get_qtaro_entries(mapping, genes):
+    entries = []
+    for gene in genes:
+        entries.append(get_qtaro_entry(mapping, gene))
+
+    return entries
+
+
 # ========================
 # Functions for lift-over
 # ========================
@@ -409,6 +429,12 @@ def get_genes_in_Nb(nb_intervals):
             ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
                                      for gene in genes_in_interval], ogi_mapping)
 
+        # Get QTARO annotations
+        with open(const.QTARO_DICTIONARY, 'rb') as f:
+            qtaro_dict = pickle.load(f)
+            qtaro_list = get_qtaro_entries(
+                qtaro_dict, [gene.id for gene in genes_in_interval])
+
         # Construct the data frame
         df = pd.DataFrame({
             'OGI': ogi_list,
@@ -416,7 +442,8 @@ def get_genes_in_Nb(nb_intervals):
             'Chromosome': [gene.chrom for gene in genes_in_interval],
             'Start': [gene.start for gene in genes_in_interval],
             'End': [gene.end for gene in genes_in_interval],
-            'Strand': [gene.strand for gene in genes_in_interval]
+            'Strand': [gene.strand for gene in genes_in_interval],
+            'QTL Studies': qtaro_list
         })
         dfs.append(df)
 
@@ -428,9 +455,9 @@ def get_genes_in_Nb(nb_intervals):
         table = pd.merge(gene_description_df, table_gene_ids,
                          left_on='Gene_ID', right_on='Name')
 
-        # Display only columns of interest
+        # Reorder columns
         table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
-                       'Chromosome', 'Start', 'End', 'Strand']]
+                       'Chromosome', 'Start', 'End', 'Strand', 'QTL Studies']]
 
         table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
             table, 'UniProtKB/Swiss-Prot')

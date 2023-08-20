@@ -14,11 +14,13 @@ class Constants(object):
     OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
     TEXT_MINING = f'{APP_DATA}/text_mining'
+    QTARO = f'{APP_DATA}/qtaro'
 
     GENOMES_NIPPONBARE = f'{APP_DATA}/genomes/Nipponbare'
     ANNOTATIONS_NB = f'{ANNOTATIONS}/Nb'
     OPEN_CHROMATIN = f'{APP_DATA}/open_chromatin'
     OPEN_CHROMATIN_PANICLE = f'{OPEN_CHROMATIN}/panicle'
+    QTARO_DICTIONARY = f'{QTARO}/qtaro.pickle'
 
     NETWORKS = f'{APP_DATA}/networks'
     NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
