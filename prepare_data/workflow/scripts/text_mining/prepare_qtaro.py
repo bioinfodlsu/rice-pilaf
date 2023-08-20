@@ -1,7 +1,16 @@
 import csv
 from collections import defaultdict
 import os
-import dill
+import pickle
+
+
+def default_to_regular(d):
+    """
+    Lifted from https://stackoverflow.com/questions/26496831/how-to-convert-defaultdict-of-defaultdicts-of-defaultdicts-to-dict-of-dicts-o
+    """
+    if isinstance(d, defaultdict):
+        d = {k: default_to_regular(v) for k, v in d.items()}
+    return d
 
 
 def prepare_qtaro_mapping(annotation_file):
@@ -18,7 +27,7 @@ def prepare_qtaro_mapping(annotation_file):
 
     print("Generated dictionary from QTARO annotation file")
 
-    return mapping
+    return default_to_regular(mapping)
 
 
 def export_mapping(mapping, output_dir):
@@ -26,7 +35,7 @@ def export_mapping(mapping, output_dir):
         os.makedirs(output_dir)
 
     with open(f'{output_dir}/qtaro.pickle', 'wb') as handle:
-        dill.dump(mapping, handle)
+        pickle.dump(mapping, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     print(f'Generated {output_dir}/qtaro.pickle')
 
