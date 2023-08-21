@@ -384,15 +384,16 @@ def get_ogi_other_ref(ref, nb_intervals):
 
 def get_qtaro_entry(mapping, gene):
     try:
-        qtaro_str = '<ul style="margin-bottom: 0;">'
+        qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
         for character_major in mapping[gene]:
             qtaro_str += '<li>' + character_major + '<ul>'
             for character_minor in mapping[gene][character_major]:
                 pubs = ['doi:' + pub for pub in mapping[gene]
                         [character_major][character_minor]]
                 pubs = list(map(get_doi_link_single_str, pubs))
-                qtaro_str += '<li>' + character_minor + ' ' + \
-                    '(' + ', '.join(pubs) + ')'
+                pubs = ['<li>' + pub + '</li>' for pub in pubs]
+                qtaro_str += '<li>' + character_minor + \
+                    '<ul>' + ''.join(pubs) + '</ul>'
                 qtaro_str += '</li>'
             qtaro_str += '</ul></li><br>'
 
