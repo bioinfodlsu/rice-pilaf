@@ -15,10 +15,11 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        State('homepage-is-submitted', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-is-submitted', 'data'),
+        Input('coexpression-submit', 'n_clicks')
     )
-    def display_input(nb_intervals_str, homepage_is_submitted):
+    def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]

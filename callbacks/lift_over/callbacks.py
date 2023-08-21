@@ -9,10 +9,11 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('lift-over-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        State('homepage-is-submitted', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-is-submitted', 'data'),
+        Input('lift-over-submit', 'n_clicks')
     )
-    def display_input(nb_intervals_str, homepage_is_submitted):
+    def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             if nb_intervals_str and not is_error(
                     get_genomic_intervals_from_input(nb_intervals_str)):
