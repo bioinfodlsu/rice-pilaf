@@ -21,10 +21,11 @@ def init_callback(app):
         State({'type': 'analysis-nav', 'label': ALL}, 'id'),
         State({'type': 'analysis-layout', 'label': ALL}, 'id'),
         #Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
-        Input('current-analysis-page-nav', 'data')
+        Input('current-analysis-page-nav', 'data'),
+        Input('homepage-submit', 'n_clicks')
     )
     #def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, *_):
-    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, current_page):
+    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, current_page, *_):
         #if ctx.triggered_id:
         if current_page:
             update_nav_class_name = []
@@ -158,11 +159,11 @@ def init_callback(app):
     @app.callback(
         Output('current-analysis-page-nav', 'data'),
         Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks'),
-        Input('homepage-is-submitted', 'data'),
+        #State('homepage-is-submitted', 'data'),
     )
-    def set_input_homepage_session_state(analysis_nav_items_n_clicks, homepage_is_submitted):
-        if homepage_is_submitted and ctx.triggered_id:
-            if not isinstance(ctx.triggered_id, str):
+    def set_input_homepage_session_state(analysis_nav_items_n_clicks):
+        if ctx.triggered_id:
+            if not all(val == 0 for val in analysis_nav_items_n_clicks):
                 analysis_page_id = ctx.triggered_id.label
                 return analysis_page_id
 
