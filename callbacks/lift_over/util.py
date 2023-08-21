@@ -392,14 +392,11 @@ def get_qtaro_entry(mapping, gene):
                             mapping[gene][character_major][character_minor]))
                 pubs = ['<li>' + pub + '</li>' for pub in pubs]
                 qtaro_str += '<li>' + character_minor + \
-                    '<ul>' + ''.join(pubs) + '</ul>'
-                qtaro_str += '</li>'
+                    '<ul>' + ''.join(pubs) + '</ul></li>'
             qtaro_str += '</ul></li><br>'
 
         # Remove the line break after the last character major
-        qtaro_str = qtaro_str[:-len("<br>")] + '</ul>'
-
-        return qtaro_str
+        return qtaro_str[:-len("<br>")] + '</ul>'
     except KeyError:
         return '&hyphen;'
 
