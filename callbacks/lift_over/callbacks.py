@@ -219,13 +219,27 @@ def init_callback(app):
 
             genes_from_Nb_raw = get_genes_in_Nb(nb_intervals)[0]
 
-            gene_statistics_nb = f'{genes_from_Nb_raw["OGI"].nunique()} genes were found in Nipponbare'
+            num_unique_genes = get_num_unique_entries(
+                genes_from_Nb_raw, 'OGI')
+            if num_unique_genes == 1:
+                gene_statistics_nb = f'{num_unique_genes} gene was found in Nipponbare'
+            else:
+                gene_statistics_nb = f'{num_unique_genes} genes were found in Nipponbare'
+
             for idx, other_ref in enumerate(other_refs):
                 common_genes_raw = get_common_genes([other_ref], nb_intervals)
+                num_unique_genes = get_num_unique_entries(
+                    common_genes_raw, 'OGI')
                 if idx == len(other_refs) - 1:
-                    gene_statistics_nb += f', and {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    if num_unique_genes == 1:
+                        gene_statistics_nb += f', and {num_unique_genes} gene in {other_ref}'
+                    else:
+                        gene_statistics_nb += f', and {num_unique_genes} genes in {other_ref}'
                 else:
-                    gene_statistics_nb += f', {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    if num_unique_genes == 1:
+                        gene_statistics_nb += f', {num_unique_genes} gene in {other_ref}'
+                    else:
+                        gene_statistics_nb += f', {num_unique_genes} genes in {other_ref}'
 
             gene_statistics_nb += '. '
             gene_statistics_items = [html.Li(gene_statistics_nb)]
@@ -233,7 +247,13 @@ def init_callback(app):
             if other_refs:
                 other_refs.append('Nipponbare')
                 genes_common = get_common_genes(other_refs, nb_intervals)
-                gene_statistics_common = f'Among these, {genes_common["OGI"].nunique()} genes are common to all cultivars.'
+                num_unique_genes = get_num_unique_entries(genes_common, 'OGI')
+
+                if num_unique_genes == 1:
+                    gene_statistics_common = f'Among these, {num_unique_genes} gene is common to all cultivars.'
+                else:
+                    gene_statistics_common = f'Among these, {num_unique_genes} genes are common to all cultivars.'
+
                 gene_statistics_items.append(
                     html.Li(gene_statistics_common))
 
@@ -248,7 +268,13 @@ def init_callback(app):
                     elif idx != 0:
                         gene_statistics_other_ref += f', '
 
-                    gene_statistics_other_ref += f'{genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
+                    num_unique_genes = get_num_unique_entries(
+                        genes_from_other_ref_raw, 'OGI')
+
+                    if num_unique_genes == 1:
+                        gene_statistics_other_ref += f'{num_unique_genes} gene is unique to {other_ref}'
+                    else:
+                        gene_statistics_other_ref += f'{num_unique_genes} genes are unique to {other_ref}'
 
                 gene_statistics_other_ref += '.'
                 gene_statistics_items.append(
