@@ -397,7 +397,7 @@ def get_qtaro_entry(mapping, gene):
                 qtaro_str += '</li>'
             qtaro_str += '</ul></li><br>'
 
-        # Remove the line break afterthe last character major
+        # Remove the line break after the last character major
         qtaro_str = qtaro_str[:-len("<br>")] + '</ul>'
 
         return qtaro_str
