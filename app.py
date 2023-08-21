@@ -91,6 +91,11 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='current-analysis-page-nav',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='lift-over-is-submitted',
                 storage_type='session'
             ),
