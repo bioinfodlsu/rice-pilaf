@@ -384,9 +384,24 @@ def get_ogi_other_ref(ref, nb_intervals):
 
 def get_qtaro_entry(mapping, gene):
     try:
-        return str(mapping[gene])
+        qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
+        for character_major in mapping[gene]:
+            qtaro_str += '<li>' + character_major + '<ul>'
+            for character_minor in mapping[gene][character_major]:
+                pubs = list(map(get_doi_link_single_str,
+                            mapping[gene][character_major][character_minor]))
+                pubs = ['<li>' + pub + '</li>' for pub in pubs]
+                qtaro_str += '<li>' + character_minor + \
+                    '<ul>' + ''.join(pubs) + '</ul>'
+                qtaro_str += '</li>'
+            qtaro_str += '</ul></li><br>'
+
+        # Remove the line break after the last character major
+        qtaro_str = qtaro_str[:-len("<br>")] + '</ul>'
+
+        return qtaro_str
     except KeyError:
-        return '-'
+        return '&hyphen;'
 
 
 def get_qtaro_entries(mapping, genes):
