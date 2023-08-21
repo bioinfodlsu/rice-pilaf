@@ -63,7 +63,7 @@ genomic_interval_modal = dbc.Modal([
 # ======
 
 submit_clear_buttons = dbc.Row([
-    dbc.Col(dbc.Button('Show Analyses Menu',
+    dbc.Col(dbc.Button('Proceed to Analyses Menu',
                        id='homepage-submit',
                        n_clicks=0,
                        className='home-button'),
