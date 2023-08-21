@@ -38,3 +38,7 @@ def get_pubmed_link(result, id_col):
     return A_HREF + 'https://pubmed.ncbi.nlm.nih.gov/' + \
         result[id_col] + '/entry' + CLOSE_A_HREF + \
         result[id_col] + LINK_ICON
+
+
+def get_doi_link_single_str(doi):
+    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + doi + LINK_ICON
