@@ -388,9 +388,8 @@ def get_qtaro_entry(mapping, gene):
         for character_major in mapping[gene]:
             qtaro_str += '<li>' + character_major + '<ul>'
             for character_minor in mapping[gene][character_major]:
-                pubs = ['doi:' + pub for pub in mapping[gene]
-                        [character_major][character_minor]]
-                pubs = list(map(get_doi_link_single_str, pubs))
+                pubs = list(map(get_doi_link_single_str,
+                            mapping[gene][character_major][character_minor]))
                 pubs = ['<li>' + pub + '</li>' for pub in pubs]
                 qtaro_str += '<li>' + character_minor + \
                     '<ul>' + ''.join(pubs) + '</ul>'

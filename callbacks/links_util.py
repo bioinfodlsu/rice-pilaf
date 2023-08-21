@@ -41,4 +41,4 @@ def get_pubmed_link(result, id_col):
 
 
 def get_doi_link_single_str(doi):
-    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + doi + LINK_ICON
+    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + f'doi:{doi}' + LINK_ICON
