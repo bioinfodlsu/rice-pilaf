@@ -308,8 +308,8 @@ def init_callback(app):
                 all_genes_raw = get_all_genes(other_refs, nb_intervals)
                 all_genes = all_genes_raw.to_dict('records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in all_genes_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in all_genes_raw.columns]
 
                 return columns, all_genes
 
@@ -318,8 +318,8 @@ def init_callback(app):
                     filter_rice_variants, nb_intervals)
                 common_genes = common_genes_raw.to_dict('records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in common_genes_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in common_genes_raw.columns]
 
                 return columns, common_genes
 
