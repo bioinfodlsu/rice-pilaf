@@ -328,8 +328,8 @@ def init_callback(app):
                     ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
                 genes_from_Nb = genes_from_Nb_raw.to_dict('records')
 
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x in ['UniProtKB/Swiss-Prot', 'QTL Studies']
-                           else {'id': x, 'name': x} for x in genes_from_Nb_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in genes_from_Nb_raw.columns]
 
                 return columns, genes_from_Nb
 
@@ -342,8 +342,8 @@ def init_callback(app):
                 genes_from_other_ref = genes_from_other_ref_raw.to_dict(
                     'records')
 
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
-                           else {'id': x, 'name': x} for x in genes_from_other_ref_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in genes_from_other_ref_raw.columns]
 
                 return columns, genes_from_other_ref
 

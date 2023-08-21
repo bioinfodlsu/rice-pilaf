@@ -28,6 +28,9 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
                      'IR64': 'indica IR64',
                      'CMeo': 'japonica CHAO MEO'}
 
+NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot',
+              'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Studies']
+OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand', ]
 FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
 
 
@@ -39,14 +42,18 @@ def construct_options_other_ref_genomes():
     return other_refs
 
 
-def create_empty_df():
+def create_empty_df_nb():
     """
     Returns an empty data frame if there are no results
 
     Returns:
     - Empty data frame
     """
-    return create_empty_df_with_cols(['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand'])
+    return create_empty_df_with_cols(NB_COLUMNS)
+
+
+def create_empty_df_other_refs():
+    return create_empty_df_with_cols(OTHER_REF_COLUMNS)
 
 
 def create_empty_front_facing_df():
@@ -468,19 +475,18 @@ def get_genes_in_Nb(nb_intervals):
                          left_on='Gene_ID', right_on='Name')
 
         # Reorder columns
-        table = table[['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI',
-                       'Chromosome', 'Start', 'End', 'Strand', 'QTL Studies']]
+        table = table[NB_COLUMNS]
 
         table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
             table, 'UniProtKB/Swiss-Prot')
 
         if table.shape[0] == 0:
-            return create_empty_df(), table['Name'].values.tolist()
+            return create_empty_df_nb(), table['Name'].values.tolist()
 
         return table, table['Name'].values.tolist()
 
     except ValueError:      # No results to concatenate
-        return create_empty_df(), table['Name'].values.tolist()
+        return create_empty_df_nb(), table['Name'].values.tolist()
 
 
 def get_genes_in_other_ref(ref, nb_intervals):
@@ -537,12 +543,12 @@ def get_genes_in_other_ref(ref, nb_intervals):
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df()
+            return create_empty_df_other_refs()
 
         return table
 
     except ValueError:      # No results to concatenate
-        return create_empty_df()
+        return create_empty_df_other_refs()
 
 
 def get_common_genes(refs, nb_intervals):

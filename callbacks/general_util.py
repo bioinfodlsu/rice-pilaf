@@ -28,16 +28,20 @@ def display_cols_in_fixed_dec_places(result, numeric_columns):
         result[column] = result[column].apply(display_in_fixed_dec_places)
 
 
-def create_empty_df_with_cols(cols, html_markdown=False):
+def create_empty_df_with_cols(cols):
     cols_dict = {}
     for col in cols:
-        if not html_markdown:
-            cols_dict[col] = ['-']
-        else:
-            cols_dict[col] = ['&hyphen;']
+        cols_dict[col] = ['&hyphen;']
 
     return pd.DataFrame(cols_dict)
 
 
 def get_tab_index(tab_id):
     return int(tab_id.split('-')[1])
+
+
+def get_num_unique_entries(table, column):
+    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&hyphen;':
+        return 0
+
+    return table[column].nunique()

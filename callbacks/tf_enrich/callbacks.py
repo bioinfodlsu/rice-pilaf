@@ -75,7 +75,7 @@ def init_callback(app):
             enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
 
-            columns = [{'id': x, 'name': x}
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in enrichment_results_df.columns]
 
             return enrichment_results_df.to_dict('records'), columns

@@ -106,6 +106,7 @@ layout = html.Div(
                         style_cell={
                             'whiteSpace': 'pre-line'
                         },
+                        markdown_options={'html': True},
                         sort_action='native',
                         filter_action='native',
                         filter_options={'case': 'insensitive',

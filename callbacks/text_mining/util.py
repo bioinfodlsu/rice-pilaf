@@ -65,7 +65,7 @@ def text_mining_query_search(query_string):
     display_cols_in_fixed_dec_places(df, ['Score'])
 
     if len(df.index) == 0:
-        return create_empty_df_with_cols(COLNAMES, html_markdown=True)
+        return create_empty_df_with_cols(COLNAMES)
 
     return df
 

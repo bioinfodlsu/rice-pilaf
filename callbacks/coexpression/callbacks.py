@@ -164,11 +164,8 @@ def init_callback(app):
                     table, empty = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
-                if not empty:
-                    columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x ==
-                               'ID' else {'id': x, 'name': x} for x in table.columns]
-                else:
-                    columns = [{'id': x, 'name': x} for x in table.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in table.columns]
 
                 return table.to_dict('records'), columns
 
