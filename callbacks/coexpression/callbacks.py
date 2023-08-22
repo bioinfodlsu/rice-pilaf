@@ -244,9 +244,9 @@ def init_callback(app):
                     stats += f'{total_num_genes} genes, of which {num_implicated_gene_ids}'
 
                 if num_implicated_gene_ids == 1:
-                    stats += ' is implicated in your GWAS/QTL.'
+                    stats += ' is implicated by your GWAS/QTL.'
                 else:
-                    stats += ' are implicated in your GWAS/QTL.'
+                    stats += ' are implicated by your GWAS/QTL.'
 
                 # No enriched modules
                 if not modules:

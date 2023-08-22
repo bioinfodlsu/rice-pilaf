@@ -103,7 +103,7 @@ layout = html.Div(
     children=[
 
         html.Div([
-            html.P('In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, which are significantly enriched in the genes implicated in your GWAS. '
+            html.P('In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. '
                    'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
         ], className='analysis-intro p-3'),
 
@@ -115,7 +115,7 @@ layout = html.Div(
         ], className='analysis-intro p-3'),
 
         html.Br(),
-        
+
         html.Div([
             dbc.Label(['Select the co-expression network',
                        html.I(
@@ -279,7 +279,7 @@ layout = html.Div(
 
 
                         html.P(
-                            'The connections indicate that the genes are co-expressed. The shaded nodes refer to those implicated in your GWAS/QTL.'),
+                            'The connections indicate that the genes are co-expressed. The shaded nodes refer to those implicated by your GWAS/QTL.'),
 
                         dbc.Label('Select the module display layout'),
 
