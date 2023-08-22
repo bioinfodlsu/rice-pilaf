@@ -506,3 +506,12 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
     # Triggered when there are no enriched modules
     except:
         return {}, {'name': layout}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
+
+# ====================================
+# Functions for displaying statistics
+# ====================================
+
+
+def count_modules(network, algo, parameters):
+    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+        return len(f.readlines())

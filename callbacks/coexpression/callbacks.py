@@ -109,6 +109,7 @@ def init_callback(app):
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
         Output('coexpression-results-module-tabs-container', 'style'),
+        Output('coexpression-module-stats', 'children'),
 
         State('lift-over-nb-table', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data'),
@@ -128,17 +129,31 @@ def init_callback(app):
                     enriched_modules = do_module_enrichment_analysis(
                         implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, parameters)
 
+                    num_enriched_modules = len(enriched_modules)
+                    total_num_modules = count_modules(
+                        submitted_network, submitted_algo, parameters)
+                    stats = f'{num_enriched_modules} out of {total_num_modules} '
+                    if total_num_modules == 1:
+                        stats += 'module '
+                    else:
+                        stats += 'modules '
+
+                    if num_enriched_modules == 1:
+                        stats += 'was found to be enriched (adjusted p-value < 0.05).'
+                    else:
+                        stats += 'were found to be enriched (adjusted p-value < 0.05).'
+
                     first_module = None
                     if enriched_modules:
                         first_module = enriched_modules[0]
                     else:
-                        return enriched_modules, first_module, {'display': 'none'}
+                        return enriched_modules, first_module, {'display': 'none'}, stats
 
                     if submitted_parameter_module and submitted_algo in submitted_parameter_module:
                         if submitted_parameter_module[submitted_algo]['param_module']:
                             first_module = submitted_parameter_module[submitted_algo]['param_module']
 
-                    return enriched_modules, first_module, {'display': 'block'}
+                    return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
 

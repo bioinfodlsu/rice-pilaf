@@ -260,6 +260,8 @@ layout = html.Div(
                         ),
 
                         html.Br(),
+                        html.P(id='coexpression-graph-stats'),
+
                         dbc.Label('Select the module display layout'),
 
                         dbc.RadioItems(
