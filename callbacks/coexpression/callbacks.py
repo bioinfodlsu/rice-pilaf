@@ -140,9 +140,9 @@ def init_callback(app):
                         stats += 'modules '
 
                     if num_enriched_modules == 1:
-                        stats += 'was found to be enriched (adjusted p-value < 0.05).'
+                        stats += 'was found to be over-represented (adjusted p-value < 0.05).'
                     else:
-                        stats += 'were found to be enriched (adjusted p-value < 0.05).'
+                        stats += 'were found to be over-represented (adjusted p-value < 0.05).'
 
                     first_module = None
                     if enriched_modules:

@@ -112,14 +112,14 @@ def init_callback(app):
                     text_mining_results_df, "PMID")
 
                 if num_entries == 1:
-                    stats = f'{num_entries} match '
+                    stats = f'Found {num_entries} match '
                 else:
-                    stats = f'{num_entries} matches '
+                    stats = f'Found {num_entries} matches '
 
                 if num_unique_entries == 1:
-                    stats += f'across {num_unique_entries} publication found.'
+                    stats += f'across {num_unique_entries} publication'
                 else:
-                    stats += f'across {num_unique_entries} publications found.'
+                    stats += f'across {num_unique_entries} publications'
 
                 return text_mining_results_df.to_dict('records'), columns, stats
 
