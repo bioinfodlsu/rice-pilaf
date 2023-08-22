@@ -66,6 +66,12 @@ layout = html.Div(
             children=[
                 html.Hr(className='mt-3 mb-4'),
                 dcc.Loading([
+                    html.Div([
+                        html.I(
+                            className='bi bi-bar-chart me-2 non-clickable'),
+                        html.Span(id='text-mining-results-stats')
+                    ], className='mb-3 stats ps-1'),
+
                     html.P(
                         html.Div([
                             dbc.Button([html.I(

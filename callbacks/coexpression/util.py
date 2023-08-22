@@ -506,3 +506,32 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
     # Triggered when there are no enriched modules
     except:
         return {}, {'name': layout}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
+
+# ====================================
+# Functions for displaying statistics
+# ====================================
+
+
+def count_modules(network, algo, parameters):
+    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+        return len(f.readlines())
+
+
+Noun = namedtuple('Noun', ['singular', 'plural'])
+
+
+def get_noun_for_active_tab(active_tab):
+    tab_idx = get_tab_index(active_tab)
+    if 0 <= tab_idx and tab_idx <= 2:
+        return Noun('ontology term', 'ontology terms')
+    else:
+        return Noun('pathway', 'pathways')
+
+
+def count_implicated_genes_in_module(module_nodes, implicated_genes):
+    module_genes = set()
+    implicated_genes = set(implicated_genes)
+    for node in module_nodes:
+        module_genes.add(node['data']['name'])
+
+    return len(set.intersection(module_genes, implicated_genes))

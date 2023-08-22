@@ -45,3 +45,10 @@ def get_num_unique_entries(table, column):
         return 0
 
     return table[column].nunique()
+
+
+def get_num_entries(table, column):
+    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&hyphen;':
+        return 0
+
+    return table[column].count()

@@ -16,8 +16,6 @@ layout = html.Div(
             html.P(
                 'In this page, you can obtain the list of genes overlapping your input intervals. '
                 'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
-            #html.P(
-            #    'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'),
         ], className='analysis-intro p-3'),
 
         html.Br(),
@@ -40,8 +38,6 @@ layout = html.Div(
                 construct_options_other_ref_genomes(),
                 id='lift-over-other-refs',
                 multi=True,
-                persistence=True,
-                persistence_type='memory',
                 className='dash-bootstrap'
             ),
 

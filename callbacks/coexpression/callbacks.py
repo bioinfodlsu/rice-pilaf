@@ -92,7 +92,7 @@ def init_callback(app):
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-module', 'data')
+        State('coexpression-submitted-parameter-module', 'data'),
     )
     def hide_table_graph(implicated_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
@@ -108,6 +108,8 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
+        Output('coexpression-results-module-tabs-container', 'style'),
+        Output('coexpression-module-stats', 'children'),
 
         State('lift-over-nb-table', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data'),
@@ -127,22 +129,39 @@ def init_callback(app):
                     enriched_modules = do_module_enrichment_analysis(
                         implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, parameters)
 
-                    first_module = 'No enriched modules found'
+                    # Display statistics
+                    num_enriched_modules = len(enriched_modules)
+                    total_num_modules = count_modules(
+                        submitted_network, submitted_algo, parameters)
+                    stats = f'{num_enriched_modules} out of {total_num_modules} '
+                    if total_num_modules == 1:
+                        stats += 'module '
+                    else:
+                        stats += 'modules '
 
+                    if num_enriched_modules == 1:
+                        stats += 'was found to be over-represented (adjusted p-value < 0.05).'
+                    else:
+                        stats += 'were found to be over-represented (adjusted p-value < 0.05).'
+
+                    first_module = None
                     if enriched_modules:
                         first_module = enriched_modules[0]
+                    else:
+                        return enriched_modules, first_module, {'display': 'none'}, stats
 
                     if submitted_parameter_module and submitted_algo in submitted_parameter_module:
                         if submitted_parameter_module[submitted_algo]['param_module']:
                             first_module = submitted_parameter_module[submitted_algo]['param_module']
 
-                    return enriched_modules, first_module
+                    return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
 
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Output('coexpression-pathways', 'columns'),
+        Output('coexpression-table-stats', 'children'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -158,16 +177,22 @@ def init_callback(app):
 
                 try:
                     module_idx = module.split(' ')[1]
-                    table, empty = convert_to_df(
+                    table, _ = convert_to_df(
                         active_tab, module_idx, submitted_network, submitted_algo, parameters)
                 except Exception as e:
-                    table, empty = convert_to_df(
+                    table, _ = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in table.columns]
 
-                return table.to_dict('records'), columns
+                num_enriched = get_num_unique_entries(table, 'ID')
+                if num_enriched == 1:
+                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).singular} were found to be enriched.'
+                else:
+                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).plural} were found to be enriched.'
+
+                return table.to_dict('records'), columns, stats
 
         raise PreventUpdate
 
@@ -176,6 +201,7 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
+        Output('coexpression-graph-stats', 'children'),
 
         State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
@@ -187,18 +213,46 @@ def init_callback(app):
         Input('coexpression-graph-layout', 'value'),
         State('coexpression-is-submitted', 'data'),
 
+        State('coexpression-modules', 'options'),
+
         Input('coexpression-reset-graph', 'n_clicks'),
 
         prevent_initial_call=True
     )
     def display_table_graph(implicated_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_module,
-                            layout, coexpression_is_submitted, *_):
+                            layout, coexpression_is_submitted, modules, *_):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
-                return load_module_graph(
-                    implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
+                if not modules:
+                    module_graph = load_module_graph(
+                        implicated_gene_ids, None, submitted_network, submitted_algo, parameters, layout)
+                else:
+                    module_graph = load_module_graph(
+                        implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout)
+
+                stats = 'This module has '
+
+                total_num_genes = len(module_graph[0]['nodes'])
+                num_implicated_gene_ids = count_implicated_genes_in_module(
+                    module_graph[0]['nodes'], implicated_gene_ids)
+
+                if total_num_genes == 1:
+                    stats += f'{total_num_genes} gene, of which {num_implicated_gene_ids}'
+                else:
+                    stats += f'{total_num_genes} genes, of which {num_implicated_gene_ids}'
+
+                if num_implicated_gene_ids == 1:
+                    stats += ' is implicated in your GWAS/QTL.'
+                else:
+                    stats += ' are implicated in your GWAS/QTL.'
+
+                # No enriched modules
+                if not modules:
+                    return module_graph + ({'display': 'None'}, stats)
+
+                return module_graph + ({'visibility': 'visible'}, stats)
 
         raise PreventUpdate
 
