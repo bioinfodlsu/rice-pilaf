@@ -52,6 +52,7 @@ def text_mining_query_search(query_string):
                 PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = map(sanitize_text, line.split(
                     '\t'))
                 Entity = addl_sanitize_gene(Entity)
+                Title = Title[:-1]
 
                 if Type == 'Gene':
                     if Sentence == 'None':
