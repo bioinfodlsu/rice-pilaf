@@ -29,7 +29,7 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
                      'CMeo': 'japonica CHAO MEO'}
 
 NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot',
-              'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Studies']
+              'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Analyses']
 OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand', ]
 FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
 
@@ -392,12 +392,16 @@ def get_ogi_other_ref(ref, nb_intervals):
 def get_qtaro_entry(mapping, gene):
     try:
         qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
+        pub_idx = 1
         for character_major in mapping[gene]:
             qtaro_str += '<li>' + character_major + '<ul>'
             for character_minor in mapping[gene][character_major]:
-                pubs = list(map(get_doi_link_single_str,
-                            mapping[gene][character_major][character_minor]))
-                pubs = ['<li>' + pub + '</li>' for pub in pubs]
+                pubs = []
+                for pub in mapping[gene][character_major][character_minor]:
+                    pubs.append(
+                        '<li>' + get_doi_link_single_str(pub, pub_idx) + '</li>')
+                    pub_idx += 1
+
                 qtaro_str += '<li>' + character_minor + \
                     '<ul>' + ''.join(pubs) + '</ul></li>'
             qtaro_str += '</ul></li><br>'
@@ -405,7 +409,7 @@ def get_qtaro_entry(mapping, gene):
         # Remove the line break after the last character major
         return qtaro_str[:-len("<br>")] + '</ul>'
     except KeyError:
-        return '&hyphen;'
+        return '&ndash;'
 
 
 def get_qtaro_entries(mapping, genes):
@@ -462,7 +466,7 @@ def get_genes_in_Nb(nb_intervals):
             'Start': [gene.start for gene in genes_in_interval],
             'End': [gene.end for gene in genes_in_interval],
             'Strand': [gene.strand for gene in genes_in_interval],
-            'QTL Studies': qtaro_list
+            'QTL Analyses': qtaro_list
         })
         dfs.append(df)
 
@@ -571,12 +575,26 @@ def get_common_genes(refs, nb_intervals):
 
         genes_in_ref = genes_in_ref[['OGI', 'Name']]
 
+        genes_in_ref['OGI'] = get_rgi_orthogroup_link(genes_in_ref, 'OGI')
+
         try:
             common_genes = pd.merge(
                 common_genes, genes_in_ref, on='OGI', how='outer')
         # First instance of merging (that is, common_genes is still None)
         except TypeError:
             common_genes = genes_in_ref
+
+        if 'Name_x' in common_genes.columns:
+            common_genes['Name_x'] = get_rgi_genecard_link(
+                common_genes, 'Name_x')
+
+        if 'Name_y' in common_genes.columns:
+            common_genes['Name_y'] = get_rgi_genecard_link(
+                common_genes, 'Name_y')
+
+        if 'Name' in common_genes.columns:
+            common_genes['Name'] = get_rgi_genecard_link(
+                common_genes, 'Name')
 
         common_genes = common_genes.rename(
             columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
@@ -602,6 +620,8 @@ def get_all_genes(refs, nb_intervals):
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
+    genes_in_nb['OGI'] = get_rgi_orthogroup_link(genes_in_nb, 'OGI')
+
     common_genes = genes_in_nb
     for ref in refs:
         if ref != 'Nipponbare':
@@ -610,11 +630,23 @@ def get_all_genes(refs, nb_intervals):
             common_genes = pd.merge(
                 common_genes, genes_in_other_ref, on='OGI', how='outer')
 
+            if 'Name_x' in common_genes.columns:
+                common_genes['Name_x'] = get_rgi_genecard_link(
+                    common_genes, 'Name_x')
+
+            if 'Name_y' in common_genes.columns:
+                common_genes['Name_y'] = get_rgi_genecard_link(
+                    common_genes, 'Name_y')
+
+            if 'Name' in common_genes.columns:
+                common_genes['Name'] = get_rgi_genecard_link(
+                    common_genes, 'Name')
+
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
-        columns={'Name': 'Nipponbare'}).fillna('-').drop_duplicates()
+        columns={'Name': 'Nipponbare'}).fillna('&ndash;').drop_duplicates()
 
     return common_genes
 
@@ -645,6 +677,9 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
                             left_on='Gene_ID', right_on='Name')
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS]
+
+    unique_genes['OGI'] = get_rgi_orthogroup_link(unique_genes, 'OGI')
+    unique_genes['Name'] = get_rgi_genecard_link(unique_genes, 'Name')
 
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')

@@ -40,5 +40,13 @@ def get_pubmed_link(result, id_col):
         result[id_col] + LINK_ICON
 
 
-def get_doi_link_single_str(doi):
-    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + f'doi:{doi}' + LINK_ICON
+def get_doi_link_single_str(doi, pub_idx):
+    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + 'Publication ' + str(pub_idx) + LINK_ICON
+
+
+def get_rgi_genecard_link(result, id_col):
+    return A_HREF + 'https://riceome.hzau.edu.cn/genecard/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
+
+
+def get_rgi_orthogroup_link(result, id_col):
+    return A_HREF + 'https://riceome.hzau.edu.cn/orthogroup/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
