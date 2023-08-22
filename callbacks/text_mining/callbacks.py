@@ -75,7 +75,7 @@ def init_callback(app):
         Output('text-mining-input-error', 'children'),
 
         State('text-mining-query', 'value'),
-        Input('text-mining-is-submitted', 'data'),
+        Input('text-mining-is-submitted', 'data')
     )
     def display_text_mining_output(text_mining_query, text_mining_is_submitted):
         is_there_error, message = is_error(text_mining_query)
@@ -90,6 +90,8 @@ def init_callback(app):
     @app.callback(
         Output('text-mining-result-table', 'data'),
         Output('text-mining-result-table', 'columns'),
+        Output('text-mining-results-stats', 'children'),
+
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query-submitted-input', 'data')
@@ -105,7 +107,21 @@ def init_callback(app):
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in text_mining_results_df.columns]
 
-                return text_mining_results_df.to_dict('records'), columns
+                num_entries = get_num_entries(text_mining_results_df, "PMID")
+                num_unique_entries = get_num_unique_entries(
+                    text_mining_results_df, "PMID")
+
+                if num_entries == 1:
+                    stats = f'{num_entries} match '
+                else:
+                    stats = f'{num_entries} matches '
+
+                if num_unique_entries == 1:
+                    stats += f'across {num_unique_entries} publication found.'
+                else:
+                    stats += f'across {num_unique_entries} publications found.'
+
+                return text_mining_results_df.to_dict('records'), columns, stats
 
         raise PreventUpdate
 

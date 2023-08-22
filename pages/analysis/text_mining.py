@@ -66,6 +66,8 @@ layout = html.Div(
             children=[
                 html.Hr(className='mt-3 mb-4'),
                 dcc.Loading([
+                    html.P(id='text-mining-results-stats'),
+
                     html.P(
                         html.Div([
                             dbc.Button([html.I(
