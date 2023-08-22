@@ -192,28 +192,32 @@ layout = html.Div(
                     id='coexpression-loading',
                     children=[
                         html.Hr(className='mt-3 mb-4'),
-                        dbc.Label('Select an enriched module'),
+                        html.P(id='coexpression-module-stats'),
 
-                        dcc.Dropdown(id='coexpression-modules'),
+                        html.Div(id='coexpression-results-module-tabs-container', children=[
+                            dbc.Label('Select an enriched module'),
+                            dcc.Dropdown(id='coexpression-modules'),
+                            html.Br(),
 
-                        html.Br(),
-
-                        dbc.Tabs(
-                            id='coexpression-modules-pathway',
-                            active_tab='tab-0',
-                            children=[dcc.Tab(label='Gene Ontology',
-                                              value='Gene Ontology'),
-                                      dcc.Tab(label='Trait Ontology',
-                                              value='Trait Ontology'),
-                                      dcc.Tab(label='Plant Ontology',
-                                              value='Plant Ontology'),
-                                      dcc.Tab(label='Pathways (Over-Representation)',
-                                              value='Pathways (Over-Representation)'),
-                                      dcc.Tab(label='Pathway-Express',
-                                              value='Pathway-Express'),
-                                      dcc.Tab(label='SPIA', value='SPIA')])
+                            dbc.Tabs(
+                                id='coexpression-modules-pathway',
+                                active_tab='tab-0',
+                                children=[
+                                    dcc.Tab(label='Gene Ontology',
+                                            value='Gene Ontology'),
+                                    dcc.Tab(label='Trait Ontology',
+                                            value='Trait Ontology'),
+                                    dcc.Tab(label='Plant Ontology',
+                                            value='Plant Ontology'),
+                                    dcc.Tab(label='Pathways (Over-Representation)',
+                                            value='Pathways (Over-Representation)'),
+                                    dcc.Tab(label='Pathway-Express',
+                                            value='Pathway-Express'),
+                                    dcc.Tab(label='SPIA', value='SPIA')
+                                ]
+                            )
+                        ])
                     ]),
-
 
                 html.Div(
                     id='coexpression-graph-container',
@@ -223,6 +227,7 @@ layout = html.Div(
 
                         html.P(
                             html.Div([
+                                html.P(id='coexpression-table-stats'),
                                 dbc.Button([html.I(
                                     className='bi bi-download me-2'),
                                     'Export to CSV'],
@@ -323,7 +328,8 @@ layout = html.Div(
                                 }
                             ]
                         )
-                    ])
+                    ]
+                )
             ]
         )
     ], className='mt-2')

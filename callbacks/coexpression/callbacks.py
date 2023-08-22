@@ -92,7 +92,7 @@ def init_callback(app):
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-module', 'data')
+        State('coexpression-submitted-parameter-module', 'data'),
     )
     def hide_table_graph(implicated_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
@@ -108,6 +108,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
+        Output('coexpression-results-module-tabs-container', 'style'),
 
         State('lift-over-nb-table', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data'),
@@ -127,16 +128,17 @@ def init_callback(app):
                     enriched_modules = do_module_enrichment_analysis(
                         implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, parameters)
 
-                    first_module = 'No enriched modules found'
-
+                    first_module = None
                     if enriched_modules:
                         first_module = enriched_modules[0]
+                    else:
+                        return enriched_modules, first_module, {'display': 'none'}
 
                     if submitted_parameter_module and submitted_algo in submitted_parameter_module:
                         if submitted_parameter_module[submitted_algo]['param_module']:
                             first_module = submitted_parameter_module[submitted_algo]['param_module']
 
-                    return enriched_modules, first_module
+                    return enriched_modules, first_module, {'display': 'block'}
 
         raise PreventUpdate
 
@@ -187,15 +189,22 @@ def init_callback(app):
         Input('coexpression-graph-layout', 'value'),
         State('coexpression-is-submitted', 'data'),
 
+        State('coexpression-modules', 'options'),
+
         Input('coexpression-reset-graph', 'n_clicks'),
 
         prevent_initial_call=True
     )
     def display_table_graph(implicated_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_module,
-                            layout, coexpression_is_submitted, *_):
+                            layout, coexpression_is_submitted, modules, *_):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
+
+                # No enriched modules
+                if not modules:
+                    return load_module_graph(
+                        implicated_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'display': 'None'}, )
 
                 return load_module_graph(
                     implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
