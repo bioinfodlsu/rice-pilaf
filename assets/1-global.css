@@ -57,3 +57,7 @@ a:hover {
 hr {
     margin: 0;
 }
+
+.left-align {
+    text-align: left !important;
+}

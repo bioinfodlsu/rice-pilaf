@@ -43,6 +43,7 @@ def addl_sanitize_gene(text):
 
 
 def text_mining_query_search(query_string):
+    query_string = query_string.strip()
     df = pd.DataFrame(columns=COLNAMES)
     query_regex = re.compile(query_string, re.IGNORECASE)
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
@@ -51,6 +52,7 @@ def text_mining_query_search(query_string):
                 PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = map(sanitize_text, line.split(
                     '\t'))
                 Entity = addl_sanitize_gene(Entity)
+                Title = Title[:-1]
 
                 if Type == 'Gene':
                     if Sentence == 'None':
@@ -65,7 +67,7 @@ def text_mining_query_search(query_string):
     display_cols_in_fixed_dec_places(df, ['Score'])
 
     if len(df.index) == 0:
-        return create_empty_df_with_cols(COLNAMES, html_markdown=True)
+        return create_empty_df_with_cols(COLNAMES)
 
     return df
 

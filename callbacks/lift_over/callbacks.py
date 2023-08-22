@@ -9,10 +9,11 @@ const = Constants()
 def init_callback(app):
     @app.callback(
         Output('lift-over-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        State('homepage-is-submitted', 'data'),
+        State('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-is-submitted', 'data'),
+        Input('lift-over-submit', 'n_clicks')
     )
-    def display_input(nb_intervals_str, homepage_is_submitted):
+    def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             if nb_intervals_str and not is_error(
                     get_genomic_intervals_from_input(nb_intervals_str)):
@@ -162,7 +163,8 @@ def init_callback(app):
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-other-refs-saved-input', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data')
+        Input('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('lift-over-submit', 'n_clicks')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
         if homepage_is_submitted:
@@ -218,13 +220,27 @@ def init_callback(app):
 
             genes_from_Nb_raw = get_genes_in_Nb(nb_intervals)[0]
 
-            gene_statistics_nb = f'{genes_from_Nb_raw["OGI"].nunique()} genes were found in Nipponbare'
+            num_unique_genes = get_num_unique_entries(
+                genes_from_Nb_raw, 'OGI')
+            if num_unique_genes == 1:
+                gene_statistics_nb = f'{num_unique_genes} gene was found in Nipponbare'
+            else:
+                gene_statistics_nb = f'{num_unique_genes} genes were found in Nipponbare'
+
             for idx, other_ref in enumerate(other_refs):
                 common_genes_raw = get_common_genes([other_ref], nb_intervals)
+                num_unique_genes = get_num_unique_entries(
+                    common_genes_raw, 'OGI')
                 if idx == len(other_refs) - 1:
-                    gene_statistics_nb += f', and {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    if num_unique_genes == 1:
+                        gene_statistics_nb += f', and {num_unique_genes} gene in {other_ref}'
+                    else:
+                        gene_statistics_nb += f', and {num_unique_genes} genes in {other_ref}'
                 else:
-                    gene_statistics_nb += f', {common_genes_raw["OGI"].nunique()} genes in {other_ref}'
+                    if num_unique_genes == 1:
+                        gene_statistics_nb += f', {num_unique_genes} gene in {other_ref}'
+                    else:
+                        gene_statistics_nb += f', {num_unique_genes} genes in {other_ref}'
 
             gene_statistics_nb += '. '
             gene_statistics_items = [html.Li(gene_statistics_nb)]
@@ -232,7 +248,13 @@ def init_callback(app):
             if other_refs:
                 other_refs.append('Nipponbare')
                 genes_common = get_common_genes(other_refs, nb_intervals)
-                gene_statistics_common = f'Among these, {genes_common["OGI"].nunique()} genes are common to all cultivars.'
+                num_unique_genes = get_num_unique_entries(genes_common, 'OGI')
+
+                if num_unique_genes == 1:
+                    gene_statistics_common = f'Among these, {num_unique_genes} gene is common to all cultivars.'
+                else:
+                    gene_statistics_common = f'Among these, {num_unique_genes} genes are common to all cultivars.'
+
                 gene_statistics_items.append(
                     html.Li(gene_statistics_common))
 
@@ -247,7 +269,13 @@ def init_callback(app):
                     elif idx != 0:
                         gene_statistics_other_ref += f', '
 
-                    gene_statistics_other_ref += f'{genes_from_other_ref_raw["OGI"].nunique()} genes are unique to {other_ref}'
+                    num_unique_genes = get_num_unique_entries(
+                        genes_from_other_ref_raw, 'OGI')
+
+                    if num_unique_genes == 1:
+                        gene_statistics_other_ref += f'{num_unique_genes} gene is unique to {other_ref}'
+                    else:
+                        gene_statistics_other_ref += f'{num_unique_genes} genes are unique to {other_ref}'
 
                 gene_statistics_other_ref += '.'
                 gene_statistics_items.append(
@@ -280,8 +308,8 @@ def init_callback(app):
                 all_genes_raw = get_all_genes(other_refs, nb_intervals)
                 all_genes = all_genes_raw.to_dict('records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in all_genes_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in all_genes_raw.columns]
 
                 return columns, all_genes
 
@@ -290,8 +318,8 @@ def init_callback(app):
                     filter_rice_variants, nb_intervals)
                 common_genes = common_genes_raw.to_dict('records')
 
-                columns = [{'id': key, 'name': key}
-                           for key in common_genes_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in common_genes_raw.columns]
 
                 return columns, common_genes
 
@@ -301,8 +329,8 @@ def init_callback(app):
                     ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
                 genes_from_Nb = genes_from_Nb_raw.to_dict('records')
 
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x in ['UniProtKB/Swiss-Prot', 'QTL Studies']
-                           else {'id': x, 'name': x} for x in genes_from_Nb_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in genes_from_Nb_raw.columns]
 
                 return columns, genes_from_Nb
 
@@ -315,8 +343,8 @@ def init_callback(app):
                 genes_from_other_ref = genes_from_other_ref_raw.to_dict(
                     'records')
 
-                columns = [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'UniProtKB/Swiss-Prot'
-                           else {'id': x, 'name': x} for x in genes_from_other_ref_raw.columns]
+                columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                           for x in genes_from_other_ref_raw.columns]
 
                 return columns, genes_from_other_ref
 

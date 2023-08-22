@@ -20,15 +20,20 @@ def init_callback(app):
         State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
         State({'type': 'analysis-nav', 'label': ALL}, 'id'),
         State({'type': 'analysis-layout', 'label': ALL}, 'id'),
-        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
+        #Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
+        Input('current-analysis-page-nav', 'data'),
+        Input('homepage-submit', 'n_clicks')
     )
-    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, *_):
-        if ctx.triggered_id:
+    #def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, *_):
+    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, current_page, *_):
+        #if ctx.triggered_id:
+        if current_page:
             update_nav_class_name = []
             update_layout_hidden = []
 
             for i in range(len(analysis_nav_id)):
-                if analysis_nav_id[i]['label'] == ctx.triggered_id.label:
+                #if analysis_nav_id[i]['label'] == ctx.triggered_id.label:
+                if analysis_nav_id[i]['label'] == current_page:
                     nav_classes = add_class_name('active', nav_className[i])
                 else:
                     nav_classes = remove_class_name('active', nav_className[i])
@@ -36,7 +41,8 @@ def init_callback(app):
                 update_nav_class_name.append(nav_classes)
 
             for i in range(len(analysis_layout_id)):
-                if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
+                #if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
+                if analysis_layout_id[i]['label'] == current_page:
                     hide_layout = False
                 else:
                     hide_layout = True
@@ -141,7 +147,7 @@ def init_callback(app):
     @app.callback(
         Output('homepage-results-container', 'style'),
         Input('homepage-is-submitted', 'data'),
-        Input('homepage-submit', 'n_clicks')
+        Input('homepage-submit', 'n_clicks'),
     )
     def display_homepage_output(homepage_is_submitted, *_):
         if homepage_is_submitted:
@@ -149,6 +155,20 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+
+    @app.callback(
+        Output('current-analysis-page-nav', 'data'),
+        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks'),
+        #State('homepage-is-submitted', 'data'),
+    )
+    def set_input_homepage_session_state(analysis_nav_items_n_clicks):
+        if ctx.triggered_id:
+            if not all(val == 0 for val in analysis_nav_items_n_clicks):
+                analysis_page_id = ctx.triggered_id.label
+                return analysis_page_id
+
+        raise PreventUpdate
+
     """
     @app.callback(
         #Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),

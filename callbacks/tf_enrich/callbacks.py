@@ -12,10 +12,11 @@ Tfbs_input = namedtuple(
 def init_callback(app):
     @app.callback(
         Output('tf-enrichment-genomic-intervals-input', 'children'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        State('homepage-is-submitted', 'data')
+        State('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-is-submitted', 'data'),
+        Input('tfbs-submit', 'n_clicks')
     )
-    def display_input(nb_intervals_str, homepage_is_submitted):
+    def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]
@@ -74,7 +75,7 @@ def init_callback(app):
             enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
 
-            columns = [{'id': x, 'name': x}
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in enrichment_results_df.columns]
 
             return enrichment_results_df.to_dict('records'), columns

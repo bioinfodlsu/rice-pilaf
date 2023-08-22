@@ -52,3 +52,7 @@ th, td {
 .dash-cell-value {
     overflow-y: hidden !important;
 }
+
+table tr td ul {
+    text-align: left !important;
+}
