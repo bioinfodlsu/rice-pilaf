@@ -31,7 +31,7 @@ def display_cols_in_fixed_dec_places(result, numeric_columns):
 def create_empty_df_with_cols(cols):
     cols_dict = {}
     for col in cols:
-        cols_dict[col] = ['&hyphen;']
+        cols_dict[col] = ['&ndash;']
 
     return pd.DataFrame(cols_dict)
 
@@ -41,14 +41,14 @@ def get_tab_index(tab_id):
 
 
 def get_num_unique_entries(table, column):
-    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&hyphen;':
+    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&ndash;':
         return 0
 
     return table[column].nunique()
 
 
 def get_num_entries(table, column):
-    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&hyphen;':
+    if table[column].iloc[0] == '-' or table[column].iloc[0] == '&ndash;':
         return 0
 
     return table[column].count()

@@ -327,6 +327,7 @@ def init_callback(app):
                 genes_from_Nb_raw = get_genes_in_Nb(
                     nb_intervals)[0].drop(
                     ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
+
                 genes_from_Nb = genes_from_Nb_raw.to_dict('records')
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
