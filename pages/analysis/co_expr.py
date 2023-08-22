@@ -274,7 +274,7 @@ layout = html.Div(
                             html.Div([
                                 dbc.Button([html.I(
                                     className='bi bi-download me-2'),
-                                    'Export to JSON'],
+                                    'Export Edge List'],
                                     id='coexpression-export-graph',
                                     color='light', size='sm',
                                     n_clicks=0,

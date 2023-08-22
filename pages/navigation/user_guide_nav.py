@@ -1,48 +1,37 @@
 import dash_bootstrap_components as dbc
-from dash import dcc, html
+from dash import html
 
 navbar = html.Div(
     dbc.Accordion(
         [
             dbc.AccordionItem(
                 title='Topic 1',
-                children= [
+                children=[
                     dbc.NavItem(dbc.NavLink(
-                    'Topic 1 Subgroup', href='topic1subgroup', className='ps-4')),
+                        'Topic 1 Subgroup', href='topic1subgroup', className='ps-4')),
                 ]
             ),
             dbc.AccordionItem(
                 title='Topic 2',
-                children= [
+                children=[
                     dbc.NavItem(dbc.NavLink(
-                    'Topic 2 Subgroup', href='topic2subgroup', className='ps-4')),
+                        'Topic 2 Subgroup', href='topic2subgroup', className='ps-4')),
                 ]
             ),
             dbc.AccordionItem(
                 title='Topic 3',
-                children= [
+                children=[
                     dbc.NavItem(dbc.NavLink(
-                    'Topic 3 Subgroup', href='topic3subgroup', className='ps-4')),
+                        'Topic 3 Subgroup', href='topic3subgroup', className='ps-4')),
                 ]
             )
         ],
         flush=True,
         always_open=True,
         active_item=[],
-        persistence=True,
-        persistence_type='session',
         id='user-guide-list'
     ),
 )
-
-
-
-
-
-
-
-
-
 
 
 """
