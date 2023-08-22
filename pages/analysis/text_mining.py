@@ -68,9 +68,9 @@ layout = html.Div(
                 dcc.Loading([
                     html.Div([
                         html.I(
-                            className='fa-solid fa-chart-simple me-2 non-clickable stats-icon'),
+                            className='bi bi-bar-chart me-2 non-clickable'),
                         html.Span(id='text-mining-results-stats')
-                    ], className='mb-3 stats'),
+                    ], className='mb-3 stats ps-1'),
 
                     html.P(
                         html.Div([
