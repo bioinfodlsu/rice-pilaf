@@ -66,8 +66,8 @@ layout = html.Div(
             ),
             html.Br(),
             dcc.Markdown("Input threshold for False-Discovery Rate:"),
-            dbc.Input(id='tfbs-fdr', type='number', value=0.25, min=0, max=1, step=0.05,
-                      persistence=True, persistence_type='memory'),
+            dbc.Input(id='tfbs-fdr', type='number',
+                      value=0.25, min=0, max=1, step=0.05),
             html.Br(),
 
             dbc.Button('Run Analysis',
