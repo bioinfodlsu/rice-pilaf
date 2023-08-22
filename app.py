@@ -122,7 +122,6 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
-
             dcc.Store(
                 id='homepage-genomic-intervals-submitted-input',
                 storage_type='session'
@@ -170,6 +169,21 @@ app.layout = lambda: dbc.Container([
 
             dcc.Store(
                 id='igv-is-submitted',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-addl-genes-saved-input',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-submitted-addl-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-combined-genes',
                 storage_type='session'
             ),
 
