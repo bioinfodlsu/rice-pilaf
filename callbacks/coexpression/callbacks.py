@@ -129,6 +129,7 @@ def init_callback(app):
                     enriched_modules = do_module_enrichment_analysis(
                         implicated_gene_ids, genomic_intervals, submitted_network, submitted_algo, parameters)
 
+                    # Display statistics
                     num_enriched_modules = len(enriched_modules)
                     total_num_modules = count_modules(
                         submitted_network, submitted_algo, parameters)
@@ -160,6 +161,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Output('coexpression-pathways', 'columns'),
+        Output('coexpression-table-stats', 'children'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -175,16 +177,22 @@ def init_callback(app):
 
                 try:
                     module_idx = module.split(' ')[1]
-                    table, empty = convert_to_df(
+                    table, _ = convert_to_df(
                         active_tab, module_idx, submitted_network, submitted_algo, parameters)
                 except Exception as e:
-                    table, empty = convert_to_df(
+                    table, _ = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in table.columns]
 
-                return table.to_dict('records'), columns
+                num_enriched = get_num_unique_entries(table, 'ID')
+                if num_enriched == 1:
+                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).singular} were found to be enriched.'
+                else:
+                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).plural} were found to be enriched.'
+
+                return table.to_dict('records'), columns, stats
 
         raise PreventUpdate
 

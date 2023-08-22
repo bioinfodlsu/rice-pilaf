@@ -202,6 +202,7 @@ layout = html.Div(
                             dbc.Label('Select an enriched module'),
                             dcc.Dropdown(id='coexpression-modules'),
                             html.Br(),
+                            html.Br(),
 
                             dbc.Tabs(
                                 id='coexpression-modules-pathway',

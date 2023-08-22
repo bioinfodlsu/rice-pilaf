@@ -515,3 +515,14 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 def count_modules(network, algo, parameters):
     with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         return len(f.readlines())
+
+
+Noun = namedtuple('Noun', ['singular', 'plural'])
+
+
+def get_noun_for_active_tab(active_tab):
+    tab_idx = get_tab_index(active_tab)
+    if 0 <= tab_idx and tab_idx <= 2:
+        return Noun('ontology term', 'ontology terms')
+    else:
+        return Noun('pathway', 'pathways')
