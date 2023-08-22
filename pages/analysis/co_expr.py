@@ -199,7 +199,7 @@ layout = html.Div(
                         ], className='mb-3 stats ps-1'),
 
                         html.Div(id='coexpression-results-module-tabs-container', children=[
-                            dbc.Label('Select an over-represented module'),
+                            dbc.Label('Select an enriched module'),
                             dcc.Dropdown(id='coexpression-modules'),
                             html.Br(),
                             html.Br(),
