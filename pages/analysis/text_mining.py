@@ -22,10 +22,11 @@ layout = html.Div(
         html.Div([
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
             html.Span(id='text-mining-genomic-intervals-input'),
+        ], className='analysis-intro p-3'),
 
-            html.Br(),
-            html.Br(),
+        html.Br(),
 
+        html.Div([
             dbc.Label('Enter your query trait/phenotype:', className='mb-2'),
 
             dbc.Alert(
