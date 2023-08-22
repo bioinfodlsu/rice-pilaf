@@ -8,7 +8,7 @@ COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
 def perform_single_query(query_string, annotated_abstracts):
     df = pd.DataFrame(columns=COLNAMES)
-    query_regex = re.compile(query_string, re.IGNORECASE)
+    query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
     with open(annotated_abstracts, 'r', encoding='utf8') as f:
         for line in f:
             if re.search(query_regex, line):

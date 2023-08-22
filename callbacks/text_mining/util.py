@@ -45,7 +45,7 @@ def addl_sanitize_gene(text):
 def text_mining_query_search(query_string):
     query_string = query_string.strip()
     df = pd.DataFrame(columns=COLNAMES)
-    query_regex = re.compile(query_string, re.IGNORECASE)
+    query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
         for line in f:
             if re.search(query_regex, line):
