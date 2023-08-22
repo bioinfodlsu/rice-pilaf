@@ -25,10 +25,11 @@ layout = html.Div(
                 className='bi bi-chevron-bar-right me-2 non-clickable'
             ),
             html.Span(id='lift-over-genomic-intervals-input'),
+        ], className='analysis-intro p-3'),
 
-            html.Br(),
-            html.Br(),
+        html.Br(),
 
+        html.Div([
             dbc.Label(
                 'Select genome(s) for lift-over (ignore if lift-over is not needed):',
                 className='mb-2'

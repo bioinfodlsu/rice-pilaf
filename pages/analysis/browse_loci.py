@@ -19,10 +19,11 @@ layout = html.Div(
         html.Div([
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
             html.Span(id='igv-genomic-intervals-input'),
+        ], className='analysis-intro p-3'),
 
-            html.Br(),
-            html.Br(),
+        html.Br(),
 
+        html.Div([
             dbc.Label('Select an interval: ',
                       className='mb-2'),
 
