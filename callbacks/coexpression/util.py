@@ -42,6 +42,8 @@ enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
 
+P_VALUE_CUTOFF = 0.05
+
 
 def get_parameters_for_algo(algo, network='OS-CX'):
     """
@@ -308,6 +310,8 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
+    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
+
     # IMPORTANT: Do not change ordering of instructions
 
     # Prettify display of ID
@@ -339,6 +343,8 @@ def convert_to_df_spia(result, network):
 
     if result.empty:
         return create_empty_df_with_cols(cols)
+
+    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
 
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']
