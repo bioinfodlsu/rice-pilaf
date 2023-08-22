@@ -5,7 +5,7 @@ RicePilaf takes as input a set of genomic intervals obtained from QTL analysis o
 
 It infers possible biological mechanisms by evaluating the enrichment of the loci in co-expression modules and in transcription factors.
 
-To do this, it collates (1) pan-genomic, (2) co-expression, (3) epigenomic, and (4) regulatory information from various sources.
+To do this, it collates pan-genomic, co-expression, epigenomic, pathway, ontology, text-mining, and regulatory information from various sources.
 
 ## Demo
 A demo version can be seen [here](http://165.22.55.49/).
