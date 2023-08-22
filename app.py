@@ -60,9 +60,26 @@ app.layout = lambda: dbc.Container([
     dbc.Row(
         html.Div(
             children=[
-                html.P(['This is a demo version. Click ', dcc.Link('here', href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
-                                                                   target='_blank',
-                                                                   className='top-navbar-item'), ' to install.'], className='my-auto')
+                html.P([
+                    'This is a demo version. Click ',
+                    dcc.Link(
+                        'here',
+                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
+                        target='_blank',
+                        className='top-navbar-item'
+                    ),
+                    html.Span(' '),
+                    dcc.Link(
+                        html.I(
+                            id='demo-link',
+                            className='fa-solid fa-up-right-from-square fa-2xs'
+                        ),
+                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
+                        target='_blank',
+                        className='top-navbar-item'
+                    ),
+                    ' to install.'], className='my-auto'
+                )
             ],
             className='banner d-flex justify-content-center py-1 text-white',
             id='demo-banner'

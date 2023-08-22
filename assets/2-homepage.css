@@ -93,6 +93,14 @@
     border-bottom: 1px solid white;
 }
 
+#demo-banner i {
+    color: white !important;
+}
+
+#demo-banner i.active {
+    color: white !important;
+}
+
 #page {
     margin-left: 3em;
 }
