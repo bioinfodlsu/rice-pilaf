@@ -201,6 +201,7 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
+        Output('coexpression-graph-stats', 'children'),
 
         State('lift-over-nb-table', 'data'),
         Input('coexpression-modules', 'value'),
@@ -224,13 +225,34 @@ def init_callback(app):
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
 
+                if not modules:
+                    module_graph = load_module_graph(
+                        implicated_gene_ids, None, submitted_network, submitted_algo, parameters, layout)
+                else:
+                    module_graph = load_module_graph(
+                        implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout)
+
+                stats = 'This module has '
+
+                total_num_genes = len(module_graph[0]['nodes'])
+                num_implicated_gene_ids = count_implicated_genes_in_module(
+                    module_graph[0]['nodes'], implicated_gene_ids)
+
+                if total_num_genes == 1:
+                    stats += f'{total_num_genes} gene, of which {num_implicated_gene_ids}'
+                else:
+                    stats += f'{total_num_genes} genes, of which {num_implicated_gene_ids}'
+
+                if num_implicated_gene_ids == 1:
+                    stats += ' is implicated in your GWAS/QTL.'
+                else:
+                    stats += ' are implicated in your GWAS/QTL.'
+
                 # No enriched modules
                 if not modules:
-                    return load_module_graph(
-                        implicated_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'display': 'None'}, )
+                    return module_graph + ({'display': 'None'}, stats)
 
-                return load_module_graph(
-                    implicated_gene_ids, module, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'visible'}, )
+                return module_graph + ({'visibility': 'visible'}, stats)
 
         raise PreventUpdate
 

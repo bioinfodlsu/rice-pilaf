@@ -526,3 +526,12 @@ def get_noun_for_active_tab(active_tab):
         return Noun('ontology term', 'ontology terms')
     else:
         return Noun('pathway', 'pathways')
+
+
+def count_implicated_genes_in_module(module_nodes, implicated_genes):
+    module_genes = set()
+    implicated_genes = set(implicated_genes)
+    for node in module_nodes:
+        module_genes.add(node['data']['name'])
+
+    return len(set.intersection(module_genes, implicated_genes))

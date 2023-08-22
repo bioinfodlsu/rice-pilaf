@@ -269,7 +269,16 @@ layout = html.Div(
                         ),
 
                         html.Br(),
-                        html.P(id='coexpression-graph-stats'),
+                        html.Br(),
+                        html.Div([
+                            html.I(
+                                className='bi bi-bar-chart me-2 non-clickable'),
+                            html.Span(id='coexpression-graph-stats')
+                        ], className='mb-3 stats ps-1'),
+
+
+                        html.P(
+                            'The connections indicate that the genes are co-expressed. The shaded nodes refer to those implicated in your GWAS/QTL.'),
 
                         dbc.Label('Select the module display layout'),
 
