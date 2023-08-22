@@ -16,3 +16,13 @@
 #coexpression-table-stats {
     text-align: left;
 }
+
+.stats-icon {
+    color: #254b5d;
+}
+
+.stats {
+    margin-left: 0;
+    padding-left: 0;
+    text-align: left;
+}

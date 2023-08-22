@@ -192,7 +192,11 @@ layout = html.Div(
                     id='coexpression-loading',
                     children=[
                         html.Hr(className='mt-3 mb-4'),
-                        html.P(id='coexpression-module-stats'),
+                        html.Div([
+                            html.I(
+                                className='fa-solid fa-chart-simple me-2 non-clickable stats-icon'),
+                            html.Span(id='coexpression-module-stats')
+                        ], className='mb-3 stats'),
 
                         html.Div(id='coexpression-results-module-tabs-container', children=[
                             dbc.Label('Select an enriched module'),
@@ -227,7 +231,11 @@ layout = html.Div(
 
                         html.P(
                             html.Div([
-                                html.P(id='coexpression-table-stats'),
+                                html.Div([
+                                    html.I(
+                                        className='fa-solid fa-chart-simple me-2 non-clickable stats-icon'),
+                                    html.Span(id='coexpression-table-stats')
+                                ], className='mb-3 stats'),
                                 dbc.Button([html.I(
                                     className='bi bi-download me-2'),
                                     'Export to CSV'],
