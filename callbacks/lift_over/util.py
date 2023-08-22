@@ -575,26 +575,12 @@ def get_common_genes(refs, nb_intervals):
 
         genes_in_ref = genes_in_ref[['OGI', 'Name']]
 
-        genes_in_ref['OGI'] = get_rgi_orthogroup_link(genes_in_ref, 'OGI')
-
         try:
             common_genes = pd.merge(
                 common_genes, genes_in_ref, on='OGI', how='outer')
         # First instance of merging (that is, common_genes is still None)
         except TypeError:
             common_genes = genes_in_ref
-
-        if 'Name_x' in common_genes.columns:
-            common_genes['Name_x'] = get_rgi_genecard_link(
-                common_genes, 'Name_x')
-
-        if 'Name_y' in common_genes.columns:
-            common_genes['Name_y'] = get_rgi_genecard_link(
-                common_genes, 'Name_y')
-
-        if 'Name' in common_genes.columns:
-            common_genes['Name'] = get_rgi_genecard_link(
-                common_genes, 'Name')
 
         common_genes = common_genes.rename(
             columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
@@ -620,8 +606,6 @@ def get_all_genes(refs, nb_intervals):
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
-    genes_in_nb['OGI'] = get_rgi_orthogroup_link(genes_in_nb, 'OGI')
-
     common_genes = genes_in_nb
     for ref in refs:
         if ref != 'Nipponbare':
@@ -629,18 +613,6 @@ def get_all_genes(refs, nb_intervals):
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
             common_genes = pd.merge(
                 common_genes, genes_in_other_ref, on='OGI', how='outer')
-
-            if 'Name_x' in common_genes.columns:
-                common_genes['Name_x'] = get_rgi_genecard_link(
-                    common_genes, 'Name_x')
-
-            if 'Name_y' in common_genes.columns:
-                common_genes['Name_y'] = get_rgi_genecard_link(
-                    common_genes, 'Name_y')
-
-            if 'Name' in common_genes.columns:
-                common_genes['Name'] = get_rgi_genecard_link(
-                    common_genes, 'Name')
 
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
@@ -677,9 +649,6 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
                             left_on='Gene_ID', right_on='Name')
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS]
-
-    unique_genes['OGI'] = get_rgi_orthogroup_link(unique_genes, 'OGI')
-    unique_genes['Name'] = get_rgi_genecard_link(unique_genes, 'Name')
 
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')
