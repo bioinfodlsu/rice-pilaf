@@ -3,6 +3,7 @@ from dash.exceptions import PreventUpdate
 
 from .util import *
 from ..constants import Constants
+from ..general_util import *
 const = Constants()
 
 
@@ -310,13 +311,13 @@ def init_callback(app):
                 all_genes_raw['OGI'] = get_rgi_orthogroup_link(
                     all_genes_raw, 'OGI')
                 if 'Nipponbare' in all_genes_raw.columns:
-                    mask = (all_genes_raw['Nipponbare'] != '&ndash;')
+                    mask = (all_genes_raw['Nipponbare'] != NULL_PLACEHOLDER)
                     all_genes_raw.loc[mask, 'Nipponbare'] = get_rgi_genecard_link(
                         all_genes_raw, 'Nipponbare')
 
                 for cultivar in other_ref_genomes:
                     if cultivar in all_genes_raw.columns:
-                        mask = (all_genes_raw[cultivar] != '&ndash;')
+                        mask = (all_genes_raw[cultivar] != NULL_PLACEHOLDER)
                         all_genes_raw.loc[mask, cultivar] = get_rgi_genecard_link(
                             all_genes_raw, cultivar)
 
@@ -331,7 +332,9 @@ def init_callback(app):
                 common_genes_raw = get_common_genes(
                     filter_rice_variants, nb_intervals)
 
-                common_genes_raw['OGI'] = get_rgi_orthogroup_link(
+                # Mask will be triggered if no cultivar is selected
+                mask = (common_genes_raw['OGI'] != NULL_PLACEHOLDER)
+                common_genes_raw.loc[mask, 'OGI'] = get_rgi_orthogroup_link(
                     common_genes_raw, 'OGI')
                 if 'Nipponbare' in common_genes_raw.columns:
                     common_genes_raw['Nipponbare'] = get_rgi_genecard_link(

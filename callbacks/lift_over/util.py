@@ -30,8 +30,9 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
 
 NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot',
               'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Analyses']
-OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand', ]
+OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand']
 FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
+NO_REFS_COLUMNS = ['OGI']
 
 
 def construct_options_other_ref_genomes():
@@ -50,6 +51,10 @@ def create_empty_df_nb():
     - Empty data frame
     """
     return create_empty_df_with_cols(NB_COLUMNS)
+
+
+def create_empty_no_refs_df():
+    return create_empty_df_with_cols(NO_REFS_COLUMNS)
 
 
 def create_empty_df_other_refs():
@@ -409,7 +414,7 @@ def get_qtaro_entry(mapping, gene):
         # Remove the line break after the last character major
         return qtaro_str[:-len("<br>")] + '</ul>'
     except KeyError:
-        return '&ndash;'
+        return NULL_PLACEHOLDER
 
 
 def get_qtaro_entries(mapping, genes):
@@ -475,14 +480,17 @@ def get_genes_in_Nb(nb_intervals):
         # Read in dataframe containing gene descriptions
         gene_description_df = pd.read_csv(
             f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
+        # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
         table = pd.merge(gene_description_df, table_gene_ids,
-                         left_on='Gene_ID', right_on='Name')
+                         left_on='Gene_ID', right_on='Name', how='right')
 
         # Reorder columns
         table = table[NB_COLUMNS]
 
         table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
             table, 'UniProtKB/Swiss-Prot')
+
+        table = table.fillna(NULL_PLACEHOLDER)
 
         if table.shape[0] == 0:
             return create_empty_df_nb(), table['Name'].values.tolist()
@@ -566,6 +574,10 @@ def get_common_genes(refs, nb_intervals):
     Returns:
     - Data frame containing the genes common to the given references
     """
+    # No cultivars selected
+    if not refs:
+        return create_empty_no_refs_df()
+
     common_genes = None
     for ref in refs:
         if ref != 'Nipponbare':
@@ -577,7 +589,7 @@ def get_common_genes(refs, nb_intervals):
 
         try:
             common_genes = pd.merge(
-                common_genes, genes_in_ref, on='OGI', how='outer')
+                common_genes, genes_in_ref, on='OGI')
         # First instance of merging (that is, common_genes is still None)
         except TypeError:
             common_genes = genes_in_ref
@@ -618,7 +630,7 @@ def get_all_genes(refs, nb_intervals):
                 columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
-        columns={'Name': 'Nipponbare'}).fillna('&ndash;').drop_duplicates()
+        columns={'Name': 'Nipponbare'}).fillna(NULL_PLACEHOLDER).drop_duplicates()
 
     return common_genes
 
@@ -645,13 +657,16 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
 
     gene_description_df = pd.read_csv(
         f'{const.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
+    # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
     unique_genes = pd.merge(gene_description_df, unique_genes,
-                            left_on='Gene_ID', right_on='Name')
+                            left_on='Gene_ID', right_on='Name', how='right')
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS]
 
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')
+
+    unique_genes = unique_genes.fillna(NULL_PLACEHOLDER)
 
     if unique_genes.shape[0] == 0:
         return create_empty_front_facing_df()
