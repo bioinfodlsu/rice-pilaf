@@ -4,7 +4,8 @@
 #coexpression-modules-pathway + div, 
 #lift-over-results-table + div,
 #text-mining-result-table + div,
-#tf-enrichment-result-table + div {
+#tf-enrichment-result-table + div,
+#analysis-layout-layout + div {
     display: block !important;
     height: 0 !important;
     margin-top: 0;
