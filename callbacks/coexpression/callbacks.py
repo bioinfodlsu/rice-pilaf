@@ -128,6 +128,15 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('coexpression-table-container', 'style', allow_duplicate=True),
+        Input('coexpression-submit', 'n_clicks'),
+
+        prevent_initial_call=True
+    )
+    def hide_table(*_):
+        return {'visibility': 'hidden'}
+
+    @app.callback(
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Input('coexpression-modules', 'value'),
 
@@ -198,6 +207,8 @@ def init_callback(app):
         Output('coexpression-graph-stats', 'children'),
         Output('coexpression-table-stats', 'children'),
 
+        Output('coexpression-table-container', 'style'),
+
         Input('coexpression-combined-genes', 'data'),
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -246,7 +257,10 @@ def init_callback(app):
                 else:
                     graph_stats += 'are implicated by your GWAS/QTL or part of the gene list you manually entered.'
 
-                return table.to_dict('records'), columns, graph_stats, stats
+                if total_num_genes == 0:
+                    return table.to_dict('records'), columns, graph_stats, stats, {'display': 'none'}
+                else:
+                    return table.to_dict('records'), columns, graph_stats, stats, {'visibility': 'visible'}
 
         raise PreventUpdate
 
@@ -287,7 +301,7 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'None'}, )
+                    return module_graph + ({'display': 'none'}, )
 
                 return module_graph + ({'visibility': 'visible'}, )
 
