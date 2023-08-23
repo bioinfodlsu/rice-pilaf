@@ -10,3 +10,7 @@
     margin-top: 0;
     padding-top: 0;
 }
+
+.dash-default-spinner > div {
+    background-color: var(--green-lighter) !important;
+}

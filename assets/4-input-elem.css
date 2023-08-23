@@ -8,10 +8,6 @@
     box-shadow: 0 0 0 0.25rem var(--light-gray);
 }
 
-.dash-default-spinner > div {
-    background-color: var(--green-lighter) !important;
-}
-
 .rc-slider-dot-active, .rc-slider-handle {
     border-color: var(--green-lighter) !important;
 }
