@@ -42,6 +42,8 @@ enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
 
+P_VALUE_CUTOFF = 0.05
+
 
 def get_parameters_for_algo(algo, network='OS-CX'):
     """
@@ -74,7 +76,7 @@ def get_parameters_for_algo(algo, network='OS-CX'):
 # =================================================
 
 
-def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
+def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, parameters):
     """
     Writes the accessions of the GWAS-implicated genes to a file
 
@@ -89,7 +91,7 @@ def write_genes_to_file(genes, genomic_intervals, network, algo, parameters):
     - Parent directory of the file to which the accessions of the GWAS-implicated genes are written
     """
     temp_output_folder_dir = get_path_to_temp(
-        genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
+        genomic_intervals, const.TEMP_COEXPRESSION, f'{addl_genes}/{network}/{algo}/{parameters}')
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)
@@ -127,7 +129,7 @@ def fetch_enriched_modules(output_dir):
     return modules
 
 
-def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, network, algo, parameters):
+def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_genes, network, algo, parameters):
     """
     Determine which modules are enriched given the set of GWAS-implicated genes
 
@@ -143,7 +145,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, networ
     """
     genes = list(set(implicated_gene_ids))
     INPUT_GENES_DIR = write_genes_to_file(
-        genes, genomic_intervals, network, algo, parameters)
+        genes, genomic_intervals, addl_genes, network, algo, parameters)
 
     if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules'):
         INPUT_GENES = f'{INPUT_GENES_DIR}/genes.txt'
@@ -308,6 +310,8 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
+    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
+
     # IMPORTANT: Do not change ordering of instructions
 
     # Prettify display of ID
@@ -339,6 +343,8 @@ def convert_to_df_spia(result, network):
 
     if result.empty:
         return create_empty_df_with_cols(cols)
+
+    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
 
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']

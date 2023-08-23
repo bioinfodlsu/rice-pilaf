@@ -103,7 +103,7 @@ layout = html.Div(
     children=[
 
         html.Div([
-            html.P('In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, which are significantly enriched in the genes implicated in your GWAS. '
+            html.P('In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. '
                    'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
         ], className='analysis-intro p-3'),
 
@@ -112,8 +112,18 @@ layout = html.Div(
         html.Div([
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
             html.Span(id='coexpression-genomic-intervals-input'),
+        ], className='analysis-intro p-3'),
 
-            html.Br(),
+        html.Br(),
+
+        html.Div([
+            dbc.Label(
+                'Include additional genes from the pan-genome lift-over or the text mining results'),
+            dbc.Label(
+                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03660;LOC_Os01g03650)'),
+
+            dbc.Textarea(id='coexpression-addl-genes'),
+
             html.Br(),
 
             dbc.Label(['Select the co-expression network',
@@ -199,7 +209,7 @@ layout = html.Div(
                         ], className='mb-3 stats ps-1'),
 
                         html.Div(id='coexpression-results-module-tabs-container', children=[
-                            dbc.Label('Select an over-represented module'),
+                            dbc.Label('Select an enriched module'),
                             dcc.Dropdown(id='coexpression-modules'),
                             html.Br(),
                             html.Br(),
@@ -278,7 +288,7 @@ layout = html.Div(
 
 
                         html.P(
-                            'The connections indicate that the genes are co-expressed. The shaded nodes refer to those implicated in your GWAS/QTL.'),
+                            'The connections indicate that the genes are co-expressed. The shaded nodes refer to those implicated by your GWAS/QTL.'),
 
                         dbc.Label('Select the module display layout'),
 
