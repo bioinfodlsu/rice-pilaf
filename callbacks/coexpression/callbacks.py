@@ -104,7 +104,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'layout'),
-        Output('coexpression-module-graph', 'style'),
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style'),
 
         Input('coexpression-combined-genes', 'data'),
@@ -113,6 +113,8 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
+
+        prevent_initial_call=True
     )
     def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
@@ -124,6 +126,15 @@ def init_callback(app):
                     combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        Input('coexpression-modules', 'value'),
+
+        prevent_initial_call=True
+    )
+    def hide_graph(*_):
+        return {'visibility': 'hidden'}
 
     @app.callback(
         Output('coexpression-modules', 'options'),

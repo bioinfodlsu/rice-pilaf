@@ -225,7 +225,8 @@ layout = html.Div(
                         html.Br(),
 
                         html.Div([
-                            html.I(className='bi bi-bar-chart me-2 non-clickable'),
+                            html.I(
+                                className='bi bi-bar-chart me-2 non-clickable'),
                             html.Span(id='coexpression-graph-stats')
                         ], className='mb-3 stats ps-1'),
 
@@ -257,7 +258,8 @@ layout = html.Div(
                                 html.Div([
                                     html.I(
                                         className='bi bi-bar-chart me-2 non-clickable'),
-                                    html.Span(id='coexpression-table-stats')
+                                    html.Span(
+                                        id='coexpression-table-stats')
                                 ], className='mb-3 stats ps-1'),
                                 dbc.Button([html.I(
                                     className='bi bi-download me-2'),
@@ -302,9 +304,9 @@ layout = html.Div(
                             id='coexpression-graph-layout',
                             options=[
                                 {'value': 'circle', 'label': 'Circle',
-                                    'label_id': 'circle'},
+                                 'label_id': 'circle'},
                                 {'value': 'grid', 'label': 'Grid',
-                                    'label_id': 'grid'}
+                                 'label_id': 'grid'}
                             ],
                             value='circle',
                             inline=True,
@@ -332,37 +334,39 @@ layout = html.Div(
                             ], style={'textAlign': 'right'})
                         ),
 
-                        cyto.Cytoscape(
-                            id='coexpression-module-graph',
-                            layout={'name': 'circle'},
-                            style={'width': '100%',
-                                   'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
-                            stylesheet=[
-                                {
-                                    'selector': 'node',
-                                    'style': {
-                                        'content': 'data(id)',
-                                        'height': '5px',
-                                        'width': '5px',
-                                        'font-size': '10px'
+                        dcc.Loading(
+                            cyto.Cytoscape(
+                                id='coexpression-module-graph',
+                                layout={'name': 'circle'},
+                                style={'width': '100%',
+                                       'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
+                                stylesheet=[
+                                    {
+                                        'selector': 'node',
+                                        'style': {
+                                            'content': 'data(id)',
+                                            'height': '5px',
+                                            'width': '5px',
+                                            'font-size': '10px'
+                                        }
+                                    },
+                                    {
+                                        'selector': 'edge',
+                                        'style': {
+                                            'width': '1px',
+                                        }
+                                    },
+                                    {
+                                        'selector': '.shaded',
+                                        'style': {
+                                            'background-color': '#254b5d',
+                                            'line-color': '#254b5d',
+                                            'height': '20px',
+                                            'width': '20px'
+                                        }
                                     }
-                                },
-                                {
-                                    'selector': 'edge',
-                                    'style': {
-                                        'width': '1px',
-                                    }
-                                },
-                                {
-                                    'selector': '.shaded',
-                                    'style': {
-                                        'background-color': '#254b5d',
-                                        'line-color': '#254b5d',
-                                        'height': '20px',
-                                        'width': '20px'
-                                    }
-                                }
-                            ]
+                                ]
+                            )
                         )
                     ]
                 )
