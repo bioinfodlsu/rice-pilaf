@@ -255,44 +255,46 @@ layout = html.Div(
 
                                 html.Br(),
 
-                                html.P(
-                                    html.Div([
+                                dcc.Loading([
+                                    html.P(
                                         html.Div([
-                                            html.I(
-                                                className='bi bi-bar-chart me-2 non-clickable'),
-                                            html.Span(
-                                                id='coexpression-table-stats')
-                                        ], className='mb-3 stats ps-1'),
-                                        dbc.Button([html.I(
-                                            className='bi bi-download me-2'),
-                                            'Export to CSV'],
-                                            id='coexpression-export-table',
-                                            n_clicks=0,
-                                            color='light', size='sm', className='table-button'),
-                                        dcc.Download(
-                                            id='coexpression-download-df-to-csv'),
-                                        dbc.Button([html.I(
-                                            className='bi bi-arrow-clockwise me-2'),
-                                            'Reset Table'],
-                                            id='coexpression-reset-table',
-                                            color='light', size='sm', className='ms-3 table-button')
-                                    ], style={'textAlign': 'right'})
-                                ),
+                                            html.Div([
+                                                html.I(
+                                                    className='bi bi-bar-chart me-2 non-clickable'),
+                                                html.Span(
+                                                    id='coexpression-table-stats')
+                                            ], className='mb-3 stats ps-1'),
+                                            dbc.Button([html.I(
+                                                className='bi bi-download me-2'),
+                                                'Export to CSV'],
+                                                id='coexpression-export-table',
+                                                n_clicks=0,
+                                                color='light', size='sm', className='table-button'),
+                                            dcc.Download(
+                                                id='coexpression-download-df-to-csv'),
+                                            dbc.Button([html.I(
+                                                className='bi bi-arrow-clockwise me-2'),
+                                                'Reset Table'],
+                                                id='coexpression-reset-table',
+                                                color='light', size='sm', className='ms-3 table-button')
+                                        ], style={'textAlign': 'right'})
+                                    ),
 
-                                dash_table.DataTable(
-                                    id='coexpression-pathways',
-                                    style_cell={
-                                        'whiteSpace': 'pre-line'
-                                    },
-                                    markdown_options={'html': True},
-                                    sort_action='native',
-                                    filter_action='native',
-                                    filter_options={'case': 'insensitive',
-                                                    'placeholder_text': 'Search column'},
-                                    page_action='native',
-                                    page_size=15,
-                                    cell_selectable=False
-                                ),
+                                    dash_table.DataTable(
+                                        id='coexpression-pathways',
+                                        style_cell={
+                                            'whiteSpace': 'pre-line'
+                                        },
+                                        markdown_options={'html': True},
+                                        sort_action='native',
+                                        filter_action='native',
+                                        filter_options={'case': 'insensitive',
+                                                        'placeholder_text': 'Search column'},
+                                        page_action='native',
+                                        page_size=15,
+                                        cell_selectable=False
+                                    )
+                                ]),
 
                                 html.Br(),
                                 html.Br(),
