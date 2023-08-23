@@ -17,22 +17,18 @@ def init_callback(app):
         Output({'type': 'analysis-nav', 'label': ALL}, 'className'),
         Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
         State({'type': 'analysis-nav', 'label': ALL}, 'className'),
-        State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
         State({'type': 'analysis-nav', 'label': ALL}, 'id'),
         State({'type': 'analysis-layout', 'label': ALL}, 'id'),
-        #Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
         Input('current-analysis-page-nav', 'data'),
-        Input('homepage-submit', 'n_clicks')
+        Input('homepage-submit', 'n_clicks'),
+        State({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
     )
-    #def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, *_):
-    def display_specific_analysis_page(nav_className, layout_hidden, analysis_nav_id, analysis_layout_id, current_page, *_):
-        #if ctx.triggered_id:
+    def display_specific_analysis_page(nav_className, analysis_nav_id, analysis_layout_id, current_page, *_):
         if current_page:
             update_nav_class_name = []
             update_layout_hidden = []
 
             for i in range(len(analysis_nav_id)):
-                #if analysis_nav_id[i]['label'] == ctx.triggered_id.label:
                 if analysis_nav_id[i]['label'] == current_page:
                     nav_classes = add_class_name('active', nav_className[i])
                 else:
@@ -41,7 +37,6 @@ def init_callback(app):
                 update_nav_class_name.append(nav_classes)
 
             for i in range(len(analysis_layout_id)):
-                #if analysis_layout_id[i]['label'] == ctx.triggered_id.label:
                 if analysis_layout_id[i]['label'] == current_page:
                     hide_layout = False
                 else:
@@ -126,13 +121,16 @@ def init_callback(app):
         Output('homepage-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
         State('homepage-genomic-intervals', 'value'),
-        # Output('homepage-genomic-intervals', 'value', allow_duplicate=True),
-        Input('homepage-reset', 'n_clicks'),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
+        Input('homepage-reset', 'n_clicks'),
+
         prevent_initial_call=True
     )
-    def set_input_fields(genomic_intervals, *_):
+    def set_input_fields(genomic_intervals, example_genomic_interval_n_clicks, *_):
+        if all(val == 0 for val in example_genomic_interval_n_clicks):
+            return ''
+
         if ctx.triggered_id:
             if 'homepage-reset' == ctx.triggered_id:
                 return None
@@ -158,8 +156,7 @@ def init_callback(app):
 
     @app.callback(
         Output('current-analysis-page-nav', 'data'),
-        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks'),
-        #State('homepage-is-submitted', 'data'),
+        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
     def set_input_homepage_session_state(analysis_nav_items_n_clicks):
         if ctx.triggered_id:
@@ -168,17 +165,6 @@ def init_callback(app):
                 return analysis_page_id
 
         raise PreventUpdate
-
-    """
-    @app.callback(
-        #Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
-        Output('homepage-genomic-intervals-saved-input', 'data'),
-        Input('homepage-genomic-intervals', 'value'),
-        #prevent_initial_call=True
-    )
-    def set_input_homepage_session_state(genomic_intervals):
-        return genomic_intervals
-    """
 
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
