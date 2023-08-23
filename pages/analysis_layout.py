@@ -28,4 +28,4 @@ layout = html.Div(children=[
     co_expr.layout,
     tf_enrich.layout,
     browse_loci.layout
-], id='analysis-layout-layout')
+])
