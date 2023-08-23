@@ -64,15 +64,12 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            sanitized_addl_genes = submitted_addl_genes.strip()
+            sanitized_addl_genes = ''
+            if submitted_addl_genes:
+                sanitized_addl_genes = submitted_addl_genes.strip()
 
-            if sanitized_addl_genes:
-                list_addl_genes = [
-                    gene.strip() for gene in sanitized_addl_genes.split(';')]
-                list_addl_genes = list(
-                    filter(None, list_addl_genes))
-            else:
-                list_addl_genes = []
+            list_addl_genes = list(
+                filter(None, [gene.strip() for gene in sanitized_addl_genes.split(';')]))
 
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
@@ -187,8 +184,10 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'data'),
         Output('coexpression-pathways', 'columns'),
+        Output('coexpression-graph-stats', 'children'),
         Output('coexpression-table-stats', 'children'),
 
+        Input('coexpression-combined-genes', 'data'),
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         Input('coexpression-modules-pathway', 'active_tab'),
@@ -196,7 +195,8 @@ def init_callback(app):
         State('coexpression-submitted-parameter-module', 'data'),
         State('coexpression-is-submitted', 'data')
     )
-    def display_pathways(submitted_network, submitted_algo, active_tab, module, submitted_parameter_module, coexpression_is_submitted):
+    def display_pathways(combined_gene_ids,
+                         submitted_network, submitted_algo, active_tab, module, submitted_parameter_module, coexpression_is_submitted):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
@@ -205,7 +205,7 @@ def init_callback(app):
                     module_idx = module.split(' ')[1]
                     table, _ = convert_to_df(
                         active_tab, module_idx, submitted_network, submitted_algo, parameters)
-                except Exception as e:
+                except Exception:
                     table, _ = convert_to_df(
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
@@ -218,7 +218,24 @@ def init_callback(app):
                 else:
                     stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).plural} were found to be enriched.'
 
-                return table.to_dict('records'), columns, stats
+                graph_stats = 'This module has '
+                try:
+                    total_num_genes, num_combined_gene_ids = count_genes_in_module(
+                        combined_gene_ids, int(module_idx), submitted_network, submitted_algo, parameters)
+                except UnboundLocalError:
+                    total_num_genes, num_combined_gene_ids = 0, 0
+
+                if total_num_genes == 1:
+                    graph_stats += f'{total_num_genes} gene, of which {num_combined_gene_ids} '
+                else:
+                    graph_stats += f'{total_num_genes} genes, of which {num_combined_gene_ids} '
+
+                if num_combined_gene_ids == 1:
+                    graph_stats += 'is implicated by your GWAS/QTL or part of the gene list you manually entered.'
+                else:
+                    graph_stats += 'are implicated by your GWAS/QTL or part of the gene list you manually entered.'
+
+                return table.to_dict('records'), columns, graph_stats, stats
 
         raise PreventUpdate
 
@@ -227,7 +244,6 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
-        Output('coexpression-graph-stats', 'children'),
 
         Input('coexpression-combined-genes', 'data'),
         Input('coexpression-modules', 'value'),
@@ -258,27 +274,11 @@ def init_callback(app):
                     module_graph = load_module_graph(
                         combined_gene_ids, module, submitted_network, submitted_algo, parameters, layout)
 
-                stats = 'This module has '
-
-                total_num_genes = len(module_graph[0]['nodes'])
-                num_combined_gene_ids = count_implicated_genes_in_module(
-                    module_graph[0]['nodes'], combined_gene_ids)
-
-                if total_num_genes == 1:
-                    stats += f'{total_num_genes} gene, of which {num_combined_gene_ids}'
-                else:
-                    stats += f'{total_num_genes} genes, of which {num_combined_gene_ids}'
-
-                if num_combined_gene_ids == 1:
-                    stats += ' is implicated by your GWAS/QTL.'
-                else:
-                    stats += ' are implicated by your GWAS/QTL.'
-
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'None'}, stats)
+                    return module_graph + ({'display': 'None'}, )
 
-                return module_graph + ({'visibility': 'visible'}, stats)
+                return module_graph + ({'visibility': 'visible'}, )
 
         raise PreventUpdate
 

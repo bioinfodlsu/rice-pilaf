@@ -11,6 +11,7 @@ from collections import OrderedDict
 from callbacks.constants import Constants
 const = Constants()
 
+
 def get_analaysis_layout_dictionary():
     return OrderedDict({
         const.LIFT_OVER: 'Gene List and Lift-Over',
@@ -20,11 +21,11 @@ def get_analaysis_layout_dictionary():
         const.IGV: 'Browse Loci'
     })
 
+
 layout = html.Div(children=[
     lift_over.layout,
     text_mining.layout,
-    co_expr.layout, 
-    tf_enrich.layout, 
+    co_expr.layout,
+    tf_enrich.layout,
     browse_loci.layout
 ])
-

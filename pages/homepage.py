@@ -112,12 +112,14 @@ genome_ref_input = dbc.Col([
         html.Span('Pre-Harvest Sprouting (Lee et al., 2021)',
                   id={'type': 'example-genomic-interval',
                       'description': 'pre-harvest'},
-                  className='sample-genomic-interval'),
+                  className='sample-genomic-interval',
+                  n_clicks=0),
         html.Span(',', className='sample-genomic-interval'),
         html.Span('Anaerobic Germination (Tnani et al., 2021)',
                   id={'type': 'example-genomic-interval',
                       'description': 'anaerobic-germination'},
-                  className='sample-genomic-interval ms-3')],
+                  className='sample-genomic-interval ms-3',
+                  n_clicks=0)],
              className='pt-3'),
     html.Br(),
 
@@ -149,7 +151,7 @@ layout = html.Div([
                          analysis_nav.navbar()],
                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                     dbc.Col(
-                        children=[analysis_layout.layout],
+                        children=analysis_layout.layout,
                         xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
                         id='page',
                     )

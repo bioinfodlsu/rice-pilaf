@@ -37,7 +37,7 @@ def convert_text_to_path(text):
     Returns:
     - Well-formed path
     """
-    return text.replace(
+    return text.strip().replace(
         ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
 
 
