@@ -64,12 +64,13 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            sanitized_addl_genes = ''
             if submitted_addl_genes:
-                sanitized_addl_genes = submitted_addl_genes.strip()
+                submitted_addl_genes = submitted_addl_genes.strip()
+            else:
+                submitted_addl_genes = ''
 
             list_addl_genes = list(
-                filter(None, [gene.strip() for gene in sanitized_addl_genes.split(';')]))
+                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
 
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
