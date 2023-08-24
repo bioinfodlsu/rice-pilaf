@@ -15,7 +15,7 @@ def get_active_branch_name():
 
 
 def is_in_demo_branch():
-    return get_active_branch_name() != 'demo'
+    return get_active_branch_name() == 'demo'
 
 
 def show_if_in_demo_branch():

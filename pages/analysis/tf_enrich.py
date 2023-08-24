@@ -65,8 +65,10 @@ layout = html.Div(
                 value='promoters',
                 inline=True
             ),
+
             html.Br(),
-            dcc.Markdown("Input threshold for False-Discovery Rate:"),
+
+            dbc.Label("Input threshold for False-Discovery Rate:"),
             dbc.Input(id='tfbs-fdr', type='number',
                       value=0.25, min=0, max=1, step=0.05),
             html.Br(),
