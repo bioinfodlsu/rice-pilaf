@@ -1,3 +1,4 @@
+import regex as re
 import os
 from .constants import Constants
 const = Constants()
@@ -62,5 +63,7 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
     temp_dir = f'{const.TEMP}/{genomic_interval_foldername}/{analysis_type}'
     for folder in args:
         temp_dir += f'/{convert_text_to_path(folder)}'
+
+    temp_dir = re.sub(r'/+', '/', temp_dir)
 
     return temp_dir

@@ -63,17 +63,10 @@ app.layout = lambda: dbc.Container([
                 html.P([
                     'This is a demo version. Click ',
                     dcc.Link(
-                        'here',
-                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
-                        target='_blank',
-                        className='top-navbar-item'
-                    ),
-                    html.Span(' '),
-                    dcc.Link(
-                        html.I(
+                        ['here ', html.I(
                             id='demo-link',
                             className='fa-solid fa-up-right-from-square fa-2xs'
-                        ),
+                        )],
                         href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
                         target='_blank',
                         className='top-navbar-item'
