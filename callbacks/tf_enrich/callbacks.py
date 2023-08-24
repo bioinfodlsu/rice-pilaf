@@ -71,19 +71,25 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-input', 'data')
     )
-    def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, addl_genes,
+    def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, submitted_addl_genes,
                                    nb_interval_str, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
             tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
-            if addl_genes:
-                addl_genes = addl_genes.strip()
+            if submitted_addl_genes:
+                submitted_addl_genes = submitted_addl_genes.strip()
             else:
-                addl_genes = ''
+                submitted_addl_genes = ''
 
-            enrichment_results_df = perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
+            list_addl_genes = list(
+                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+
+            combined_genes = lift_over_nb_entire_table + \
+                get_annotations_addl_gene(list_addl_genes)
+
+            enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
                                                               tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
 
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}

@@ -6,11 +6,29 @@ from ..file_util import *
 from ..constants import Constants
 from ..general_util import *
 
+import gffutils
+
 const = Constants()
 
 
 def create_empty_df():
     return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
+
+
+def get_annotations_addl_gene(addl_genes):
+    db = gffutils.FeatureDB(
+        f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+
+    annotations = []
+    for addl_gene in addl_genes:
+        annotations.append({'ogi': None,
+                            'name': addl_gene,
+                            'Chromosome': db[addl_gene].chrom,
+                            'Start': db[addl_gene].start,
+                            'End': db[addl_gene].end,
+                            'Strand': db[addl_gene].strand})
+
+    return annotations
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 
