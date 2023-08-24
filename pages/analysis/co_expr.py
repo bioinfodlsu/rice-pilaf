@@ -119,8 +119,9 @@ layout = html.Div(
         html.Div([
             dbc.Label(
                 'Include additional genes from the pan-genome lift-over or the text mining results'),
+            html.Br(),
             dbc.Label(
-                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03660;LOC_Os01g03650)'),
+                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)'),
 
             dbc.Textarea(id='coexpression-addl-genes'),
 
