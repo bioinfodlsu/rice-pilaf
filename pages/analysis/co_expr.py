@@ -127,7 +127,7 @@ layout = html.Div(
             html.Br(),
             dbc.Label(
                 'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)',
-                className='small'),
+                className='small text-muted'),
 
             dbc.Textarea(id='coexpression-addl-genes'),
 
@@ -173,7 +173,7 @@ layout = html.Div(
                         className='fa-solid fa-up-right-from-square fa-2xs')
                 ], href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation', target='_blank'),
                 html.Span(' to use it.')
-            ], hidden=(not is_in_demo_branch()), className='small'),
+            ], hidden=(not is_in_demo_branch()), className='small text-muted'),
 
             dbc.RadioItems(
                 id='coexpression-clustering-algo',
