@@ -229,16 +229,17 @@ layout = html.Div(
                         html.Div([
                             html.Div([
                                 html.Span(id='coexpression-module-stats')
-                            ], className='mb-3 stats'),
+                            ], className='stats'),
 
                             html.Div(
                                 id='coexpression-results-module-tabs-container',
                                 children=[
                                     dbc.Label('Select an enriched module'),
                                     dcc.Dropdown(id='coexpression-modules'),
-                                ]
+                                ],
+                                className='pt-3 pb-2'
                             )
-                        ], className='analysis-intro p-3 pb-4')
+                        ], className='analysis-intro p-3')
                     ]
                 ),
 
