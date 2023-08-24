@@ -126,7 +126,8 @@ layout = html.Div(
                 'Include additional genes from the pan-genome lift-over or the text mining results'),
             html.Br(),
             dbc.Label(
-                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)'),
+                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)',
+                className='small'),
 
             dbc.Textarea(id='coexpression-addl-genes'),
 
@@ -165,14 +166,14 @@ layout = html.Div(
 
             dbc.Label([
                 html.Span(
-                    '(Running COACH on RCRN is temporarily unavailable in this demo version. Install the '),
+                    'Running COACH on RCRN is temporarily unavailable in this demo version. Install the '),
                 dcc.Link([
                     'app ',
                     html.I(
                         className='fa-solid fa-up-right-from-square fa-2xs')
                 ], href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation', target='_blank'),
-                html.Span(' to use it.)')
-            ], hidden=(not is_in_demo_branch())),
+                html.Span(' to use it.')
+            ], hidden=(not is_in_demo_branch()), className='small'),
 
             dbc.RadioItems(
                 id='coexpression-clustering-algo',
