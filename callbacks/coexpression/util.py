@@ -511,7 +511,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
     # Triggered when there are no enriched modules
     except:
-        return {}, {'name': layout}, {'visibility': 'hidden', 'width': '100%', 'height': '100vh'}
+        return {}, {'name': layout}, {'display': 'none', 'width': '100%', 'height': '100vh'}
 
 # ====================================
 # Functions for displaying statistics

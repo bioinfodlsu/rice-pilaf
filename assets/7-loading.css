@@ -1,10 +1,13 @@
 /* This ensures that the loading affordance is displayed at the top of the container div. 
    Otherwise, it will be displayed at the center of the container div. */
    
-#coexpression-modules-pathway + div, 
+#coexpression-results-module-tabs-container + div,
+#coexpression-pathways + div,
 #lift-over-results-table + div,
 #text-mining-result-table + div,
-#tf-enrichment-result-table + div {
+#tf-enrichment-result-table + div,
+#coexpression-module-graph + div,
+#coexpression-graph-container {
     display: block !important;
     height: 0 !important;
     margin-top: 0;

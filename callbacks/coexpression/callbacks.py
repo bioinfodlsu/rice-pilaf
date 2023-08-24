@@ -104,7 +104,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'layout'),
-        Output('coexpression-module-graph', 'style'),
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style'),
 
         Input('coexpression-combined-genes', 'data'),
@@ -113,6 +113,8 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
+
+        prevent_initial_call=True
     )
     def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
         if coexpression_is_submitted:
@@ -124,6 +126,24 @@ def init_callback(app):
                     combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-table-container', 'style', allow_duplicate=True),
+        Input('coexpression-submit', 'n_clicks'),
+
+        prevent_initial_call=True
+    )
+    def hide_table(*_):
+        return {'visibility': 'hidden'}
+
+    @app.callback(
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        Input('coexpression-modules', 'value'),
+
+        prevent_initial_call=True
+    )
+    def hide_graph(*_):
+        return {'visibility': 'hidden'}
 
     @app.callback(
         Output('coexpression-modules', 'options'),
@@ -187,6 +207,8 @@ def init_callback(app):
         Output('coexpression-graph-stats', 'children'),
         Output('coexpression-table-stats', 'children'),
 
+        Output('coexpression-table-container', 'style'),
+
         Input('coexpression-combined-genes', 'data'),
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -235,7 +257,10 @@ def init_callback(app):
                 else:
                     graph_stats += 'are implicated by your GWAS/QTL or part of the gene list you manually entered.'
 
-                return table.to_dict('records'), columns, graph_stats, stats
+                if total_num_genes == 0:
+                    return table.to_dict('records'), columns, graph_stats, stats, {'display': 'none'}
+                else:
+                    return table.to_dict('records'), columns, graph_stats, stats, {'visibility': 'visible'}
 
         raise PreventUpdate
 
@@ -276,7 +301,7 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'None'}, )
+                    return module_graph + ({'display': 'none'}, )
 
                 return module_graph + ({'visibility': 'visible'}, )
 
