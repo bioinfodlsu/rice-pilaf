@@ -61,3 +61,7 @@ hr {
 .left-align {
     text-align: left !important;
 }
+
+.link-muted:hover {
+    color: #6c757d !important;
+}

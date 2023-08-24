@@ -90,8 +90,12 @@ def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, par
     Returns:
     - Parent directory of the file to which the accessions of the GWAS-implicated genes are written
     """
-    temp_output_folder_dir = get_path_to_temp(
-        genomic_intervals, const.TEMP_COEXPRESSION, f'{addl_genes}/{network}/{algo}/{parameters}')
+    if addl_genes:
+        temp_output_folder_dir = get_path_to_temp(
+            genomic_intervals, const.TEMP_COEXPRESSION, f'{addl_genes}/{network}/{algo}/{parameters}')
+    else:
+        temp_output_folder_dir = get_path_to_temp(
+            genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)

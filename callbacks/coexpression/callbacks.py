@@ -4,6 +4,7 @@ from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
+from ..branch import *
 
 Input_parameter_module = namedtuple('Input_parameter_module', [
     'param_slider_marks', 'param_slider_value'])
@@ -64,12 +65,13 @@ def init_callback(app):
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
 
-            sanitized_addl_genes = ''
             if submitted_addl_genes:
-                sanitized_addl_genes = submitted_addl_genes.strip()
+                submitted_addl_genes = submitted_addl_genes.strip()
+            else:
+                submitted_addl_genes = ''
 
             list_addl_genes = list(
-                filter(None, [gene.strip() for gene in sanitized_addl_genes.split(';')]))
+                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
 
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
@@ -100,6 +102,18 @@ def init_callback(app):
             return parameter_module[algo]['param_slider_marks'], parameter_module[algo]['param_slider_value']
 
         return get_parameters_for_algo(algo), module_detection_algos[algo].default_param * module_detection_algos[algo].multiplier
+
+    @app.callback(
+        Output('coexpression-clustering-algo', 'options'),
+        Input('coexpression-network', 'value'),
+        State('coexpression-clustering-algo', 'options')
+    )
+    def set_visibility_clustering_algo(network, algo_options):
+        for option in algo_options:
+            if option['value'] == 'coach':
+                option['disabled'] = is_in_demo_branch() and network == 'RCRN'
+
+        return algo_options
 
     @app.callback(
         Output('coexpression-module-graph', 'elements'),
