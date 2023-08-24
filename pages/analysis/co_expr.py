@@ -171,7 +171,10 @@ layout = html.Div(
                     'app ',
                     html.I(
                         className='fa-solid fa-up-right-from-square fa-2xs')
-                ], href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation', target='_blank'),
+                ],
+                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
+                    target='_blank',
+                    className='link-muted'),
                 html.Span(' to use it.')
             ], hidden=(not is_in_demo_branch()), className='small text-muted'),
 
