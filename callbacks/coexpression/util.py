@@ -542,5 +542,5 @@ def count_genes_in_module(implicated_genes, module_idx, network, algo, parameter
     with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
         for idx, module in enumerate(modules):
             if idx == module_idx - 1:
-                module_genes = module.split('\t')
+                module_genes = module.strip().split('\t')
                 return len(module_genes), len(set.intersection(set(module_genes), set(implicated_genes)))
