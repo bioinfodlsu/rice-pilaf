@@ -413,7 +413,7 @@ layout = html.Div(
                             ),
                         ]),
 
-                        html.Div(id='extra-bottom-div', className='mb-4')
+                        html.Div(id='coexpression-extra-bottom-div', className='mb-4')
                     ]
                 )
             ]
