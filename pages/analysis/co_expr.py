@@ -2,6 +2,27 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
+
+from pathlib import Path
+
+
+def get_active_branch_name():
+    """
+    Lifted from https://stackoverflow.com/questions/26134026/how-to-get-the-current-checked-out-git-branch-name-through-pygit2
+    """
+    head_dir = Path(".") / ".git" / "HEAD"
+    with head_dir.open("r") as f:
+        content = f.read().splitlines()
+
+    for line in content:
+        if line[0:4] == "ref:":
+            return line.partition("refs/heads/")[2]
+
+
+def is_in_demo_branch():
+    return get_active_branch_name() == 'demo'
+
+
 const = Constants()
 
 coach = html.Li(
@@ -131,12 +152,27 @@ layout = html.Div(
                        html.I(
                            className='bi bi-info-circle', id='coexpression-network-tooltip')]),
 
+            html.Br(),
+
+            dbc.Label([
+                html.Span(
+                    '(RCRN is temporarily unavailable in this demo version. Install the '),
+                dcc.Link([
+                    'app ',
+                    html.I(
+                        className='fa-solid fa-up-right-from-square fa-2xs')
+                ], href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation', target='_blank'),
+                html.Span(' to use it.)')
+            ], hidden=(not is_in_demo_branch())),
+
+
             dbc.RadioItems(
                 id='coexpression-network',
                 options=[
                     {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
                     {'value': 'RCRN',
-                     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
+                     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn',
+                     'disabled': is_in_demo_branch()},
                 ],
                 value='OS-CX',
                 inline=True,
