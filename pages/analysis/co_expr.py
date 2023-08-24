@@ -4,8 +4,6 @@ from dash import dash_table, dcc, html
 from callbacks.constants import Constants
 from callbacks.branch import *
 
-from pathlib import Path
-
 
 const = Constants()
 
@@ -226,20 +224,21 @@ layout = html.Div(
                 dcc.Loading(
                     id='coexpression-loading',
                     children=[
-                        html.Hr(className='mt-3 mb-4'),
+                        html.Hr(className='mt-3 mb-3'),
+                        html.Br(),
                         html.Div([
-                            html.I(
-                                className='bi bi-bar-chart me-2 non-clickable'),
-                            html.Span(id='coexpression-module-stats')
-                        ], className='mb-3 stats ps-1'),
+                            html.Div([
+                                html.Span(id='coexpression-module-stats')
+                            ], className='mb-3 stats'),
 
-                        html.Div(
-                            id='coexpression-results-module-tabs-container',
-                            children=[
-                                dbc.Label('Select an enriched module'),
-                                dcc.Dropdown(id='coexpression-modules'),
-                            ]
-                        )
+                            html.Div(
+                                id='coexpression-results-module-tabs-container',
+                                children=[
+                                    dbc.Label('Select an enriched module'),
+                                    dcc.Dropdown(id='coexpression-modules'),
+                                ]
+                            )
+                        ], className='analysis-intro p-3 pb-4')
                     ]
                 ),
 
@@ -252,12 +251,8 @@ layout = html.Div(
                                 html.Br(),
 
                                 html.Div([
-                                    html.I(
-                                        className='bi bi-bar-chart me-2 non-clickable'),
                                     html.Span(id='coexpression-graph-stats')
-                                ], className='mb-3 stats ps-1'),
-
-                                html.Br(),
+                                ], className='mb-4 stats'),
 
                                 dbc.Tabs(
                                     id='coexpression-modules-pathway',
@@ -284,11 +279,9 @@ layout = html.Div(
                                     html.P(
                                         html.Div([
                                             html.Div([
-                                                html.I(
-                                                    className='bi bi-bar-chart me-2 non-clickable'),
                                                 html.Span(
                                                     id='coexpression-table-stats')
-                                            ], className='mb-3 stats ps-1'),
+                                            ], className='mb-3 stats'),
                                             dbc.Button([html.I(
                                                 className='bi bi-download me-2'),
                                                 'Export to CSV'],
@@ -324,23 +317,31 @@ layout = html.Div(
                                 html.Br(),
                                 html.Br(),
 
-                                html.P(
-                                    'The connections indicate that the genes are co-expressed. The shaded nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
+                                html.Div([
+                                    html.P(
+                                        'The graph below shows the selected module. The connections indicate that the genes are co-expressed. The shaded nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
 
-                                dbc.Label('Select the module display layout'),
+                                    dbc.Label(
+                                        'Select the graph display layout'),
 
-                                dbc.RadioItems(
-                                    id='coexpression-graph-layout',
-                                    options=[
-                                        {'value': 'circle', 'label': 'Circle',
-                                         'label_id': 'circle'},
-                                        {'value': 'grid', 'label': 'Grid',
-                                         'label_id': 'grid'}
-                                    ],
-                                    value='circle',
-                                    inline=True,
-                                    className='ms-3'
-                                ),
+                                    dbc.RadioItems(
+                                        id='coexpression-graph-layout',
+                                        options=[
+                                            {'value': 'circle', 'label': 'Circle',
+                                             'label_id': 'circle'},
+                                            {'value': 'grid', 'label': 'Grid',
+                                             'label_id': 'grid'}
+                                        ],
+                                        value='circle',
+                                        inline=True,
+                                        className='ms-3 mb-3',
+                                    ),
+
+                                    html.P(
+                                        'Click "Reset Graph Display" to position the graph at the center and restore default zoom settings.')
+                                ], className='analysis-intro p-3'),
+
+                                html.Br(),
 
                                 html.P(
                                     html.Div([
@@ -355,13 +356,13 @@ layout = html.Div(
                                             id='coexpression-download-graph-to-json'),
                                         dbc.Button([html.I(
                                             className='bi bi-arrow-clockwise me-2'),
-                                            'Reset Graph'],
+                                            'Reset Graph Display'],
                                             id='coexpression-reset-graph',
                                             n_clicks=0,
                                             color='light', size='sm',
                                             className='ms-3 table-button')
                                     ], style={'textAlign': 'right'})
-                                )
+                                ),
                             ]
                         ),
 
