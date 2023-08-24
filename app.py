@@ -77,8 +77,16 @@ app.layout = lambda: dbc.Container([
     html.Div(
         id='session-container',
         children=[
+            # =========
+            # Homepage
+            # =========
             dcc.Store(
                 id='homepage-is-submitted',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='homepage-genomic-intervals-submitted-input',
                 storage_type='session'
             ),
 
@@ -87,6 +95,9 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            # ==========
+            # Lift-over
+            # ==========
             dcc.Store(
                 id='lift-over-is-submitted',
                 storage_type='session'
@@ -94,11 +105,6 @@ app.layout = lambda: dbc.Container([
 
             dcc.Store(
                 id='lift-over-active-tab',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='homepage-genomic-intervals-submitted-input',
                 storage_type='session'
             ),
 
@@ -123,10 +129,13 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='lift_over_nb_entire_table',
+                id='lift-over-nb-entire-table',
                 storage_type='session'
             ),
 
+            # ============
+            # IGV Browser
+            # ============
             dcc.Store(
                 id='igv-selected-genomic-intervals-saved-input',
                 storage_type='session'
@@ -147,6 +156,9 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            # ==============
+            # Co-expression
+            # ==============
             dcc.Store(
                 id='coexpression-addl-genes-saved-input',
                 storage_type='session'
@@ -202,6 +214,10 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            # ==============================
+            # Regulatory Feature Enrichment
+            # ==============================
+
             dcc.Store(
                 id='tfbs-submitted-input',
                 storage_type='session'
@@ -211,6 +227,10 @@ app.layout = lambda: dbc.Container([
                 id='tfbs-is-submitted',
                 storage_type='session'
             ),
+
+            # ============
+            # Text Mining
+            # ============
 
             dcc.Store(
                 id='text-mining-query-saved-input',

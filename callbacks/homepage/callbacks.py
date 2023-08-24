@@ -99,7 +99,7 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-nb-table', 'data'),
-        Output('lift_over_nb_entire_table', 'data'),
+        Output('lift-over-nb-entire-table', 'data'),
         Input('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data')
     )

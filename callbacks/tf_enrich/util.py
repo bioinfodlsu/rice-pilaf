@@ -6,20 +6,37 @@ from ..file_util import *
 from ..constants import Constants
 from ..general_util import *
 
+import gffutils
+
 const = Constants()
 
 
 def create_empty_df():
     return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
 
+
+def get_annotations_addl_gene(addl_genes):
+    db = gffutils.FeatureDB(
+        f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+
+    annotations = []
+    for addl_gene in addl_genes:
+        annotations.append({'ogi': None,
+                            'name': addl_gene,
+                            'Chromosome': db[addl_gene].chrom,
+                            'Start': db[addl_gene].start,
+                            'End': db[addl_gene].end,
+                            'Strand': db[addl_gene].strand})
+
+    return annotations
+
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 
 
-def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, upstream_win_len=500, downstream_win_len=100):
-
+def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
     make_dir(get_path_to_temp(nb_interval_str, const.TEMP_TFBS))
     filepath = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, const.PROMOTER_BED)
+        nb_interval_str, const.TEMP_TFBS, addl_genes, const.PROMOTER_BED)
     with open(filepath, "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
@@ -37,9 +54,8 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, upstream
     return filepath
 
 
-def write_query_genome_intervals_to_file(nb_interval_str):
-
-    make_dir(get_path_to_temp(nb_interval_str, const.TEMP_TFBS))
+def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
+    make_dir(get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes))
     filepath = get_path_to_temp(
         nb_interval_str, const.TEMP_TFBS, const.GENOME_WIDE_BED)
     with open(filepath, "w") as f:
@@ -50,10 +66,9 @@ def write_query_genome_intervals_to_file(nb_interval_str):
     return filepath
 
 
-def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
-
+def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
     out_dir = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, tfbs_set, tfbs_prediction_technique)
+        nb_interval_str, const.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
     # if previously computed
     if path_exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
         results_df = pd.read_csv(
@@ -74,13 +89,14 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, tfbs_set, tfbs_predicti
 
     # construct query BED file
     out_dir_tf_enrich = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS)
+        nb_interval_str, const.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
         query_bed = write_query_promoter_intervals_to_file(
-            lift_over_nb_entire_table, nb_interval_str)
+            lift_over_nb_entire_table, nb_interval_str, addl_genes)
         sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
-        query_bed = write_query_genome_intervals_to_file(nb_interval_str)
+        query_bed = write_query_genome_intervals_to_file(
+            nb_interval_str, addl_genes)
         sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
     TF_list = []

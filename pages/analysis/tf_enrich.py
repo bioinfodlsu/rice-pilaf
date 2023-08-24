@@ -12,7 +12,7 @@ layout = html.Div(
     children=[
         html.Div([
             html.P(
-                'Perhaps your intervals contains variants that influence regulatory elements, for example by affecting binding affinity.'),
+                'Perhaps your intervals contain variants that influence regulatory elements, for example by affecting binding affinity.'),
             html.P(
                 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
         ], className='analysis-intro p-3'),
@@ -27,6 +27,17 @@ layout = html.Div(
         html.Br(),
 
         html.Div([
+            dbc.Label(
+                'Include additional genes from the pan-genome lift-over or the text mining results'),
+            html.Br(),
+            dbc.Label(
+                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)',
+                className='small text-muted'),
+
+            dbc.Textarea(id='tfbs-addl-genes'),
+
+            html.Br(),
+
             dbc.Label(['Choose TF binding site prediction technique:',
                        html.I(
                            className='bi bi-info-circle',
@@ -60,7 +71,6 @@ layout = html.Div(
                         'label_id': 'promoters'},
                     {'value': 'genome', 'label': 'genome',
                      'label_id': 'genome'}
-
                 ],
                 value='promoters',
                 inline=True

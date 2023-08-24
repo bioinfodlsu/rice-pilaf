@@ -30,7 +30,7 @@ module_detection_algos = {
     'demon': Module_detection_algo(
         100, 0.25, '1 (Fewer Modules)', '4 (More Modules)'),
     'fox': Module_detection_algo(
-        100, 0.01, '1 (Loose Modules)', '4 (Cohesive Modules)'),
+        100, 0.05, '1 (Loose Modules)', '4 (Cohesive Modules)'),
 }
 
 Enrichment_tab = namedtuple('Enrichment_tab', ['enrichment', 'path'])
@@ -239,6 +239,8 @@ def convert_to_df_go(result):
 
     result['ID'] = get_go_link(result, 'ID')
 
+    result = result.sort_values('Adj. p-value')
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -257,6 +259,8 @@ def convert_to_df_to(result):
 
     result['ID'] = get_to_po_link(result, 'ID')
 
+    result = result.sort_values('Adj. p-value')
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -274,6 +278,8 @@ def convert_to_df_po(result):
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
 
     result['ID'] = get_to_po_link(result, 'ID')
+
+    result = result.sort_values('Adj. p-value')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -299,6 +305,8 @@ def convert_to_df_ora(result, network):
         '/').str.join('\n')
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
+
+    result = result.sort_values('Adj. p-value')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -335,6 +343,8 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
 
+    result = result.sort_values('Adj. Combined p-value')
+
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
 
@@ -363,6 +373,8 @@ def convert_to_df_spia(result, network):
 
     result['Genes'] = result.apply(
         lambda x: convert_transcript_to_msu_id(x['Genes'], network), axis=1)
+
+    result = result.sort_values('Adj. Combined p-value')
 
     display_cols_in_sci_notation(
         result, [col for col in cols if 'p-value' in col])
@@ -542,5 +554,5 @@ def count_genes_in_module(implicated_genes, module_idx, network, algo, parameter
     with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
         for idx, module in enumerate(modules):
             if idx == module_idx - 1:
-                module_genes = module.split('\t')
+                module_genes = module.strip().split('\t')
                 return len(module_genes), len(set.intersection(set(module_genes), set(implicated_genes)))

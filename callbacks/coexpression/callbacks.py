@@ -254,7 +254,7 @@ def init_callback(app):
                 else:
                     stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).plural} were found to be enriched.'
 
-                graph_stats = 'This module has '
+                graph_stats = 'The selected module has '
                 try:
                     total_num_genes, num_combined_gene_ids = count_genes_in_module(
                         combined_gene_ids, int(module_idx), submitted_network, submitted_algo, parameters)
@@ -318,7 +318,8 @@ def init_callback(app):
                 if not modules:
                     return module_graph + ({'display': 'none'}, {'height': '0em'})
 
-                return module_graph + ({'visibility': 'visible'}, {'height': '1.5em'})
+                return module_graph + ({'visibility': 'visible', 'width': '100%',
+                                       'height': '100vh'}, {'height': '1.5em'})
 
         raise PreventUpdate
 
