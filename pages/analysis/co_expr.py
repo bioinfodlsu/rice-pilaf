@@ -341,9 +341,10 @@ layout = html.Div(
                             ]
                         ),
 
-                        dcc.Loading(
+                        dcc.Loading([
                             cyto.Cytoscape(
                                 id='coexpression-module-graph',
+                                className='mb-3',
                                 layout={'name': 'circle'},
                                 style={'width': '100%',
                                        'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
@@ -373,8 +374,10 @@ layout = html.Div(
                                         }
                                     }
                                 ]
-                            )
-                        )
+                            ),
+                        ]),
+
+                        html.Div(id='extra-bottom-div', className='mb-4')
                     ]
                 )
             ]

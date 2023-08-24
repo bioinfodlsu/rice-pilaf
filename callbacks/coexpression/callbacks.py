@@ -317,7 +317,7 @@ def init_callback(app):
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
 
-        Input('coexpression-addl-genes', 'value'),
+        State('coexpression-addl-genes', 'value'),
         Input('coexpression-network', 'value'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
