@@ -35,6 +35,7 @@ class Constants(object):
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
     PROMOTER_BED = 'query_promoter_intervals'
     GENOME_WIDE_BED = 'query_genomic_intervals'
+    TFBS_ANNOTATION = f'{TFBS_BEDS}/annotation'
 
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
