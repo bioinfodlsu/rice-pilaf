@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import subprocess
 import statsmodels.stats.multitest as sm
+import pickle
 from ..file_util import *
 from ..constants import Constants
 from ..general_util import *
@@ -9,6 +10,9 @@ from ..general_util import *
 import gffutils
 
 const = Constants()
+
+COLUMNS = ['Transcription Factor', 'Family',
+           'p-value', 'Adj. p-value', 'Significant?']
 
 
 def create_empty_df():
@@ -73,6 +77,12 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
     if path_exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
         results_df = pd.read_csv(
             f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', dtype=object)
+
+        results_df['Family'] = results_df['Transcription Factor'].apply(
+            get_family)
+
+        results_df = results_df[COLUMNS]
+
         return results_df
 
     # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
@@ -83,6 +93,12 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
                                                  float(tfbs_fdr))
         results_df.to_csv(
             f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+
+        results_df['Family'] = results_df['Transcription Factor'].apply(
+            get_family)
+
+        results_df = results_df[COLUMNS]
+
         return results_df
 
     make_dir(out_dir)
@@ -127,6 +143,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
     results_df.to_csv(
         f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
 
+    results_df['Family'] = results_df['Transcription Factor'].apply(
+        get_family)
+
+    results_df = results_df[COLUMNS]
+
     return results_df
 
 
@@ -154,3 +175,10 @@ def multiple_testing_correction(single_tf_results, fdr):
     single_tf_results['Significant?'] = sig
     single_tf_results.sort_values(by=['p-value'], inplace=True)
     return single_tf_results
+
+
+def get_family(transcription_factor):
+    with open(f'{const.TFBS_ANNOTATION}/family_mapping.pickle', 'rb') as f:
+        mapping = pickle.load(f)
+
+    return mapping[transcription_factor]
