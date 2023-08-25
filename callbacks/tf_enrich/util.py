@@ -11,6 +11,9 @@ import gffutils
 
 const = Constants()
 
+COLUMNS = ['Transcription Factor', 'Family',
+           'p-value', 'Adj. p-value', 'Significant?']
+
 
 def create_empty_df():
     return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
@@ -78,8 +81,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
         results_df['Family'] = results_df['Transcription Factor'].apply(
             get_family)
 
-        results_df = results_df[['Transcription Factor',
-                                 'Family', 'p-value', 'Adj. p-value', 'Significant?']]
+        results_df = results_df[COLUMNS]
 
         return results_df
 
@@ -94,6 +96,8 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
 
         results_df['Family'] = results_df['Transcription Factor'].apply(
             get_family)
+
+        results_df = results_df[COLUMNS]
 
         return results_df
 
@@ -138,6 +142,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+
+    results_df['Family'] = results_df['Transcription Factor'].apply(
+        get_family)
+
+    results_df = results_df[COLUMNS]
 
     return results_df
 
