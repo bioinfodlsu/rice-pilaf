@@ -2,6 +2,9 @@ import pandas as pd
 import os
 import regex as re
 import csv
+import pickle
+
+from collections import defaultdict
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
@@ -13,13 +16,12 @@ def perform_single_query(query_string, annotated_abstracts, ignore_case=True):
     if not ignore_case:
         query_regex = re.compile(query_string)
 
-    print(query_regex)
-
+    pmid_score = defaultdict(lambda: 0)
     with open(annotated_abstracts, 'r', encoding='utf8') as f:
         for line in f:
             if re.search(query_regex, line):
                 try:
-                    PMID, Title, Sentence, _, Entity, _, Type, _, _, score = line.split(
+                    PMID, _, _, _, Entity, _, Type, _, _, score = line.split(
                         '\t')
                 except Exception as e:
                     while True:
@@ -31,24 +33,19 @@ def perform_single_query(query_string, annotated_abstracts, ignore_case=True):
                             break
 
                         try:
-                            PMID, Title, Sentence, _, Entity, _, Type, _, _, score = line.split(
+                            PMID, _, _, _, Entity, _, Type, _, _, score = line.split(
                                 '\t')
                             break
                         except:
                             pass
 
                 if Type == 'Gene':
-                    if Sentence == 'None':
-                        Sentence = Title
-                    df.loc[len(df.index)] = [
-                        Entity, PMID, Title, Sentence, score]
+                    pmid_score[PMID] = max(pmid_score[PMID], float(score))
 
-    return df
+    return pmid_score
 
 
 def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_directory):
-    dfs = []
-
     query_str_ignore_case = ''
     query_str_with_case = ''
 
@@ -61,28 +58,51 @@ def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_dir
     query_str_ignore_case = query_str_ignore_case[:-1]
     query_str_with_case = query_str_with_case[:-1]
 
+    pmid_score_ignore_case = None
+    pmid_score_with_case = None
+
     if query_str_ignore_case:
-        dfs.append(perform_single_query(
-            query_str_ignore_case, annotated_abstracts, ignore_case=True))
-
+        pmid_score_ignore_case = perform_single_query(
+            query_str_ignore_case, annotated_abstracts, ignore_case=True)
     if query_str_with_case:
-        dfs.append(perform_single_query(
-            query_str_with_case, annotated_abstracts, ignore_case=False))
+        pmid_score_with_case = perform_single_query(
+            query_str_with_case, annotated_abstracts, ignore_case=False)
 
-    pubmed_df = pd.concat(dfs, ignore_index=True)
-    pubmed_df = pubmed_df.sort_values('Score', ascending=False)
+    pmid_score = {}
+    if pmid_score_ignore_case:
+        for pmid, score in pmid_score_ignore_case.items():
+            pmid_score[pmid] = score
 
-    if not pubmed_df.empty:
-        pubmed_df.to_csv(f'{output_directory}/{accession}.csv')
+    if pmid_score_with_case:
+        for pmid, score in pmid_score_with_case.items():
+            if pmid in pmid_score:
+                pmid_score[pmid] = max(pmid_score[pmid], score)
+            else:
+                pmid_score[pmid] = score
+
+    if pmid_score:
+        with open(f'{output_directory}/{accession}.pickle', 'wb') as f:
+            pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
+    ####
+    # start_idx = 66000
+    # end_idx = 72337
+    ####
+
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         next(csv_reader)
+        #####
+        # for _ in range(start_idx):
+        #     next(csv_reader)
+
+        # number_lines = end_idx - start_idx + 1
+        #####
 
         for line in csv_reader:
             iricname = list(filter(None, line[1].strip().split(',')))
@@ -115,6 +135,13 @@ def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
                                         annotated_abstracts, output_directory)
 
                     print(f'Finished parsing entry for {accession}')
+
+            ######
+            # number_lines -= 1
+
+            # if number_lines == 0:
+            #     break
+            ######
 
     print(f'Finished populating {output_directory}')
 
