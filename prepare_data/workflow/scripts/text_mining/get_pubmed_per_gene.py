@@ -8,10 +8,12 @@ COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
 def perform_single_query(query_string, annotated_abstracts, ignore_case=True):
     df = pd.DataFrame(columns=COLNAMES)
-    if ignore_case:
-        query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
-    else:
-        query_regex = re.compile(re.escape(query_string))
+
+    query_regex = re.compile(query_string, re.IGNORECASE)
+    if not ignore_case:
+        query_regex = re.compile(query_string)
+
+    print(query_regex)
 
     with open(annotated_abstracts, 'r', encoding='utf8') as f:
         for line in f:
@@ -46,14 +48,26 @@ def perform_single_query(query_string, annotated_abstracts, ignore_case=True):
 
 def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_directory):
     dfs = []
-    for symbol in gene_symbols:
-        ignore_case = True
-        if len(symbol) == 2:
-            ignore_case = False
 
-        print(f'Querying {accession}: {symbol}')
+    query_str_ignore_case = ''
+    query_str_with_case = ''
+
+    for symbol in gene_symbols:
+        if len(symbol) != 2:
+            query_str_ignore_case += f'({re.escape(symbol)})|'
+        else:
+            query_str_with_case += f'({re.escape(symbol)})|'
+
+    query_str_ignore_case = query_str_ignore_case[:-1]
+    query_str_with_case = query_str_with_case[:-1]
+
+    if query_str_ignore_case:
         dfs.append(perform_single_query(
-            symbol, annotated_abstracts, ignore_case))
+            query_str_ignore_case, annotated_abstracts, ignore_case=True))
+
+    if query_str_with_case:
+        dfs.append(perform_single_query(
+            query_str_with_case, annotated_abstracts, ignore_case=False))
 
     pubmed_df = pd.concat(dfs, ignore_index=True)
     pubmed_df = pubmed_df.sort_values('Score', ascending=False)
