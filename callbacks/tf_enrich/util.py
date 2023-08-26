@@ -181,4 +181,4 @@ def get_family(transcription_factor):
     with open(f'{const.TFBS_ANNOTATION}/family_mapping.pickle', 'rb') as f:
         mapping = pickle.load(f)
 
-    return mapping[transcription_factor]
+    return ', '.join(mapping[transcription_factor])
