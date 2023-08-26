@@ -6,14 +6,34 @@ import csv
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
 
-def perform_single_query(query_string, annotated_abstracts):
+def perform_single_query(query_string, annotated_abstracts, ignore_case=True):
     df = pd.DataFrame(columns=COLNAMES)
-    query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
+    if ignore_case:
+        query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
+    else:
+        query_regex = re.compile(re.escape(query_string))
+
     with open(annotated_abstracts, 'r', encoding='utf8') as f:
         for line in f:
             if re.search(query_regex, line):
-                PMID, Title, Sentence, IsInTitle, Entity, Annotations, Type, start_pos, end_pos, score = line.split(
-                    '\t')
+                try:
+                    PMID, Title, Sentence, _, Entity, _, Type, _, _, score = line.split(
+                        '\t')
+                except Exception as e:
+                    while True:
+                        prev_line = line
+                        try:
+                            next_line = next(f)
+                            line = prev_line.strip() + ' ' + next_line.strip()
+                        except StopIteration:
+                            break
+
+                        try:
+                            PMID, Title, Sentence, _, Entity, _, Type, _, _, score = line.split(
+                                '\t')
+                            break
+                        except:
+                            pass
 
                 if Type == 'Gene':
                     if Sentence == 'None':
@@ -27,7 +47,13 @@ def perform_single_query(query_string, annotated_abstracts):
 def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_directory):
     dfs = []
     for symbol in gene_symbols:
-        dfs.append(perform_single_query(symbol, annotated_abstracts))
+        ignore_case = True
+        if len(symbol) == 2:
+            ignore_case = False
+
+        print(f'Querying {accession}: {symbol}')
+        dfs.append(perform_single_query(
+            symbol, annotated_abstracts, ignore_case))
 
     pubmed_df = pd.concat(dfs, ignore_index=True)
     pubmed_df = pubmed_df.sort_values('Score', ascending=False)
@@ -45,25 +71,36 @@ def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
         next(csv_reader)
 
         for line in csv_reader:
-            # Some entries in the accession column consist of multiple accessionss
+            iricname = list(filter(None, line[1].strip().split(',')))
+            raprepname = list(filter(None, line[3].strip().split(',')))
+            rappredname = list(filter(None, line[4].strip().split(',')))
+
+            # Some entries in the accession column consist of multiple accessions
             accessions = line[2].split(',')
             # Remove the opening and closing brackets
             gene_symbols = line[-1][1:-1].split(',')
             gene_symbols = [gene_symbol.replace('"', '').replace(
-                "'", '').strip() for gene_symbol in gene_symbols]
+                "'", '').replace('\\', '').strip() for gene_symbol in gene_symbols]
 
-            if gene_symbols[0] != '':
-                for accession in accessions:
-                    if len(accession.strip()) > 0:
-                        try:
-                            get_pubmed_per_gene(accession, gene_symbols,
-                                                annotated_abstracts, output_directory)
-                        except:
-                            with open(f'{output_directory}/error.txt', 'a') as error:
-                                error.write(
-                                    f'{accession}\t{",".join(gene_symbols)}\n')
+            for idx, gene_symbol in enumerate(gene_symbols):
+                if gene_symbol.isdigit():
+                    # Handle cases like \\OsAMT1,2\\
+                    gene_symbols[idx - 1] = gene_symbols[idx -
+                                                         1] + ',' + gene_symbol
+                    gene_symbols[idx] = ''
 
-                        print(f'Finished parsing entry for {accession}')
+                if len(gene_symbol) == 1:
+                    gene_symbols[idx] = ''
+
+            gene_symbols = list(filter(None, gene_symbols))
+
+            for accession in accessions:
+                accession = accession.strip()
+                if accession:
+                    get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
+                                        annotated_abstracts, output_directory)
+
+                    print(f'Finished parsing entry for {accession}')
 
     print(f'Finished populating {output_directory}')
 
@@ -73,8 +110,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'gene_index_file', help='file containing gene accessions and their common names')
-    parser.add_argument('annotated_abstracts_file',
-                        help='file containing the annotated abstracts')
+    parser.add_argument(
+        'annotated_abstracts_file',
+        help='file containing the annotated abstracts')
     parser.add_argument(
         'output_dir', help='output directory for the dictionary resulting from preprocessing the QTARO annotation file')
 
