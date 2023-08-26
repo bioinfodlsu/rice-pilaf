@@ -62,9 +62,13 @@ def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_dir
     pmid_score_with_case = None
 
     if query_str_ignore_case:
+        # Should not be sandwiched between alphanumeric characters
+        query_str_ignore_case = f'(?<![a-zA-Z0-9])({query_str_ignore_case})(?![a-zA-Z0-9])'
         pmid_score_ignore_case = perform_single_query(
             query_str_ignore_case, annotated_abstracts, ignore_case=True)
     if query_str_with_case:
+        # Should not be sandwiched between alphanumeric characters
+        query_str_with_case = f'(?<![a-zA-Z0-9])({query_str_with_case})(?![a-zA-Z0-9])'
         pmid_score_with_case = perform_single_query(
             query_str_with_case, annotated_abstracts, ignore_case=False)
 
@@ -86,10 +90,10 @@ def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_dir
 
 
 def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
-    ####
+    # ###
     # start_idx = 66000
     # end_idx = 72337
-    ####
+    # ###
 
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
@@ -97,12 +101,12 @@ def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         next(csv_reader)
-        #####
+        # ####
         # for _ in range(start_idx):
         #     next(csv_reader)
 
         # number_lines = end_idx - start_idx + 1
-        #####
+        # ####
 
         for line in csv_reader:
             iricname = list(filter(None, line[1].strip().split(',')))
@@ -136,12 +140,12 @@ def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
 
                     print(f'Finished parsing entry for {accession}')
 
-            ######
+            # #####
             # number_lines -= 1
 
             # if number_lines == 0:
             #     break
-            ######
+            # #####
 
     print(f'Finished populating {output_directory}')
 
