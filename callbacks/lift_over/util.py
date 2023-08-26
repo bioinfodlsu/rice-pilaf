@@ -435,8 +435,7 @@ def get_pubmed_entry(gene):
     except FileNotFoundError:
         return NULL_PLACEHOLDER
 
-    MAX_NUM_DISPLAY_IDS = 30
-    return ' , '.join(pubmed_ids[:MAX_NUM_DISPLAY_IDS])
+    return ' , '.join(pubmed_ids)
 
 
 # ========================
