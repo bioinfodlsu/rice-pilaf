@@ -17,11 +17,21 @@ genomic_interval_modal = dbc.Modal([
         dbc.ModalTitle('Genomic Intervals from GWAS/QTL')
     ),
     dbc.ModalBody([
-        html.P('Enter genomic intervals like so: Chr01:100000-200000. '
-               'Multiple intervals should be separated by a semicolon like so: Chr01:100000-200000;Chr02:300000-400000. '
-               'These intervals are obtained from LD-based clumping of significant GWAS SNPs or from QTL mapping studies.'),
+        html.Span('Enter genomic intervals like so: '), html.Span(
+            'Chr01:100000-200000', className='text-muted'),
+        html.Br(),
+        html.Span(
+            'Multiple intervals should be separated by a semicolon like so: '),
+        html.Span('Chr01:100000-200000;Chr02:300000-400000',
+                  className='text-muted'),
+        html.Br(),
+        html.Span(
+            'These intervals are obtained from LD-based clumping of significant GWAS SNPs or from QTL mapping studies.'),
+        html.Br(),
+        html.Br(),
+
         html.P(
-            'We also provide some sample genomic intervals, taken from the following GWAS/QTL analysis:'),
+            'We also provide some sample genomic intervals, taken from the following GWAS/QTL analyses:'),
         html.Ul([
             html.Li([
                 html.Div([
@@ -147,7 +157,7 @@ layout = html.Div([
                 id='post-gwas-analysis-container',
                 children=[dbc.Row([
                     dbc.Col(
-                        [html.H5('Select an analysis:', id='post-gwas-hdr'),
+                        [html.H5('Select an analysis', id='post-gwas-hdr'),
                          analysis_nav.navbar()],
                         xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
                     dbc.Col(

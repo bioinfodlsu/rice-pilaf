@@ -226,6 +226,11 @@ layout = html.Div(
                     children=[
                         html.Hr(className='mt-3 mb-3'),
                         html.Br(),
+
+                        html.Div(
+                            id='coepxression-input'
+                        ),
+
                         html.Div([
                             html.Div([
                                 html.Span(id='coexpression-module-stats')

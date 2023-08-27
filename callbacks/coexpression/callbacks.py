@@ -458,6 +458,20 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('coepxression-input', 'children'),
+        Input('coexpression-is-submitted', 'data'),
+        State('coexpression-addl-genes', 'value'),
+        State('coexpression-network', 'value'),
+        State('coexpression-clustering-algo', 'value'),
+        State('coexpression-parameter-slider', 'value')
+    )
+    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, clustering_algo, slider_value):
+        if coexpression_is_submitted:
+            return [genes, html.Br(), network, html.Br(), clustering_algo, html.Br(), slider_value]
+        
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
         Input('coexpression-clustering-algo-tooltip', 'n_clicks')
     )

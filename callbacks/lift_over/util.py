@@ -29,7 +29,7 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
                      'CMeo': 'japonica CHAO MEO'}
 
 NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot',
-              'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Analyses']
+              'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Analyses', 'PubMed Article IDs']
 OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand']
 FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
 NO_REFS_COLUMNS = ['OGI']
@@ -389,9 +389,9 @@ def get_ogi_other_ref(ref, nb_intervals):
 
     return final_ogi_set, final_ogi_dict
 
-# ==================================
-# Utility function related to QTARO
-# ==================================
+# ==================================================
+# Utility function related to QTARO and Text Mining
+# ==================================================
 
 
 def get_qtaro_entry(mapping, gene):
@@ -423,6 +423,19 @@ def get_qtaro_entries(mapping, genes):
         entries.append(get_qtaro_entry(mapping, gene))
 
     return entries
+
+
+def get_pubmed_entry(gene):
+    try:
+        with open(f'{const.TEXT_MINING_PUBMED}/{gene}.pickle', 'rb') as f:
+            mapping = pickle.load(f)
+
+        pubmed_ids = [get_pubmed_link_single_str(pubmed_id[0]) for pubmed_id in sorted(
+            mapping.items(), key=lambda x: x[1], reverse=True)]
+    except FileNotFoundError:
+        return NULL_PLACEHOLDER
+
+    return ' , '.join(pubmed_ids)
 
 
 # ========================
@@ -463,6 +476,10 @@ def get_genes_in_Nb(nb_intervals):
             qtaro_list = get_qtaro_entries(
                 qtaro_dict, [gene.id for gene in genes_in_interval])
 
+        pubmed_ids = []
+        for gene in genes_in_interval:
+            pubmed_ids.append(get_pubmed_entry(gene.id))
+
         # Construct the data frame
         df = pd.DataFrame({
             'OGI': ogi_list,
@@ -471,8 +488,10 @@ def get_genes_in_Nb(nb_intervals):
             'Start': [gene.start for gene in genes_in_interval],
             'End': [gene.end for gene in genes_in_interval],
             'Strand': [gene.strand for gene in genes_in_interval],
-            'QTL Analyses': qtaro_list
+            'QTL Analyses': qtaro_list,
+            'PubMed Article IDs': pubmed_ids
         })
+
         dfs.append(df)
 
     try:

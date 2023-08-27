@@ -38,7 +38,7 @@ layout = html.Div(
 
             html.Br(),
 
-            dbc.Label(['Choose TF binding site prediction technique:',
+            dbc.Label(['Choose TF binding site prediction technique',
                        html.I(
                            className='bi bi-info-circle',
                            id='tf-enrichment-technique-tooltip',
@@ -58,7 +58,7 @@ layout = html.Div(
             ),
 
             html.Br(),
-            dbc.Label(['Consider TF binding sites in the following regions:',
+            dbc.Label(['Consider TF binding sites in the following regions',
                        html.I(
                            className='bi bi-info-circle',
                            id='tf-enrichment-binding-site-tooltip',

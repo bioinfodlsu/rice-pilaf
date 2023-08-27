@@ -31,7 +31,7 @@ layout = html.Div(
 
         html.Div([
             dbc.Label(
-                'Select genome(s) for lift-over (ignore if lift-over is not needed):',
+                'Select genome(s) for lift-over (ignore if lift-over is not needed)',
                 className='mb-2'
             ),
 

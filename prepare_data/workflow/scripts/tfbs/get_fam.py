@@ -3,6 +3,15 @@ import os
 import pickle
 
 
+def convert_default_to_vanilla_dict(d):
+    """
+    Lifted from https://stackoverflow.com/questions/26496831/how-to-convert-defaultdict-of-defaultdicts-of-defaultdicts-to-dict-of-dicts-o
+    """
+    if isinstance(d, defaultdict):
+        d = {k: convert_default_to_vanilla_dict(v) for k, v in d.items()}
+    return d
+
+
 def get_family_df(family_file):
     family_mapping = defaultdict(set)
     with open(family_file) as f:
@@ -11,13 +20,9 @@ def get_family_df(family_file):
             _, gene_id, family = line.strip().split('\t')
             family_mapping[gene_id].add(family)
 
-    family_str_mapping = {}
-    for gene_id, family in family_mapping.items():
-        family_str_mapping[gene_id] = ', '.join(family_mapping[gene_id])
-
     print("Generated gene-to-family mapping dictionary")
 
-    return family_str_mapping
+    return convert_default_to_vanilla_dict(family_mapping)
 
 
 def export_mapping(mapping, output_dir):
