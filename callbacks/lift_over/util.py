@@ -435,7 +435,17 @@ def get_pubmed_entry(gene):
     except FileNotFoundError:
         return NULL_PLACEHOLDER
 
-    return ' , '.join(pubmed_ids)
+    pubmed_str = ''
+    for idx, pubmed in enumerate(pubmed_ids):
+        if idx % 2 == 0:
+            pubmed_str += f'{pubmed}&nbsp;&nbsp;&nbsp;'
+        else:
+            pubmed_str += f'{pubmed}\n'
+
+    if pubmed_str[-1] == '\n':        # Ends in a newline
+        return pubmed_str[:-len('\n')]
+
+    return pubmed_str[:-len('&nbsp;&nbsp;&nbsp;')]
 
 
 # ========================
