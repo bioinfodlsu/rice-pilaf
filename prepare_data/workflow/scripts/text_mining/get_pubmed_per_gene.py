@@ -14,6 +14,10 @@ ENG_WORDS = set(words.words())
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
+SPECIES_LOOKBEHIND = '(?<!((spp)|(sp)|(spp\.)|(sp\.))\s+)'
+ALPHANUMERIC_LOOKBEHIND = '(?<![a-zA-Z0-9])'
+ALPHANUMERIC_LOOKAHEAD = '(?![a-zA-Z0-9])'
+
 
 def perform_single_query(query_string, annotated_abstracts, ignore_case=True, symbol=None):
     df = pd.DataFrame(columns=COLNAMES)
@@ -71,21 +75,24 @@ def construct_query(gene_symbols):
     for symbol in gene_symbols:
         if symbol in symbols_to_be_replaced:
             for replacement_symbol in symbols_to_be_replaced[symbol]:
-                query_str_with_case += f'({re.escape(replacement_symbol)})|'
+                if len(replacement_symbol) <= 3:
+                    query_str_with_case += f'({SPECIES_LOOKBEHIND}({re.escape(replacement_symbol)}))|'
+                else:
+                    query_str_with_case += f'({re.escape(replacement_symbol)})|'
         else:
             if symbol.lower() in ENG_WORDS or symbol in symbols_to_be_excluded:
                 if len(symbol) <= 3:
-                    query_str_with_case += f'((?<!((spp)|(sp)|(spp\.)|(sp\.))\s+)({re.escape(symbol)}))|'
+                    query_str_with_case += f'({SPECIES_LOOKBEHIND}({re.escape(symbol)}))|'
                 else:
                     query_str_with_case += f'({re.escape(symbol)})|'
             else:
                 if len(symbol) != 2:
                     if len(symbol) <= 3:
-                        query_str_ignore_case += f'((?<!((spp)|(sp)|(spp\.)|(sp\.))\s+)({re.escape(symbol)}))|'
+                        query_str_ignore_case += f'({SPECIES_LOOKBEHIND}({re.escape(symbol)}))|'
                     else:
                         query_str_ignore_case += f'({re.escape(symbol)})|'
                 else:
-                    query_str_with_case += f'((?<!((spp)|(sp)|(spp\.)|(sp\.))\s+)({re.escape(symbol)}))|'
+                    query_str_with_case += f'({SPECIES_LOOKBEHIND}({re.escape(symbol)}))|'
 
     query_str_ignore_case = query_str_ignore_case[:-1]
     query_str_with_case = query_str_with_case[:-1]
@@ -101,12 +108,12 @@ def create_pubmed_dict_per_gene(gene_symbols, annotated_abstracts, symbol=None):
 
     if query_str_ignore_case:
         # Should not be sandwiched between alphanumeric characters
-        query_str_ignore_case = f'(?<![a-zA-Z0-9])({query_str_ignore_case})(?![a-zA-Z0-9])'
+        query_str_ignore_case = f'{ALPHANUMERIC_LOOKBEHIND}({query_str_ignore_case}){ALPHANUMERIC_LOOKAHEAD}'
         pmid_score_ignore_case = perform_single_query(
             query_str_ignore_case, annotated_abstracts, ignore_case=True, symbol=symbol)
     if query_str_with_case:
         # Should not be sandwiched between alphanumeric characters
-        query_str_with_case = f'(?<![a-zA-Z0-9])({query_str_with_case})(?![a-zA-Z0-9])'
+        query_str_with_case = f'{ALPHANUMERIC_LOOKBEHIND}({query_str_with_case}){ALPHANUMERIC_LOOKAHEAD}'
         pmid_score_with_case = perform_single_query(
             query_str_with_case, annotated_abstracts, ignore_case=False, symbol=symbol)
 
