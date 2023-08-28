@@ -486,9 +486,7 @@ def get_genes_in_Nb(nb_intervals):
             qtaro_list = get_qtaro_entries(
                 qtaro_dict, [gene.id for gene in genes_in_interval])
 
-        pubmed_ids = []
-        for gene in genes_in_interval:
-            pubmed_ids.append(get_pubmed_entry(gene.id))
+        pubmed_ids = [get_pubmed_entry(gene.id) for gene in genes_in_interval]
 
         # Construct the data frame
         df = pd.DataFrame({
