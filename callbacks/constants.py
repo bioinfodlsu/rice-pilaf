@@ -13,6 +13,7 @@ class Constants(object):
     ALIGNMENTS = f'{APP_DATA}/alignments'
     OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
+    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
     TEXT_MINING = f'{APP_DATA}/text_mining'
     QTARO = f'{APP_DATA}/qtaro'
 
@@ -45,7 +46,6 @@ class Constants(object):
     ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
     ENRICHMENT_ANALYSIS_MODULES = 'modules'
 
-    TRANSCRIPT_TO_MSU_DICT = f'{ENRICHMENT_ANALYSIS_MAPPING}/transcript-to-msu-id.pickle'
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
 

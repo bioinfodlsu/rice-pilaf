@@ -153,12 +153,14 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
 
     if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules'):
         INPUT_GENES = f'{INPUT_GENES_DIR}/genes.txt'
-        BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY}/{network}/all-genes.txt'
-        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
+        BACKGROUND_GENES = f'{const.NETWORKS_MODULES}/{network}/all-genes.txt'
+        # MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
-        # TODO: Add exception handling
-        subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
-                        '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', INPUT_GENES_DIR])
+        # # TODO: Add exception handling
+        # subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
+        #                 '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', INPUT_GENES_DIR])
+
+        print(INPUT_GENES, BACKGROUND_GENES)
 
     return fetch_enriched_modules(INPUT_GENES_DIR)
 
@@ -179,7 +181,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     Returns:
     - Equivalent MSU accessions of the KEGG transcript IDs
     """
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.TRANSCRIPT_TO_MSU_DICT}', 'rb') as f:
+    with open(f'{const.GENE_ID_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
@@ -193,7 +195,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
 
 
 def get_genes_in_module(module_idx, network, algo, parameters):
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
+    with open(f'{const.NETWORKS_MODULES}/{network}/transcript/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         for idx, module in enumerate(f):
             if idx + 1 == int(module_idx):
                 return set(module.split('\t'))
@@ -510,7 +512,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
         if not path_exists(coexpress_nw):
             NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
-            MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv'
+            MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
             convert_modules_to_edgelist(
                 NETWORK_FILE, MODULE_FILE, module_idx, OUTPUT_DIR)
@@ -535,7 +537,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
 
 def count_modules(network, algo, parameters):
-    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+    with open(f'{const.NETWORKS_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         return len(f.readlines())
 
 
@@ -551,7 +553,7 @@ def get_noun_for_active_tab(active_tab):
 
 
 def count_genes_in_module(implicated_genes, module_idx, network, algo, parameters):
-    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
+    with open(f'{const.NETWORKS_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
         for idx, module in enumerate(modules):
             if idx == module_idx - 1:
                 module_genes = module.strip().split('\t')
