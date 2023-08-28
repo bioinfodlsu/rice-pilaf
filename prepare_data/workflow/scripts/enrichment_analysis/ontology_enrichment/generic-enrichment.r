@@ -32,7 +32,8 @@ go <- enricher(
         sep = "\t", stringsAsFactors = FALSE
     ),
     minGSSize = 2,
-    maxGSSize = 100000
+    maxGSSize = 100000,
+    pAdjustMethod = "none"
 )
 
 if (!dir.exists(paste0(opt$output_dir, "/enriched_modules"))) {
