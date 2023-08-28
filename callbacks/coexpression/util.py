@@ -4,7 +4,6 @@ from ..general_util import *
 from ..links_util import *
 import os
 import pickle
-import subprocess
 
 import pandas as pd
 import networkx as nx
@@ -57,8 +56,8 @@ def get_parameters_for_algo(algo, network='OS-CX'):
     - User-facing parameters for the module detection algorithms
     """
     param_dict = {}
-    parameters = sorted(map(int, os.listdir(
-        f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes')))
+    parameters = sorted(
+        map(int, os.listdir(f'{const.NETWORKS_MODULES}/{network}/MSU/{algo}')))
 
     # Display the user-facing parameters for the module detection algorithms
     for idx, parameter in enumerate(parameters):
@@ -154,6 +153,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules'):
         INPUT_GENES = f'{INPUT_GENES_DIR}/genes.txt'
         BACKGROUND_GENES = f'{const.NETWORKS_MODULES}/{network}/all-genes.txt'
+        f'{const.NETWORKS_MODULES}/{network}/'
         # MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
 
         # # TODO: Add exception handling
