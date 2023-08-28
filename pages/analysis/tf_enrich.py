@@ -123,7 +123,7 @@ layout = html.Div(
                         sort_action='native',
                         filter_action='native',
                         filter_options={'case': 'insensitive',
-                                        'placeholder_text': '🔎 Search Column'},
+                                        'placeholder_text': '🔎︎ Search Column'},
                         page_action='native',
                         page_size=15,
                         cell_selectable=False
