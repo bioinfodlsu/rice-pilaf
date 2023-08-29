@@ -36,11 +36,8 @@ NO_REFS_COLUMNS = ['OGI']
 
 
 def construct_options_other_ref_genomes():
-    other_refs = []
-    for symbol, name in other_ref_genomes.items():
-        other_refs.append({'value': symbol, 'label': f'{symbol} ({name})'})
-
-    return other_refs
+    return [
+        {'value': symbol, 'label': f'{symbol} ({name})'} for symbol, name in other_ref_genomes.items()]
 
 
 def create_empty_df_nb():
@@ -292,9 +289,7 @@ def get_ogi_list(accession_ids, ogi_mapping):
     Returns:
     - list of equivalent OGIs of given accessions
     """
-    ogi_list = []
-    for accession_id in accession_ids:
-        ogi_list.append(ogi_mapping[accession_id])
+    ogi_list = [ogi_mapping[accession_id] for accession_id in accession_ids]
 
     return ogi_list
 
@@ -418,11 +413,7 @@ def get_qtaro_entry(mapping, gene):
 
 
 def get_qtaro_entries(mapping, genes):
-    entries = []
-    for gene in genes:
-        entries.append(get_qtaro_entry(mapping, gene))
-
-    return entries
+    return [get_qtaro_entry(mapping, gene) for gene in genes]
 
 
 def get_pubmed_entry(gene):
@@ -486,9 +477,7 @@ def get_genes_in_Nb(nb_intervals):
             qtaro_list = get_qtaro_entries(
                 qtaro_dict, [gene.id for gene in genes_in_interval])
 
-        pubmed_ids = []
-        for gene in genes_in_interval:
-            pubmed_ids.append(get_pubmed_entry(gene.id))
+        pubmed_ids = [get_pubmed_entry(gene.id) for gene in genes_in_interval]
 
         # Construct the data frame
         df = pd.DataFrame({

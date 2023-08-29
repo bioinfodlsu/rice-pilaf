@@ -1,3 +1,40 @@
+# ===========
+# CORE LOGIC
+# ===========
+
+# Go through each symbol associated with gene
+# We use the word "symbol" to refer to the different accession IDs and gene symbols.
+
+# - The symbol should not be "sandwiched" between alphanumeric characters
+#   - This is to disambiguate PK1 from PK12
+#   - This is also so that PK1 in (PK1) can still be matched
+
+# - The symbol should not be after sp. or spp. (or their variants w/o periods)
+#   - This is to disambiguate gene symbols from taxonomic nomenclature
+
+# - If the symbol has 2 letters only, make matching case-sensitive
+#   - This is to disambiguate go from GO
+#   - Otherwise, make matching case-insensitive
+
+# - If the symbol is an English word, make matching case-sensitive
+#   - This is to disambiguate coin from COIN (cold inducible zinc finger protein)
+#   - We are using the English word corpus from the NLTK
+
+# - We have to replace some symbols for better disambiguation (based on a manually compiled list)
+#   - For now, the only entry is tips. It yielded a lot of false matches with root tips etc.
+#   - So we replace tips with TIPS and TIPs
+
+# - We have to exclude some symbols under certain contexts (based on a manually compiled list)
+#   - For example, PS is a symbol for some pistilloid-stamen gene.
+#     However, PS is more commonly used in literature as an abbreviation for photosystem
+#   - Another case is LOG, which is a symbol for lonely guy gene, but can often appear in the context of log <sub>2</sub>
+#   - Our disambiguation strategy is as follows:
+#     - Let x be the symbol of interest. It should be excluded if it stands for or refers to y.
+#     - Let S be the set of symbols for that gene. Let S' = S \ {x} .
+#     - If a PubMed article has a match in S', then it is included
+#     - If a PubMed article matches x  but the article also contains y, then it is excluded
+#     - If a PubMed article matches x and the article does not contain y, then it is included
+
 from nltk.corpus import words
 import pandas as pd
 import os

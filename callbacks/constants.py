@@ -13,6 +13,7 @@ class Constants(object):
     ALIGNMENTS = f'{APP_DATA}/alignments'
     OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
+    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
     TEXT_MINING = f'{APP_DATA}/text_mining'
     QTARO = f'{APP_DATA}/qtaro'
 
@@ -23,8 +24,7 @@ class Constants(object):
     QTARO_DICTIONARY = f'{QTARO}/qtaro.pickle'
 
     NETWORKS = f'{APP_DATA}/networks'
-    NETWORKS_DISPLAY = f'{APP_DATA}/networks_display'
-    NETWORKS_MODULES = f'{APP_DATA}/networks_modules'
+    NETWORK_MODULES = f'{APP_DATA}/network_modules'
 
     TEMP = f'{DATA}/temp'
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
@@ -39,18 +39,18 @@ class Constants(object):
 
     DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
     ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
-    ORA_ENRICHMENT_ANALYSIS_PROGRAM = f'{ENRICHMENT_ANALYSIS_SCRIPTS}/ontology_enrichment/generic-enrichment.r'
 
     ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
     ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
     ENRICHMENT_ANALYSIS_MODULES = 'modules'
 
-    TRANSCRIPT_TO_MSU_DICT = f'{ENRICHMENT_ANALYSIS_MAPPING}/transcript-to-msu-id.pickle'
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
 
     TEXT_MINING_ANNOTATED_ABSTRACTS = f'{TEXT_MINING}/annotated_abstracts.tsv'
     TEXT_MINING_PUBMED = f'{TEXT_MINING}/pubmed_per_gene'
+
+    P_VALUE_CUTOFF = 0.05
 
     def __init__(self):
         pass

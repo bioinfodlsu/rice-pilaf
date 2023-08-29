@@ -169,10 +169,8 @@ def init_callback(app):
                 }
             ]
 
-            display_tracks = []
-            for track in track_info:
-                if selected_tracks and track['name'] in selected_tracks:
-                    display_tracks.append(track)
+            display_tracks = [
+                track for track in track_info if selected_tracks and track['name'] in selected_tracks]
 
             return html.Div([
                 dashbio.Igv(

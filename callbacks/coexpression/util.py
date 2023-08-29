@@ -4,10 +4,11 @@ from ..general_util import *
 from ..links_util import *
 import os
 import pickle
-import subprocess
 
 import pandas as pd
 import networkx as nx
+from scipy.stats import fisher_exact
+import statsmodels.stats.multitest as sm
 
 from collections import namedtuple
 
@@ -42,8 +43,6 @@ enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
 
-P_VALUE_CUTOFF = 0.05
-
 
 def get_parameters_for_algo(algo, network='OS-CX'):
     """
@@ -57,8 +56,8 @@ def get_parameters_for_algo(algo, network='OS-CX'):
     - User-facing parameters for the module detection algorithms
     """
     param_dict = {}
-    parameters = sorted(map(int, os.listdir(
-        f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes')))
+    parameters = sorted(
+        map(int, os.listdir(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}')))
 
     # Display the user-facing parameters for the module detection algorithms
     for idx, parameter in enumerate(parameters):
@@ -118,7 +117,7 @@ def fetch_enriched_modules(output_dir):
     - Enriched modules (i.e., their respectives indices and adjust p-values)
     """
     modules = []
-    with open(f'{output_dir}/enriched_modules/ora-df.tsv') as modules_file:
+    with open(f'{output_dir}/enriched_modules.tsv') as modules_file:
         # Ignore header
         next(modules_file)
 
@@ -151,16 +150,69 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     INPUT_GENES_DIR = write_genes_to_file(
         genes, genomic_intervals, addl_genes, network, algo, parameters)
 
-    if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules'):
-        INPUT_GENES = f'{INPUT_GENES_DIR}/genes.txt'
-        BACKGROUND_GENES = f'{const.NETWORKS_DISPLAY}/{network}/all-genes.txt'
-        MODULE_TO_GENE_MAPPING = f'{const.NETWORKS_DISPLAY}/{network}/{algo}/modules_to_genes/{parameters}/modules-to-genes.tsv'
+    if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules.tsv'):
+        IMPLICATED_GENES_PATH = f'{INPUT_GENES_DIR}/genes.txt'
+        MODULES_PATH = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
-        # TODO: Add exception handling
-        subprocess.run(['Rscript', '--vanilla', const.ORA_ENRICHMENT_ANALYSIS_PROGRAM, '-g', INPUT_GENES,
-                        '-b', BACKGROUND_GENES, '-m', MODULE_TO_GENE_MAPPING, '-o', INPUT_GENES_DIR])
+        # ====================================================================================
+        # This replicates the logic of running the universal enrichment function `enricher()`
+        # provided by clusterProfiler
+        # ====================================================================================
+        with open(IMPLICATED_GENES_PATH) as implicated_genes_file, open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
+            background_genes = set()
+            for line in modules_file:
+                background_genes = background_genes.union(
+                    set(line.strip().split('\t')))
+
+            for line in implicated_genes_file:
+                line = line.strip().split('\t')
+                implicated_genes = set(line)
+
+            p_values_indices = []
+            p_values = []
+            modules_file.seek(0)
+            for idx, line in enumerate(modules_file):
+                module = line.strip().split('\t')
+                module_genes = set(module)
+                table = construct_contigency_table(
+                    background_genes, implicated_genes, module_genes)
+
+                p_value = fisher_exact(table, alternative='greater').pvalue
+                if not (0.999999999 < p_value and p_value < 1.000000001):
+                    p_values.append(p_value)
+                    p_values_indices.append(idx + 1)
+
+            _, adj_p_values, _, _ = sm.multipletests(
+                p_values, method='fdr_bh')
+            significant_adj_p_values = [(p_values_indices[idx], adj_p_value) for idx, adj_p_value in enumerate(
+                adj_p_values) if adj_p_value < const.P_VALUE_CUTOFF]
+            significant_adj_p_values.sort(key=lambda x: x[1])
+            significant_adj_p_values = [
+                f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
+
+            enriched_modules_file.write(f'ID\tp.adjust\n')
+            enriched_modules_file.write('\n'.join(significant_adj_p_values))
 
     return fetch_enriched_modules(INPUT_GENES_DIR)
+
+
+def construct_contigency_table(background_genes, implicated_genes, module_genes):
+    not_in_implicated = background_genes.difference(implicated_genes)
+    not_in_module = background_genes.difference(module_genes)
+
+    in_implicated_in_module = len(implicated_genes.intersection(module_genes))
+    in_implicated_not_in_module = len(
+        implicated_genes.intersection(not_in_module))
+
+    not_in_implicated_in_module = len(
+        not_in_implicated.intersection(module_genes))
+    not_in_implicated_not_in_module = len(
+        not_in_implicated.intersection(not_in_module))
+
+    table = [[in_implicated_in_module, not_in_implicated_in_module],
+             [in_implicated_not_in_module, not_in_implicated_not_in_module]]
+
+    return table
 
 
 # ===============================================================================================
@@ -179,7 +231,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     Returns:
     - Equivalent MSU accessions of the KEGG transcript IDs
     """
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.TRANSCRIPT_TO_MSU_DICT}', 'rb') as f:
+    with open(f'{const.GENE_ID_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
@@ -193,7 +245,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
 
 
 def get_genes_in_module(module_idx, network, algo, parameters):
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.ENRICHMENT_ANALYSIS_MODULES}/{algo}/{parameters}/transcript/{algo}-module-list.tsv') as f:
+    with open(f'{const.NETWORK_MODULES}/{network}/transcript/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         for idx, module in enumerate(f):
             if idx + 1 == int(module_idx):
                 return set(module.split('\t'))
@@ -322,7 +374,7 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
+    result = result.loc[result['Adj. Combined p-value'] < const.P_VALUE_CUTOFF]
 
     # IMPORTANT: Do not change ordering of instructions
 
@@ -358,7 +410,7 @@ def convert_to_df_spia(result, network):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value'] < P_VALUE_CUTOFF]
+    result = result.loc[result['Adj. Combined p-value'] < const.P_VALUE_CUTOFF]
 
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']
@@ -510,7 +562,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
         if not path_exists(coexpress_nw):
             NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
-            MODULE_FILE = f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv'
+            MODULE_FILE = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
             convert_modules_to_edgelist(
                 NETWORK_FILE, MODULE_FILE, module_idx, OUTPUT_DIR)
@@ -535,7 +587,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
 
 def count_modules(network, algo, parameters):
-    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+    with open(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         return len(f.readlines())
 
 
@@ -551,7 +603,7 @@ def get_noun_for_active_tab(active_tab):
 
 
 def count_genes_in_module(implicated_genes, module_idx, network, algo, parameters):
-    with open(f'{const.NETWORKS_MODULES}/{network}/module_list/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
+    with open(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
         for idx, module in enumerate(modules):
             if idx == module_idx - 1:
                 module_genes = module.strip().split('\t')

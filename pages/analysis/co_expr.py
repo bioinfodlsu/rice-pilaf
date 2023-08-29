@@ -2,7 +2,6 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
-from callbacks.branch import *
 
 
 const = Constants()
@@ -162,20 +161,6 @@ layout = html.Div(
 
             html.Br(),
 
-            dbc.Label([
-                html.Span(
-                    'Running COACH on RCRN is temporarily unavailable in this demo version. Install the '),
-                dcc.Link([
-                    'app ',
-                    html.I(
-                        className='fa-solid fa-up-right-from-square fa-2xs')
-                ],
-                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
-                    target='_blank',
-                    className='link-muted'),
-                html.Span(' to use it.')
-            ], hidden=(not is_in_demo_branch()), className='small text-muted'),
-
             dbc.RadioItems(
                 id='coexpression-clustering-algo',
                 options=[
@@ -313,7 +298,7 @@ layout = html.Div(
                                         sort_action='native',
                                         filter_action='native',
                                         filter_options={'case': 'insensitive',
-                                                        'placeholder_text': 'Search column'},
+                                                        'placeholder_text': '🔎︎ Search Column'},
                                         page_action='native',
                                         page_size=15,
                                         cell_selectable=False
