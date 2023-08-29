@@ -118,9 +118,6 @@ def fetch_enriched_modules(output_dir):
     """
     modules = []
     with open(f'{output_dir}/enriched_modules.tsv') as modules_file:
-        # Ignore header
-        next(modules_file)
-
         for line in modules_file:
             line = line.rstrip().split('\t')
             idx = line[0]
@@ -190,7 +187,6 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
             significant_adj_p_values = [
                 f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
 
-            enriched_modules_file.write(f'ID\tp.adjust\n')
             enriched_modules_file.write('\n'.join(significant_adj_p_values))
 
     return fetch_enriched_modules(INPUT_GENES_DIR)
