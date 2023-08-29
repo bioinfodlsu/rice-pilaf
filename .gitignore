@@ -189,6 +189,7 @@ scratch/
 scratch.ipynb
 scratch.py
 *dummy*
+generic-enrichment.r
 
 # Scripts for bulk processing
 *-bulk.*
