@@ -238,7 +238,11 @@ layout = html.Div(
 
                                 html.Div([
                                     html.Span(id='coexpression-graph-stats')
-                                ], className='mb-4 stats'),
+                                ], className='mb-3 stats'),
+
+                                html.P(
+                                    'Click on the tabs below to see the ontology terms and pathways in which the module is enriched.',
+                                    className='mb-4'),
 
                                 dbc.Tabs(
                                     id='coexpression-modules-pathway',
