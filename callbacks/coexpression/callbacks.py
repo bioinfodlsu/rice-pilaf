@@ -457,6 +457,9 @@ def init_callback(app):
         if coexpression_is_submitted:
             if not genes:
                 genes = 'None'
+            else:
+                genes = '; '.join(
+                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
 
             return [html.B('Additional Genes: '), genes,
                     html.Br(),
