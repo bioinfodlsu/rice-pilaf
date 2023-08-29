@@ -190,27 +190,33 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
         # provided by clusterProfiler
         # ====================================================================================
         with open(IMPLICATED_GENES_PATH) as implicated_genes_file, open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
-            background_genes = set()
-            for line in modules_file:
-                background_genes = background_genes.union(
-                    set(line.strip().split('\t')))
-
+            # There is only a single line, which lists all the implicated genes
             for line in implicated_genes_file:
                 line = line.strip().split('\t')
                 implicated_genes = set(line)
+
+            modules = []
+            background_genes = set()
+            for idx, line in enumerate(modules_file):
+                module_genes = set(line.strip().split('\t'))
+                background_genes = background_genes.union(module_genes)
+                if implicated_genes.intersection(module_genes):
+                    modules.append(idx)
 
             p_values_indices = []
             p_values = []
             modules_file.seek(0)
             for idx, line in enumerate(modules_file):
-                module = line.strip().split('\t')
-                module_genes = set(module)
-                table = construct_contigency_table(
-                    background_genes, implicated_genes, module_genes)
+                if idx in modules:
+                    module = line.strip().split('\t')
+                    module_genes = set(module)
+                    table = construct_contigency_table(
+                        background_genes, implicated_genes, module_genes)
 
-                p_value = fisher_exact(table, alternative='greater').pvalue
-                if not (0.999999999 < p_value and p_value < 1.000000001):
-                    p_values.append(p_value)
+                    p_values.append(fisher_exact(
+                        table, alternative='greater').pvalue)
+
+                    # Add 1 since user-facing module number is one-based
                     p_values_indices.append(idx + 1)
 
             _, adj_p_values, _, _ = sm.multipletests(
