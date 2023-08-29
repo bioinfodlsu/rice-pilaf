@@ -104,18 +104,6 @@ def init_callback(app):
         return get_parameters_for_algo(algo), module_detection_algos[algo].default_param * module_detection_algos[algo].multiplier
 
     @app.callback(
-        Output('coexpression-clustering-algo', 'options'),
-        Input('coexpression-network', 'value'),
-        State('coexpression-clustering-algo', 'options')
-    )
-    def set_visibility_clustering_algo(network, algo_options):
-        for option in algo_options:
-            if option['value'] == 'coach':
-                option['disabled'] = is_in_demo_branch() and network == 'RCRN'
-
-        return algo_options
-
-    @app.callback(
         Output('coexpression-module-graph', 'elements'),
         Output('coexpression-module-graph', 'layout'),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
@@ -468,7 +456,7 @@ def init_callback(app):
     def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, clustering_algo, slider_value):
         if coexpression_is_submitted:
             return [genes, html.Br(), network, html.Br(), clustering_algo, html.Br(), slider_value]
-        
+
         raise PreventUpdate
 
     @app.callback(
