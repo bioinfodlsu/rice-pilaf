@@ -34,6 +34,21 @@ module_detection_algos = {
         100, 0.05, '1 (Loose Modules)', '4 (Cohesive Modules)'),
 }
 
+
+MODULE_DETECTION_ALGOS_VALUE_LABEL = [
+    {'value': 'clusterone', 'label': 'ClusterONE',
+     'label_id': 'clusterone'},
+    {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
+    {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
+    {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
+]
+
+COEXPRESSION_NETWORKS_VALUE_LABEL = [
+    {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
+    {'value': 'RCRN',
+     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
+]
+
 Enrichment_tab = namedtuple('Enrichment_tab', ['enrichment', 'path'])
 enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                    Enrichment_tab('Trait Ontology', 'ontology_enrichment/to'),
@@ -42,6 +57,25 @@ enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
                                   'pathway_enrichment/ora'),
                    Enrichment_tab('Pathway-Express', 'pathway_enrichment/pe'),
                    Enrichment_tab('SPIA', 'pathway_enrichment/spia')]
+
+
+def get_user_facing_parameter(algo, parameter, network='OS-CX'):
+    parameters = sorted(
+        map(int, os.listdir(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}')))
+
+    return parameters.index(parameter) + 1
+
+
+def get_user_facing_algo(algo):
+    for entry in MODULE_DETECTION_ALGOS_VALUE_LABEL:
+        if entry['value'] == algo:
+            return entry['label']
+
+
+def get_user_facing_network(network):
+    for entry in COEXPRESSION_NETWORKS_VALUE_LABEL:
+        if entry['value'] == network:
+            return entry['label']
 
 
 def get_parameters_for_algo(algo, network='OS-CX'):
@@ -118,9 +152,6 @@ def fetch_enriched_modules(output_dir):
     """
     modules = []
     with open(f'{output_dir}/enriched_modules.tsv') as modules_file:
-        # Ignore header
-        next(modules_file)
-
         for line in modules_file:
             line = line.rstrip().split('\t')
             idx = line[0]
@@ -190,7 +221,6 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
             significant_adj_p_values = [
                 f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
 
-            enriched_modules_file.write(f'ID\tp.adjust\n')
             enriched_modules_file.write('\n'.join(significant_adj_p_values))
 
     return fetch_enriched_modules(INPUT_GENES_DIR)

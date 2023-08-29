@@ -238,9 +238,9 @@ def init_callback(app):
 
                 num_enriched = get_num_unique_entries(table, 'ID')
                 if num_enriched == 1:
-                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).singular} were found to be enriched.'
+                    stats = f'This module is enriched in {num_enriched} {get_noun_for_active_tab(active_tab).singular}.'
                 else:
-                    stats = f'{num_enriched} {get_noun_for_active_tab(active_tab).plural} were found to be enriched.'
+                    stats = f'This module is enriched in {num_enriched} {get_noun_for_active_tab(active_tab).plural}.'
 
                 graph_stats = 'The selected module has '
                 try:
@@ -446,16 +446,30 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coepxression-input', 'children'),
+        Output('coexpression-input', 'children'),
         Input('coexpression-is-submitted', 'data'),
         State('coexpression-addl-genes', 'value'),
         State('coexpression-network', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'value')
     )
-    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, clustering_algo, slider_value):
+    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, parameters):
         if coexpression_is_submitted:
-            return [genes, html.Br(), network, html.Br(), clustering_algo, html.Br(), slider_value]
+            if not genes:
+                genes = 'None'
+            else:
+                genes = '; '.join(
+                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
+
+            return [html.B('Additional Genes: '), genes,
+                    html.Br(),
+                    html.B('Selected Co-Expression Network: '), get_user_facing_network(
+                        network),
+                    html.Br(),
+                    html.B('Selected Module Detection Algorithm: '), get_user_facing_algo(
+                        algo),
+                    html.Br(),
+                    html.B('Selected Algorithm Parameter: '), get_user_facing_parameter(algo, parameters)]
 
         raise PreventUpdate
 

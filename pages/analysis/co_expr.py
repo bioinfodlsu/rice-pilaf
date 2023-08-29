@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
+from callbacks.coexpression.util import *
 
 
 const = Constants()
@@ -138,11 +139,7 @@ layout = html.Div(
 
             dbc.RadioItems(
                 id='coexpression-network',
-                options=[
-                    {'value': 'OS-CX', 'label': 'RiceNet v2', 'label_id': 'os-cx'},
-                    {'value': 'RCRN',
-                     'label': 'Rice Combined Mutual Ranked Network (RCRN)', 'label_id': 'rcrn'},
-                ],
+                options=COEXPRESSION_NETWORKS_VALUE_LABEL,
                 value='OS-CX',
                 inline=True,
                 className='ms-3 mt-1'
@@ -163,13 +160,7 @@ layout = html.Div(
 
             dbc.RadioItems(
                 id='coexpression-clustering-algo',
-                options=[
-                    {'value': 'clusterone', 'label': 'ClusterONE',
-                     'label_id': 'clusterone'},
-                    {'value': 'coach', 'label': 'COACH', 'label_id': 'coach'},
-                    {'value': 'demon', 'label': 'DEMON', 'label_id': 'demon'},
-                    {'value': 'fox', 'label': 'FOX', 'label_id': 'fox'}
-                ],
+                options=MODULE_DETECTION_ALGOS_VALUE_LABEL,
                 value='clusterone',
                 inline=True,
                 className='ms-3 mt-1'
@@ -210,11 +201,15 @@ layout = html.Div(
                     id='coexpression-loading',
                     children=[
                         html.Hr(className='mt-3 mb-3'),
+
                         html.Br(),
 
                         html.Div(
-                            id='coepxression-input'
+                            id='coexpression-input',
+                            className='analysis-intro p-3'
                         ),
+
+                        html.Br(),
 
                         html.Div([
                             html.Div([
@@ -243,7 +238,11 @@ layout = html.Div(
 
                                 html.Div([
                                     html.Span(id='coexpression-graph-stats')
-                                ], className='mb-4 stats'),
+                                ], className='mb-3 stats'),
+
+                                html.P(
+                                    'Click on the tabs below to see the ontology terms and pathways in which the module is enriched.',
+                                    className='mb-4'),
 
                                 dbc.Tabs(
                                     id='coexpression-modules-pathway',
