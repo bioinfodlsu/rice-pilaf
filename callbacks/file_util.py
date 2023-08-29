@@ -39,7 +39,7 @@ def convert_text_to_path(text):
     - Well-formed path
     """
     return text.strip().replace(
-        ":", "_").replace(";", "__").replace("-", "_").replace('.', '_')
+        ":", "_").replace(";", "__").replace("-", "_").replace('.', '_').replace(' ', '')
 
 
 def get_path_to_temp(genomic_interval, analysis_type, *args):
