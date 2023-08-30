@@ -116,7 +116,8 @@ def init_callback(app):
                     return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
 
         raise PreventUpdate
-
+    
+    """
     @app.callback(
         Output('homepage-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
@@ -140,6 +141,55 @@ def init_callback(app):
 
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
+        raise PreventUpdate
+    """
+    """
+    @app.callback(
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
+        Input({'type': 'example-genomic-interval',
+              'description': ALL}, 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def set_input_fields(example_genomic_interval_n_clicks):
+        if ctx.triggered_id and not all(val == 0 for val in example_genomic_interval_n_clicks):
+            return get_example_genomic_interval(ctx.triggered_id['description'])
+
+        raise PreventUpdate
+
+    """
+    @app.callback(
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
+        Input({'type': 'example-genomic-interval',
+              'description': ALL}, 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def set_input_fields_with_preset_input(example_genomic_interval_n_clicks):
+        if ctx.triggered_id and not all(val == 0 for val in example_genomic_interval_n_clicks):
+            return get_example_genomic_interval(ctx.triggered_id['description'])
+
+        raise PreventUpdate
+    
+    @app.callback(
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
+        Input('homepage-genomic-intervals', 'value'),
+        prevent_initial_call=True
+    )
+    def set_input_fields(genomic_intervals):
+        return genomic_intervals
+
+    @app.callback(
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
+        Input('homepage-reset', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def clear_input_fields(reset_n_clicks):
+        if reset_n_clicks >= 1:
+            return None
+        
         raise PreventUpdate
 
     @app.callback(
