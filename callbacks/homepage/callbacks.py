@@ -58,6 +58,7 @@ def init_callback(app):
         State('homepage-genomic-intervals', 'value'),
 
         Input('homepage-submit', 'n_clicks'),
+        Input('homepage-genomic-intervals', 'n_submit'),
         State('session-container', 'children'),
 
         Input('homepage-reset', 'n_clicks'),
@@ -65,7 +66,7 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def parse_input(nb_intervals_str, n_clicks, dccStore_children, *_):
+    def parse_input(nb_intervals_str, n_clicks, n_submit, dccStore_children, *_):
         if 'homepage-clear-cache' == ctx.triggered_id:
             clear_cache_folder()
 
@@ -75,7 +76,7 @@ def init_callback(app):
 
             return dccStore_children, None, {'display': 'none'}, False, ''
 
-        if 'homepage-submit' == ctx.triggered_id and n_clicks >= 1:
+        if n_submit >= 1 or ('homepage-submit' == ctx.triggered_id and n_clicks >= 1):
             if nb_intervals_str:
                 intervals = lift_over_util.get_genomic_intervals_from_input(
                     nb_intervals_str)
