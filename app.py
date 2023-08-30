@@ -208,15 +208,15 @@ app.layout = lambda: dbc.Container([
                 id='coexpression-is-submitted',
                 storage_type='session'
             ),
+            
+            # ==============================
+            # Regulatory Feature Enrichment
+            # ==============================
 
             dcc.Store(
                 id='tfbs-saved-input',
                 storage_type='session'
             ),
-
-            # ==============================
-            # Regulatory Feature Enrichment
-            # ==============================
 
             dcc.Store(
                 id='tfbs-submitted-input',
