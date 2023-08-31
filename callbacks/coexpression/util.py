@@ -108,7 +108,7 @@ def get_parameters_for_algo(algo, network='OS-CX'):
 # =================================================
 
 
-def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, parameters):
+def create_module_enrichment_results_dir(genomic_intervals, addl_genes, network, algo, parameters):
     """
     Writes the accessions of the GWAS-implicated genes to a file
 
@@ -131,10 +131,6 @@ def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, par
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)
-
-        with open(f'{temp_output_folder_dir}/genes.txt', 'w') as f:
-            f.write('\t'.join(genes))
-            f.write('\n')
 
     return temp_output_folder_dir
 
@@ -176,24 +172,18 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     Returns:
     - Enriched modules (i.e., their respectives indices and adjust p-values)
     """
-    genes = list(set(implicated_gene_ids))
-    INPUT_GENES_DIR = write_genes_to_file(
-        genes, genomic_intervals, addl_genes, network, algo, parameters)
+    implicated_genes = set(implicated_gene_ids)
+    INPUT_GENES_DIR = create_module_enrichment_results_dir(
+        genomic_intervals, addl_genes, network, algo, parameters)
 
     if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules.tsv'):
-        IMPLICATED_GENES_PATH = f'{INPUT_GENES_DIR}/genes.txt'
         MODULES_PATH = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
         # ====================================================================================
         # This replicates the logic of running the universal enrichment function `enricher()`
         # provided by clusterProfiler
         # ====================================================================================
-        with open(IMPLICATED_GENES_PATH) as implicated_genes_file, open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
-            # There is only a single line, which lists all the implicated genes
-            for line in implicated_genes_file:
-                line = line.strip().split('\t')
-                implicated_genes = set(line)
-
+        with open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
             modules = []
             background_genes = set()
             for idx, line in enumerate(modules_file):
