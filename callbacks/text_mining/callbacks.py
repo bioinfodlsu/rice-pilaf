@@ -5,11 +5,6 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 
-
-Text_mining_input = namedtuple(
-    'Text_mining_input', ['text_mining_query'])
-
-
 def init_callback(app):
 
     # to display user input interval in the top nav
@@ -30,19 +25,25 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
-        State('text-mining-query', 'value'),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
     )
-    def set_input_fields(query_string, *_):
-        if ctx.triggered_id:
-            if 'text-mining-query' == ctx.triggered_id:
-                return query_string
-
+    def set_input_fields_with_preset_input(example_text_mining_n_clicks):
+        if ctx.triggered_id and not all(val == 0 for val in example_text_mining_n_clicks):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
+    
+
+    @app.callback(
+        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Input('text-mining-query', 'value'),
+        prevent_initial_call=True
+    )
+    def set_input_fields(query_string):
+        return query_string
+
 
     @app.callback(
         Output('text-mining-query', 'value'),
@@ -52,40 +53,41 @@ def init_callback(app):
         return query
 
     @app.callback(
+        Output('text-mining-input-error', 'style'),
+        Output('text-mining-input-error', 'children'),
+
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
         Output('text-mining-query-submitted-input',
                'data', allow_duplicate=True),
         Input('text-mining-submit', 'n_clicks'),
+        Input('text-mining-query', 'n_submit'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query', 'value'),
         prevent_initial_call=True
     )
-    def submit_text_mining_input(text_mining_submitted_n_clicks, homepage_is_submitted, text_mining_query):
-        if homepage_is_submitted and text_mining_submitted_n_clicks >= 1:
-            submitted_input = Text_mining_input(
-                text_mining_query)._asdict()
-
-            return True, submitted_input
+    def submit_text_mining_input(text_mining_submitted_n_clicks, text_mining_query_n_submit, homepage_is_submitted, text_mining_query):
+        if homepage_is_submitted and (text_mining_submitted_n_clicks >= 1 or text_mining_query_n_submit >= 1):
+            is_there_error, message = is_error(text_mining_query)
+            
+            if not is_there_error:
+                return {'display': 'none'}, message, True, text_mining_query
+            else:
+                return {'display': 'block'}, message, False, None
 
         raise PreventUpdate
 
+    
     @app.callback(
         Output('text-mining-results-container', 'style'),
-        Output('text-mining-input-error', 'style'),
-        Output('text-mining-input-error', 'children'),
-
-        State('text-mining-query', 'value'),
         Input('text-mining-is-submitted', 'data')
     )
-    def display_text_mining_output(text_mining_query, text_mining_is_submitted):
-        is_there_error, message = is_error(text_mining_query)
+    def display_coexpression_output(text_mining_is_submitted):
         if text_mining_is_submitted:
-            if not is_there_error:
-                return {'display': 'block'}, {'display': 'none'}, message
-            else:
-                return {'display': 'none'}, {'display': 'block'}, message
+            return {'display': 'block'}
 
-        return {'display': 'none'}, {'display': 'none'}, message
+        else:
+            return {'display': 'none'}
+
 
     @app.callback(
         Output('text-mining-result-table', 'data'),
@@ -98,7 +100,7 @@ def init_callback(app):
     )
     def display_text_mining_results(text_mining_is_submitted, homepage_submitted, text_mining_query_submitted_input):
         if homepage_submitted and text_mining_is_submitted:
-            query_string = text_mining_query_submitted_input['text_mining_query']
+            query_string = text_mining_query_submitted_input
 
             is_there_error, _ = is_error(query_string)
             if not is_there_error:

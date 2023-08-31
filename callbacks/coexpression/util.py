@@ -7,8 +7,7 @@ import pickle
 
 import pandas as pd
 import networkx as nx
-from scipy.stats import fisher_exact
-import statsmodels.stats.multitest as sm
+from scipy.stats import fisher_exact, false_discovery_control
 
 from collections import namedtuple
 
@@ -219,8 +218,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
                     # Add 1 since user-facing module number is one-based
                     p_values_indices.append(idx + 1)
 
-            _, adj_p_values, _, _ = sm.multipletests(
-                p_values, method='fdr_bh')
+            adj_p_values = false_discovery_control(p_values, method='bh')
             significant_adj_p_values = [(p_values_indices[idx], adj_p_value) for idx, adj_p_value in enumerate(
                 adj_p_values) if adj_p_value < const.P_VALUE_CUTOFF]
             significant_adj_p_values.sort(key=lambda x: x[1])
