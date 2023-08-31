@@ -25,19 +25,25 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
-        State('text-mining-query', 'value'),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
     )
-    def set_input_fields(query_string, *_):
-        if ctx.triggered_id:
-            if 'text-mining-query' == ctx.triggered_id:
-                return query_string
-
+    def set_input_fields_with_preset_input(example_text_mining_n_clicks):
+        if ctx.triggered_id and not all(val == 0 for val in example_text_mining_n_clicks):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
+    
+
+    @app.callback(
+        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Input('text-mining-query', 'value'),
+        prevent_initial_call=True
+    )
+    def set_input_fields(query_string):
+        return query_string
+
 
     @app.callback(
         Output('text-mining-query', 'value'),
@@ -54,12 +60,13 @@ def init_callback(app):
         Output('text-mining-query-submitted-input',
                'data', allow_duplicate=True),
         Input('text-mining-submit', 'n_clicks'),
+        Input('text-mining-query', 'n_submit'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query', 'value'),
         prevent_initial_call=True
     )
-    def submit_text_mining_input(text_mining_submitted_n_clicks, homepage_is_submitted, text_mining_query):
-        if homepage_is_submitted and text_mining_submitted_n_clicks >= 1:
+    def submit_text_mining_input(text_mining_submitted_n_clicks, text_mining_query_n_submit, homepage_is_submitted, text_mining_query):
+        if homepage_is_submitted and (text_mining_submitted_n_clicks >= 1 or text_mining_query_n_submit >= 1):
             is_there_error, message = is_error(text_mining_query)
             
             if not is_there_error:
