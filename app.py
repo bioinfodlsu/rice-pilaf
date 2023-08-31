@@ -66,13 +66,6 @@ app.layout = lambda: dbc.Container([
 
     dash.page_container,
 
-    # Do NOT place inside session-container.
-    # Otherwise, the input field for genomic interval will be cleared when submitted.
-    dcc.Store(
-        id='homepage-genomic-intervals-saved-input',
-        storage_type='session'
-    ),
-
     # Session storage
     html.Div(
         id='session-container',
@@ -86,6 +79,11 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='homepage-genomic-intervals-saved-input',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='homepage-genomic-intervals-submitted-input',
                 storage_type='session'
             ),
@@ -94,6 +92,8 @@ app.layout = lambda: dbc.Container([
                 id='current-analysis-page-nav',
                 storage_type='session'
             ),
+
+            
 
             # ==========
             # Lift-over

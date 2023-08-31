@@ -14,9 +14,13 @@ def clear_cache_folder():
     if os.path.exists(const.TEMP):
         shutil.rmtree(const.TEMP, ignore_errors=True)
 
-def get_cleared_dccStore_data(dccStore_children):
+def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *arg):
     for i in range(len(dccStore_children)):
-        dccStore_children[i]['props']['data'] = ''
+        dccStore_ID = dccStore_children[i]['props']['id']
+        
+        if not dccStore_ID in arg:
+            dccStore_children[i]['props']['data'] = ''
+
     return dccStore_children
 
 def get_example_genomic_interval(description):
