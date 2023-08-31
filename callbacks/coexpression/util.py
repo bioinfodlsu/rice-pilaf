@@ -175,15 +175,19 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     implicated_genes = set(implicated_gene_ids)
     INPUT_GENES_DIR = create_module_enrichment_results_dir(
         genomic_intervals, addl_genes, network, algo, parameters)
+    ENRICHED_MODULES_PATH = f'{INPUT_GENES_DIR}/enriched_modules.tsv'
 
-    if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules.tsv'):
+    if not path_exists(ENRICHED_MODULES_PATH):
+        ENRICHED_MODULES_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
+            ENRICHED_MODULES_PATH)
         MODULES_PATH = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
         # ====================================================================================
         # This replicates the logic of running the universal enrichment function `enricher()`
         # provided by clusterProfiler
         # ====================================================================================
-        with open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
+
+        with open(MODULES_PATH) as modules_file, open(ENRICHED_MODULES_PATH_WITH_TIMESTAMP, 'w') as enriched_modules_file:
             modules = []
             background_genes = set()
             for idx, line in enumerate(modules_file):
@@ -216,6 +220,12 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
                 f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
 
             enriched_modules_file.write('\n'.join(significant_adj_p_values))
+
+        try:
+            os.replace(ENRICHED_MODULES_PATH_WITH_TIMESTAMP,
+                       ENRICHED_MODULES_PATH)
+        except:
+            pass
 
     return fetch_enriched_modules(INPUT_GENES_DIR)
 
