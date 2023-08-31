@@ -24,13 +24,13 @@ Module_detection_algo = namedtuple('Module_detection_algo', [
                                    'multiplier', 'default_param', 'low', 'high'])
 module_detection_algos = {
     'clusterone': Module_detection_algo(
-        100, 0.3, '1 (Loose Modules)', '4 (Dense Modules)'),
+        100, 0.3, '1 (Looser Modules)', '4 (Denser Modules)'),
     'coach': Module_detection_algo(
-        1000, 0.225, '1 (Fewer Modules)', '4 (More Modules)'),
+        1000, 0.225, '1 (Looser Modules)', '4 (Denser Modules)'),
     'demon': Module_detection_algo(
-        100, 0.25, '1 (Fewer Modules)', '4 (More Modules)'),
+        100, 0.25, '1 (Looser Modules)', '4 (Denser Modules)'),
     'fox': Module_detection_algo(
-        100, 0.05, '1 (Loose Modules)', '4 (Cohesive Modules)'),
+        100, 0.05, '1 (Looser Modules)', '4 (Denser Modules)'),
 }
 
 
