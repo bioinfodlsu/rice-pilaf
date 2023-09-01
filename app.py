@@ -268,9 +268,7 @@ try:
     connection = sqlite3.connect(const.FILE_STATUS_DB)
     cursor = connection.cursor()
 
-    query = '''CREATE TABLE file_table (
-            name TEXT,
-            UNIQUE(name));'''
+    query = f'CREATE TABLE IF NOT EXISTS {const.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
 
     cursor.execute(query)
     connection.commit()

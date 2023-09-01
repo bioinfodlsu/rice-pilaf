@@ -78,7 +78,7 @@ def shorten_name(name):
         connection = sqlite3.connect(const.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'INSERT OR IGNORE INTO file_table(name) VALUES("{name}")'
+        query = f'INSERT OR IGNORE INTO {const.FILE_STATUS_TABLE}(name) VALUES("{name}")'
 
         cursor.execute(query)
         connection.commit()
@@ -92,7 +92,7 @@ def shorten_name(name):
         connection = sqlite3.connect(const.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'SELECT rowid FROM file_table WHERE name = "{name}"'
+        query = f'SELECT rowid FROM {const.FILE_STATUS_TABLE} WHERE name = "{name}"'
         cursor.execute(query)
         row_id = cursor.fetchall()[0][0]
 

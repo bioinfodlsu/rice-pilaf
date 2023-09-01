@@ -57,6 +57,7 @@ class Constants(object):
     # =========
 
     FILE_STATUS_DB = f'{TEMP}/file_status.db'
+    FILE_STATUS_TABLE = 'file_status'
 
     def __init__(self):
         pass
