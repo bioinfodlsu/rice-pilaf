@@ -70,7 +70,7 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 html.Hr(className='mt-3 mb-4'),
-                dcc.Loading([
+                dcc.Loading(id='text-mining-loading', children=[
                     html.Div([
                         html.Span(id='text-mining-results-stats')
                     ], className='mb-3 stats'),

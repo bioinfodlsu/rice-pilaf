@@ -1,4 +1,4 @@
-from dash import Input, Output, State, ctx, ALL, html
+from dash import Input, Output, State, ctx, ALL, html, no_update
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -72,7 +72,7 @@ def init_callback(app):
             if not is_there_error:
                 return {'display': 'none'}, message, True, text_mining_query
             else:
-                return {'display': 'block'}, message, False, None
+                return {'display': 'block'}, message, no_update, no_update
 
         raise PreventUpdate
 
@@ -88,15 +88,31 @@ def init_callback(app):
         else:
             return {'display': 'none'}
 
+    @app.callback(
+        Output('text-mining-submit', 'disabled'),
+        Input('text-mining-submit', 'n_clicks'),
+        Input('text-mining-result-table', 'data'),
+    )
+    def trigger(n_clicks, data):
+        context = ctx.triggered_id
+
+        if context == 'text-mining-submit':
+            if n_clicks > 0 :
+                return True
+            else:
+                return False
+        else:
+            return False
+
 
     @app.callback(
         Output('text-mining-result-table', 'data'),
         Output('text-mining-result-table', 'columns'),
         Output('text-mining-results-stats', 'children'),
 
-        Input('text-mining-is-submitted', 'data'),
+        State('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('text-mining-query-submitted-input', 'data')
+        Input('text-mining-query-submitted-input', 'data')
     )
     def display_text_mining_results(text_mining_is_submitted, homepage_submitted, text_mining_query_submitted_input):
         if homepage_submitted and text_mining_is_submitted:
@@ -105,7 +121,7 @@ def init_callback(app):
             is_there_error, _ = is_error(query_string)
             if not is_there_error:
                 text_mining_results_df = text_mining_query_search(query_string)
-
+                
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in text_mining_results_df.columns]
 
