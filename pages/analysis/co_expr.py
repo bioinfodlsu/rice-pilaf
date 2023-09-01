@@ -72,7 +72,7 @@ fox = html.Li([html.B('FOX'),
                target='_blank')],
              className='reference mb-3',
              ),
-    html.Span('RicePilaf uses LazyFox ')
+    html.Span('RicePilaf uses LazyFox for a parallelized implementation of FOX')
 ])
 
 module_detection_algo_modal = dbc.Modal([
