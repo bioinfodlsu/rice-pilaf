@@ -44,7 +44,7 @@ demon = html.Li(
 clusterone = html.Li(
     [html.B('ClusterONE'),
      html.Span(
-        ' Forms cohesive gene subnetworks from an initial set of seed genes. Among the module detection algorithms supported by this app, this is the only algorithm that takes into account the weights associated with the coexpression',
+        ' Forms cohesive gene subnetworks from an initial set of seed genes. ',
         className='algo-desc'),
      html.Div([
          html.Span(
