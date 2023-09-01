@@ -50,11 +50,20 @@ def clear_cache_folder():
         pass
 
 
-def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *arg):
+def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *args):
     for i in range(len(dccStore_children)):
         dccStore_ID = dccStore_children[i]['props']['id']
 
-        if not dccStore_ID in arg:
+        if args:
+            flag = False
+            for arg in args:
+                if arg in dccStore_ID:
+                    flag = True
+                    
+            if not flag:
+                dccStore_children[i]['props']['data'] = ''
+    
+        else:
             dccStore_children[i]['props']['data'] = ''
 
     return dccStore_children
