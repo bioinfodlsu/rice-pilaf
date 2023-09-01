@@ -8,11 +8,12 @@ from ..constants import Constants
 from ..general_util import *
 
 import gffutils
+import pybedtools
 
 const = Constants()
 
 COLUMNS = ['Transcription Factor', 'Family',
-           'p-value', 'Adj. p-value', 'Significant?']
+           'p-value', 'Adj. p-value']#, 'Significant?']
 
 
 def create_empty_df():
@@ -66,13 +67,16 @@ def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
     return filepath
 
 
-def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, tfbs_prediction_technique, tfbs_fdr, nb_interval_str):
-    out_dir = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
+def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
+                              tfbs_set, tfbs_prediction_technique,
+                              nb_interval_str):
+
+    out_dir = get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
+
     # if previously computed
-    if path_exists(f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv'):
+    if path_exists(f'{out_dir}/BH_corrected.csv'):
         results_df = pd.read_csv(
-            f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', dtype=object)
+            f'{out_dir}/BH_corrected.csv', dtype=object)
 
         results_df['Family'] = results_df['Transcription Factor'].apply(
             get_family)
@@ -81,6 +85,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
 
         return results_df
 
+    '''
     # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
     elif path_exists(f'{out_dir}/results_before_multiple_corrections.csv'):
         results_before_multiple_corrections = pd.read_csv(
@@ -96,12 +101,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
         results_df = results_df[COLUMNS]
 
         return results_df
-
+    '''
     make_dir(out_dir)
 
     # construct query BED file
-    out_dir_tf_enrich = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, addl_genes)
+    #out_dir_tf_enrich = get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
         query_bed = write_query_promoter_intervals_to_file(
             lift_over_nb_entire_table, nb_interval_str, addl_genes)
@@ -111,6 +115,10 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
             nb_interval_str, addl_genes)
         sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
 
+    #construct a pybedtool object. we will use pybedtools to compute if there
+    #is any overlap. If no, don't test for significance using mcdp2.
+    query_pybed = pybedtools.BedTool(query_bed)
+
     TF_list = []
     # keep together using a dict? but BH correction needs a separate list of p_values
     pvalue_list = []
@@ -119,25 +127,29 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes, tfbs_set, t
     for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
         # print("computing overlaps for: {}".format(tf))
         ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
+        ref_pybed = pybedtools.BedTool(ref_bed)
+
         out_dir_tf = f'{out_dir}/{tf}'
         make_dir(out_dir_tf)
 
-        p_value = perform_enrichment_specific_tf(
-            ref_bed, query_bed, sizes, out_dir_tf)
+        if query_pybed.intersect(ref_pybed,nonamecheck=True).count() != 0 :
 
-        TF_list.append(tf)
-        pvalue_list.append(p_value)
+            p_value = perform_enrichment_specific_tf(ref_bed, query_bed,
+                                                     sizes, out_dir_tf)
+
+            TF_list.append(tf)
+            pvalue_list.append(p_value)
 
     results_no_adj_df = pd.DataFrame(list((zip(TF_list, pvalue_list))), columns=[
                                      "Transcription Factor", "p-value"])
     results_no_adj_df.to_csv(
         f'{out_dir}/results_before_multiple_corrections.csv', index=False)
 
-    results_df = multiple_testing_correction(results_no_adj_df, tfbs_fdr)
+    results_df = multiple_testing_correction(results_no_adj_df)
     display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
     results_df.to_csv(
-        f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+        f'{out_dir}/BH_corrected.csv', index=False)
 
     results_df['Family'] = results_df['Transcription Factor'].apply(
         get_family)
@@ -160,15 +172,15 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
     return p_value
 
 
-def multiple_testing_correction(single_tf_results, fdr):
+def multiple_testing_correction(single_tf_results):
     pvalues = single_tf_results['p-value'].tolist()
     sig, adj_pvalue, _, _ = sm.multipletests(
-        pvalues, alpha=fdr, method='fdr_bh', is_sorted=False, returnsorted=False)
+        pvalues,  method='fdr_bh', is_sorted=False, returnsorted=False)
     sig = sig.tolist()
     sig = list(map(str, sig))
     adj_pvalue = adj_pvalue.tolist()
     single_tf_results['Adj. p-value'] = adj_pvalue
-    single_tf_results['Significant?'] = sig
+    #single_tf_results['Significant?'] = sig
     single_tf_results.sort_values(by=['p-value'], inplace=True)
     return single_tf_results
 
