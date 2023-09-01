@@ -1,6 +1,9 @@
 import regex as re
 import os
 from .constants import Constants
+
+import time
+
 const = Constants()
 
 
@@ -67,3 +70,7 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
     temp_dir = re.sub(r'/+', '/', temp_dir)
 
     return temp_dir
+
+
+def append_timestamp_to_filename(filename):
+    return f'{filename}.{time.time_ns() // 1000}'
