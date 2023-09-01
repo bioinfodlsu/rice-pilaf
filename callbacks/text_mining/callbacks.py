@@ -1,4 +1,4 @@
-from dash import Input, Output, State, ctx, ALL, html
+from dash import Input, Output, State, ctx, ALL, html, no_update
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -72,7 +72,7 @@ def init_callback(app):
             if not is_there_error:
                 return {'display': 'none'}, message, True, text_mining_query
             else:
-                return {'display': 'block'}, message, False, None
+                return {'display': 'block'}, message, False, no_update
 
         raise PreventUpdate
 
@@ -88,6 +88,25 @@ def init_callback(app):
         else:
             return {'display': 'none'}
 
+    @app.callback(
+        Output('text-mining-submit', 'disabled'),
+        Input('text-mining-submit', 'n_clicks'),
+        Input('text-mining-result-table', 'data'),
+        Input('text-mining-is-submitted', 'data')
+    )
+    def trigger(n_clicks, data, text_mining_is_submitted):
+        if text_mining_is_submitted:
+            context = ctx.triggered_id
+
+            if context == 'text-mining-submit':
+                if n_clicks > 0:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        
+        return False
 
     @app.callback(
         Output('text-mining-result-table', 'data'),

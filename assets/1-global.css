@@ -15,6 +15,8 @@
 
     --link-blue: #6b6bb9;
     --button-red: #dc3545;
+
+    --button-gray-disabled: #cccccc;
 }
   
 html, body {
@@ -25,6 +27,12 @@ html, body {
     width: 11em;
     background-color: var(--green-lighter);
     border-color: var(--green-lighter);
+}
+
+.page-button:disabled {
+    width: 11em;
+    background-color: var(--button-gray-disabled);
+    border-color: var(--button-gray-disabled);
 }
 
 .page-button:hover {
