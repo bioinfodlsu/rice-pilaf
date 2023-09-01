@@ -7,8 +7,7 @@ import pickle
 
 import pandas as pd
 import networkx as nx
-from scipy.stats import fisher_exact
-import statsmodels.stats.multitest as sm
+from scipy.stats import fisher_exact, false_discovery_control
 
 from collections import namedtuple
 
@@ -25,13 +24,13 @@ Module_detection_algo = namedtuple('Module_detection_algo', [
                                    'multiplier', 'default_param', 'low', 'high'])
 module_detection_algos = {
     'clusterone': Module_detection_algo(
-        100, 0.3, '1 (Loose Modules)', '4 (Dense Modules)'),
+        100, 0.3, '1 (Looser Modules)', '4 (Denser Modules)'),
     'coach': Module_detection_algo(
-        1000, 0.225, '1 (Fewer Modules)', '4 (More Modules)'),
+        1000, 0.225, '1 (Looser Modules)', '4 (Denser Modules)'),
     'demon': Module_detection_algo(
-        100, 0.25, '1 (Fewer Modules)', '4 (More Modules)'),
+        100, 0.25, '1 (Looser Modules)', '4 (Denser Modules)'),
     'fox': Module_detection_algo(
-        100, 0.05, '1 (Loose Modules)', '4 (Cohesive Modules)'),
+        100, 0.05, '1 (Looser Modules)', '4 (Denser Modules)'),
 }
 
 
@@ -109,7 +108,7 @@ def get_parameters_for_algo(algo, network='OS-CX'):
 # =================================================
 
 
-def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, parameters):
+def create_module_enrichment_results_dir(genomic_intervals, addl_genes, network, algo, parameters):
     """
     Writes the accessions of the GWAS-implicated genes to a file
 
@@ -125,17 +124,13 @@ def write_genes_to_file(genes, genomic_intervals, addl_genes, network, algo, par
     """
     if addl_genes:
         temp_output_folder_dir = get_path_to_temp(
-            genomic_intervals, const.TEMP_COEXPRESSION, f'{addl_genes}/{network}/{algo}/{parameters}')
+            genomic_intervals, const.TEMP_COEXPRESSION, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
     else:
         temp_output_folder_dir = get_path_to_temp(
             genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)
-
-        with open(f'{temp_output_folder_dir}/genes.txt', 'w') as f:
-            f.write('\t'.join(genes))
-            f.write('\n')
 
     return temp_output_folder_dir
 
@@ -177,24 +172,22 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     Returns:
     - Enriched modules (i.e., their respectives indices and adjust p-values)
     """
-    genes = list(set(implicated_gene_ids))
-    INPUT_GENES_DIR = write_genes_to_file(
-        genes, genomic_intervals, addl_genes, network, algo, parameters)
+    implicated_genes = set(implicated_gene_ids)
+    INPUT_GENES_DIR = create_module_enrichment_results_dir(
+        genomic_intervals, addl_genes, network, algo, parameters)
+    ENRICHED_MODULES_PATH = f'{INPUT_GENES_DIR}/enriched_modules.tsv'
 
-    if not path_exists(f'{INPUT_GENES_DIR}/enriched_modules.tsv'):
-        IMPLICATED_GENES_PATH = f'{INPUT_GENES_DIR}/genes.txt'
+    if not path_exists(ENRICHED_MODULES_PATH):
+        ENRICHED_MODULES_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
+            ENRICHED_MODULES_PATH)
         MODULES_PATH = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
         # ====================================================================================
         # This replicates the logic of running the universal enrichment function `enricher()`
         # provided by clusterProfiler
         # ====================================================================================
-        with open(IMPLICATED_GENES_PATH) as implicated_genes_file, open(MODULES_PATH) as modules_file, open(f'{INPUT_GENES_DIR}/enriched_modules.tsv', 'w') as enriched_modules_file:
-            # There is only a single line, which lists all the implicated genes
-            for line in implicated_genes_file:
-                line = line.strip().split('\t')
-                implicated_genes = set(line)
 
+        with open(MODULES_PATH) as modules_file, open(ENRICHED_MODULES_PATH_WITH_TIMESTAMP, 'w') as enriched_modules_file:
             modules = []
             background_genes = set()
             for idx, line in enumerate(modules_file):
@@ -219,8 +212,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
                     # Add 1 since user-facing module number is one-based
                     p_values_indices.append(idx + 1)
 
-            _, adj_p_values, _, _ = sm.multipletests(
-                p_values, method='fdr_bh')
+            adj_p_values = false_discovery_control(p_values, method='bh')
             significant_adj_p_values = [(p_values_indices[idx], adj_p_value) for idx, adj_p_value in enumerate(
                 adj_p_values) if adj_p_value < const.P_VALUE_CUTOFF]
             significant_adj_p_values.sort(key=lambda x: x[1])
@@ -228,6 +220,12 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
                 f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
 
             enriched_modules_file.write('\n'.join(significant_adj_p_values))
+
+        try:
+            os.replace(ENRICHED_MODULES_PATH_WITH_TIMESTAMP,
+                       ENRICHED_MODULES_PATH)
+        except:
+            pass
 
     return fetch_enriched_modules(INPUT_GENES_DIR)
 

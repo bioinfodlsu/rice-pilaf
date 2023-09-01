@@ -30,6 +30,7 @@ class Constants(object):
     IMPLICATED_GENES = f'{TEMP}/implicated_genes'
     TEMP_IGV = 'igv'
     TEMP_COEXPRESSION = 'co_expression'
+    TEMP_TEXT_MINING = 'text_mining'
 
     TEMP_TFBS = 'tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
@@ -51,6 +52,13 @@ class Constants(object):
     TEXT_MINING_PUBMED = f'{TEXT_MINING}/pubmed_per_gene'
 
     P_VALUE_CUTOFF = 0.05
+
+    # =========
+    # Database
+    # =========
+
+    FILE_STATUS_DB = f'{TEMP}/file_status.db'
+    FILE_STATUS_TABLE = 'file_status'
 
     def __init__(self):
         pass

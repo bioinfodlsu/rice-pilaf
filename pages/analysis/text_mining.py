@@ -37,19 +37,23 @@ layout = html.Div(
             dbc.Input(
                 id='text-mining-query',
                 type='text',
-                value=''
+                value='',
+                debounce=True,
+                n_submit=0
             ),
 
             html.Div([html.Span('Examples:', className='pe-3'),
                       html.Span('pre-harvest sprouting',
                                 id={'type': 'example-text-mining',
                                     'description': 'pre-harvest sprouting'},
-                                className='sample-genomic-interval'),
+                                className='sample-genomic-interval',
+                                n_clicks=0),
                       html.Span(',', className='sample-genomic-interval'),
                       html.Span('anaerobic germination',
                                 id={'type': 'example-text-mining',
                                     'description': 'anaerobic germination'},
-                                className='sample-genomic-interval ms-3')],
+                                className='sample-genomic-interval ms-3',
+                                n_clicks=0)],
                      className='pt-3'),
             html.Br(),
 

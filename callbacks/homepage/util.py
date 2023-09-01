@@ -2,6 +2,9 @@ import os
 import shutil
 from ..style_util import *
 from ..constants import Constants
+from ..file_util import *
+
+import sqlite3
 
 const = Constants()
 
@@ -14,10 +17,48 @@ def clear_cache_folder():
     if os.path.exists(const.TEMP):
         shutil.rmtree(const.TEMP, ignore_errors=True)
 
-def get_cleared_dccStore_data(dccStore_children):
+    # Drop the table
+    try:
+        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        cursor = connection.cursor()
+
+        query = f'DROP TABLE {const.FILE_STATUS_TABLE}'
+
+        cursor.execute(query)
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+    except:
+        pass
+
+    # Recreate the database
+    make_dir(const.TEMP)
+
+    try:
+        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        cursor = connection.cursor()
+
+        query = f'CREATE TABLE IF NOT EXISTS {const.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+
+        cursor.execute(query)
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+    except sqlite3.Error as error:
+        pass
+
+
+def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *arg):
     for i in range(len(dccStore_children)):
-        dccStore_children[i]['props']['data'] = ''
+        dccStore_ID = dccStore_children[i]['props']['id']
+
+        if not dccStore_ID in arg:
+            dccStore_children[i]['props']['data'] = ''
+
     return dccStore_children
+
 
 def get_example_genomic_interval(description):
     return example_genomic_intervals[description]

@@ -1,6 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
+import sqlite3
 
 import pages.navigation.main_nav as main_nav
 
@@ -13,6 +14,8 @@ import callbacks.tf_enrich.callbacks
 import callbacks.text_mining.callbacks
 
 from callbacks.branch import *
+from callbacks.constants import *
+from callbacks.file_util import *
 
 from flask import Flask
 
@@ -66,13 +69,6 @@ app.layout = lambda: dbc.Container([
 
     dash.page_container,
 
-    # Do NOT place inside session-container.
-    # Otherwise, the input field for genomic interval will be cleared when submitted.
-    dcc.Store(
-        id='homepage-genomic-intervals-saved-input',
-        storage_type='session'
-    ),
-
     # Session storage
     html.Div(
         id='session-container',
@@ -86,6 +82,11 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='homepage-genomic-intervals-saved-input',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='homepage-genomic-intervals-submitted-input',
                 storage_type='session'
             ),
@@ -94,6 +95,8 @@ app.layout = lambda: dbc.Container([
                 id='current-analysis-page-nav',
                 storage_type='session'
             ),
+
+
 
             # ==========
             # Lift-over
@@ -209,14 +212,14 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            # ==============================
+            # Regulatory Feature Enrichment
+            # ==============================
+
             dcc.Store(
                 id='tfbs-saved-input',
                 storage_type='session'
             ),
-
-            # ==============================
-            # Regulatory Feature Enrichment
-            # ==============================
 
             dcc.Store(
                 id='tfbs-submitted-input',
@@ -256,6 +259,24 @@ callbacks.browse_loci.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
 callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)
+
+# Create database table
+const = Constants()
+make_dir(const.TEMP)
+
+try:
+    connection = sqlite3.connect(const.FILE_STATUS_DB)
+    cursor = connection.cursor()
+
+    query = f'CREATE TABLE IF NOT EXISTS {const.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+
+    cursor.execute(query)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+except sqlite3.Error as error:
+    pass
 
 if __name__ == '__main__':
     app.run_server(port='8050', debug=True)
