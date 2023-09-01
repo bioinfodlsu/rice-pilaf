@@ -1,9 +1,9 @@
 from dash import Input, Output, State, ctx, ALL, html, no_update
 from dash.exceptions import PreventUpdate
-from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
+
 
 def init_callback(app):
 
@@ -34,7 +34,6 @@ def init_callback(app):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
-    
 
     @app.callback(
         Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
@@ -43,7 +42,6 @@ def init_callback(app):
     )
     def set_input_fields(query_string):
         return query_string
-
 
     @app.callback(
         Output('text-mining-query', 'value'),
@@ -68,7 +66,7 @@ def init_callback(app):
     def submit_text_mining_input(text_mining_submitted_n_clicks, text_mining_query_n_submit, homepage_is_submitted, text_mining_query):
         if homepage_is_submitted and (text_mining_submitted_n_clicks >= 1 or text_mining_query_n_submit >= 1):
             is_there_error, message = is_error(text_mining_query)
-            
+
             if not is_there_error:
                 return {'display': 'none'}, message, True, text_mining_query
             else:
@@ -76,7 +74,6 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    
     @app.callback(
         Output('text-mining-results-container', 'style'),
         Input('text-mining-is-submitted', 'data')
@@ -90,23 +87,18 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-submit', 'disabled'),
-        Input('text-mining-submit', 'n_clicks'),
-        Input('text-mining-result-table', 'data'),
-        Input('text-mining-is-submitted', 'data')
-    )
-    def trigger(n_clicks, data, text_mining_is_submitted):
-        if text_mining_is_submitted:
-            context = ctx.triggered_id
 
-            if context == 'text-mining-submit':
-                if n_clicks > 0:
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        
-        return False
+        Input('text-mining-submit', 'n_clicks'),
+        State('text-mining-query', 'value'),
+        Input('text-mining-result-table', 'data'),
+    )
+    def trigger(n_clicks, text_mining_query, *_):
+        is_there_error, _ = is_error(text_mining_query)
+
+        if is_there_error:
+            return False
+
+        return ctx.triggered_id == 'text-mining-submit' and n_clicks > 0
 
     @app.callback(
         Output('text-mining-result-table', 'data'),
