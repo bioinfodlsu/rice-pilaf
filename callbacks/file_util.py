@@ -73,6 +73,17 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
     return temp_dir
 
 
+def get_path_to_text_mining_temp(analysis_type, *args):
+    analysis_type = convert_text_to_path(analysis_type)
+
+    temp_dir = f'{const.TEMP}/{analysis_type}'
+    for folder in args:
+        temp_dir += f'/{convert_text_to_path(folder)}'
+
+    temp_dir = re.sub(r'/+', '/', temp_dir)
+    
+    return temp_dir
+    
 def shorten_name(name):
     try:
         connection = sqlite3.connect(const.FILE_STATUS_DB)
