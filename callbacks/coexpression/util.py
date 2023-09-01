@@ -124,7 +124,7 @@ def create_module_enrichment_results_dir(genomic_intervals, addl_genes, network,
     """
     if addl_genes:
         temp_output_folder_dir = get_path_to_temp(
-            genomic_intervals, const.TEMP_COEXPRESSION, f'{addl_genes}/{network}/{algo}/{parameters}')
+            genomic_intervals, const.TEMP_COEXPRESSION, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
     else:
         temp_output_folder_dir = get_path_to_temp(
             genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
