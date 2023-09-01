@@ -58,24 +58,41 @@ clusterone = html.Li(
     )],
 )
 
-fox = html.Li(
-    [html.B('FOX'),
-     html.Span(
-        ' Determines the membership of a gene to a subnetwork by counting the number of triangles formed by the gene with other genes in the subnetwork',
-        className='algo-desc'),
-     html.Div([
-         html.Span(
+fox = html.Li([html.B('FOX'),
+               html.Span(
+    ' Determines the membership of a gene to a subnetwork by counting the number of triangles formed by the gene with other genes in the subnetwork',
+    className='algo-desc'),
+    html.Div([
+        html.Span(
              'Lyu, T., Bing, L., Zhang, Z., & Zhang, Y. (2020). FOX: Fast overlapping community detection algorithm in big weighted networks. '),
-         html.I('ACM Transactions on Social Computing, 3'),
-         html.Span('(3), 1–23. '),
-         html.A('https://doi.org/10.1145/3404970',
-                href='https://doi.org/10.1145/3404970',
-                target='_blank')],
-        className='reference'
-    )],
-)
+        html.I('ACM Transactions on Social Computing, 3'),
+        html.Span('(3), 1–23. '),
+        html.A('https://doi.org/10.1145/3404970',
+               href='https://doi.org/10.1145/3404970',
+               target='_blank')],
+             className='reference mb-3',
+             ),
+    html.Span('RicePilaf uses LazyFox ')
+])
 
 module_detection_algo_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Module Detection Algorithms')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'Since genes can possibly be involved in multiple biological functions or processes, the algorithms supported by RicePilaf allow for overlapping modules (that is, a given gene may belong to multiple modules):'),
+        html.Ul([
+            clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
+        ])
+    ])],
+    id='coexpression-clustering-algo-modal',
+    is_open=False,
+    size='xl'
+)
+
+
+coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
         dbc.ModalTitle('Module Detection Algorithms')
     ),
