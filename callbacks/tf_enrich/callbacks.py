@@ -6,7 +6,7 @@ from .util import *
 from ..lift_over import util as lift_over_util
 
 Tfbs_input = namedtuple(
-    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique', 'tfbs_fdr'])
+    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique'])
 
 
 def init_callback(app):
@@ -35,13 +35,12 @@ def init_callback(app):
         State('tfbs-addl-genes', 'value'),
         State('tfbs-set', 'value'),
         State('tfbs-prediction-technique', 'value'),
-        State('tfbs-fdr', 'value'),
         prevent_initial_call=True
     )
-    def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique, tfbs_fdr):
+    def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
         if homepage_is_submitted and tfbs_submitted_n_clicks >= 1:
             submitted_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
+                tfbs_set, tfbs_prediction_technique)._asdict()
 
             return True, submitted_input
 
@@ -76,7 +75,6 @@ def init_callback(app):
         if homepage_submitted and tfbs_is_submitted:
             tfbs_set = tfbs_submitted_input['tfbs_set']
             tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
-            tfbs_fdr = tfbs_submitted_input['tfbs_fdr']
 
             if submitted_addl_genes:
                 submitted_addl_genes = submitted_addl_genes.strip()
@@ -90,7 +88,7 @@ def init_callback(app):
                 get_annotations_addl_gene(list_addl_genes)
 
             enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
-                                                              tfbs_set, tfbs_prediction_technique, float(tfbs_fdr), nb_interval_str)
+                                                              tfbs_set, tfbs_prediction_technique, nb_interval_str)
 
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in enrichment_results_df.columns]
@@ -103,14 +101,13 @@ def init_callback(app):
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
         Input('tfbs-set', 'value'),
         Input('tfbs-prediction-technique', 'value'),
-        Input('tfbs-fdr', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, tfbs_fdr, homepage_is_submitted):
+    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, homepage_is_submitted):
         if homepage_is_submitted:
             tfbs_saved_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique, tfbs_fdr)._asdict()
+                tfbs_set, tfbs_prediction_technique)._asdict()
 
             return tfbs_saved_input
 

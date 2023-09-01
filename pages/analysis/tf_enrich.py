@@ -78,11 +78,6 @@ layout = html.Div(
 
             html.Br(),
 
-            dbc.Label("Input threshold for False-Discovery Rate:"),
-            dbc.Input(id='tfbs-fdr', type='number',
-                      value=0.25, min=0, max=1, step=0.05),
-            html.Br(),
-
             dbc.Button('Run Analysis',
                        id='tfbs-submit',
                        n_clicks=0,
