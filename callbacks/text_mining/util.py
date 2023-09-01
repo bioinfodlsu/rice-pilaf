@@ -4,8 +4,9 @@ from ..general_util import *
 from ..links_util import *
 import regex as re
 import ftfy
+from ..file_util import *
 
-
+const = Constants()
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 
 
@@ -43,6 +44,14 @@ def addl_sanitize_gene(text):
 
 
 def text_mining_query_search(query_string):
+    text_mining_path = get_path_to_text_mining_temp(const.TEMP_TEXT_MINING)
+    make_dir(text_mining_path)
+
+    text_mining_path = f'{text_mining_path}/{query_string}.csv'
+
+    if path_exists(text_mining_path):
+        return pd.read_csv(text_mining_path)
+
     query_string = query_string.strip()
     df = pd.DataFrame(columns=COLNAMES)
     query_regex = re.compile(re.escape(query_string), re.IGNORECASE)
@@ -65,9 +74,11 @@ def text_mining_query_search(query_string):
     df = df.sort_values('Score', ascending=False)
 
     display_cols_in_fixed_dec_places(df, ['Score'])
-
+    
     if len(df.index) == 0:
-        return create_empty_df_with_cols(COLNAMES)
+        df = create_empty_df_with_cols(COLNAMES)
+    
+    df.to_csv(f'{text_mining_path}', index=False)
 
     return df
 
@@ -80,3 +91,4 @@ def is_error(input):
         pass
 
     return False, None
+
