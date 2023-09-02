@@ -39,27 +39,6 @@ def construct_options_other_ref_genomes():
         {'value': symbol, 'label': f'{symbol} ({name})'} for symbol, name in other_ref_genomes.items()]
 
 
-def create_empty_df_nb():
-    """
-    Returns an empty data frame if there are no results
-
-    Returns:
-    - Empty data frame
-    """
-    return create_empty_df_with_cols(NB_COLUMNS)
-
-
-def create_empty_no_refs_df():
-    return create_empty_df_with_cols(NO_REFS_COLUMNS)
-
-
-def create_empty_df_other_refs():
-    return create_empty_df_with_cols(OTHER_REF_COLUMNS)
-
-
-def create_empty_front_facing_df():
-    return create_empty_df_with_cols(FRONT_FACING_COLUMNS)
-
 # =====================================================
 # Utility functions for parsing input genomic interval
 # =====================================================
@@ -438,6 +417,16 @@ def get_pubmed_entry(gene):
     return pubmed_str[:-len('&nbsp;&nbsp;&nbsp;')]
 
 
+def get_nb_ortholog(gene, ref):
+    with open(f'{Constants.NB_MAPPING}/{ref}_to_Nb.pickle', 'rb') as f:
+        mapping = pickle.load(f)
+
+        if mapping[gene]:
+            return ', '.join(mapping[gene])
+
+        return NULL_PLACEHOLDER
+
+
 # ========================
 # Functions for lift-over
 # ========================
@@ -510,12 +499,12 @@ def get_genes_in_Nb(nb_intervals):
         table = table.fillna(NULL_PLACEHOLDER)
 
         if table.shape[0] == 0:
-            return create_empty_df_nb(), table['Name'].values.tolist()
+            return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
 
         return table, table['Name'].values.tolist()
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_nb(), table['Name'].values.tolist()
+        return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
 
 
 def get_genes_in_other_ref(ref, nb_intervals):
@@ -572,12 +561,12 @@ def get_genes_in_other_ref(ref, nb_intervals):
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df_other_refs()
+            return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
 
         return table
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_other_refs()
+        return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
 
 
 def get_common_genes(refs, nb_intervals):
@@ -593,7 +582,7 @@ def get_common_genes(refs, nb_intervals):
     """
     # No cultivars selected
     if not refs:
-        return create_empty_no_refs_df()
+        return create_empty_df_with_cols(NO_REFS_COLUMNS)()
 
     common_genes = None
     for ref in refs:
@@ -678,7 +667,11 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     unique_genes = pd.merge(gene_description_df, unique_genes,
                             left_on='Gene_ID', right_on='Name', how='right')
 
-    unique_genes = unique_genes[FRONT_FACING_COLUMNS]
+    unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
+        lambda x: get_nb_ortholog(x['Name'], ref), axis=1)
+
+    unique_genes = unique_genes[FRONT_FACING_COLUMNS +
+                                ['Ortholog in Nipponbare']]
 
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')
@@ -686,6 +679,6 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     unique_genes = unique_genes.fillna(NULL_PLACEHOLDER)
 
     if unique_genes.shape[0] == 0:
-        return create_empty_front_facing_df()
+        return create_empty_df_with_cols(FRONT_FACING_COLUMNS + ['Ortholog in Nipponbare'])
 
     return unique_genes
