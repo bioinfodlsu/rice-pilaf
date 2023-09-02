@@ -47,7 +47,7 @@ def text_mining_query_search(query_string):
     text_mining_path = get_path_to_text_mining_temp(Constants.TEMP_TEXT_MINING)
     make_dir(text_mining_path)
 
-    text_mining_path = f'{text_mining_path}/{query_string}.csv'
+    text_mining_path = f'{text_mining_path}/{shorten_name(query_string)}.csv'
 
     if path_exists(text_mining_path):
         return pd.read_csv(text_mining_path)
