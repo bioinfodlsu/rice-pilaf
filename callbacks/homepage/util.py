@@ -6,7 +6,6 @@ from ..file_util import *
 
 import sqlite3
 
-const = Constants()
 
 example_genomic_intervals = {
     'pre-harvest': 'Chr01:1523625-1770814;Chr04:4662701-4670717',
@@ -14,15 +13,15 @@ example_genomic_intervals = {
 
 
 def clear_cache_folder():
-    if os.path.exists(const.TEMP):
-        shutil.rmtree(const.TEMP, ignore_errors=True)
+    if os.path.exists(Constants.TEMP):
+        shutil.rmtree(Constants.TEMP, ignore_errors=True)
 
     # Drop the table
     try:
-        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'DROP TABLE {const.FILE_STATUS_TABLE}'
+        query = f'DROP TABLE {Constants.FILE_STATUS_TABLE}'
 
         cursor.execute(query)
         connection.commit()
@@ -33,13 +32,13 @@ def clear_cache_folder():
         pass
 
     # Recreate the database
-    make_dir(const.TEMP)
+    make_dir(Constants.TEMP)
 
     try:
-        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'CREATE TABLE IF NOT EXISTS {const.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+        query = f'CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
 
         cursor.execute(query)
         connection.commit()
@@ -59,10 +58,10 @@ def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *args):
             for arg in args:
                 if arg in dccStore_ID:
                     flag = True
-                    
+
             if not flag:
                 dccStore_children[i]['props']['data'] = ''
-    
+
         else:
             dccStore_children[i]['props']['data'] = ''
 

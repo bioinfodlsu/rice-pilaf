@@ -9,7 +9,6 @@ from ..general_util import *
 from ..links_util import *
 
 
-const = Constants()
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
 
 # Error codes and messages triggered by a malformed genomic interval entered by the user
@@ -39,27 +38,6 @@ def construct_options_other_ref_genomes():
     return [
         {'value': symbol, 'label': f'{symbol} ({name})'} for symbol, name in other_ref_genomes.items()]
 
-
-def create_empty_df_nb():
-    """
-    Returns an empty data frame if there are no results
-
-    Returns:
-    - Empty data frame
-    """
-    return create_empty_df_with_cols(NB_COLUMNS)
-
-
-def create_empty_no_refs_df():
-    return create_empty_df_with_cols(NO_REFS_COLUMNS)
-
-
-def create_empty_df_other_refs():
-    return create_empty_df_with_cols(OTHER_REF_COLUMNS)
-
-
-def create_empty_front_facing_df():
-    return create_empty_df_with_cols(FRONT_FACING_COLUMNS)
 
 # =====================================================
 # Utility functions for parsing input genomic interval
@@ -315,12 +293,12 @@ def get_ogi_nb(nb_intervals):
     for nb_interval in nb_intervals:
         # Load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
-            f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+            f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
         # Map Nipponbare accessions to OGIs
-        ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
+        ogi_mapping_path = f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle'
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
             for gene in genes_in_interval:
@@ -356,11 +334,11 @@ def get_ogi_other_ref(ref, nb_intervals):
 
     # Get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
-        f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
+        f'{Constants.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
 
     # Get corresponding intervals on ref
     db_annotation = gffutils.FeatureDB(
-        f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
+        f"{Constants.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
 
     for nb_interval in nb_intervals:
         gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
@@ -372,7 +350,7 @@ def get_ogi_other_ref(ref, nb_intervals):
                                                           completely_within=False, featuretype='gene'))
 
             # Map reference-specific accessions to OGIs
-            ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
+            ogi_mapping_path = f'{Constants.OGI_MAPPING}/{ref}_to_ogi.pickle'
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
                 for gene in genes_in_interval:
@@ -418,7 +396,7 @@ def get_qtaro_entries(mapping, genes):
 
 def get_pubmed_entry(gene):
     try:
-        with open(f'{const.TEXT_MINING_PUBMED}/{gene}.pickle', 'rb') as f:
+        with open(f'{Constants.TEXT_MINING_PUBMED}/{gene}.pickle', 'rb') as f:
             mapping = pickle.load(f)
 
         pubmed_ids = [get_pubmed_link_single_str(pubmed_id[0]) for pubmed_id in sorted(
@@ -437,6 +415,16 @@ def get_pubmed_entry(gene):
         return pubmed_str[:-len('\n')]
 
     return pubmed_str[:-len('&nbsp;&nbsp;&nbsp;')]
+
+
+def get_nb_ortholog(gene, ref):
+    with open(f'{Constants.NB_MAPPING}/{ref}_to_Nb.pickle', 'rb') as f:
+        mapping = pickle.load(f)
+
+        if mapping[gene]:
+            return ', '.join(mapping[gene])
+
+        return NULL_PLACEHOLDER
 
 
 # ========================
@@ -459,12 +447,12 @@ def get_genes_in_Nb(nb_intervals):
     for nb_interval in nb_intervals:
         # Load and search GFF_DB of Nipponbare
         db = gffutils.FeatureDB(
-            f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+            f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
         genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
                                            completely_within=False, featuretype='gene'))
 
         # Map accessions to their respective OGIs
-        ogi_mapping_path = f'{const.OGI_MAPPING}/Nb_to_ogi.pickle'
+        ogi_mapping_path = f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle'
         ogi_list = []
         with open(ogi_mapping_path, 'rb') as f:
             ogi_mapping = pickle.load(f)
@@ -472,7 +460,7 @@ def get_genes_in_Nb(nb_intervals):
                                      for gene in genes_in_interval], ogi_mapping)
 
         # Get QTARO annotations
-        with open(const.QTARO_DICTIONARY, 'rb') as f:
+        with open(Constants.QTARO_DICTIONARY, 'rb') as f:
             qtaro_dict = pickle.load(f)
             qtaro_list = get_qtaro_entries(
                 qtaro_dict, [gene.id for gene in genes_in_interval])
@@ -497,7 +485,7 @@ def get_genes_in_Nb(nb_intervals):
         table_gene_ids = pd.concat(dfs, ignore_index=True)
         # Read in dataframe containing gene descriptions
         gene_description_df = pd.read_csv(
-            f'{const.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
+            f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
         # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
         table = pd.merge(gene_description_df, table_gene_ids,
                          left_on='Gene_ID', right_on='Name', how='right')
@@ -511,12 +499,12 @@ def get_genes_in_Nb(nb_intervals):
         table = table.fillna(NULL_PLACEHOLDER)
 
         if table.shape[0] == 0:
-            return create_empty_df_nb(), table['Name'].values.tolist()
+            return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
 
         return table, table['Name'].values.tolist()
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_nb(), table['Name'].values.tolist()
+        return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
 
 
 def get_genes_in_other_ref(ref, nb_intervals):
@@ -534,11 +522,11 @@ def get_genes_in_other_ref(ref, nb_intervals):
 
     # Get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
-        f'{const.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
+        f'{Constants.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
 
     # Get corresponding intervals on ref
     db_annotation = gffutils.FeatureDB(
-        f"{const.ANNOTATIONS}/{ref}/{ref}.gff.db")
+        f"{Constants.ANNOTATIONS}/{ref}/{ref}.gff.db")
 
     dfs = []
 
@@ -552,7 +540,7 @@ def get_genes_in_other_ref(ref, nb_intervals):
                                                           completely_within=False, featuretype='gene'))
 
             # Map accessions to their respective OGIs
-            ogi_mapping_path = f'{const.OGI_MAPPING}/{ref}_to_ogi.pickle'
+            ogi_mapping_path = f'{Constants.OGI_MAPPING}/{ref}_to_ogi.pickle'
             ogi_list = []
             with open(ogi_mapping_path, 'rb') as f:
                 ogi_mapping = pickle.load(f)
@@ -573,12 +561,12 @@ def get_genes_in_other_ref(ref, nb_intervals):
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df_other_refs()
+            return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
 
         return table
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_other_refs()
+        return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
 
 
 def get_common_genes(refs, nb_intervals):
@@ -594,7 +582,7 @@ def get_common_genes(refs, nb_intervals):
     """
     # No cultivars selected
     if not refs:
-        return create_empty_no_refs_df()
+        return create_empty_df_with_cols(NO_REFS_COLUMNS)()
 
     common_genes = None
     for ref in refs:
@@ -674,12 +662,16 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
         subset=['OGI'], keep=False)
 
     gene_description_df = pd.read_csv(
-        f'{const.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
+        f'{Constants.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
     # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
     unique_genes = pd.merge(gene_description_df, unique_genes,
                             left_on='Gene_ID', right_on='Name', how='right')
 
-    unique_genes = unique_genes[FRONT_FACING_COLUMNS]
+    unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
+        lambda x: get_nb_ortholog(x['Name'], ref), axis=1)
+
+    unique_genes = unique_genes[FRONT_FACING_COLUMNS +
+                                ['Ortholog in Nipponbare']]
 
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')
@@ -687,6 +679,6 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     unique_genes = unique_genes.fillna(NULL_PLACEHOLDER)
 
     if unique_genes.shape[0] == 0:
-        return create_empty_front_facing_df()
+        return create_empty_df_with_cols(FRONT_FACING_COLUMNS + ['Ortholog in Nipponbare'])
 
     return unique_genes

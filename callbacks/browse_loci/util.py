@@ -1,17 +1,13 @@
 from ..lift_over import util
 import gffutils
-import pandas as pd
-import os
 from ..file_util import *
 from ..constants import Constants
-
-const = Constants()
 
 
 def write_igv_tracks_to_file(nb_intervals_str):
     # tracks found in igv
-    track_db = [[const.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
-                [const.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
+    track_db = [[Constants.ANNOTATIONS_NB, 'IRGSPMSU.gff.db', 'gff'],
+                [Constants.OPEN_CHROMATIN_PANICLE, 'SRR7126116_ATAC-Seq_Panicles.bed', 'bed']]
 
     # write to file the data for igv
     for db in track_db:
@@ -32,7 +28,7 @@ def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
             nb_intervals_str)
 
         temp_folder = get_path_to_temp(
-            nb_intervals_str, const.TEMP_IGV, source_file)
+            nb_intervals_str, Constants.TEMP_IGV, source_file)
         make_dir(temp_folder)
 
         for i in range(len(loci_list)):

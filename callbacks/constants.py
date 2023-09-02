@@ -12,6 +12,7 @@ class Constants(object):
     ANNOTATIONS = f'{APP_DATA}/annotations'
     ALIGNMENTS = f'{APP_DATA}/alignments'
     OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
+    NB_MAPPING = f'{APP_DATA}/nb_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
     GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
     TEXT_MINING = f'{APP_DATA}/text_mining'

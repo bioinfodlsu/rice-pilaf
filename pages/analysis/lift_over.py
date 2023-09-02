@@ -2,13 +2,12 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 from callbacks.lift_over.util import *
 from callbacks.constants import Constants
-const = Constants()
 
 
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': const.LIFT_OVER
+        'label': Constants.LIFT_OVER
     },
     hidden=True,
     children=[

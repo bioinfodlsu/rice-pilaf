@@ -5,8 +5,6 @@ from .constants import Constants
 import time
 import sqlite3
 
-const = Constants()
-
 
 def path_exists(path):
     """
@@ -64,7 +62,7 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
 
     analysis_type = convert_text_to_path(analysis_type)
 
-    temp_dir = f'{const.TEMP}/{genomic_interval_foldername}/{analysis_type}'
+    temp_dir = f'{Constants.TEMP}/{genomic_interval_foldername}/{analysis_type}'
     for folder in args:
         temp_dir += f'/{convert_text_to_path(folder)}'
 
@@ -76,20 +74,21 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
 def get_path_to_text_mining_temp(analysis_type, *args):
     analysis_type = convert_text_to_path(analysis_type)
 
-    temp_dir = f'{const.TEMP}/{analysis_type}'
+    temp_dir = f'{Constants.TEMP}/{analysis_type}'
     for folder in args:
         temp_dir += f'/{convert_text_to_path(folder)}'
 
     temp_dir = re.sub(r'/+', '/', temp_dir)
-    
+
     return temp_dir
-    
+
+
 def shorten_name(name):
     try:
-        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'INSERT OR IGNORE INTO {const.FILE_STATUS_TABLE}(name) VALUES("{name}")'
+        query = f'INSERT OR IGNORE INTO {Constants.FILE_STATUS_TABLE}(name) VALUES("{name}")'
 
         cursor.execute(query)
         connection.commit()
@@ -100,10 +99,10 @@ def shorten_name(name):
         pass
 
     try:
-        connection = sqlite3.connect(const.FILE_STATUS_DB)
+        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
         cursor = connection.cursor()
 
-        query = f'SELECT rowid FROM {const.FILE_STATUS_TABLE} WHERE name = "{name}"'
+        query = f'SELECT rowid FROM {Constants.FILE_STATUS_TABLE} WHERE name = "{name}"'
         cursor.execute(query)
         row_id = cursor.fetchall()[0][0]
 

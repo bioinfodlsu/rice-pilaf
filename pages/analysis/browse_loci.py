@@ -1,12 +1,12 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
 from callbacks.constants import Constants
-const = Constants()
+
 
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': const.IGV
+        'label': Constants.IGV
     },
     hidden=True,
     children=[

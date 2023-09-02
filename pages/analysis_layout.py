@@ -9,16 +9,15 @@ import pages.analysis.text_mining as text_mining
 from collections import OrderedDict
 
 from callbacks.constants import Constants
-const = Constants()
 
 
 def get_analaysis_layout_dictionary():
     return OrderedDict({
-        const.LIFT_OVER: 'Gene List and Lift-Over',
-        const.TEXT_MINING: 'Gene Retrieval by Text Mining',
-        const.COEXPRESSION: 'Co-Expression Network Analysis',
-        const.TFBS: 'Regulatory Feature Enrichment',
-        const.IGV: 'Browse Loci'
+        Constants.LIFT_OVER: 'Gene List and Lift-Over',
+        Constants.TEXT_MINING: 'Gene Retrieval by Text Mining',
+        Constants.COEXPRESSION: 'Co-Expression Network Analysis',
+        Constants.TFBS: 'Regulatory Feature Enrichment',
+        Constants.IGV: 'Browse Loci'
     })
 
 

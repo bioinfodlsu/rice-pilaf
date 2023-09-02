@@ -4,7 +4,6 @@ from dash.exceptions import PreventUpdate
 from .util import *
 from ..constants import Constants
 from ..general_util import *
-const = Constants()
 
 
 def init_callback(app):
@@ -390,6 +389,11 @@ def init_callback(app):
                 mask = (genes_from_other_ref_raw['Name'] != NULL_PLACEHOLDER)
                 genes_from_other_ref_raw.loc[mask, 'Name'] = get_rgi_genecard_link(
                     genes_from_other_ref_raw, 'Name')
+
+                mask = (
+                    genes_from_other_ref_raw['Ortholog in Nipponbare'] != NULL_PLACEHOLDER)
+                genes_from_other_ref_raw.loc[mask, 'Ortholog in Nipponbare'] = get_rgi_genecard_link(
+                    genes_from_other_ref_raw, 'Ortholog in Nipponbare')
 
                 genes_from_other_ref = genes_from_other_ref_raw.to_dict(
                     'records')

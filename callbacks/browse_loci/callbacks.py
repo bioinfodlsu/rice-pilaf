@@ -11,7 +11,6 @@ from ..lift_over import util as lift_over_util
 from ..file_util import *
 
 from ..constants import Constants
-const = Constants()
 
 
 def init_callback(app):
@@ -73,7 +72,7 @@ def init_callback(app):
     @app.server.route('/genomes_nipponbare/<path:filename>')
     def send_genomes_nipponbare_url(filename):
         try:
-            return send_from_directory(const.GENOMES_NIPPONBARE, filename)
+            return send_from_directory(Constants.GENOMES_NIPPONBARE, filename)
         except FileNotFoundError:
             abort(404)
 
@@ -81,7 +80,7 @@ def init_callback(app):
     def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
         try:
             temp_output_folder_dir = get_path_to_temp(
-                nb_intervals_str, const.TEMP_IGV, foldername)
+                nb_intervals_str, Constants.TEMP_IGV, foldername)
 
             selected_interval_str_filename = convert_text_to_path(
                 selected_interval_str)
@@ -96,7 +95,7 @@ def init_callback(app):
     @app.server.route('/open_chromatin_panicle/<path:filename>')
     def send_open_chromatin_panicle_url(filename):
         try:
-            return send_from_directory(const.OPEN_CHROMATIN_PANICLE, filename)
+            return send_from_directory(Constants.OPEN_CHROMATIN_PANICLE, filename)
 
         except FileNotFoundError:
             abort(404)
