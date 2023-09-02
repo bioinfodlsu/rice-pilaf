@@ -10,7 +10,7 @@ from ..file_util import *
 
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
-SIMILARITY_CUTOFF = 70
+SIMILARITY_CUTOFF = 75
 
 
 def sanitize_text(text):
@@ -103,8 +103,27 @@ def text_mining_query_search(query_string):
                 line += after_match
 
                 if similarity.score > 0:
-                    PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
-                        sanitize_text, line.split('\t'))
+                    try:
+                        PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
+                            sanitize_text, line.split('\t'))
+                    except Exception as e:
+                        while True:
+                            # Sometimes there is a newline in the abstract, which causes a literal line break
+                            # in the CSV file
+                            prev_line = line
+                            try:
+                                next_line = next(f)
+                                line = prev_line.strip() + ' ' + next_line.strip()
+                            except StopIteration:
+                                break
+
+                            try:
+                                PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
+                                    sanitize_text, line.split('\t'))
+                                break
+                            except:
+                                pass
+
                     Entity = addl_sanitize_gene(Entity)
                     Title = Title[:-1]
 
