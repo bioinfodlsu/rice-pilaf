@@ -261,14 +261,14 @@ callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)
 
 # Create database table
-const = Constants()
-make_dir(const.TEMP)
+
+make_dir(Constants.TEMP)
 
 try:
-    connection = sqlite3.connect(const.FILE_STATUS_DB)
+    connection = sqlite3.connect(Constants.FILE_STATUS_DB)
     cursor = connection.cursor()
 
-    query = f'CREATE TABLE IF NOT EXISTS {const.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+    query = f'CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
 
     cursor.execute(query)
     connection.commit()

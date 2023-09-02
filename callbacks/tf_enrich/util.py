@@ -10,10 +10,9 @@ from ..general_util import *
 import gffutils
 import pybedtools
 
-const = Constants()
 
 COLUMNS = ['Transcription Factor', 'Family',
-           'p-value', 'Adj. p-value']#, 'Significant?']
+           'p-value', 'Adj. p-value']  # , 'Significant?']
 
 
 def create_empty_df():
@@ -22,7 +21,7 @@ def create_empty_df():
 
 def get_annotations_addl_gene(addl_genes):
     db = gffutils.FeatureDB(
-        f'{const.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+        f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
 
     return [{'ogi': None,
              'name': addl_gene,
@@ -35,9 +34,9 @@ def get_annotations_addl_gene(addl_genes):
 
 
 def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
-    make_dir(get_path_to_temp(nb_interval_str, const.TEMP_TFBS))
+    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
     filepath = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, addl_genes, const.PROMOTER_BED)
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED)
     with open(filepath, "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
@@ -56,9 +55,9 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_gen
 
 
 def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
-    make_dir(get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes))
+    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes))
     filepath = get_path_to_temp(
-        nb_interval_str, const.TEMP_TFBS, const.GENOME_WIDE_BED)
+        nb_interval_str, Constants.TEMP_TFBS, Constants.GENOME_WIDE_BED)
     with open(filepath, "w") as f:
         for interval in nb_interval_str.split(";"):
             chrom, range = interval.split(":")
@@ -71,7 +70,8 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
                               tfbs_set, tfbs_prediction_technique,
                               nb_interval_str):
 
-    out_dir = get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
+    out_dir = get_path_to_temp(
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
 
     # if previously computed
     if path_exists(f'{out_dir}/BH_corrected.csv'):
@@ -105,18 +105,18 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     make_dir(out_dir)
 
     # construct query BED file
-    #out_dir_tf_enrich = get_path_to_temp(nb_interval_str, const.TEMP_TFBS, addl_genes)
+    # out_dir_tf_enrich = get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
         query_bed = write_query_promoter_intervals_to_file(
             lift_over_nb_entire_table, nb_interval_str, addl_genes)
-        sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
+        sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
         query_bed = write_query_genome_intervals_to_file(
             nb_interval_str, addl_genes)
-        sizes = f'{const.TFBS_BEDS}/sizes/{tfbs_set}'
+        sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
 
-    #construct a pybedtool object. we will use pybedtools to compute if there
-    #is any overlap. If no, don't test for significance using mcdp2.
+    # construct a pybedtool object. we will use pybedtools to compute if there
+    # is any overlap. If no, don't test for significance using mcdp2.
     query_pybed = pybedtools.BedTool(query_bed)
 
     TF_list = []
@@ -124,15 +124,15 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     pvalue_list = []
 
     # perform annotation overlap statistical significance tests
-    for tf in os.listdir(os.path.join(const.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
+    for tf in os.listdir(os.path.join(Constants.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
         # print("computing overlaps for: {}".format(tf))
-        ref_bed = f'{const.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
+        ref_bed = f'{Constants.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
         ref_pybed = pybedtools.BedTool(ref_bed)
 
         out_dir_tf = f'{out_dir}/{tf}'
         make_dir(out_dir_tf)
 
-        if query_pybed.intersect(ref_pybed,nonamecheck=True).count() != 0 :
+        if query_pybed.intersect(ref_pybed, nonamecheck=True).count() != 0:
 
             p_value = perform_enrichment_specific_tf(ref_bed, query_bed,
                                                      sizes, out_dir_tf)
@@ -180,13 +180,13 @@ def multiple_testing_correction(single_tf_results):
     sig = list(map(str, sig))
     adj_pvalue = adj_pvalue.tolist()
     single_tf_results['Adj. p-value'] = adj_pvalue
-    #single_tf_results['Significant?'] = sig
+    # single_tf_results['Significant?'] = sig
     single_tf_results.sort_values(by=['p-value'], inplace=True)
     return single_tf_results
 
 
 def get_family(transcription_factor):
-    with open(f'{const.TFBS_ANNOTATION}/family_mapping.pickle', 'rb') as f:
+    with open(f'{Constants.TFBS_ANNOTATION}/family_mapping.pickle', 'rb') as f:
         mapping = pickle.load(f)
 
     return ', '.join(mapping[transcription_factor])

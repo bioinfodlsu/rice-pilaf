@@ -5,8 +5,6 @@ from callbacks.constants import Constants
 from callbacks.coexpression.util import *
 
 
-const = Constants()
-
 coach = html.Li(
     [html.B('COACH'),
      html.Span(
@@ -116,7 +114,7 @@ coexpression_network_modal = dbc.Modal([
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': const.COEXPRESSION
+        'label': Constants.COEXPRESSION
     },
     hidden=True,
 

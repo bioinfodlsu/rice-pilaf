@@ -8,8 +8,6 @@ from ..constants import Constants
 
 from ..style_util import *
 
-const = Constants()
-
 
 def init_callback(app):
 
@@ -72,7 +70,8 @@ def init_callback(app):
 
         if 'homepage-reset' == ctx.triggered_id:
             # clear data for items in dcc.Store found in session-container
-            dccStore_children = get_cleared_dccStore_data_excluding_some_data(dccStore_children)
+            dccStore_children = get_cleared_dccStore_data_excluding_some_data(
+                dccStore_children)
 
             return dccStore_children, None, {'display': 'none'}, False, ''
 
@@ -130,8 +129,7 @@ def init_callback(app):
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
-    
-    
+
     @app.callback(
         Output('homepage-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
@@ -140,7 +138,6 @@ def init_callback(app):
     )
     def set_input_fields(genomic_intervals):
         return genomic_intervals
-
 
     @app.callback(
         Output('homepage-results-container', 'style'),

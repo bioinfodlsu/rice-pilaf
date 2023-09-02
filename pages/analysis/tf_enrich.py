@@ -1,12 +1,12 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
-const = Constants()
+
 
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': const.TFBS
+        'label': Constants.TFBS
     },
     hidden=True,
     children=[

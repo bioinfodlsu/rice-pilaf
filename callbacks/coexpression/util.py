@@ -11,7 +11,6 @@ from scipy.stats import fisher_exact, false_discovery_control
 
 from collections import namedtuple
 
-const = Constants()
 
 # Settings for the module detection algorithms:
 # - multiplier: Value multiplied to the parameter to get the name of the directory
@@ -60,7 +59,7 @@ enrichment_tabs = [Enrichment_tab('Gene Ontology', 'ontology_enrichment/go'),
 
 def get_user_facing_parameter(algo, parameter, network='OS-CX'):
     parameters = sorted(
-        map(int, os.listdir(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}')))
+        map(int, os.listdir(f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}')))
 
     return parameters.index(parameter) + 1
 
@@ -90,7 +89,7 @@ def get_parameters_for_algo(algo, network='OS-CX'):
     """
     param_dict = {}
     parameters = sorted(
-        map(int, os.listdir(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}')))
+        map(int, os.listdir(f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}')))
 
     # Display the user-facing parameters for the module detection algorithms
     for idx, parameter in enumerate(parameters):
@@ -124,10 +123,10 @@ def create_module_enrichment_results_dir(genomic_intervals, addl_genes, network,
     """
     if addl_genes:
         temp_output_folder_dir = get_path_to_temp(
-            genomic_intervals, const.TEMP_COEXPRESSION, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
+            genomic_intervals, Constants.TEMP_COEXPRESSION, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
     else:
         temp_output_folder_dir = get_path_to_temp(
-            genomic_intervals, const.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
+            genomic_intervals, Constants.TEMP_COEXPRESSION, f'{network}/{algo}/{parameters}')
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)
@@ -180,7 +179,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
     if not path_exists(ENRICHED_MODULES_PATH):
         ENRICHED_MODULES_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
             ENRICHED_MODULES_PATH)
-        MODULES_PATH = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
+        MODULES_PATH = f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
         # ====================================================================================
         # This replicates the logic of running the universal enrichment function `enricher()`
@@ -214,7 +213,7 @@ def do_module_enrichment_analysis(implicated_gene_ids, genomic_intervals, addl_g
 
             adj_p_values = false_discovery_control(p_values, method='bh')
             significant_adj_p_values = [(p_values_indices[idx], adj_p_value) for idx, adj_p_value in enumerate(
-                adj_p_values) if adj_p_value < const.P_VALUE_CUTOFF]
+                adj_p_values) if adj_p_value < Constants.P_VALUE_CUTOFF]
             significant_adj_p_values.sort(key=lambda x: x[1])
             significant_adj_p_values = [
                 f'{ID}\t{adj_p_value}' for ID, adj_p_value in significant_adj_p_values]
@@ -265,7 +264,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     Returns:
     - Equivalent MSU accessions of the KEGG transcript IDs
     """
-    with open(f'{const.GENE_ID_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
+    with open(f'{Constants.GENE_ID_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
@@ -279,14 +278,14 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
 
 
 def get_genes_in_module(module_idx, network, algo, parameters):
-    with open(f'{const.NETWORK_MODULES}/{network}/transcript/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+    with open(f'{Constants.NETWORK_MODULES}/{network}/transcript/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         for idx, module in enumerate(f):
             if idx + 1 == int(module_idx):
                 return set(module.split('\t'))
 
 
 def get_genes_in_pathway(pathway_id, network):
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.KEGG_DOSA_GENESET}', 'rb') as f:
+    with open(f'{Constants.ENRICHMENT_ANALYSIS}/{network}/{Constants.KEGG_DOSA_GENESET}', 'rb') as f:
         genes_in_pathway = pickle.load(f)
 
     return genes_in_pathway[pathway_id]
@@ -298,7 +297,7 @@ def get_genes_in_module_and_pathway(pathway_id, module_idx, network, algo, param
 
 
 def get_kegg_pathway_name(pathway_id, network):
-    with open(f'{const.ENRICHMENT_ANALYSIS}/{network}/{const.KEGG_DOSA_PATHWAY_NAMES}') as pathways:
+    with open(f'{Constants.ENRICHMENT_ANALYSIS}/{network}/{Constants.KEGG_DOSA_PATHWAY_NAMES}') as pathways:
         for line in pathways:
             line = line.split('\t')
             if line[0].rstrip() == pathway_id:
@@ -408,7 +407,8 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value'] < const.P_VALUE_CUTOFF]
+    result = result.loc[result['Adj. Combined p-value']
+                        < Constants.P_VALUE_CUTOFF]
 
     # IMPORTANT: Do not change ordering of instructions
 
@@ -444,7 +444,8 @@ def convert_to_df_spia(result, network):
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value'] < const.P_VALUE_CUTOFF]
+    result = result.loc[result['Adj. Combined p-value']
+                        < Constants.P_VALUE_CUTOFF]
 
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']
@@ -486,7 +487,7 @@ def convert_to_df(active_tab, module_idx, network, algo, parameters):
     dir = enrichment_tabs[get_tab_index(active_tab)].path
     enrichment_type = dir.split('/')[-1]
 
-    file = f'{const.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
+    file = f'{Constants.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/{dir}/results/{enrichment_type}-df-{module_idx}.tsv'
 
     columns = {'go': ['ID', 'Gene Ontology Term', 'Gene Ratio',
                       'BG Ratio', 'p-value', 'Adj. p-value', 'q-value', 'Genes', 'Count'],
@@ -591,12 +592,12 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
     try:
         # Ignore the word "Module" at the start
         module_idx = int(module.split(' ')[1])
-        OUTPUT_DIR = f'{const.TEMP}/{network}/{algo}/modules/{parameters}'
+        OUTPUT_DIR = f'{Constants.TEMP}/{network}/{algo}/modules/{parameters}'
         coexpress_nw = f'{OUTPUT_DIR}/module-{module_idx}.tsv'
 
         if not path_exists(coexpress_nw):
-            NETWORK_FILE = f'{const.NETWORKS}/{network}.txt'
-            MODULE_FILE = f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
+            NETWORK_FILE = f'{Constants.NETWORKS}/{network}.txt'
+            MODULE_FILE = f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv'
 
             convert_modules_to_edgelist(
                 NETWORK_FILE, MODULE_FILE, module_idx, OUTPUT_DIR)
@@ -621,7 +622,7 @@ def load_module_graph(implicated_gene_ids, module, network, algo, parameters, la
 
 
 def count_modules(network, algo, parameters):
-    with open(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as f:
+    with open(f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as f:
         return len(f.readlines())
 
 
@@ -637,7 +638,7 @@ def get_noun_for_active_tab(active_tab):
 
 
 def count_genes_in_module(implicated_genes, module_idx, network, algo, parameters):
-    with open(f'{const.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
+    with open(f'{Constants.NETWORK_MODULES}/{network}/MSU/{algo}/{parameters}/{algo}-module-list.tsv') as modules:
         for idx, module in enumerate(modules):
             if idx == module_idx - 1:
                 module_genes = module.strip().split('\t')

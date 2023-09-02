@@ -4,7 +4,6 @@ from dash.exceptions import PreventUpdate
 from .util import *
 from ..constants import Constants
 from ..general_util import *
-const = Constants()
 
 
 def init_callback(app):
