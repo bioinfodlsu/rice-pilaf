@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html, dcc
+from dash import Input, Output, State, html, dcc, ctx
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -90,6 +90,17 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+    
+    @app.callback(
+        Output('coexpression-submit', 'disabled'),
+
+        Input('coexpression-submit', 'n_clicks'),
+        Input('coexpression-module-graph', 'elements'),
+        Input('coexpression-pathways', 'data'),
+        Input('coexpression-module-stats', 'children')
+    )
+    def disable_coexpression_button_upon_run(n_clicks,  *_):
+        return ctx.triggered_id == 'coexpression-submit' and n_clicks > 0
 
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
