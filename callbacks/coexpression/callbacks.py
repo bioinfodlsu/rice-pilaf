@@ -492,7 +492,13 @@ def init_callback(app):
         Input('coexpression-network-tooltip', 'n_clicks')
     )
     def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks):
-        return algo_tooltip_n_clicks, network_tooltip_n_clicks
+        if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
+            return True, False
+
+        if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
+            return False, True
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),

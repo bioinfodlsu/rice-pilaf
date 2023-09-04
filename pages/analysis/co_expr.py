@@ -113,6 +113,7 @@ module_detection_algo_modal = dbc.Modal([
 
 ricenet = html.Li([
     html.B('RiceNet v2'),
+    html.Br(),
     html.Span(
         'The co-expression network used is the component network derived from the co-expression of '),
     html.I('Oryza sativa '),
@@ -208,7 +209,7 @@ layout = html.Div(
 
             dbc.Label(['Select the co-expression network',
                        html.I(
-                           className='bi bi-info-circle', id='coexpression-network-tooltip')]),
+                           className='bi bi-info-circle', id='coexpression-network-tooltip', n_clicks=0)]),
 
             html.Br(),
 
@@ -241,13 +242,14 @@ layout = html.Div(
                 className='ms-3 mt-1'
             ),
 
+            coexpression_network_modal,
             html.Br(),
 
             dbc.Label(['Select the ',
                        html.Span('parameter for running the algorithm',
                                  id='coexpression-parameter-name'),
                        html.I(
-                           className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
+                           className='bi bi-info-circle', id='coexpression-parameter-tooltip', n_clicks=0)],
                       className='mb-4'),
 
             # Should also be changed if parameter space is changed
