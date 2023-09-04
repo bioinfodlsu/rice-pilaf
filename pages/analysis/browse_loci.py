@@ -11,7 +11,7 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.P('WRITE ME')
+            html.P('In this page, you can genome-browse your input intervals.')
         ], className='analysis-intro p-3'),
 
         html.Br(),

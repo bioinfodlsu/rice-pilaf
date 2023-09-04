@@ -12,9 +12,19 @@ layout = html.Div(
     children=[
         html.Div([
             html.P(
-                'Perhaps your intervals contain variants that influence regulatory elements, for example by affecting binding affinity.'),
-            html.P(
-                'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals.')
+                ['In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,'
+                'the idea being that your intervals might contain variants that affect the binding affinity of transcription factors. Click ',
+                dcc.Link(
+                    ['here ', html.I(
+                        id='demo-link',
+                        className='fa-solid fa-up-right-from-square fa-2xs'
+                    )],
+                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.4-Regulatory-Feature-Enrichment',
+                    target='_blank',
+                    className='top-navbar-item'
+                ),
+                ' for user guide.']
+            )
         ], className='analysis-intro p-3'),
 
         html.Br(),
