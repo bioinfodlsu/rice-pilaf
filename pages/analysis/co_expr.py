@@ -117,15 +117,16 @@ ricenet = html.Li([
         'The co-expression network used is the component network derived from the co-expression of '),
     html.I('Oryza sativa '),
     html.Span(
-        'The co-expression network used is the component network derived from the co-expression of '),
+        'genes across microarray experiments.',
+        className='algo-desc'),
     html.Div([
         html.Span(
-             'Nepusz, T., Yu, H., & Paccanaro, A. (2012). Detecting overlapping protein complexes in protein-protein interaction networks. '),
-        html.I('Nature Methods, 9, '),
-        html.Span('471–472. '),
+             'Lee, T., Oh, T., Yang, S., Shin, J., Hwang, S., Kim, C. Y., Kim, H., Shim, H., Shim, J. E., Ronald, P. C., & Lee, I. (2015). RiceNet v2: An improved network prioritization server for rice genes. '),
+        html.I('Nucleic Acids Research, 43'),
+        html.Span('(W1), W122–W127 '),
         html.A(
-            'https://doi.org/10.1038/nmeth.1938',
-            href='https://doi.org/10.1038/nmeth.1938',
+            'https://doi.org/10.1093/nar/gkv253',
+            href='https://doi.org/10.1093/nar/gkv253',
             target='_blank')
     ], className='reference')
 ])
@@ -143,9 +144,10 @@ coexpression_network_modal = dbc.Modal([
             ricenet, html.Br(), rcrn
         ])
     ])],
-    id='coexpression-clustering-algo-modal',
+    id='coexpression-network-modal',
     is_open=False,
-    size='xl'
+    size='xl',
+    scrollable=True
 )
 
 

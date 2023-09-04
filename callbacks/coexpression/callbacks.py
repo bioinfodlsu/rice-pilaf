@@ -90,7 +90,7 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
-    
+
     @app.callback(
         Output('coexpression-submit', 'disabled'),
 
@@ -486,11 +486,13 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
-        Input('coexpression-clustering-algo-tooltip', 'n_clicks')
+        Output('coexpression-network-modal', 'is_open'),
+
+        Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
+        Input('coexpression-network-tooltip', 'n_clicks')
     )
-    def open_modals(tooltip_n_clicks):
-        if tooltip_n_clicks > 0:
-            return True
+    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks):
+        return algo_tooltip_n_clicks, network_tooltip_n_clicks
 
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),
