@@ -121,8 +121,24 @@ layout = html.Div(
     children=[
 
         html.Div([
-            html.P('In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. '
-                   'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.')
+            html.P(
+                [
+                   'In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, '
+                   'which are significantly enriched in the genes implicated by your GWAS. '
+                   'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases. Click ',
+                   dcc.Link(
+                    ['here ', html.I(
+                        id='demo-link',
+                        className='fa-solid fa-up-right-from-square fa-2xs'
+                    )],
+                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.3-Co%E2%80%90expression-Network-Analysis',
+                    target='_blank',
+                    className='top-navbar-item'
+                ),
+                ' for user guide.'
+
+                ]
+            )
         ], className='analysis-intro p-3'),
 
         html.Br(),
