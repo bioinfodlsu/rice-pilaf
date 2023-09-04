@@ -5,72 +5,85 @@ from callbacks.constants import Constants
 from callbacks.coexpression.util import *
 
 
-coach = html.Li(
-    [html.B('COACH'),
-     html.Span(
+coach = html.Li([
+    html.B('COACH'),
+    html.Span(
         ' Detects highly connected gene subnetworks (referred to as "cores") and expands them by including closely associated genes',
         className='algo-desc'),
-     html.Div([
-         html.Span(
-             'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
-         html.I('BMC Bioinformatics, 10'),
-         html.Span('(169). '),
-         html.A('https://doi.org/10.1186/1471-2105-10-169',
-                href='https://doi.org/10.1186/1471-2105-10-169',
-                target='_blank')],
-        className='reference'
-    )]
-)
-
-demon = html.Li(
-    [html.B('DEMON'),
-     html.Span(
-        ' Adopts a bottom-up approach where genes "vote" to determine the subnetwork to which connected genes belong',
-        className='algo-desc'),
-     html.Div([
-         html.Span(
-             'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
-         html.I('KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining '),
-         html.Span('(pp. 615–623). Association for Computing Machinery. '),
-         html.A('https://doi.org/10.1145/2339530.2339630',
-                href='https://doi.org/10.1145/2339530.2339630',
-                target='_blank')],
-        className='reference'
-    )]
-)
-
-clusterone = html.Li(
-    [html.B('ClusterONE'),
-     html.Span(
-        ' Forms cohesive gene subnetworks from an initial set of seed genes. ',
-        className='algo-desc'),
-     html.Div([
-         html.Span(
-             'Nepusz, T., Yu, H., & Paccanaro, A. (2012). Detecting overlapping protein complexes in protein-protein interaction networks. '),
-         html.I('Nature Methods, 9, '),
-         html.Span('471–472. '),
-         html.A('https://doi.org/10.1038/nmeth.1938',
-                href='https://doi.org/10.1038/nmeth.1938',
-                target='_blank')],
-        className='reference'
-    )],
-)
-
-fox = html.Li([html.B('FOX'),
-               html.Span(
-    ' Determines the membership of a gene to a subnetwork by counting the number of triangles formed by the gene with other genes in the subnetwork',
-    className='algo-desc'),
     html.Div([
         html.Span(
-             'Lyu, T., Bing, L., Zhang, Z., & Zhang, Y. (2020). FOX: Fast overlapping community detection algorithm in big weighted networks. '),
+             'Wu, M., Li, X., Kwoh, C. K., & Ng, S. K. (2009). A core-attachment based method to detect protein complexes in PPI networks. '),
+        html.I('BMC Bioinformatics, 10'),
+        html.Span('(169). '),
+        html.A(
+            'https://doi.org/10.1186/1471-2105-10-169',
+            href='https://doi.org/10.1186/1471-2105-10-169',
+            target='_blank')
+    ], className='reference')
+])
+
+demon = html.Li([
+    html.B('DEMON'),
+    html.Span(
+        ' Adopts a bottom-up approach where genes "vote" to determine the subnetwork to which connected genes belong',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+             'Coscia, M., Rossetti, G., Giannotti, F., & Pedreschi, D. (2012). DEMON: A local-first discovery method for overlapping communities. In '),
+        html.I('KDD\'12: Proceedings of the 18th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining '),
+        html.Span('(pp. 615–623). Association for Computing Machinery. '),
+        html.A(
+            'https://doi.org/10.1145/2339530.2339630',
+            href='https://doi.org/10.1145/2339530.2339630',
+            target='_blank')
+    ], className='reference')
+])
+
+clusterone = html.Li([
+    html.B('ClusterONE'),
+    html.Span(
+        ' Forms cohesive gene subnetworks from an initial set of seed genes. ',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+             'Nepusz, T., Yu, H., & Paccanaro, A. (2012). Detecting overlapping protein complexes in protein-protein interaction networks. '),
+        html.I('Nature Methods, 9, '),
+        html.Span('471–472. '),
+        html.A(
+            'https://doi.org/10.1038/nmeth.1938',
+            href='https://doi.org/10.1038/nmeth.1938',
+            target='_blank')
+    ], className='reference')
+])
+
+fox = html.Li([
+    html.B('FOX'),
+    html.Span(
+        ' Determines the membership of a gene to a subnetwork by counting the number of triangles formed by the gene with other genes in the subnetwork',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+            'Lyu, T., Bing, L., Zhang, Z., & Zhang, Y. (2020). FOX: Fast overlapping community detection algorithm in big weighted networks. '),
         html.I('ACM Transactions on Social Computing, 3'),
         html.Span('(3), 1–23. '),
-        html.A('https://doi.org/10.1145/3404970',
-               href='https://doi.org/10.1145/3404970',
-               target='_blank')],
-             className='reference mb-3',
-             ),
-    html.Span('RicePilaf uses LazyFox for a parallelized implementation of FOX')
+        html.A(
+            'https://doi.org/10.1145/3404970',
+            href='https://doi.org/10.1145/3404970',
+            target='_blank')
+    ], className='reference mb-3'),
+    html.Span(
+        'RicePilaf uses LazyFox for a parallelized implementation of FOX.',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+            'Garrels, T., Khodabakhsh, A., Renard, B. Y., & Baum, K. (2023). LazyFox: Fast and parallelized overlapping community detection in large graphs. '),
+        html.I('PeerJ Computer Science, 9, '),
+        html.Span('e1291. '),
+        html.A(
+            'https://doi.org/10.7717/peerj-cs.1291',
+            href='https://doi.org/10.7717/peerj-cs.1291',
+            target='_blank')
+    ], className='reference mb-3')
 ])
 
 module_detection_algo_modal = dbc.Modal([
@@ -86,7 +99,8 @@ module_detection_algo_modal = dbc.Modal([
     ])],
     id='coexpression-clustering-algo-modal',
     is_open=False,
-    size='xl'
+    size='xl',
+    scrollable=True
 )
 
 
@@ -123,19 +137,19 @@ layout = html.Div(
         html.Div([
             html.P(
                 [
-                   'In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, '
-                   'which are significantly enriched in the genes implicated by your GWAS. '
-                   'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases. Click ',
-                   dcc.Link(
-                    ['here ', html.I(
-                        id='demo-link',
-                        className='fa-solid fa-up-right-from-square fa-2xs'
-                    )],
-                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.3-Co%E2%80%90expression-Network-Analysis',
-                    target='_blank',
-                    className='top-navbar-item'
-                ),
-                ' for user guide.'
+                    'In this page, you can search for modules (a.k.a. communities, clusters) in rice co-expression networks, '
+                    'which are significantly enriched in the genes implicated by your GWAS. '
+                    'Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases. Click ',
+                    dcc.Link(
+                        ['here ', html.I(
+                            id='demo-link',
+                            className='fa-solid fa-up-right-from-square fa-2xs'
+                        )],
+                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.3-Co%E2%80%90expression-Network-Analysis',
+                        target='_blank',
+                        className='top-navbar-item'
+                    ),
+                    ' for user guide.'
 
                 ]
             )
