@@ -92,7 +92,7 @@ def init_callback(app):
         State('text-mining-query', 'value'),
         Input('text-mining-result-table', 'data'),
     )
-    def trigger(n_clicks, text_mining_query, *_):
+    def disable_text_mining_button_upon_run(n_clicks, text_mining_query, *_):
         is_there_error, _ = is_error(text_mining_query)
 
         if is_there_error:
