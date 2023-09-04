@@ -521,7 +521,8 @@ def init_callback(app):
     )
     def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
         if download_n_clicks >= 1:
-            df = pd.DataFrame(coexpression_df)
+            df = pd.DataFrame(purge_html_export_table(coexpression_df))
+            print(df)
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
 
         raise PreventUpdate
