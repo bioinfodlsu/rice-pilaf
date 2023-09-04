@@ -4,6 +4,10 @@ from dash import dash_table, dcc, html
 from callbacks.constants import Constants
 from callbacks.coexpression.util import *
 
+# ============================
+# Module Detection Algorithms
+# ============================
+
 
 coach = html.Li([
     html.B('COACH'),
@@ -72,7 +76,7 @@ fox = html.Li([
             target='_blank')
     ], className='reference mb-3'),
     html.Span(
-        'RicePilaf uses LazyFox for a parallelized implementation of FOX.',
+        'RicePilaf uses LazyFox for a parallelized implementation of FOX. LazyFox is run with the queue size and thread count set to 20.',
         className='algo-desc'),
     html.Div([
         html.Span(
@@ -103,10 +107,14 @@ module_detection_algo_modal = dbc.Modal([
     scrollable=True
 )
 
+# ======================
+# Coexpression Networks
+# ======================
+
 
 coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
-        dbc.ModalTitle('Module Detection Algorithms')
+        dbc.ModalTitle('Coexpression Networks')
     ),
     dbc.ModalBody([
         html.P(
