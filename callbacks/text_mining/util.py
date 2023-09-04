@@ -11,6 +11,7 @@ from ..file_util import *
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 SIMILARITY_CUTOFF = 75
+MAX_NUM_RESULTS = 5000
 
 
 def sanitize_text(text):
@@ -138,6 +139,9 @@ def text_mining_query_search(query_string):
                             Sentence = Title
                         df.loc[len(df.index)] = [Entity, PMID,
                                                  Title, Sentence, similarity.score]
+
+                        if df.shape[0] == MAX_NUM_RESULTS:
+                            break
             except:
                 pass
 
