@@ -487,16 +487,21 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
         Output('coexpression-network-modal', 'is_open'),
+        Output('coexpression-parameter-modal', 'is_open'),
 
         Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
-        Input('coexpression-network-tooltip', 'n_clicks')
+        Input('coexpression-network-tooltip', 'n_clicks'),
+        Input('coexpression-parameter-tooltip', 'n_clicks')
     )
-    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks):
+    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks):
         if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
-            return True, False
+            return True, False, False
 
         if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
-            return False, True
+            return False, True, False
+
+        if ctx.triggered_id == 'coexpression-parameter-tooltip' and parameter_tooltip_n_clicks > 0:
+            return False, False, True
 
         raise PreventUpdate
 

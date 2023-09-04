@@ -149,6 +149,7 @@ rcrn = html.Li([
             target='_blank')
     ], className='reference')
 ])
+
 coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
         dbc.ModalTitle('Coexpression Networks')
@@ -166,6 +167,52 @@ coexpression_network_modal = dbc.Modal([
     scrollable=True
 )
 
+# ===========
+# Parameters
+# ===========
+
+parameter_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Coexpression Networks')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'RicePilaf provides the option to configure selected parameters when running the module detection algorithms:'),
+        html.Ul([
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'ClusterOne', href='https://doi.org/10.1038/nmeth.1938', target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the minimum cluster density.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'COACH', href='https://doi.org/10.1186/1471-2105-10-169', target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the maximum core affinity.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'DEMON', href='https://doi.org/10.1145/2339530.2339630', target='_blank'),
+                html.Span(', the parameter pertains to the merging threshold.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A('FOX', href='https://doi.org/10.1145/3404970',
+                       target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the weighted community clustering metric.')
+            ])
+        ])
+    ])],
+    id='coexpression-parameter-modal',
+    is_open=False,
+    size='xl',
+    scrollable=True
+)
 
 # ============
 # Main Layout
@@ -246,7 +293,6 @@ layout = html.Div(
                        )]),
 
             module_detection_algo_modal,
-
             html.Br(),
 
             dbc.RadioItems(
@@ -274,6 +320,7 @@ layout = html.Div(
                                  value=30)],
                      id='coexpression-parameter-slider-container'),
 
+            parameter_modal,
             html.Br(),
 
             dbc.Button('Run Analysis',
