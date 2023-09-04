@@ -114,12 +114,12 @@ module_detection_algo_modal = dbc.Modal([
 ricenet = html.Li([
     html.B('RiceNet v2'),
     html.Br(),
-    html.Span(
-        'The co-expression network used is the component network derived from the co-expression of '),
-    html.I('Oryza sativa '),
-    html.Span(
+    html.Div([html.Span(
+        'RicePilaf uses the component network derived from the co-expression of '),
+        html.I('Oryza sativa '),
+        html.Span(
         'genes across microarray experiments.',
-        className='algo-desc'),
+    )], className='algo-desc'),
     html.Div([
         html.Span(
              'Lee, T., Oh, T., Yang, S., Shin, J., Hwang, S., Kim, C. Y., Kim, H., Shim, H., Shim, J. E., Ronald, P. C., & Lee, I. (2015). RiceNet v2: An improved network prioritization server for rice genes. '),
@@ -132,8 +132,23 @@ ricenet = html.Li([
     ], className='reference')
 ])
 
-rcrn = None
-
+rcrn = html.Li([
+    html.B('Rice Combined Mutual Ranked Network (RCRN)'),
+    html.Br(),
+    html.Span(
+        'RicePilaf uses the integrated RCRN network.',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+             'Zhao, K., Lin, F., Romero-Gamboa, S. P., Saha, P., Goh, H. J., An, G., Jung, K. H., Hazen, S. P., & Bartley, L. E. (2019). Rice genome-scale network integration reveals transcriptional regulators of grass cell wall synthesis. '),
+        html.I('Frontiers in Plant Science, 10, '),
+        html.Span('1275. '),
+        html.A(
+            'https://doi.org/10.3389/fpls.2019.01275',
+            href='https://doi.org/10.3389/fpls.2019.01275',
+            target='_blank')
+    ], className='reference')
+])
 coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
         dbc.ModalTitle('Coexpression Networks')
