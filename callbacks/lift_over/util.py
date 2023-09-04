@@ -8,6 +8,8 @@ from ..constants import Constants
 from ..general_util import *
 from ..links_util import *
 
+import regex as re
+
 
 Genomic_interval = namedtuple('Genomic_interval', ['chrom', 'start', 'stop'])
 
@@ -121,6 +123,12 @@ def to_genomic_interval(genomic_interval_str):
         chrom, interval = genomic_interval_str.split(":")
         if is_one_digit_chromosome(chrom):
             chrom = pad_one_digit_chromosome(chrom)
+
+        # Change 'chr' to 'Chr'
+        chrom = re.sub(r'chr', 'Chr', chrom, flags=re.IGNORECASE)
+
+        if not chrom.startswith('Chr') or not chrom[3].isdigit():
+            return errors['NO_CHROM_INTERVAL_SEP'].code, genomic_interval_str
 
     except ValueError:
         return errors['NO_CHROM_INTERVAL_SEP'].code, genomic_interval_str
