@@ -52,7 +52,7 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
         Output('homepage-genomic-intervals-submitted-input', 'data'),
-        Output('homepage-genomic-intervals-saved-input', 'data'),
+        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
 
         State('homepage-genomic-intervals', 'value'),
 
