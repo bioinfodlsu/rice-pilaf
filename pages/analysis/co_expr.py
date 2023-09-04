@@ -111,6 +111,26 @@ module_detection_algo_modal = dbc.Modal([
 # Coexpression Networks
 # ======================
 
+ricenet = html.Li([
+    html.B('RiceNet v2'),
+    html.Span(
+        'The co-expression network used is the component network derived from the co-expression of '),
+    html.I('Oryza sativa '),
+    html.Span(
+        'The co-expression network used is the component network derived from the co-expression of '),
+    html.Div([
+        html.Span(
+             'Nepusz, T., Yu, H., & Paccanaro, A. (2012). Detecting overlapping protein complexes in protein-protein interaction networks. '),
+        html.I('Nature Methods, 9, '),
+        html.Span('471–472. '),
+        html.A(
+            'https://doi.org/10.1038/nmeth.1938',
+            href='https://doi.org/10.1038/nmeth.1938',
+            target='_blank')
+    ], className='reference')
+])
+
+rcrn = None
 
 coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
@@ -118,9 +138,9 @@ coexpression_network_modal = dbc.Modal([
     ),
     dbc.ModalBody([
         html.P(
-            'Since genes can possibly be involved in multiple biological functions or processes, the algorithms supported by RicePilaf allow for overlapping modules (that is, a given gene may belong to multiple modules):'),
+            'RicePilaf provides the option to choose between two co-expression networks:'),
         html.Ul([
-            clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
+            ricenet, html.Br(), rcrn
         ])
     ])],
     id='coexpression-clustering-algo-modal',
