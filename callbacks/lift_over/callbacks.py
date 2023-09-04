@@ -1,4 +1,4 @@
-from dash import Input, Output, State, dcc, html
+from dash import Input, Output, State, dcc, html, ctx
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -52,6 +52,16 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+
+    @app.callback(
+        Output('lift-over-submit', 'disabled'),
+
+        Input('lift-over-submit', 'n_clicks'),
+        Input('lift-over-results-table', 'data'),
+        Input('lift-over-results-statistics', 'children')
+    )
+    def disable_lift_over_button_upon_run(n_clicks,  *_):
+        return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
 
     @app.callback(
         Output('lift-over-results-intro', 'children'),

@@ -1,4 +1,4 @@
-from dash import Input, Output, State, ctx, ALL, html, no_update
+from dash import Input, Output, State, ctx, ALL, html, no_update, dcc
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -92,7 +92,7 @@ def init_callback(app):
         State('text-mining-query', 'value'),
         Input('text-mining-result-table', 'data'),
     )
-    def trigger(n_clicks, text_mining_query, *_):
+    def disable_text_mining_button_upon_run(n_clicks, text_mining_query, *_):
         is_there_error, _ = is_error(text_mining_query)
 
         if is_there_error:
@@ -144,3 +144,15 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+    @app.callback(
+        Output('text-mining-download-df-to-csv', 'data'),
+        Input('text-mining-export-table', 'n_clicks'),
+        State('text-mining-result-table', 'data'),
+    )
+    def download_text_mining_table_to_csv(download_n_clicks, text_mining_df, ):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(text_mining_df)
+            return dcc.send_data_frame(df.to_csv, f'Text Mining Analysis Table.csv', index=False)
+
+        raise PreventUpdate
