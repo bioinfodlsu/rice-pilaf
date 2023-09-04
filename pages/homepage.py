@@ -20,16 +20,14 @@ genomic_interval_modal = dbc.Modal([
         html.Span('Enter genomic intervals like so: '), html.Span(
             'Chr01:100000-200000', className='text-muted'),
         html.Br(),
-        html.Span(
-            'Multiple intervals should be separated by a semicolon like so: '),
-        html.Span('Chr01:100000-200000;Chr02:300000-400000',
-                  className='text-muted'),
-        html.Br(),
-        html.Span(
+        html.P([
+            html.Span(
+                'Multiple intervals should be separated by a semicolon like so: '),
+            html.Span('Chr01:100000-200000;Chr02:300000-400000',
+                      className='text-muted')
+        ]),
+        html.P(
             'These intervals are obtained from LD-based clumping of significant GWAS SNPs or from QTL mapping studies.'),
-        html.Br(),
-        html.Br(),
-
         html.P(
             'We also provide some sample genomic intervals, taken from the following GWAS/QTL analyses:'),
         html.Ul([
@@ -65,7 +63,8 @@ genomic_interval_modal = dbc.Modal([
     ])],
     id='genomic-interval-modal',
     is_open=False,
-    size='xl'
+    size='xl',
+    scrollable=True
 )
 
 # ======
