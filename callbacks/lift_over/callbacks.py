@@ -60,7 +60,7 @@ def init_callback(app):
         Input('lift-over-results-table', 'data'),
         Input('lift-over-results-statistics', 'children')
     )
-    def disable_text_mining_button_upon_run(n_clicks,  *_):
+    def disable_lift_over_button_upon_run(n_clicks,  *_):
         return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
 
     @app.callback(
