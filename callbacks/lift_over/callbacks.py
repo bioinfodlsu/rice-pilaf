@@ -433,7 +433,7 @@ def init_callback(app):
     )
     def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
         if download_n_clicks >= 1:
-            df = pd.DataFrame(lift_over_df)
+            df = pd.DataFrame(purge_html_export_table(lift_over_df))
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
 
         raise PreventUpdate

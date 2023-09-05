@@ -90,7 +90,7 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
-    
+
     @app.callback(
         Output('coexpression-submit', 'disabled'),
 
@@ -486,11 +486,24 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-clustering-algo-modal', 'is_open'),
-        Input('coexpression-clustering-algo-tooltip', 'n_clicks')
+        Output('coexpression-network-modal', 'is_open'),
+        Output('coexpression-parameter-modal', 'is_open'),
+
+        Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
+        Input('coexpression-network-tooltip', 'n_clicks'),
+        Input('coexpression-parameter-tooltip', 'n_clicks')
     )
-    def open_modals(tooltip_n_clicks):
-        if tooltip_n_clicks > 0:
-            return True
+    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks):
+        if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
+            return True, False, False
+
+        if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
+            return False, True, False
+
+        if ctx.triggered_id == 'coexpression-parameter-tooltip' and parameter_tooltip_n_clicks > 0:
+            return False, False, True
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),
@@ -508,7 +521,7 @@ def init_callback(app):
     )
     def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
         if download_n_clicks >= 1:
-            df = pd.DataFrame(coexpression_df)
+            df = pd.DataFrame(purge_html_export_table(coexpression_df))
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
 
         raise PreventUpdate

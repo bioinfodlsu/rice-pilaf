@@ -111,6 +111,44 @@ module_detection_algo_modal = dbc.Modal([
 # Coexpression Networks
 # ======================
 
+ricenet = html.Li([
+    html.B('RiceNet v2'),
+    html.Br(),
+    html.Div([html.Span(
+        'RicePilaf uses the component network derived from the co-expression of '),
+        html.I('Oryza sativa '),
+        html.Span(
+        'genes across microarray experiments.',
+    )], className='algo-desc'),
+    html.Div([
+        html.Span(
+             'Lee, T., Oh, T., Yang, S., Shin, J., Hwang, S., Kim, C. Y., Kim, H., Shim, H., Shim, J. E., Ronald, P. C., & Lee, I. (2015). RiceNet v2: An improved network prioritization server for rice genes. '),
+        html.I('Nucleic Acids Research, 43'),
+        html.Span('(W1), W122–W127 '),
+        html.A(
+            'https://doi.org/10.1093/nar/gkv253',
+            href='https://doi.org/10.1093/nar/gkv253',
+            target='_blank')
+    ], className='reference')
+])
+
+rcrn = html.Li([
+    html.B('Rice Combined Mutual Ranked Network (RCRN)'),
+    html.Br(),
+    html.Span(
+        'RicePilaf uses the integrated RCRN network.',
+        className='algo-desc'),
+    html.Div([
+        html.Span(
+             'Zhao, K., Lin, F., Romero-Gamboa, S. P., Saha, P., Goh, H. J., An, G., Jung, K. H., Hazen, S. P., & Bartley, L. E. (2019). Rice genome-scale network integration reveals transcriptional regulators of grass cell wall synthesis. '),
+        html.I('Frontiers in Plant Science, 10, '),
+        html.Span('1275. '),
+        html.A(
+            'https://doi.org/10.3389/fpls.2019.01275',
+            href='https://doi.org/10.3389/fpls.2019.01275',
+            target='_blank')
+    ], className='reference')
+])
 
 coexpression_network_modal = dbc.Modal([
     dbc.ModalHeader(
@@ -118,16 +156,63 @@ coexpression_network_modal = dbc.Modal([
     ),
     dbc.ModalBody([
         html.P(
-            'Since genes can possibly be involved in multiple biological functions or processes, the algorithms supported by RicePilaf allow for overlapping modules (that is, a given gene may belong to multiple modules):'),
+            'RicePilaf provides the option to choose between two co-expression networks:'),
         html.Ul([
-            clusterone, html.Br(), coach, html.Br(), demon, html.Br(), fox
+            ricenet, html.Br(), rcrn
         ])
     ])],
-    id='coexpression-clustering-algo-modal',
+    id='coexpression-network-modal',
     is_open=False,
-    size='xl'
+    size='xl',
+    scrollable=True
 )
 
+# ===========
+# Parameters
+# ===========
+
+parameter_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Coexpression Networks')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'RicePilaf provides the option to configure selected parameters when running the module detection algorithms:'),
+        html.Ul([
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'ClusterOne', href='https://doi.org/10.1038/nmeth.1938', target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the minimum cluster density.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'COACH', href='https://doi.org/10.1186/1471-2105-10-169', target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the maximum core affinity.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A(
+                    'DEMON', href='https://doi.org/10.1145/2339530.2339630', target='_blank'),
+                html.Span(', the parameter pertains to the merging threshold.')
+            ]),
+            html.Li([
+                html.Span('For '),
+                html.A('FOX', href='https://doi.org/10.1145/3404970',
+                       target='_blank'),
+                html.Span(
+                    ', the parameter pertains to the weighted community clustering metric.')
+            ])
+        ])
+    ])],
+    id='coexpression-parameter-modal',
+    is_open=False,
+    size='xl',
+    scrollable=True
+)
 
 # ============
 # Main Layout
@@ -186,7 +271,7 @@ layout = html.Div(
 
             dbc.Label(['Select the co-expression network',
                        html.I(
-                           className='bi bi-info-circle', id='coexpression-network-tooltip')]),
+                           className='bi bi-info-circle', id='coexpression-network-tooltip', n_clicks=0)]),
 
             html.Br(),
 
@@ -208,7 +293,6 @@ layout = html.Div(
                        )]),
 
             module_detection_algo_modal,
-
             html.Br(),
 
             dbc.RadioItems(
@@ -219,13 +303,14 @@ layout = html.Div(
                 className='ms-3 mt-1'
             ),
 
+            coexpression_network_modal,
             html.Br(),
 
             dbc.Label(['Select the ',
                        html.Span('parameter for running the algorithm',
                                  id='coexpression-parameter-name'),
                        html.I(
-                           className='bi bi-info-circle', id='coexpression-parameter-tooltip')],
+                           className='bi bi-info-circle', id='coexpression-parameter-tooltip', n_clicks=0)],
                       className='mb-4'),
 
             # Should also be changed if parameter space is changed
@@ -235,6 +320,7 @@ layout = html.Div(
                                  value=30)],
                      id='coexpression-parameter-slider-container'),
 
+            parameter_modal,
             html.Br(),
 
             dbc.Button('Run Analysis',

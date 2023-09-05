@@ -152,7 +152,7 @@ def init_callback(app):
     )
     def download_text_mining_table_to_csv(download_n_clicks, text_mining_df, ):
         if download_n_clicks >= 1:
-            df = pd.DataFrame(text_mining_df)
+            df = pd.DataFrame(purge_html_export_table(text_mining_df))
             return dcc.send_data_frame(df.to_csv, f'Text Mining Analysis Table.csv', index=False)
 
         raise PreventUpdate

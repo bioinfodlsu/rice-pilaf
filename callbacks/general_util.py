@@ -1,4 +1,5 @@
 import pandas as pd
+import regex as re
 
 NULL_PLACEHOLDER = '&ndash;'
 
@@ -54,3 +55,13 @@ def get_num_entries(table, column):
         return 0
 
     return table[column].count()
+
+
+def purge_html_export_table(table):
+    for row in table:
+        for key in row.keys():
+            row[key] = row[key].replace('&nbsp;', '')
+            row[key] = row[key].replace('\n', ';')
+            row[key] = re.sub(r'<.+?>', '', row[key])
+
+    return table
