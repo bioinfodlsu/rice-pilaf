@@ -10,7 +10,7 @@ from ..file_util import *
 
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
-SIMILARITY_CUTOFF = 75
+SIMILARITY_CUTOFF = 85
 MAX_NUM_RESULTS = 100
 
 
@@ -101,6 +101,7 @@ def text_mining_query_search(query_string):
 
     df = pd.DataFrame(columns=COLNAMES)
     pubmed_matches = set()
+    pubmed_matches_100 = set()
 
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
         for line in f:
@@ -177,8 +178,12 @@ def text_mining_query_search(query_string):
                         df.loc[len(df.index)] = [Entity, PMID,
                                                  Title, Sentence, similarity.score]
 
-                        if df.shape[0] == MAX_NUM_RESULTS:
+                        if similarity.score == 100:
+                            pubmed_matches_100.add(PMID)
+
+                        if len(pubmed_matches_100) == MAX_NUM_RESULTS:
                             break
+
             except:
                 pass
 
