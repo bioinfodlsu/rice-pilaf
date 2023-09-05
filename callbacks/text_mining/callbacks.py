@@ -120,19 +120,13 @@ def init_callback(app):
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in text_mining_results_df.columns]
 
-                num_entries = get_num_entries(text_mining_results_df, "PMID")
                 num_unique_entries = get_num_unique_entries(
                     text_mining_results_df, "PMID")
 
-                if num_entries == 1:
-                    stats = f'Found {num_entries} match '
-                else:
-                    stats = f'Found {num_entries} matches '
-
                 if num_unique_entries == 1:
-                    stats += f'across {num_unique_entries} publication'
+                    stats = f'Found matches across {num_unique_entries} publication'
                 else:
-                    stats += f'across {num_unique_entries} publications'
+                    stats = f'Found matches across {num_unique_entries} publications'
 
                 return text_mining_results_df.to_dict('records'), columns, stats
 

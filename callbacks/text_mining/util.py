@@ -49,6 +49,7 @@ def addl_sanitize_gene(text):
 
 def addl_sanitize_for_bold(text):
     text = re.sub(r'</b$', '</b>', text)
+    text = re.sub(r'<</b>\s+/\s+i>', '</b></i>', text)
 
     return text
 
@@ -80,6 +81,7 @@ def text_mining_query_search(query_string):
         return pd.read_csv(text_mining_path)
 
     df = pd.DataFrame(columns=COLNAMES)
+    pubmed_matches = set()
 
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
         for line in f:
@@ -107,6 +109,7 @@ def text_mining_query_search(query_string):
                     try:
                         PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
                             sanitize_text, line.split('\t'))
+
                     except Exception as e:
                         while True:
                             # Sometimes there is a newline in the abstract, which causes a literal line break
@@ -121,9 +124,13 @@ def text_mining_query_search(query_string):
                             try:
                                 PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
                                     sanitize_text, line.split('\t'))
+
                                 break
                             except:
                                 pass
+
+                    if PMID in pubmed_matches:
+                        continue
 
                     Entity = addl_sanitize_gene(Entity)
                     Title = Title[:-1]
@@ -134,9 +141,14 @@ def text_mining_query_search(query_string):
                     Entity = addl_sanitize_for_bold(Entity)
                     Type = addl_sanitize_for_bold(Type)
 
+                    if PMID == '34199720':
+                        print(Sentence)
+
                     if Type == 'Gene':
                         if Sentence == 'None':
                             Sentence = Title
+
+                        pubmed_matches.add(PMID)
                         df.loc[len(df.index)] = [Entity, PMID,
                                                  Title, Sentence, similarity.score]
 
