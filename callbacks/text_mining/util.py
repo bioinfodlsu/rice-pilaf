@@ -49,6 +49,7 @@ def addl_sanitize_gene(text):
 
 def addl_sanitize_for_bold(text):
     text = re.sub(r'</b$', '</b>', text)
+    text = re.sub(r'<</b>\s+/\s+i>', '</b></i>', text)
 
     return text
 
@@ -67,6 +68,25 @@ def find_index_space_after(index, text):
     return index
 
 
+def display_aligned_substring_in_bold(text, similarity):
+    before_match = text[:find_index_space_before(
+        similarity.dest_start, text)]
+    match = text[find_index_space_before(
+        similarity.dest_start, text):find_index_space_after(similarity.dest_end, text)]
+    after_match = text[find_index_space_after(
+        similarity.dest_end, text):]
+
+    text = before_match
+    if before_match[:-1] == ' ' or match[0] == ' ':
+        text += ' '
+    text += f'<b>{match}</b>'
+    if after_match[0] == ' ':
+        text += ' '
+    text += after_match
+
+    return text
+
+
 def text_mining_query_search(query_string):
     # Make case-insensitive and remove starting and trailing spaces
     query_string = query_string.lower().strip()
@@ -80,6 +100,7 @@ def text_mining_query_search(query_string):
         return pd.read_csv(text_mining_path)
 
     df = pd.DataFrame(columns=COLNAMES)
+    pubmed_matches = set()
 
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
         for line in f:
@@ -88,25 +109,13 @@ def text_mining_query_search(query_string):
 
             try:
                 # Display the matching substring in bold
-                before_match = line[:find_index_space_before(
-                    similarity.dest_start, line)]
-                match = line[find_index_space_before(
-                    similarity.dest_start, line):find_index_space_after(similarity.dest_end, line)]
-                after_match = line[find_index_space_after(
-                    similarity.dest_end, line):]
-
-                line = before_match
-                if before_match[:-1] == ' ' or match[0] == ' ':
-                    line += ' '
-                line += f'<b>{match}</b>'
-                if after_match[0] == ' ':
-                    line += ' '
-                line += after_match
+                line = display_aligned_substring_in_bold(line, similarity)
 
                 if similarity.score > 0:
                     try:
                         PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
                             sanitize_text, line.split('\t'))
+
                     except Exception as e:
                         while True:
                             # Sometimes there is a newline in the abstract, which causes a literal line break
@@ -121,9 +130,13 @@ def text_mining_query_search(query_string):
                             try:
                                 PMID, Title, Sentence, _, Entity, _, Type, _, _, _ = map(
                                     sanitize_text, line.split('\t'))
+
                                 break
                             except:
                                 pass
+
+                    if PMID in pubmed_matches:
+                        continue
 
                     Entity = addl_sanitize_gene(Entity)
                     Title = Title[:-1]
@@ -137,6 +150,30 @@ def text_mining_query_search(query_string):
                     if Type == 'Gene':
                         if Sentence == 'None':
                             Sentence = Title
+
+                        # If the Type is the one containing the aligned substring, then no bold substring is displayed to the user
+                        # We resort to parsing the string again, but, this time, excluding the Type
+                        if '<b>' not in Title and '<b>' not in Sentence and '<b>' not in Entity:
+                            title_sim = rapidfuzz.fuzz.partial_ratio_alignment(
+                                query_string, Title.lower(), score_cutoff=SIMILARITY_CUTOFF)
+                            sentence_sim = rapidfuzz.fuzz.partial_ratio_alignment(
+                                query_string, Sentence.lower(), score_cutoff=SIMILARITY_CUTOFF)
+                            entity_sim = rapidfuzz.fuzz.partial_ratio_alignment(
+                                query_string, Entity.lower(), score_cutoff=SIMILARITY_CUTOFF)
+
+                            max_sim = max(title_sim.score,
+                                          sentence_sim.score, entity_sim.score)
+                            if max_sim == title_sim.score:
+                                Title = display_aligned_substring_in_bold(
+                                    Title, title_sim)
+                            elif max_sim == sentence_sim.score:
+                                Sentence = display_aligned_substring_in_bold(
+                                    Sentence, sentence_sim)
+                            else:
+                                Entity = display_aligned_substring_in_bold(
+                                    Entity, entity_sim)
+
+                        pubmed_matches.add(PMID)
                         df.loc[len(df.index)] = [Entity, PMID,
                                                  Title, Sentence, similarity.score]
 
