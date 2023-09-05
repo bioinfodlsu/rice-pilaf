@@ -11,7 +11,7 @@ from ..file_util import *
 
 COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
 SIMILARITY_CUTOFF = 75
-MAX_NUM_RESULTS = 5000
+MAX_NUM_RESULTS = 100
 
 
 def sanitize_text(text):
