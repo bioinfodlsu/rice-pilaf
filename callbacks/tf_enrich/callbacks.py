@@ -1,4 +1,4 @@
-from dash import Input, Output, State, html, dcc
+from dash import Input, Output, State, html, dcc, ctx
 from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
@@ -56,6 +56,15 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+
+    @app.callback(
+        Output('tfbs-submit', 'disabled'),
+
+        Input('tfbs-submit', 'n_clicks'),
+        Input('tf-enrichment-result-table', 'data')
+    )
+    def disable_tfbs_button_upon_run(n_clicks,  *_):
+        return ctx.triggered_id == 'tfbs-submit' and n_clicks > 0
 
     @app.callback(
         Output('tf-enrichment-result-table', 'data'),
