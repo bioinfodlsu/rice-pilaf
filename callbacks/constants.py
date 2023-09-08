@@ -11,12 +11,14 @@ class Constants(object):
 
     ANNOTATIONS = f'{APP_DATA}/annotations'
     ALIGNMENTS = f'{APP_DATA}/alignments'
-    OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
-    NB_MAPPING = f'{APP_DATA}/nb_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
-    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
     TEXT_MINING = f'{APP_DATA}/text_mining'
     QTARO = f'{APP_DATA}/qtaro'
+
+    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
+    MSU_MAPPING = f'{GENE_ID_MAPPING}/msu_mapping'
+    OGI_MAPPING = f'{GENE_ID_MAPPING}/ogi_mapping'
+    NB_MAPPING = f'{GENE_ID_MAPPING}/nb_mapping'
 
     GENOMES_NIPPONBARE = f'{APP_DATA}/genomes/Nipponbare'
     ANNOTATIONS_NB = f'{ANNOTATIONS}/Nb'
