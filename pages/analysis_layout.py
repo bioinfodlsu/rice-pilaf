@@ -13,11 +13,11 @@ from callbacks.constants import Constants
 
 def get_analaysis_layout_dictionary():
     return OrderedDict({
-        Constants.LIFT_OVER: 'Gene List and Lift-Over',
-        Constants.TEXT_MINING: 'Gene Retrieval by Text Mining',
-        Constants.COEXPRESSION: 'Co-Expression Network Analysis',
-        Constants.TFBS: 'Regulatory Feature Enrichment',
-        Constants.IGV: 'Browse Loci'
+        Constants.LABEL_LIFT_OVER: 'Gene List and Lift-Over',
+        Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
+        Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',
+        Constants.LABEL_TFBS: 'Regulatory Feature Enrichment',
+        Constants.LABEL_IGV: 'Browse Loci'
     })
 
 

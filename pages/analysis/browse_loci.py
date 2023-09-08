@@ -6,7 +6,7 @@ from callbacks.constants import Constants
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.IGV
+        'label': Constants.LABEL_IGV
     },
     hidden=True,
     children=[

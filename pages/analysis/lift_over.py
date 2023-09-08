@@ -7,25 +7,25 @@ from callbacks.constants import Constants
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.LIFT_OVER
+        'label': Constants.LABEL_LIFT_OVER
     },
     hidden=True,
     children=[
         html.Div([
             html.P(
-               ['In this page, you can obtain the list of genes overlapping your input intervals. '
-                'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to. Click ',
+                ['In this page, you can obtain the list of genes overlapping your input intervals. '
+                 'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to. Click ',
                  dcc.Link(
-                    ['here ', html.I(
-                        id='demo-link',
-                        className='fa-solid fa-up-right-from-square fa-2xs'
-                    )],
-                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.1-Gene-List-and-Lift%E2%80%90over',
-                    target='_blank',
-                    className='top-navbar-item'
-                ),
-                ' for user guide.'
-               ]
+                     ['here ', html.I(
+                         id='demo-link',
+                         className='fa-solid fa-up-right-from-square fa-2xs'
+                     )],
+                     href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.1-Gene-List-and-Lift%E2%80%90over',
+                     target='_blank',
+                     className='top-navbar-item'
+                 ),
+                 ' for user guide.'
+                 ]
             )
         ], className='analysis-intro p-3'),
 
