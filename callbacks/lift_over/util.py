@@ -354,6 +354,11 @@ def get_ogi_other_ref(ref, nb_intervals):
         for intersection in gff_intersections:
             ref_interval = to_genomic_interval(
                 intersection.attributes['Name'][0])
+
+            # Skip if assembler does not know what to do with contig
+            if is_error(ref_interval):
+                continue
+
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
@@ -544,6 +549,11 @@ def get_genes_in_other_ref(ref, nb_intervals):
         for intersection in gff_intersections:
             ref_interval = to_genomic_interval(
                 intersection.attributes['Name'][0])
+
+            # Skip if assembler does not know what to do with contig
+            if is_error(ref_interval):
+                continue
+
             genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
                                                           completely_within=False, featuretype='gene'))
 
