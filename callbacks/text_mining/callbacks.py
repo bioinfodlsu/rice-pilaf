@@ -125,6 +125,8 @@ def init_callback(app):
 
                 if num_unique_entries == 1:
                     stats = f'Found matches across {num_unique_entries} publication'
+                elif num_unique_entries == MAX_NUM_RESULTS:
+                    stats = f'Found matches across over {num_unique_entries} publications. Consider making your search query more specific'
                 else:
                     stats = f'Found matches across {num_unique_entries} publications'
 
