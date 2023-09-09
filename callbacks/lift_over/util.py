@@ -482,8 +482,6 @@ def get_genes_in_Nb(nb_intervals):
         interpro_list = [get_interpro_entry(
             gene.id) for gene in genes_in_interval]
 
-        # Get InterPro annotations
-
         # Construct the data frame
         df = pd.DataFrame({
             'OGI': ogi_list,
