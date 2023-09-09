@@ -41,12 +41,8 @@ class Constants(object):
     GENOME_WIDE_BED = 'query_genomic_intervals'
     TFBS_ANNOTATION = f'{TFBS_BEDS}/annotation'
 
-    DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
-    ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
-
     ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
     ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
-    ENRICHMENT_ANALYSIS_MODULES = 'modules'
 
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
