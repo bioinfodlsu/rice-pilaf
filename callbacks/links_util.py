@@ -1,6 +1,7 @@
 A_HREF = '<a style="white-space:nowrap" target = "_blank" href="'
+A_HREF_WITH_WORD_WRAP = '<a target = "_blank" href="'
 CLOSE_A_HREF = '">'
-LINK_ICON = '&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></a>'
+LINK_ICON = '<span style="white-space:nowrap">&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></span></a>'
 
 
 def get_genes_from_kegg_link(link):
@@ -56,3 +57,7 @@ def get_rgi_genecard_link(result, id_col):
 
 def get_rgi_orthogroup_link(result, id_col):
     return A_HREF + 'https://riceome.hzau.edu.cn/orthogroup/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
+
+
+def get_interpro_link_single_str(term, id):
+    return A_HREF_WITH_WORD_WRAP + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
