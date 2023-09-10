@@ -29,7 +29,7 @@ other_ref_genomes = {'N22': 'aus Nagina-22',
                      'IR64': 'indica IR64',
                      'CMeo': 'japonica CHAO MEO'}
 
-NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot',
+NB_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'InterPro',
               'OGI', 'Chromosome', 'Start', 'End', 'Strand', 'QTL Analyses', 'PubMed Article IDs']
 OTHER_REF_COLUMNS = ['OGI', 'Name', 'Chromosome', 'Start', 'End', 'Strand']
 FRONT_FACING_COLUMNS = ['Name', 'Description', 'UniProtKB/Swiss-Prot', 'OGI']
@@ -403,8 +403,11 @@ def get_qtaro_entry(mapping, gene):
         return NULL_PLACEHOLDER
 
 
-def get_qtaro_entries(mapping, genes):
-    return [get_qtaro_entry(mapping, gene) for gene in genes]
+def get_qtaro_entries(genes):
+    with open(Constants.QTARO_DICTIONARY, 'rb') as f:
+        qtaro_dict = pickle.load(f)
+
+    return [get_qtaro_entry(qtaro_dict, gene) for gene in genes]
 
 
 def get_pubmed_entry(gene):
@@ -417,17 +420,19 @@ def get_pubmed_entry(gene):
     except FileNotFoundError:
         return NULL_PLACEHOLDER
 
-    pubmed_str = ''
-    for idx, pubmed in enumerate(pubmed_ids):
-        if idx % 2 == 0:
-            pubmed_str += f'{pubmed}&nbsp;&nbsp;&nbsp;'
-        else:
-            pubmed_str += f'{pubmed}\n'
+    return '\n'.join(pubmed_ids)
 
-    if pubmed_str[-1] == '\n':        # Ends in a newline
-        return pubmed_str[:-len('\n')]
 
-    return pubmed_str[:-len('&nbsp;&nbsp;&nbsp;')]
+def get_interpro_entry(gene):
+    with open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_f,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_f:
+        interpro_mapping = pickle.load(interpro_f)
+        iric_mapping = pickle.load(iric_mapping_f)
+
+        try:
+            return '<br><br>'.join([get_interpro_link_single_str(entry[1], entry[0])
+                                    for entry in interpro_mapping[iric_mapping[gene]] if entry[1]])
+        except KeyError:
+            return NULL_PLACEHOLDER
 
 
 def get_nb_ortholog(gene, ref):
@@ -472,13 +477,10 @@ def get_genes_in_Nb(nb_intervals):
             ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
                                      for gene in genes_in_interval], ogi_mapping)
 
-        # Get QTARO annotations
-        with open(Constants.QTARO_DICTIONARY, 'rb') as f:
-            qtaro_dict = pickle.load(f)
-            qtaro_list = get_qtaro_entries(
-                qtaro_dict, [gene.id for gene in genes_in_interval])
-
+        qtaro_list = get_qtaro_entries([gene.id for gene in genes_in_interval])
         pubmed_ids = [get_pubmed_entry(gene.id) for gene in genes_in_interval]
+        interpro_list = [get_interpro_entry(
+            gene.id) for gene in genes_in_interval]
 
         # Construct the data frame
         df = pd.DataFrame({
@@ -489,7 +491,8 @@ def get_genes_in_Nb(nb_intervals):
             'End': [gene.end for gene in genes_in_interval],
             'Strand': [gene.strand for gene in genes_in_interval],
             'QTL Analyses': qtaro_list,
-            'PubMed Article IDs': pubmed_ids
+            'PubMed Article IDs': pubmed_ids,
+            'InterPro': interpro_list
         })
 
         dfs.append(df)
