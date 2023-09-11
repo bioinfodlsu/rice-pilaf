@@ -495,7 +495,7 @@ layout = html.Div(
                             ]
                         ),
 
-                        html.Div(id='coexpression-module-graph-node-data'),
+                        html.Div(id='coexpression-module-graph-node-data', hidden=True),
                         
                         dcc.Loading([
                             cyto.Cytoscape(
