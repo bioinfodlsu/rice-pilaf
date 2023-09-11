@@ -172,6 +172,9 @@ def init_callback(app):
             display_tracks = [
                 track for track in track_info if selected_tracks and track['name'] in selected_tracks]
 
+            selected_nb_intervals_str = lift_over_util.to_genomic_interval(selected_nb_intervals_str)
+            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
+
             return html.Div([
                 dashbio.Igv(
                     id='igv-Nipponbare-local',
