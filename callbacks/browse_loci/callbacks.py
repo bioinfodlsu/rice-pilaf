@@ -110,7 +110,8 @@ def init_callback(app):
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval):
         if homepage_is_submitted:
-            igv_options = nb_intervals_str.split(';')
+            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str) 
+            igv_options = igv_options.split(';')
 
             if not selected_nb_interval:
                 selected_nb_interval = igv_options[0]
