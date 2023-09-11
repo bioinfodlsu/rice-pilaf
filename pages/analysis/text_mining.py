@@ -6,7 +6,7 @@ from callbacks.constants import Constants
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.TEXT_MINING
+        'label': Constants.LABEL_TEXT_MINING
     },
     hidden=True,
     children=[
@@ -14,16 +14,16 @@ layout = html.Div(
         html.Div([
             html.P(
                 [
-                   'In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. '
-                   'from a database constructed from text-mined PubMed abstracts. Click ',
+                    'In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. '
+                    'from a database constructed from text-mined PubMed abstracts. Click ',
                     dcc.Link(
-                    ['here ', html.I(
-                        id='demo-link',
-                        className='fa-solid fa-up-right-from-square fa-2xs'
-                    )],
-                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.2-Gene-retrieval-by-text-mining',
-                    target='_blank',
-                    className='top-navbar-item'
+                        ['here ', html.I(
+                            id='demo-link',
+                            className='fa-solid fa-up-right-from-square fa-2xs'
+                        )],
+                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.2-Gene-retrieval-by-text-mining',
+                        target='_blank',
+                        className='top-navbar-item'
                     ),
                     ' for user guide.'
                 ]

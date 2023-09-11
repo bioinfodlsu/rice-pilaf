@@ -1,9 +1,9 @@
 class Constants(object):
-    LIFT_OVER = 'lift-over'
-    COEXPRESSION = 'co-expression'
-    TFBS = 'tf-enrichment'
-    IGV = 'browse-loci'
-    TEXT_MINING = 'text-mining'
+    LABEL_LIFT_OVER = 'lift-over'
+    LABEL_COEXPRESSION = 'co-expression'
+    LABEL_TFBS = 'tf-enrichment'
+    LABEL_IGV = 'browse-loci'
+    LABEL_TEXT_MINING = 'text-mining'
 
     DATA = 'static'
     APP_DATA = f'{DATA}/app_data'
@@ -11,12 +11,16 @@ class Constants(object):
 
     ANNOTATIONS = f'{APP_DATA}/annotations'
     ALIGNMENTS = f'{APP_DATA}/alignments'
-    OGI_MAPPING = f'{APP_DATA}/ogi_mapping'
-    NB_MAPPING = f'{APP_DATA}/nb_mapping'
     GENE_DESCRIPTIONS = f'{APP_DATA}/gene_descriptions'
-    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
     TEXT_MINING = f'{APP_DATA}/text_mining'
     QTARO = f'{APP_DATA}/qtaro'
+    IRIC = f'{APP_DATA}/iric_data'
+
+    GENE_ID_MAPPING = f'{APP_DATA}/gene_id_mapping'
+    MSU_MAPPING = f'{GENE_ID_MAPPING}/msu_mapping'
+    OGI_MAPPING = f'{GENE_ID_MAPPING}/ogi_mapping'
+    NB_MAPPING = f'{GENE_ID_MAPPING}/nb_mapping'
+    IRIC_MAPPING = f'{GENE_ID_MAPPING}/iric_mapping'
 
     GENOMES_NIPPONBARE = f'{APP_DATA}/genomes/Nipponbare'
     ANNOTATIONS_NB = f'{ANNOTATIONS}/Nb'
@@ -39,12 +43,8 @@ class Constants(object):
     GENOME_WIDE_BED = 'query_genomic_intervals'
     TFBS_ANNOTATION = f'{TFBS_BEDS}/annotation'
 
-    DATA_PREPARATION_SCRIPTS = 'prepare_data/workflow/scripts'
-    ENRICHMENT_ANALYSIS_SCRIPTS = f'{DATA_PREPARATION_SCRIPTS}/enrichment_analysis'
-
     ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
     ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
-    ENRICHMENT_ANALYSIS_MODULES = 'modules'
 
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'

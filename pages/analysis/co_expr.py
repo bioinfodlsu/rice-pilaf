@@ -221,7 +221,7 @@ parameter_modal = dbc.Modal([
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.COEXPRESSION
+        'label': Constants.LABEL_COEXPRESSION
     },
     hidden=True,
 

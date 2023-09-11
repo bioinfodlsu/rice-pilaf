@@ -6,24 +6,24 @@ from callbacks.constants import Constants
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.TFBS
+        'label': Constants.LABEL_TFBS
     },
     hidden=True,
     children=[
         html.Div([
             html.P(
                 ['In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,'
-                'the idea being that your intervals might contain variants that affect the binding affinity of transcription factors. Click ',
-                dcc.Link(
-                    ['here ', html.I(
-                        id='demo-link',
-                        className='fa-solid fa-up-right-from-square fa-2xs'
-                    )],
-                    href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.4-Regulatory-Feature-Enrichment',
-                    target='_blank',
-                    className='top-navbar-item'
-                ),
-                ' for user guide.']
+                 'the idea being that your intervals might contain variants that affect the binding affinity of transcription factors. Click ',
+                 dcc.Link(
+                     ['here ', html.I(
+                         id='demo-link',
+                         className='fa-solid fa-up-right-from-square fa-2xs'
+                     )],
+                     href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.4-Regulatory-Feature-Enrichment',
+                     target='_blank',
+                     className='top-navbar-item'
+                 ),
+                    ' for user guide.']
             )
         ], className='analysis-intro p-3'),
 

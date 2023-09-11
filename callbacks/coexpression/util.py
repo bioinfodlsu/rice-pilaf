@@ -264,7 +264,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     Returns:
     - Equivalent MSU accessions of the KEGG transcript IDs
     """
-    with open(f'{Constants.GENE_ID_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
+    with open(f'{Constants.MSU_MAPPING}/{network}/transcript-to-msu-id.pickle', 'rb') as f:
         mapping_dict = pickle.load(f)
 
     output_str = ''
