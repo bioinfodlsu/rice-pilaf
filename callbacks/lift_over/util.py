@@ -443,59 +443,61 @@ def get_genes_in_other_ref(ref, nb_intervals):
     Returns:
     - Data frame containing the genes in references other than Nipponbare
     """
+    dfs = []
 
     # Get intervals from other refs that align to (parts) of the input loci
     db_align = gffutils.FeatureDB(
-        f'{Constants.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
+        f'{Constants.ALIGNMENTS}/Nb_{ref}/Nb_{ref}.gff.db')
 
     # Get corresponding intervals on ref
     db_annotation = gffutils.FeatureDB(
         f"{Constants.ANNOTATIONS}/{ref}/{ref}.gff.db")
 
-    dfs = []
+    ogi_file_path = f'{Constants.OGI_MAPPING}/{ref}_to_ogi.pickle'
 
-    for nb_interval in nb_intervals:
-        gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
-                                                 completely_within=False))
-        for intersection in gff_intersections:
-            ref_interval = to_genomic_interval(
-                intersection.attributes['Name'][0])
+    with open(ogi_file_path, 'rb') as ogi_file:
+        ogi_mapping = pickle.load(ogi_file)
 
-            # Skip if assembler does not know what to do with contig
-            if is_error(ref_interval):
-                continue
+        for nb_interval in nb_intervals:
+            gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
+                                                     completely_within=False))
+            for intersection in gff_intersections:
+                ref_interval = to_genomic_interval(
+                    intersection.attributes['Name'][0])
 
-            genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
-                                                          completely_within=False, featuretype='gene'))
+                # Skip if assembler does not know what to do with contig
+                if is_error(ref_interval):
+                    continue
 
-            # Map accessions to their respective OGIs
-            ogi_mapping_path = f'{Constants.OGI_MAPPING}/{ref}_to_ogi.pickle'
-            ogi_list = []
-            with open(ogi_mapping_path, 'rb') as f:
-                ogi_mapping = pickle.load(f)
-                ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
-                                         for gene in genes_in_interval], ogi_mapping)
+                genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
+                                                              completely_within=False, featuretype='gene'))
+                gene_ids_in_interval = [sanitize_gene_id(
+                    gene.id) for gene in genes_in_interval]
 
-            # Construct the data frame
-            df = pd.DataFrame({
-                'OGI': ogi_list,
-                'Name': [sanitize_gene_id(gene.id) for gene in genes_in_interval],
-                'Chromosome': [gene.chrom for gene in genes_in_interval],
-                'Start': [gene.start for gene in genes_in_interval],
-                'End': [gene.end for gene in genes_in_interval],
-                'Strand': [gene.strand for gene in genes_in_interval]
-            })
-            dfs.append(df)
+                # Map accessions to their respective OGIs
+                ogi_list = get_ogi_list(gene_ids_in_interval, ogi_mapping)
+
+                # Construct the data frame
+                df = pd.DataFrame({
+                    'OGI': ogi_list,
+                    'Name': gene_ids_in_interval,
+                    'Chromosome': [gene.chrom for gene in genes_in_interval],
+                    'Start': [gene.start for gene in genes_in_interval],
+                    'End': [gene.end for gene in genes_in_interval],
+                    'Strand': [gene.strand for gene in genes_in_interval]
+                })
+
+                dfs.append(df)
 
     try:
         table = pd.concat(dfs, ignore_index=True)
         if table.shape[0] == 0:
-            return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
+            return create_empty_df_with_cols(OTHER_REF_COLUMNS)
 
         return table
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_with_cols(OTHER_REF_COLUMNS)()
+        return create_empty_df_with_cols(OTHER_REF_COLUMNS)
 
 
 def get_common_genes(refs, nb_intervals):
