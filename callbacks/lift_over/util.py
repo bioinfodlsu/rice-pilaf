@@ -410,11 +410,12 @@ def get_genes_in_Nb(nb_intervals):
             f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
 
         # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
-        gene_description_df.set_index('Gene_ID')
-        table_gene_ids.set_index('Name')
+        gene_description_df = gene_description_df.set_index('Gene_ID')
+        table_gene_ids = table_gene_ids.set_index('Name')
         table = gene_description_df.join(table_gene_ids, how='right')
 
         # Reorder columns
+        table = table.reset_index()
         table = table[NB_COLUMNS]
 
         table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
@@ -525,10 +526,15 @@ def get_common_genes(refs, nb_intervals):
         genes_in_ref = genes_in_ref[['OGI', 'Name']]
 
         try:
-            common_genes = pd.merge(
-                common_genes, genes_in_ref, on='OGI')
+            common_genes = common_genes.set_index('OGI')
+            genes_in_ref = genes_in_ref.set_index('OGI')
+
+            common_genes = common_genes.join(
+                genes_in_ref, how='inner', lsuffix='_x', rsuffix='_y')
+
+            common_genes = common_genes.reset_index()
         # First instance of merging (that is, common_genes is still None)
-        except TypeError:
+        except (TypeError, AttributeError):
             common_genes = genes_in_ref
 
         common_genes = common_genes.rename(
@@ -560,8 +566,14 @@ def get_all_genes(refs, nb_intervals):
         if ref != 'Nipponbare':
             genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
-            common_genes = pd.merge(
-                common_genes, genes_in_other_ref, on='OGI', how='outer')
+
+            common_genes = common_genes.set_index('OGI')
+            genes_in_other_ref = genes_in_other_ref.set_index('OGI')
+
+            common_genes = common_genes.join(
+                genes_in_other_ref, how='outer', lsuffix='_x', rsuffix='_y')
+
+            common_genes = common_genes.reset_index()
 
             common_genes = common_genes.rename(
                 columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
@@ -594,9 +606,12 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
 
     gene_description_df = pd.read_csv(
         f'{Constants.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
+
     # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
-    unique_genes = pd.merge(gene_description_df, unique_genes,
-                            left_on='Gene_ID', right_on='Name', how='right')
+    gene_description_df = gene_description_df.set_index('Gene_ID')
+    unique_genes = unique_genes.set_index('Name')
+    unique_genes = gene_description_df.join(unique_genes, how='right')
+    unique_genes = unique_genes.reset_index()
 
     unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
         lambda x: get_nb_ortholog(x['Name'], ref), axis=1)
