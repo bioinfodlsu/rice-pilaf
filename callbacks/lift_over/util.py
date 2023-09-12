@@ -341,7 +341,7 @@ def get_interpro_entries(genes, interpro_mapping, iric_mapping):
     return [get_interpro_entry(gene, interpro_mapping, iric_mapping) for gene in genes]
 
 
-def get_nb_ortholog(gene, ref, nb_ortholog_mapping):
+def get_nb_ortholog(gene, nb_ortholog_mapping):
     if nb_ortholog_mapping[gene]:
         return ', '.join(nb_ortholog_mapping[gene])
 
@@ -598,11 +598,8 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     genes_in_nb = genes_in_nb[['OGI']]
 
     # Get set difference
-    genes_in_nb_set = set(map(tuple, genes_in_nb.values))
-    genes_in_other_ref_set = set(map(tuple, genes_in_other_ref.values))
-
-    unique_genes = pd.DataFrame(
-        list(genes_in_other_ref_set.difference(genes_in_nb_set)))
+    unique_genes = pd.concat([genes_in_other_ref, genes_in_nb, genes_in_nb]).drop_duplicates(
+        subset=['OGI'], keep=False)
 
     gene_description_df = pd.read_csv(
         f'{Constants.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
@@ -617,7 +614,7 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
         nb_ortholog_mapping = pickle.load(f)
 
         unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
-            lambda x: get_nb_ortholog(x['Name'], ref, nb_ortholog_mapping), axis=1)
+            lambda x: get_nb_ortholog(x['Name'], nb_ortholog_mapping), axis=1)
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS +
                                 ['Ortholog in Nipponbare']]
