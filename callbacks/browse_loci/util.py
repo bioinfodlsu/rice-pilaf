@@ -23,7 +23,9 @@ def write_igv_tracks_to_file(nb_intervals_str):
 
 def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
     if path_exists(source_dir):
-        loci_list = nb_intervals_str.split(';')
+        loci_list = util.sanitize_nb_intervals_str(nb_intervals_str) 
+        loci_list = loci_list.split(';')
+        
         genomic_interval_list = util.get_genomic_intervals_from_input(
             nb_intervals_str)
 

@@ -6,6 +6,8 @@ from .util import *
 from ..lift_over import util as lift_over_util
 from ..branch import *
 
+import json
+
 Input_parameter_module = namedtuple('Input_parameter_module', [
     'param_slider_marks', 'param_slider_value'])
 
@@ -532,8 +534,18 @@ def init_callback(app):
         State('coexpression-module-graph', 'elements'),
         State('homepage-genomic-intervals-submitted-input', 'data')
     )
-    def download_coexpression_table_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
+    def download_coexpression_graph_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
         if download_n_clicks >= 1:
             return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
 
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-module-graph-node-data', 'children'),
+        Input('coexpression-module-graph', 'tapNodeData')
+    )
+    def display_node_data(node_data):
+        if node_data:
+            return json.dumps(node_data)
+        
         raise PreventUpdate
