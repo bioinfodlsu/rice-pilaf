@@ -513,7 +513,7 @@ def get_common_genes(refs, nb_intervals):
     """
     # No cultivars selected
     if not refs:
-        return create_empty_df_with_cols(NO_REFS_COLUMNS)()
+        return create_empty_df_with_cols(NO_REFS_COLUMNS)
 
     common_genes = None
     for ref in refs:
