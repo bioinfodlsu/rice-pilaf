@@ -280,101 +280,6 @@ def get_ogi_list(accession_ids, ogi_mapping):
     return ogi_list
 
 
-def get_ogi_nb(nb_intervals):
-    """
-    Maps Nipponbare accessions (obtained from a list of Genomic_interval tuples) to their respective OGIs
-
-    Parameters:
-    - nb_intervals: List of Genomic_interval tuples
-
-    Returns:
-    - Set containing all unique OGIs after performing OGI-to-Nipponbare mapping
-    - OGI-to-Nipponbare mapping dictionary
-    """
-
-    # All unique OGIs
-    final_ogi_set = set()
-
-    # OGI-to-NB mapping dictionary (one OGI can map to multiple NB accessions)
-    final_ogi_dict = defaultdict(set)
-
-    for nb_interval in nb_intervals:
-        # Load and search GFF_DB of Nipponbare
-        db = gffutils.FeatureDB(
-            f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
-        genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
-                                           completely_within=False, featuretype='gene'))
-
-        # Map Nipponbare accessions to OGIs
-        ogi_mapping_path = f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle'
-        with open(ogi_mapping_path, 'rb') as f:
-            ogi_mapping = pickle.load(f)
-            for gene in genes_in_interval:
-                gene_id = sanitize_gene_id(gene.id)
-                ogi = ogi_mapping[gene_id]
-
-                final_ogi_set.add(ogi)
-                final_ogi_dict[ogi].add(gene_id)
-
-    return final_ogi_set, final_ogi_dict
-
-
-def get_ogi_other_ref(ref, nb_intervals):
-    """
-    Maps reference-specific accessions (obtained from a list of Genomic_interval tuples) to their respective OGIs
-    "Reference" refers to a reference other than Nipponbare
-    Nipponbare reference is handled by get_ogi_nb()
-
-    Parameters:
-    - ref: Reference
-    - nb_intervals: List of Genomic_interval tuples
-
-    Returns:
-    - Set containing all unique OGIs after performing OGI-to-reference mapping
-    - OGI-to-reference mapping dictionary
-    """
-
-    # All unique OGIs
-    final_ogi_set = set()
-
-    # OGI-to-NB mapping dictionary (one OGI can map to multiple NB accessions)
-    final_ogi_dict = defaultdict(set)
-
-    # Get intervals from other refs that align to (parts) of the input loci
-    db_align = gffutils.FeatureDB(
-        f'{Constants.ALIGNMENTS}/{"Nb_"+str(ref)}/{"Nb_"+str(ref)}.gff.db')
-
-    # Get corresponding intervals on ref
-    db_annotation = gffutils.FeatureDB(
-        f"{Constants.ANNOTATIONS}/{ref}/{ref}.gff.db".format(ref))
-
-    for nb_interval in nb_intervals:
-        gff_intersections = list(db_align.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
-                                                 completely_within=False))
-        for intersection in gff_intersections:
-            ref_interval = to_genomic_interval(
-                intersection.attributes['Name'][0])
-
-            # Skip if assembler does not know what to do with contig
-            if is_error(ref_interval):
-                continue
-
-            genes_in_interval = list(db_annotation.region(region=(ref_interval.chrom, ref_interval.start, ref_interval.stop),
-                                                          completely_within=False, featuretype='gene'))
-
-            # Map reference-specific accessions to OGIs
-            ogi_mapping_path = f'{Constants.OGI_MAPPING}/{ref}_to_ogi.pickle'
-            with open(ogi_mapping_path, 'rb') as f:
-                ogi_mapping = pickle.load(f)
-                for gene in genes_in_interval:
-                    gene_id = sanitize_gene_id(gene.id)
-                    ogi = ogi_mapping[gene_id]
-
-                    final_ogi_set.add(ogi)
-                    final_ogi_dict[ogi].add(gene_id)
-
-    return final_ogi_set, final_ogi_dict
-
 # ==================================================
 # Utility function related to QTARO and Text Mining
 # ==================================================
@@ -403,11 +308,8 @@ def get_qtaro_entry(mapping, gene):
         return NULL_PLACEHOLDER
 
 
-def get_qtaro_entries(genes):
-    with open(Constants.QTARO_DICTIONARY, 'rb') as f:
-        qtaro_dict = pickle.load(f)
-
-    return [get_qtaro_entry(qtaro_dict, gene) for gene in genes]
+def get_qtaro_entries(genes, qtaro_mapping):
+    return [get_qtaro_entry(qtaro_mapping, gene) for gene in genes]
 
 
 def get_pubmed_entry(gene):
@@ -423,16 +325,20 @@ def get_pubmed_entry(gene):
     return '\n'.join(pubmed_ids)
 
 
-def get_interpro_entry(gene):
-    with open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_f,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_f:
-        interpro_mapping = pickle.load(interpro_f)
-        iric_mapping = pickle.load(iric_mapping_f)
+def get_pubmed_entries(genes):
+    return [get_pubmed_entry(gene) for gene in genes]
 
-        try:
-            return '<br><br>'.join([get_interpro_link_single_str(entry[1], entry[0])
-                                    for entry in interpro_mapping[iric_mapping[gene]] if entry[1]])
-        except KeyError:
-            return NULL_PLACEHOLDER
+
+def get_interpro_entry(gene, interpro_mapping, iric_mapping):
+    try:
+        return '<br><br>'.join([get_interpro_link_single_str(entry[1], entry[0])
+                                for entry in interpro_mapping[iric_mapping[gene]] if entry[1]])
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_interpro_entries(genes, interpro_mapping, iric_mapping):
+    return [get_interpro_entry(gene, interpro_mapping, iric_mapping) for gene in genes]
 
 
 def get_nb_ortholog(gene, ref):
@@ -462,49 +368,51 @@ def get_genes_in_Nb(nb_intervals):
     """
     dfs = []
 
-    for nb_interval in nb_intervals:
-        # Load and search GFF_DB of Nipponbare
-        db = gffutils.FeatureDB(
-            f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
-        genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
-                                           completely_within=False, featuretype='gene'))
+    # Load and search GFF_DB of Nipponbare
+    db = gffutils.FeatureDB(
+        f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
 
-        # Map accessions to their respective OGIs
-        ogi_mapping_path = f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle'
-        ogi_list = []
-        with open(ogi_mapping_path, 'rb') as f:
-            ogi_mapping = pickle.load(f)
-            ogi_list = get_ogi_list([sanitize_gene_id(gene.id)
-                                     for gene in genes_in_interval], ogi_mapping)
+    ogi_file_path = f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle'
 
-        qtaro_list = get_qtaro_entries([gene.id for gene in genes_in_interval])
-        pubmed_ids = [get_pubmed_entry(gene.id) for gene in genes_in_interval]
-        interpro_list = [get_interpro_entry(
-            gene.id) for gene in genes_in_interval]
+    with open(ogi_file_path, 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file:
+        ogi_mapping = pickle.load(ogi_file)
+        qtaro_mapping = pickle.load(qtaro_file)
+        interpro_mapping = pickle.load(interpro_file)
+        iric_mapping = pickle.load(iric_mapping_file)
 
-        # Construct the data frame
-        df = pd.DataFrame({
-            'OGI': ogi_list,
-            'Name': [gene.id for gene in genes_in_interval],
-            'Chromosome': [gene.chrom for gene in genes_in_interval],
-            'Start': [gene.start for gene in genes_in_interval],
-            'End': [gene.end for gene in genes_in_interval],
-            'Strand': [gene.strand for gene in genes_in_interval],
-            'QTL Analyses': qtaro_list,
-            'PubMed Article IDs': pubmed_ids,
-            'InterPro': interpro_list
-        })
+        for nb_interval in nb_intervals:
+            genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
+                                               completely_within=False, featuretype='gene'))
 
-        dfs.append(df)
+            gene_ids_in_interval = [sanitize_gene_id(
+                gene.id) for gene in genes_in_interval]
+
+            # Construct the data frame
+            df = pd.DataFrame({
+                'OGI': get_ogi_list(gene_ids_in_interval, ogi_mapping),
+                'Name': gene_ids_in_interval,
+                'Chromosome': [gene.chrom for gene in genes_in_interval],
+                'Start': [gene.start for gene in genes_in_interval],
+                'End': [gene.end for gene in genes_in_interval],
+                'Strand': [gene.strand for gene in genes_in_interval],
+                'QTL Analyses': get_qtaro_entries(gene_ids_in_interval, qtaro_mapping),
+                'PubMed Article IDs': get_pubmed_entries(gene_ids_in_interval),
+                'InterPro': get_interpro_entries(gene_ids_in_interval, interpro_mapping, iric_mapping)
+            })
+
+            dfs.append(df)
 
     try:
         table_gene_ids = pd.concat(dfs, ignore_index=True)
+
         # Read in dataframe containing gene descriptions
         gene_description_df = pd.read_csv(
             f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.csv')
+
         # Right merge because some genes do not have descriptions or UniProtKB/Swiss-Prot IDs
-        table = pd.merge(gene_description_df, table_gene_ids,
-                         left_on='Gene_ID', right_on='Name', how='right')
+        gene_description_df.set_index('Gene_ID')
+        table_gene_ids.set_index('Name')
+        table = gene_description_df.join(table_gene_ids, how='right')
 
         # Reorder columns
         table = table[NB_COLUMNS]
@@ -515,12 +423,12 @@ def get_genes_in_Nb(nb_intervals):
         table = table.fillna(NULL_PLACEHOLDER)
 
         if table.shape[0] == 0:
-            return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
+            return create_empty_df_with_cols(NB_COLUMNS), table['Name'].values.tolist()
 
         return table, table['Name'].values.tolist()
 
     except ValueError:      # No results to concatenate
-        return create_empty_df_with_cols(NB_COLUMNS)(), table['Name'].values.tolist()
+        return create_empty_df_with_cols(NB_COLUMNS), table['Name'].values.tolist()
 
 
 def get_genes_in_other_ref(ref, nb_intervals):
