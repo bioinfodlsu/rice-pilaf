@@ -559,8 +559,16 @@ def get_all_genes(refs, genomic_intervals):
 
     else:
         make_dir(temp_output_dir)
+        FILENAME = f'{temp_output_dir}/all_genes.csv'
+        FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(FILENAME)
+
         all_genes = get_all_genes_if_not_exist(refs, nb_intervals)
-        all_genes.to_csv(f'{temp_output_dir}/all_genes.csv', index=False)
+        all_genes.to_csv(FILENAME_WITH_TIMESTAMP, index=False)
+        try:
+            os.replace(FILENAME_WITH_TIMESTAMP, FILENAME)
+        except:
+            pass
+
         return all_genes
 
 
