@@ -290,9 +290,9 @@ def get_qtaro_entry(mapping, gene):
     try:
         qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
         pub_idx = 1
-        for character_major in mapping[gene]:
+        for character_major in sorted(mapping[gene]):
             qtaro_str += '<li>' + character_major + '<ul>'
-            for character_minor in mapping[gene][character_major]:
+            for character_minor in sorted(mapping[gene][character_major]):
                 pubs = []
                 for pub in mapping[gene][character_major][character_minor]:
                     pubs.append(
@@ -333,7 +333,7 @@ def get_pubmed_entries(genes):
 def get_interpro_entry(gene, interpro_mapping, iric_mapping):
     try:
         return '<br><br>'.join([get_interpro_link_single_str(entry[1], entry[0])
-                                for entry in interpro_mapping[iric_mapping[gene]] if entry[1]])
+                                for entry in sorted(interpro_mapping[iric_mapping[gene]]) if entry[1]])
     except KeyError:
         return NULL_PLACEHOLDER
 
@@ -353,8 +353,7 @@ def get_nb_ortholog(gene, nb_ortholog_mapping):
 # Functions for lift-over
 # ========================
 
-
-def get_genes_in_Nb(nb_intervals):
+def get_genes_in_Nb(genomic_intervals):
     """
     Returns a data frame containing the genes in Nipponbare
 
@@ -364,6 +363,8 @@ def get_genes_in_Nb(nb_intervals):
     Returns:
     - Data frame containing the genes in Nipponbare
     """
+    nb_intervals = get_genomic_intervals_from_input(genomic_intervals)
+
     dfs = []
 
     # Load and search GFF_DB of Nipponbare
@@ -420,6 +421,7 @@ def get_genes_in_Nb(nb_intervals):
             table, 'UniProtKB/Swiss-Prot')
 
         table = table.fillna(NULL_PLACEHOLDER)
+        table = table.sort_values('Name')
 
         if table.shape[0] == 0:
             return create_empty_df_with_cols(NB_COLUMNS), table['Name'].values.tolist()
@@ -442,6 +444,7 @@ def get_genes_in_other_ref(ref, nb_intervals):
     Returns:
     - Data frame containing the genes in references other than Nipponbare
     """
+    nb_intervals = get_genomic_intervals_from_input(nb_intervals)
     dfs = []
 
     # Get intervals from other refs that align to (parts) of the input loci
@@ -499,7 +502,7 @@ def get_genes_in_other_ref(ref, nb_intervals):
         return create_empty_df_with_cols(OTHER_REF_COLUMNS)
 
 
-def get_common_genes(refs, nb_intervals):
+def get_common_genes(refs, genomic_intervals):
     """
     Returns a data frame containing the genes common to the given references
 
@@ -514,39 +517,20 @@ def get_common_genes(refs, nb_intervals):
     if not refs:
         return create_empty_df_with_cols(NO_REFS_COLUMNS)
 
-    common_genes = None
+    all_genes = get_all_genes(refs, genomic_intervals)
+    all_genes = all_genes[['OGI'] + refs]
+
+    mask = True
     for ref in refs:
-        if ref != 'Nipponbare':
-            genes_in_ref = get_genes_in_other_ref(ref, nb_intervals)
-        else:
-            genes_in_ref = get_genes_in_Nb(nb_intervals)[0]
+        mask &= (all_genes[ref] != NULL_PLACEHOLDER)
 
-        genes_in_ref = genes_in_ref[['OGI', 'Name']]
-
-        try:
-            common_genes = common_genes.set_index('OGI')
-            genes_in_ref = genes_in_ref.set_index('OGI')
-
-            common_genes = common_genes.join(
-                genes_in_ref, how='inner', lsuffix='_x', rsuffix='_y')
-
-            common_genes = common_genes.reset_index()
-        # First instance of merging (that is, common_genes is still None)
-        except (TypeError, AttributeError):
-            common_genes = genes_in_ref
-
-        common_genes = common_genes.rename(
-            columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
-
-    common_genes = common_genes.rename(
-        columns={'Name': 'Nipponbare'}).dropna().drop_duplicates()
+    common_genes = all_genes.loc[mask]
+    common_genes = common_genes.sort_values('OGI')
 
     return common_genes
 
 
 def get_all_genes(refs, genomic_intervals):
-    nb_intervals = get_genomic_intervals_from_input(genomic_intervals)
-
     if refs:
         temp_output_dir = get_path_to_temp(
             genomic_intervals, Constants.TEMP_LIFT_OVER, shorten_name('_'.join(refs)))
@@ -554,25 +538,26 @@ def get_all_genes(refs, genomic_intervals):
         temp_output_dir = get_path_to_temp(
             genomic_intervals, Constants.TEMP_LIFT_OVER)
 
-    if path_exists(temp_output_dir):
-        return pd.read_csv(f'{temp_output_dir}/all_genes.csv')
+    ALL_GENES_FILENAME = f'{temp_output_dir}/all_genes.csv'
+    if path_exists(ALL_GENES_FILENAME):
+        return pd.read_csv(ALL_GENES_FILENAME)
 
     else:
         make_dir(temp_output_dir)
-        FILENAME = f'{temp_output_dir}/all_genes.csv'
-        FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(FILENAME)
+        ALL_GENES_FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(
+            ALL_GENES_FILENAME)
 
-        all_genes = get_all_genes_if_not_exist(refs, nb_intervals)
-        all_genes.to_csv(FILENAME_WITH_TIMESTAMP, index=False)
+        all_genes = get_all_genes_if_not_exist(refs, genomic_intervals)
+        all_genes.to_csv(ALL_GENES_FILENAME_WITH_TIMESTAMP, index=False)
         try:
-            os.replace(FILENAME_WITH_TIMESTAMP, FILENAME)
+            os.replace(ALL_GENES_FILENAME_WITH_TIMESTAMP, ALL_GENES_FILENAME)
         except:
             pass
 
         return all_genes
 
 
-def get_all_genes_if_not_exist(refs, nb_intervals):
+def get_all_genes_if_not_exist(refs, genomic_intervals):
     """
     Returns a data frame containing all the genes (i.e., the set-theoretic union of all the genes)
     in Nipponbare, as well as orthologous genes in the given references
@@ -587,13 +572,13 @@ def get_all_genes_if_not_exist(refs, nb_intervals):
 
     # Check if all genes table has already been cached since it will be used for the computation
 
-    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
+    genes_in_nb = get_genes_in_Nb(genomic_intervals)[0]
     genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
     common_genes = genes_in_nb
     for ref in refs:
         if ref != 'Nipponbare':
-            genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
+            genes_in_other_ref = get_genes_in_other_ref(ref, genomic_intervals)
             genes_in_other_ref = genes_in_other_ref[['OGI', 'Name']]
 
             common_genes = common_genes.set_index('OGI')

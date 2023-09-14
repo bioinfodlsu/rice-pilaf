@@ -52,7 +52,8 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
         Output('homepage-genomic-intervals-submitted-input', 'data'),
-        Output('homepage-genomic-intervals-saved-input', 'data', allow_duplicate=True),
+        Output('homepage-genomic-intervals-saved-input',
+               'data', allow_duplicate=True),
 
         State('homepage-genomic-intervals', 'value'),
 
@@ -112,7 +113,7 @@ def init_callback(app):
 
                 if not lift_over_util.is_error(nb_intervals):
                     genes_from_Nb = lift_over_util.get_genes_in_Nb(
-                        nb_intervals)
+                        nb_intervals_str)
 
                     return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
 

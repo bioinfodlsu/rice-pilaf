@@ -228,7 +228,7 @@ def init_callback(app):
             nb_intervals = get_genomic_intervals_from_input(
                 nb_intervals_str)
 
-            genes_from_Nb_raw = get_genes_in_Nb(nb_intervals)[0]
+            genes_from_Nb_raw = get_genes_in_Nb(nb_intervals_str)[0]
 
             num_unique_genes = get_num_unique_entries(
                 genes_from_Nb_raw, 'OGI')
@@ -238,7 +238,8 @@ def init_callback(app):
                 gene_statistics_nb = f'{num_unique_genes} genes were found in Nipponbare'
 
             for idx, other_ref in enumerate(other_refs):
-                common_genes_raw = get_common_genes([other_ref], nb_intervals)
+                common_genes_raw = get_common_genes(
+                    [other_ref], nb_intervals_str)
                 num_unique_genes = get_num_unique_entries(
                     common_genes_raw, 'OGI')
                 if idx == len(other_refs) - 1:
@@ -257,7 +258,8 @@ def init_callback(app):
 
             if other_refs:
                 other_refs.append('Nipponbare')
-                genes_common = get_common_genes(other_refs, nb_intervals)
+                genes_common = get_common_genes(
+                    other_refs, nb_intervals_str)
                 num_unique_genes = get_num_unique_entries(genes_common, 'OGI')
 
                 if num_unique_genes == 1:
@@ -311,9 +313,6 @@ def init_callback(app):
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, other_refs, children, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
-            nb_intervals = get_genomic_intervals_from_input(
-                nb_intervals_str)
-
             # The RGI links are added here instead of the util.py file so that the IDs
             # in the dataframe stored in dcc.Store are not polluted with the hyperlinks.
 
@@ -344,7 +343,7 @@ def init_callback(app):
 
             elif active_tab == get_tab_id('Common Genes'):
                 common_genes_raw = get_common_genes(
-                    filter_rice_variants, nb_intervals)
+                    filter_rice_variants, nb_intervals_str)
 
                 # Mask will be triggered if no cultivar is selected
                 mask = (common_genes_raw['OGI'] != NULL_PLACEHOLDER)
@@ -371,7 +370,7 @@ def init_callback(app):
 
             elif active_tab == get_tab_id('Nipponbare'):
                 genes_from_Nb_raw = get_genes_in_Nb(
-                    nb_intervals)[0].drop(
+                    nb_intervals_str)[0].drop(
                     ['Chromosome', 'Start', 'End', 'Strand'], axis=1)
 
                 mask = (genes_from_Nb_raw['OGI'] != NULL_PLACEHOLDER)
