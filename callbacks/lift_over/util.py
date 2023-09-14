@@ -502,7 +502,7 @@ def get_genes_in_other_ref(ref, nb_intervals):
         return create_empty_df_with_cols(OTHER_REF_COLUMNS)
 
 
-def get_common_genes(refs, nb_intervals_str, nb_intervals):
+def get_common_genes(refs, genomic_intervals):
     """
     Returns a data frame containing the genes common to the given references
 
@@ -517,32 +517,14 @@ def get_common_genes(refs, nb_intervals_str, nb_intervals):
     if not refs:
         return create_empty_df_with_cols(NO_REFS_COLUMNS)
 
-    common_genes = None
+    all_genes = get_all_genes(refs, genomic_intervals)
+    all_genes = all_genes[['OGI'] + refs]
+
+    mask = True
     for ref in refs:
-        if ref != 'Nipponbare':
-            genes_in_ref = get_genes_in_other_ref(ref, nb_intervals_str)
-        else:
-            genes_in_ref = get_genes_in_Nb(nb_intervals_str)[0]
+        mask &= (all_genes[ref] != NULL_PLACEHOLDER)
 
-        genes_in_ref = genes_in_ref[['OGI', 'Name']]
-
-        try:
-            common_genes = common_genes.set_index('OGI')
-            genes_in_ref = genes_in_ref.set_index('OGI')
-
-            common_genes = common_genes.join(
-                genes_in_ref, how='inner', lsuffix='_x', rsuffix='_y')
-
-            common_genes = common_genes.reset_index()
-        # First instance of merging (that is, common_genes is still None)
-        except (TypeError, AttributeError):
-            common_genes = genes_in_ref
-
-        common_genes = common_genes.rename(
-            columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
-
-    common_genes = common_genes.rename(
-        columns={'Name': 'Nipponbare'}).dropna().drop_duplicates()
+    common_genes = all_genes.loc[mask]
 
     return common_genes
 
