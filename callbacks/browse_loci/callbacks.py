@@ -106,9 +106,10 @@ def init_callback(app):
         Input('homepage-genomic-intervals-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('igv-selected-genomic-intervals-saved-input', 'data')
+        State('igv-selected-genomic-intervals-saved-input', 'data'),
+        Input('igv-submit', 'n_clicks')
     )
-    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval):
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
             igv_options = util.sanitize_nb_intervals_str(nb_intervals_str) 
             igv_options = igv_options.split(';')
