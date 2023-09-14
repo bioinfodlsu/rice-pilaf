@@ -32,7 +32,7 @@ class Constants(object):
     NETWORK_MODULES = f'{APP_DATA}/network_modules'
 
     TEMP = f'{DATA}/temp'
-    IMPLICATED_GENES = f'{TEMP}/implicated_genes'
+    TEMP_LIFT_OVER = 'lift_over'
     TEMP_IGV = 'igv'
     TEMP_COEXPRESSION = 'co_expression'
     TEMP_TEXT_MINING = 'text_mining'

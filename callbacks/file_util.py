@@ -111,7 +111,7 @@ def shorten_name(name):
     except sqlite3.Error as error:
         pass
 
-    return row_id
+    return str(row_id)
 
 
 def append_timestamp_to_filename(filename):

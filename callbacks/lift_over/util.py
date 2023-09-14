@@ -7,6 +7,7 @@ import pandas as pd
 from ..constants import Constants
 from ..general_util import *
 from ..links_util import *
+from ..file_util import *
 
 import regex as re
 
@@ -543,7 +544,25 @@ def get_common_genes(refs, nb_intervals):
     return common_genes
 
 
-def get_all_genes(refs, nb_intervals):
+def get_all_genes(refs, nb_intervals, genomic_intervals):
+    if refs:
+        temp_output_dir = get_path_to_temp(
+            genomic_intervals, Constants.TEMP_LIFT_OVER, shorten_name('_'.join(refs)))
+    else:
+        temp_output_dir = get_path_to_temp(
+            genomic_intervals, Constants.TEMP_LIFT_OVER)
+
+    if path_exists(temp_output_dir):
+        return pd.read_csv(f'{temp_output_dir}/all_genes.csv')
+
+    else:
+        make_dir(temp_output_dir)
+        all_genes = get_all_genes_if_not_exist(refs, nb_intervals)
+        all_genes.to_csv(f'{temp_output_dir}/all_genes.csv', index=False)
+        return all_genes
+
+
+def get_all_genes_if_not_exist(refs, nb_intervals):
     """
     Returns a data frame containing all the genes (i.e., the set-theoretic union of all the genes)
     in Nipponbare, as well as orthologous genes in the given references
