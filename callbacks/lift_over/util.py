@@ -584,6 +584,9 @@ def get_all_genes_if_not_exist(refs, nb_intervals):
     Returns:
     - Data frame containing all the genes
     """
+
+    # Check if all genes table has already been cached since it will be used for the computation
+
     genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
     genes_in_nb = genes_in_nb[['OGI', 'Name']]
 
@@ -612,7 +615,7 @@ def get_all_genes_if_not_exist(refs, nb_intervals):
     return common_genes
 
 
-def get_unique_genes_in_other_ref(ref, nb_intervals):
+def get_unique_genes_in_other_ref(refs, ref, genomic_intervals):
     """
     Returns a data frame containing the genes in a reference that are not present in Nipponbare
 
@@ -623,14 +626,11 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
     Returns:
     - Data frame containing the genes in a reference that are not present in Nipponbare
     """
-    genes_in_nb = get_genes_in_Nb(nb_intervals)[0]
-    genes_in_other_ref = get_genes_in_other_ref(ref, nb_intervals)
+    all_genes = get_all_genes(refs, genomic_intervals)
 
-    genes_in_nb = genes_in_nb[['OGI']]
-
-    # Get set difference
-    unique_genes = pd.concat([genes_in_other_ref, genes_in_nb, genes_in_nb]).drop_duplicates(
-        subset=['OGI'], keep=False)
+    unique_genes = all_genes.loc[(all_genes['Nipponbare'] ==
+                                 NULL_PLACEHOLDER) & (all_genes[ref] != NULL_PLACEHOLDER)]
+    unique_genes = unique_genes.rename(columns={ref: 'Name'})
 
     gene_description_df = pd.read_csv(
         f'{Constants.GENE_DESCRIPTIONS}/{ref}/{ref}_gene_descriptions.csv')
@@ -654,6 +654,7 @@ def get_unique_genes_in_other_ref(ref, nb_intervals):
         unique_genes, 'UniProtKB/Swiss-Prot')
 
     unique_genes = unique_genes.fillna(NULL_PLACEHOLDER)
+    unique_genes = unique_genes.sort_values('Name')
 
     if unique_genes.shape[0] == 0:
         return create_empty_df_with_cols(FRONT_FACING_COLUMNS + ['Ortholog in Nipponbare'])

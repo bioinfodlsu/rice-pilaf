@@ -272,7 +272,7 @@ def init_callback(app):
                 other_refs.pop()            # Remove added Nipponbare
                 for idx, other_ref in enumerate(other_refs):
                     genes_from_other_ref_raw = get_unique_genes_in_other_ref(
-                        other_ref, nb_intervals)
+                        other_refs, other_ref, nb_intervals_str)
 
                     if len(other_refs) > 1 and idx == len(other_refs) - 1:
                         gene_statistics_other_ref += f', and '
@@ -313,6 +313,9 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_is_submitted:
             nb_intervals = get_genomic_intervals_from_input(
                 nb_intervals_str)
+
+            # The RGI links are added here instead of the util.py file so that the IDs
+            # in the dataframe stored in dcc.Store are not polluted with the hyperlinks.
 
             if active_tab == get_tab_id('All Genes'):
                 all_genes_raw = get_all_genes(
@@ -391,7 +394,7 @@ def init_callback(app):
                 other_ref = children[tab_number]['props']['value']
 
                 genes_from_other_ref_raw = get_unique_genes_in_other_ref(
-                    other_ref, nb_intervals)
+                    other_refs, other_ref, nb_intervals_str)
 
                 mask = (genes_from_other_ref_raw['OGI'] != NULL_PLACEHOLDER)
                 genes_from_other_ref_raw.loc[mask, 'OGI'] = get_rgi_orthogroup_link(
