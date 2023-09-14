@@ -354,33 +354,6 @@ def get_nb_ortholog(gene, nb_ortholog_mapping):
 # ========================
 
 def get_genes_in_Nb(genomic_intervals):
-    nb_intervals = get_genomic_intervals_from_input(genomic_intervals)
-
-    temp_output_dir = get_path_to_temp(
-        genomic_intervals, Constants.TEMP_LIFT_OVER)
-    NB_GENES_FILENAME = f'{temp_output_dir}/nb_genes.csv'
-
-    if path_exists(NB_GENES_FILENAME):
-        nb_genes = pd.read_csv(NB_GENES_FILENAME)
-        return nb_genes, nb_genes['Name'].values.tolist()
-
-    else:
-        make_dir(temp_output_dir)
-
-        NB_GENES_FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(
-            NB_GENES_FILENAME)
-
-        nb_genes = get_genes_in_Nb_if_not_exist(nb_intervals)
-        nb_genes[0].to_csv(NB_GENES_FILENAME_WITH_TIMESTAMP, index=False)
-        try:
-            os.replace(NB_GENES_FILENAME_WITH_TIMESTAMP, NB_GENES_FILENAME)
-        except:
-            pass
-
-        return nb_genes
-
-
-def get_genes_in_Nb_if_not_exist(nb_intervals):
     """
     Returns a data frame containing the genes in Nipponbare
 
@@ -390,6 +363,8 @@ def get_genes_in_Nb_if_not_exist(nb_intervals):
     Returns:
     - Data frame containing the genes in Nipponbare
     """
+    nb_intervals = get_genomic_intervals_from_input(genomic_intervals)
+
     dfs = []
 
     # Load and search GFF_DB of Nipponbare
