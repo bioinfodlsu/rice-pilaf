@@ -290,9 +290,9 @@ def get_qtaro_entry(mapping, gene):
     try:
         qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
         pub_idx = 1
-        for character_major in mapping[gene]:
+        for character_major in sorted(mapping[gene]):
             qtaro_str += '<li>' + character_major + '<ul>'
-            for character_minor in mapping[gene][character_major]:
+            for character_minor in sorted(mapping[gene][character_major]):
                 pubs = []
                 for pub in mapping[gene][character_major][character_minor]:
                     pubs.append(
@@ -333,7 +333,7 @@ def get_pubmed_entries(genes):
 def get_interpro_entry(gene, interpro_mapping, iric_mapping):
     try:
         return '<br><br>'.join([get_interpro_link_single_str(entry[1], entry[0])
-                                for entry in interpro_mapping[iric_mapping[gene]] if entry[1]])
+                                for entry in sorted(interpro_mapping[iric_mapping[gene]]) if entry[1]])
     except KeyError:
         return NULL_PLACEHOLDER
 
@@ -525,6 +525,7 @@ def get_common_genes(refs, genomic_intervals):
         mask &= (all_genes[ref] != NULL_PLACEHOLDER)
 
     common_genes = all_genes.loc[mask]
+    common_genes = common_genes.sort_values('OGI')
 
     return common_genes
 
