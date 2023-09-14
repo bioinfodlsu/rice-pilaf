@@ -544,7 +544,9 @@ def get_common_genes(refs, nb_intervals):
     return common_genes
 
 
-def get_all_genes(refs, nb_intervals, genomic_intervals):
+def get_all_genes(refs, genomic_intervals):
+    nb_intervals = get_genomic_intervals_from_input(genomic_intervals)
+
     if refs:
         temp_output_dir = get_path_to_temp(
             genomic_intervals, Constants.TEMP_LIFT_OVER, shorten_name('_'.join(refs)))
@@ -596,6 +598,8 @@ def get_all_genes_if_not_exist(refs, nb_intervals):
 
     common_genes = common_genes.rename(
         columns={'Name': 'Nipponbare'}).fillna(NULL_PLACEHOLDER).drop_duplicates()
+
+    common_genes = common_genes.sort_values('OGI')
 
     return common_genes
 

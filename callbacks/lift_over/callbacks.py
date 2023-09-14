@@ -316,7 +316,7 @@ def init_callback(app):
 
             if active_tab == get_tab_id('All Genes'):
                 all_genes_raw = get_all_genes(
-                    other_refs, nb_intervals, nb_intervals_str)
+                    other_refs, nb_intervals_str)
 
                 mask = (all_genes_raw['OGI'] != NULL_PLACEHOLDER)
                 all_genes_raw.loc[mask, 'OGI'] = get_rgi_orthogroup_link(
