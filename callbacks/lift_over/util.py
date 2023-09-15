@@ -420,8 +420,8 @@ def get_genes_in_Nb(genomic_intervals):
         table['UniProtKB/Swiss-Prot'] = get_uniprot_link(
             table, 'UniProtKB/Swiss-Prot')
 
-        table = table.fillna(NULL_PLACEHOLDER)
-        table = table.sort_values('Name')
+        table = table.fillna(
+            NULL_PLACEHOLDER).drop_duplicates().sort_values('Name')
 
         if table.shape[0] == 0:
             return create_empty_df_with_cols(NB_COLUMNS), table['Name'].values.tolist()
@@ -524,8 +524,7 @@ def get_common_genes(refs, genomic_intervals):
     for ref in refs:
         mask &= (all_genes[ref] != NULL_PLACEHOLDER)
 
-    common_genes = all_genes.loc[mask]
-    common_genes = common_genes.sort_values('OGI')
+    common_genes = all_genes.loc[mask].drop_duplicates().sort_values('OGI')
 
     return common_genes
 
@@ -593,9 +592,7 @@ def get_all_genes_if_not_exist(refs, genomic_intervals):
                 columns={'Name_x': 'Nipponbare', 'Name_y': ref, 'Name': ref})
 
     common_genes = common_genes.rename(
-        columns={'Name': 'Nipponbare'}).fillna(NULL_PLACEHOLDER).drop_duplicates()
-
-    common_genes = common_genes.sort_values('OGI')
+        columns={'Name': 'Nipponbare'}).fillna(NULL_PLACEHOLDER).drop_duplicates().sort_values('OGI')
 
     return common_genes
 
@@ -638,8 +635,8 @@ def get_unique_genes_in_other_ref(refs, ref, genomic_intervals):
     unique_genes['UniProtKB/Swiss-Prot'] = get_uniprot_link(
         unique_genes, 'UniProtKB/Swiss-Prot')
 
-    unique_genes = unique_genes.fillna(NULL_PLACEHOLDER)
-    unique_genes = unique_genes.sort_values('Name')
+    unique_genes = unique_genes.fillna(
+        NULL_PLACEHOLDER).drop_duplicates().sort_values('Name')
 
     if unique_genes.shape[0] == 0:
         return create_empty_df_with_cols(FRONT_FACING_COLUMNS + ['Ortholog in Nipponbare'])

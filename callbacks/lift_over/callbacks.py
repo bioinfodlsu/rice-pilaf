@@ -225,23 +225,22 @@ def init_callback(app):
     )
     def display_gene_statistics(nb_intervals_str, other_refs, homepage_is_submitted, lift_over_is_submitted):
         if homepage_is_submitted and lift_over_is_submitted:
-            nb_intervals = get_genomic_intervals_from_input(
-                nb_intervals_str)
-
             genes_from_Nb_raw = get_genes_in_Nb(nb_intervals_str)[0]
 
+            # Number of genes in Nipponbare
             num_unique_genes = get_num_unique_entries(
-                genes_from_Nb_raw, 'OGI')
+                genes_from_Nb_raw, 'Name')
             if num_unique_genes == 1:
                 gene_statistics_nb = f'{num_unique_genes} gene was found in Nipponbare'
             else:
                 gene_statistics_nb = f'{num_unique_genes} genes were found in Nipponbare'
 
+            # Number of genes in other reference
             for idx, other_ref in enumerate(other_refs):
                 common_genes_raw = get_common_genes(
                     [other_ref], nb_intervals_str)
                 num_unique_genes = get_num_unique_entries(
-                    common_genes_raw, 'OGI')
+                    common_genes_raw, other_ref)
                 if idx == len(other_refs) - 1:
                     if num_unique_genes == 1:
                         gene_statistics_nb += f', and {num_unique_genes} gene in {other_ref}'
@@ -257,19 +256,21 @@ def init_callback(app):
             gene_statistics_items = [html.Li(gene_statistics_nb)]
 
             if other_refs:
+                # Number of orthogroups with genes common across all cultivars
                 other_refs.append('Nipponbare')
                 genes_common = get_common_genes(
                     other_refs, nb_intervals_str)
                 num_unique_genes = get_num_unique_entries(genes_common, 'OGI')
 
                 if num_unique_genes == 1:
-                    gene_statistics_common = f'Among these, {num_unique_genes} gene is common to all cultivars.'
+                    gene_statistics_common = f'{num_unique_genes} orthogroup has genes across all selected cultivars.'
                 else:
-                    gene_statistics_common = f'Among these, {num_unique_genes} genes are common to all cultivars.'
+                    gene_statistics_common = f'{num_unique_genes} orthogroups have genes across all selected cultivars.'
 
                 gene_statistics_items.append(
                     html.Li(gene_statistics_common))
 
+                # Number of unique genes
                 gene_statistics_other_ref = f''
                 other_refs.pop()            # Remove added Nipponbare
                 for idx, other_ref in enumerate(other_refs):
@@ -282,7 +283,7 @@ def init_callback(app):
                         gene_statistics_other_ref += f', '
 
                     num_unique_genes = get_num_unique_entries(
-                        genes_from_other_ref_raw, 'OGI')
+                        genes_from_other_ref_raw, 'Name')
 
                     if num_unique_genes == 1:
                         gene_statistics_other_ref += f'{num_unique_genes} gene is unique to {other_ref}'
