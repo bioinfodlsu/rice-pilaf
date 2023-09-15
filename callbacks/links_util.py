@@ -51,6 +51,10 @@ def get_pubmed_link_single_str(pubmed):
         pubmed + LINK_ICON
 
 
+def get_rgi_genecard_link_single_str(accession):
+    return A_HREF + 'https://riceome.hzau.edu.cn/genecard/' + accession + CLOSE_A_HREF + accession + LINK_ICON
+
+
 def get_rgi_genecard_link(result, id_col):
     return A_HREF + 'https://riceome.hzau.edu.cn/genecard/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
 
