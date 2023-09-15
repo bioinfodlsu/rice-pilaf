@@ -25,7 +25,9 @@ app = dash.Dash(__name__, use_pages=True,
                                       dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server,
                 title='RicePilaf',
-                update_title='Loading...')
+                update_title='Loading...',
+                meta_tags=[{'name': 'viewport',
+                            'content': 'width=1024'}])
 
 welcome = dcc.Markdown(
     '''
