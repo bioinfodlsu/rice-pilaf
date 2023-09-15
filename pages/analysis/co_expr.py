@@ -495,44 +495,48 @@ layout = html.Div(
                             ]
                         ),
 
-                        html.Div(id='coexpression-module-graph-node-data', hidden=True),
+                        html.Div([
+                            html.Div([
+                                dcc.Loading([
+                                    cyto.Cytoscape(
+                                        id='coexpression-module-graph',
+                                        className='mb-3',
+                                        layout={'name': 'circle'},
+                                        style={'width': '75%',
+                                            'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
+                                        stylesheet=[
+                                            {
+                                                'selector': 'node',
+                                                'style': {
+                                                    'content': 'data(id)',
+                                                    'height': '5px',
+                                                    'width': '5px',
+                                                    'font-size': '10px'
+                                                }
+                                            },
+                                            {
+                                                'selector': 'edge',
+                                                'style': {
+                                                    'width': '1px',
+                                                }
+                                            },
+                                            {
+                                                'selector': '.shaded',
+                                                'style': {
+                                                    'background-color': '#254b5d',
+                                                    'line-color': '#254b5d',
+                                                    'height': '20px',
+                                                    'width': '20px'
+                                                }
+                                            }
+                                        ]
+                                    ),
+                                ])
+                            ], className='w-75'),
+                            
+                            html.Div(id='coexpression-module-graph-node-data', className='bg-secondary w-25', style={'height': '100vh'}),
+                        ], className='d-flex flex-row'),
                         
-                        dcc.Loading([
-                            cyto.Cytoscape(
-                                id='coexpression-module-graph',
-                                className='mb-3',
-                                layout={'name': 'circle'},
-                                style={'width': '100%',
-                                       'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
-                                stylesheet=[
-                                    {
-                                        'selector': 'node',
-                                        'style': {
-                                            'content': 'data(id)',
-                                            'height': '5px',
-                                            'width': '5px',
-                                            'font-size': '10px'
-                                        }
-                                    },
-                                    {
-                                        'selector': 'edge',
-                                        'style': {
-                                            'width': '1px',
-                                        }
-                                    },
-                                    {
-                                        'selector': '.shaded',
-                                        'style': {
-                                            'background-color': '#254b5d',
-                                            'line-color': '#254b5d',
-                                            'height': '20px',
-                                            'width': '20px'
-                                        }
-                                    }
-                                ]
-                            ),
-                        ]),
-
                         html.Div(id='coexpression-extra-bottom-div',
                                  className='mb-4')
                     ]
