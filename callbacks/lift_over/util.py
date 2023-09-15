@@ -344,7 +344,7 @@ def get_interpro_entries(genes, interpro_mapping, iric_mapping):
 
 def get_nb_ortholog(gene, nb_ortholog_mapping):
     if nb_ortholog_mapping[gene]:
-        return ', '.join(nb_ortholog_mapping[gene])
+        return '<br>'.join(map(get_rgi_genecard_link_single_str, nb_ortholog_mapping[gene]))
 
     return NULL_PLACEHOLDER
 
