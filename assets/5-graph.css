@@ -4,3 +4,8 @@
     height: 100vh;
     border: 1px solid var(--table-button-gray);
 }
+
+#coexpression-module-graph-node-data {
+    height: 100vh;
+    background-color: var(--bg-gray-darker);
+}

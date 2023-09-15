@@ -533,10 +533,12 @@ layout = html.Div(
                                     ),
                                 ])
                             ], className='w-75'),
-                            
-                            html.Div(id='coexpression-module-graph-node-data', className='bg-secondary w-25', style={'height': '100vh'}),
+
+                            html.Div(
+                                id='coexpression-module-graph-node-data', className='w-25'),
                         ], className='d-flex flex-row'),
-                        
+
+                        # This is for adding padding at the bottom of the graph
                         html.Div(id='coexpression-extra-bottom-div',
                                  className='mb-4')
                     ]
