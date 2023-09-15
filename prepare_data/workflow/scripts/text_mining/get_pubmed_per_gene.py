@@ -458,7 +458,7 @@ if __name__ == '__main__':
         help='file containing the symbols that must be excluded under certain contexts'
     )
     parser.add_argument(
-        'output_dir', help='output directory for the dictionary resulting from preprocessing the QTARO annotation file')
+        'output_dir', help='output directory for the dictionaries with the PubMed IDs of related articles')
 
     args = parser.parse_args()
 
