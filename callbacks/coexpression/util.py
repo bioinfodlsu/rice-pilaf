@@ -706,3 +706,12 @@ def get_qtaro_entry(gene, mapping):
 
     except KeyError:
         return NULL_PLACEHOLDER
+
+
+def get_pubmed_entry(gene, pubmed_mapping):
+    try:
+        return html.Ul([html.Li(get_pubmed_link_single_str(pubmed_id[0], dash=True)) for pubmed_id in sorted(
+            pubmed_mapping[gene].items(), key=lambda x: x[1], reverse=True)],
+            className='no-bottom-space')
+    except KeyError:
+        return html.Span([NULL_PLACEHOLDER, html.Br()])

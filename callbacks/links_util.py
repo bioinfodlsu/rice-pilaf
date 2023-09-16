@@ -72,9 +72,17 @@ def get_doi_link_single_str(doi, dash=False):
     return A_HREF + LINK + CLOSE_A_HREF + doi + LINK_ICON
 
 
-def get_pubmed_link_single_str(pubmed):
-    return A_HREF + 'https://pubmed.ncbi.nlm.nih.gov/' + \
-        pubmed + '/entry' + CLOSE_A_HREF + \
+def get_pubmed_link_single_str(pubmed, dash=False):
+    LINK = 'https://pubmed.ncbi.nlm.nih.gov/' + \
+        pubmed + '/entry'
+    if dash:
+        return dcc.Link([
+            pubmed, LINK_ICON_DASH],
+            href=LINK,
+            target='_blank'
+        )
+
+    return A_HREF + LINK + CLOSE_A_HREF + \
         pubmed + LINK_ICON
 
 

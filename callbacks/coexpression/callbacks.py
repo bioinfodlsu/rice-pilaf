@@ -564,7 +564,7 @@ def init_callback(app):
                 interpro_mapping = pickle.load(interpro_file)
                 pfam_mapping = pickle.load(pfam_file)
                 iric_mapping = pickle.load(iric_mapping_file)
-                # pubmed_mapping = pickle.load(pubmed_file)
+                pubmed_mapping = pickle.load(pubmed_file)
                 rapdb_mapping = pickle.load(rapdb_file)
                 gene_descriptions_mapping = pickle.load(gene_descriptions_file)
 
@@ -588,7 +588,7 @@ def init_callback(app):
 
                              html.B('QTL Analyses: '), get_qtaro_entry(
                                  gene, qtaro_mapping), html.Br(),
-                             html.B('PubMed Article IDs')]
+                             html.B('PubMed Article IDs: '), get_pubmed_entry(gene, pubmed_mapping)]
 
                 return node_data
 
