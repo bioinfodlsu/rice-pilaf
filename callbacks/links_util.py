@@ -42,6 +42,18 @@ def get_uniprot_link(result, id_col):
         result[id_col] + LINK_ICON
 
 
+def get_uniprot_link_single_str(id, dash=False):
+    LINK = 'https://www.uniprot.org/uniprotkb/' + id + '/entry'
+    if dash:
+        return dcc.Link([
+            id, LINK_ICON_DASH],
+            href=LINK,
+            target='_blank'
+        )
+
+    return A_HREF + LINK + CLOSE_A_HREF + id + LINK_ICON
+
+
 def get_pubmed_link(result, id_col):
     return A_HREF + 'https://pubmed.ncbi.nlm.nih.gov/' + \
         result[id_col] + '/entry' + CLOSE_A_HREF + \

@@ -658,6 +658,20 @@ def get_rapdb_entry(gene, rapdb_mapping):
     return NULL_PLACEHOLDER
 
 
+def get_gene_description_entry(gene, gene_descriptions_mapping):
+    try:
+        return gene_descriptions_mapping[gene][0]
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_uniprot_entry(gene, gene_descriptions_mapping):
+    try:
+        return get_uniprot_link_single_str(gene_descriptions_mapping[gene][1], dash=True)
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
 def get_qtaro_entry(mapping, gene):
     try:
         character_majors_list = []
