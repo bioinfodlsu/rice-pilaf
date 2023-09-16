@@ -1,3 +1,4 @@
+from dash import html
 from ..constants import Constants
 from ..file_util import *
 from ..general_util import *
@@ -643,3 +644,74 @@ def count_genes_in_module(implicated_genes, module_idx, network, algo, parameter
             if idx == module_idx - 1:
                 module_genes = module.strip().split('\t')
                 return len(module_genes), len(set.intersection(set(module_genes), set(implicated_genes)))
+
+
+# =========================================
+# Functions related to graph interactivity
+# =========================================
+
+def get_rapdb_entry(gene, rapdb_mapping):
+    if rapdb_mapping[gene]:
+        return html.Ul([html.Li(get_rapdb_single_str(entry, dash=True)) for entry in sorted(rapdb_mapping[gene]) if entry],
+                       className='no-bottom-space')
+
+    return NULL_PLACEHOLDER
+
+
+def get_gene_description_entry(gene, gene_descriptions_mapping):
+    try:
+        return gene_descriptions_mapping[gene][0]
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_uniprot_entry(gene, gene_descriptions_mapping):
+    try:
+        return get_uniprot_link_single_str(gene_descriptions_mapping[gene][1], dash=True)
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_pfam_entry(gene, pfam_mapping, iric_mapping):
+    try:
+        return html.Ul([html.Li(get_pfam_link_single_str(entry[1], entry[0], dash=True)) for entry in sorted(pfam_mapping[iric_mapping[gene]]) if entry[1]],
+                       className='no-bottom-space')
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_interpro_entry(gene, interpro_mapping, iric_mapping):
+    try:
+        return html.Ul([html.Li(get_interpro_link_single_str(entry[1], entry[0], dash=True)) for entry in sorted(interpro_mapping[iric_mapping[gene]]) if entry[1]],
+                       className='no-bottom-space')
+    except KeyError:
+        return html.Span([NULL_PLACEHOLDER, html.Br()])
+
+
+def get_qtaro_entry(gene, mapping):
+    try:
+        character_majors_list = []
+        for character_major in sorted(mapping[gene]):
+            character_minors_list = []
+            for character_minor in sorted(mapping[gene][character_major]):
+                pubs = [html.Li(get_doi_link_single_str(pub, dash=True)) for pub in sorted(mapping[gene]
+                        [character_major][character_minor])]
+                character_minors_list.append(
+                    html.Li([character_minor, html.Ul(pubs)]))
+
+            character_majors_list.append(
+                html.Li([character_major, html.Ul(character_minors_list)]))
+
+        return html.Ul(character_majors_list, className='no-bottom-space')
+
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_pubmed_entry(gene, pubmed_mapping):
+    try:
+        return html.Ul([html.Li(get_pubmed_link_single_str(pubmed_id[0], dash=True)) for pubmed_id in sorted(
+            pubmed_mapping[gene].items(), key=lambda x: x[1], reverse=True)],
+            className='no-bottom-space')
+    except KeyError:
+        return html.Span([NULL_PLACEHOLDER, html.Br()])

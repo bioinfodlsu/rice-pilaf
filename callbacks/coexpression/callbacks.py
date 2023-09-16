@@ -287,6 +287,8 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
+        Output('coexpression-module-graph-node-data',
+               'children', allow_duplicate=True),
         Output('coexpression-extra-bottom-div', 'style', allow_duplicate=True),
 
         Input('coexpression-combined-genes', 'data'),
@@ -320,10 +322,10 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, None, {'height': '0em'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
-                                       'height': '100vh'}, {'height': '1.5em'})
+                                       'height': '100vh'}, None, {'height': '1.5em'})
 
         raise PreventUpdate
 
@@ -556,18 +558,37 @@ def init_callback(app):
     )
     def display_node_data(node_data):
         if node_data:
-            with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file:
-                pickle.load(ogi_file)
-                pickle.load(qtaro_file)
+            with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file, open(f'{Constants.IRIC}/pfam.pickle', 'rb') as pfam_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file, open(f'{Constants.MSU_MAPPING}/msu_to_rap.pickle', 'rb') as rapdb_file, open(f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.pickle', 'rb') as gene_descriptions_file:
+                ogi_mapping = pickle.load(ogi_file)
+                qtaro_mapping = pickle.load(qtaro_file)
                 interpro_mapping = pickle.load(interpro_file)
+                pfam_mapping = pickle.load(pfam_file)
                 iric_mapping = pickle.load(iric_mapping_file)
-                pickle.load(pubmed_file)
+                pubmed_mapping = pickle.load(pubmed_file)
+                rapdb_mapping = pickle.load(rapdb_file)
+                gene_descriptions_mapping = pickle.load(gene_descriptions_file)
 
                 gene = node_data['id']
-                interpro = lift_over_util.get_interpro_entry(
-                    gene, interpro_mapping, iric_mapping)
 
-                node_data = [html.B('MSU ID: '), html.Span(gene), html.Br()]
+                node_data = [html.B('Name: '), get_rgi_genecard_link_single_str(gene, dash=True), html.Br(),
+                             html.B('OGI: '), get_rgi_orthogroup_link_single_str(
+                                 ogi_mapping[gene], dash=True), html.Br(),
+                             html.B(
+                                 'RAP-DB: ', ), get_rapdb_entry(gene, rapdb_mapping), html.Br(),
+
+                             html.B(
+                                 'Description: '), get_gene_description_entry(gene, gene_descriptions_mapping), html.Br(),
+                             html.B(
+                                 'UniProtKB/Swiss-Prot: '), get_uniprot_entry(gene, gene_descriptions_mapping), html.Br(), html.Br(),
+
+                             html.B('Pfam: '), get_pfam_entry(
+                                 gene, pfam_mapping, iric_mapping), html.Br(),
+                             html.B('InterPro: '), get_interpro_entry(
+                                 gene, interpro_mapping, iric_mapping), html.Br(),
+
+                             html.B('QTL Analyses: '), get_qtaro_entry(
+                                 gene, qtaro_mapping), html.Br(),
+                             html.B('PubMed Article IDs: '), get_pubmed_entry(gene, pubmed_mapping)]
 
                 return node_data
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import regex as re
 
-NULL_PLACEHOLDER = '&ndash;'
+NULL_PLACEHOLDER = '–'
 
 
 def display_in_sci_notation(number):
@@ -60,8 +60,16 @@ def get_num_entries(table, column):
 def purge_html_export_table(table):
     for row in table:
         for key in row.keys():
-            row[key] = row[key].replace('&nbsp;', '')
-            row[key] = row[key].replace('\n', ';')
-            row[key] = re.sub(r'<.+?>', '', row[key])
+            try:
+                row[key] = row[key].replace('&nbsp;', '')
+                row[key] = row[key].replace(NULL_PLACEHOLDER, '')
+                row[key] = row[key].replace('<br>', ';')
+                row[key] = row[key].replace('<li>', ';')
+                row[key] = row[key].replace('\n', ';')
+                row[key] = re.sub(r'<.+?>', '', row[key])
+                row[key] = re.sub(r';+', ';', row[key])
+                row[key] = re.sub(r'^;', '', row[key])
+            except AttributeError:
+                pass
 
     return table

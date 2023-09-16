@@ -58,5 +58,5 @@ table tr td ul {
 }
 
 #lift-over-results-table {
-    overflow-x: scroll;
+    overflow-x: auto;
 }

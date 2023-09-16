@@ -128,16 +128,6 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
-            dcc.Store(
-                id='lift-over-nb-table',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='lift-over-nb-entire-table',
-                storage_type='session'
-            ),
-
             # ============
             # IGV Browser
             # ============

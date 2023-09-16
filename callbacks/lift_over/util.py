@@ -286,19 +286,14 @@ def get_ogi_list(accession_ids, ogi_mapping):
 # ==================================================
 
 
-def get_qtaro_entry(mapping, gene):
+def get_qtaro_entry(gene, mapping):
     try:
         qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
-        pub_idx = 1
         for character_major in sorted(mapping[gene]):
             qtaro_str += '<li>' + character_major + '<ul>'
             for character_minor in sorted(mapping[gene][character_major]):
-                pubs = []
-                for pub in mapping[gene][character_major][character_minor]:
-                    pubs.append(
-                        '<li>' + get_doi_link_single_str(pub, pub_idx) + '</li>')
-                    pub_idx += 1
-
+                pubs = ['<li>' + get_doi_link_single_str(
+                    pub) + '</li>' for pub in sorted(mapping[gene][character_major][character_minor])]
                 qtaro_str += '<li>' + character_minor + \
                     '<ul>' + ''.join(pubs) + '</ul></li>'
             qtaro_str += '</ul></li><br>'
@@ -310,7 +305,7 @@ def get_qtaro_entry(mapping, gene):
 
 
 def get_qtaro_entries(genes, qtaro_mapping):
-    return [get_qtaro_entry(qtaro_mapping, gene) for gene in genes]
+    return [get_qtaro_entry(gene, qtaro_mapping) for gene in genes]
 
 
 def get_pubmed_entry(gene, pubmed_mapping):
