@@ -649,6 +649,15 @@ def count_genes_in_module(implicated_genes, module_idx, network, algo, parameter
 # =========================================
 # Functions related to graph interactivity
 # =========================================
+
+def get_rapdb_entry(gene, rapdb_mapping):
+    if rapdb_mapping[gene]:
+        return html.Ul([html.Li(get_rapdb_single_str(entry, dash=True)) for entry in sorted(rapdb_mapping[gene]) if entry],
+                       className='no-bottom-space')
+
+    return NULL_PLACEHOLDER
+
+
 def get_qtaro_entry(mapping, gene):
     try:
         character_majors_list = []
@@ -663,7 +672,7 @@ def get_qtaro_entry(mapping, gene):
             character_majors_list.append(
                 html.Li([character_major, html.Ul(character_minors_list)]))
 
-        return html.Ul(character_majors_list)
+        return html.Ul(character_majors_list, className='no-bottom-space')
 
     except KeyError:
         return NULL_PLACEHOLDER
