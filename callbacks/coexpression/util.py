@@ -672,7 +672,15 @@ def get_uniprot_entry(gene, gene_descriptions_mapping):
         return NULL_PLACEHOLDER
 
 
-def get_qtaro_entry(mapping, gene):
+def get_pfam_entry(gene, pfam_mapping, iric_mapping):
+    try:
+        return html.Ul([html.Li(get_pfam_link_single_str(entry[1], entry[0], dash=True)) for entry in sorted(pfam_mapping[iric_mapping[gene]]) if entry[1]],
+                       className='no-bottom-space')
+    except KeyError:
+        return NULL_PLACEHOLDER
+
+
+def get_qtaro_entry(gene, mapping):
     try:
         character_majors_list = []
         for character_major in sorted(mapping[gene]):

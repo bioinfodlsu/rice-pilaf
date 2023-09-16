@@ -114,8 +114,16 @@ def get_interpro_link_single_str(term, id):
     return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
 
 
-def get_pfam_link_single_str(term, id):
-    return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/pfam/' + id + CLOSE_A_HREF + term + LINK_ICON
+def get_pfam_link_single_str(term, id, dash=False):
+    LINK = 'https://www.ebi.ac.uk/interpro/entry/pfam/' + id
+    if dash:
+        return dcc.Link([
+            term, LINK_ICON_DASH],
+            href=LINK,
+            target='_blank'
+        )
+
+    return A_HREF + LINK + CLOSE_A_HREF + term + LINK_ICON
 
 
 def get_rapdb_single_str(id, dash=False):

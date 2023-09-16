@@ -562,8 +562,8 @@ def init_callback(app):
                 ogi_mapping = pickle.load(ogi_file)
                 qtaro_mapping = pickle.load(qtaro_file)
                 # interpro_mapping = pickle.load(interpro_file)
-                # pfam_mapping = pickle.load(pfam_file)
-                # iric_mapping = pickle.load(iric_mapping_file)
+                pfam_mapping = pickle.load(pfam_file)
+                iric_mapping = pickle.load(iric_mapping_file)
                 # pubmed_mapping = pickle.load(pubmed_file)
                 rapdb_mapping = pickle.load(rapdb_file)
                 gene_descriptions_mapping = pickle.load(gene_descriptions_file)
@@ -581,11 +581,12 @@ def init_callback(app):
                              html.B(
                                  'UniProtKB/Swiss-Prot: '), get_uniprot_entry(gene, gene_descriptions_mapping), html.Br(), html.Br(),
 
-                             html.B('Pfam: '), html.Br(),
+                             html.B('Pfam: '), get_pfam_entry(
+                                 gene, pfam_mapping, iric_mapping), html.Br(),
                              html.B('InterPro: '), html.Br(), html.Br(),
 
                              html.B('QTL Analyses: '), get_qtaro_entry(
-                                 qtaro_mapping, gene), html.Br(),
+                                 gene, qtaro_mapping), html.Br(),
                              html.B('PubMed Article IDs')]
 
                 return node_data
