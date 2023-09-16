@@ -509,8 +509,8 @@ layout = html.Div(
                                                 'selector': 'node',
                                                 'style': {
                                                     'content': 'data(id)',
-                                                    'height': '5px',
-                                                    'width': '5px',
+                                                    'height': '10px',
+                                                    'width': '10px',
                                                     'font-size': '10px'
                                                 }
                                             },
