@@ -1,7 +1,7 @@
 import pandas as pd
 import regex as re
 
-NULL_PLACEHOLDER = '&ndash;'
+NULL_PLACEHOLDER = '–'
 
 
 def display_in_sci_notation(number):
