@@ -100,26 +100,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-nb-table', 'data'),
-        Output('lift-over-nb-entire-table', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        State('homepage-is-submitted', 'data')
-    )
-    def get_nipponbare_gene_ids(nb_intervals_str, homepage_is_submitted):
-        if homepage_is_submitted:
-            if nb_intervals_str:
-                nb_intervals = lift_over_util.get_genomic_intervals_from_input(
-                    nb_intervals_str)
-
-                if not lift_over_util.is_error(nb_intervals):
-                    genes_from_Nb = lift_over_util.get_genes_in_Nb(
-                        nb_intervals_str)
-
-                    return genes_from_Nb[1], genes_from_Nb[0].to_dict('records')
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('homepage-genomic-intervals-saved-input',
                'data', allow_duplicate=True),
         Input({'type': 'example-genomic-interval',

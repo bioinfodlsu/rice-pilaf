@@ -46,9 +46,9 @@ def init_callback(app):
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
-        State('lift-over-nb-table', 'data'),
-
+        State('homepage-genomic-intervals-submitted-input', 'data'),
         State('coexpression-addl-genes', 'value'),
+
         State('coexpression-network', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'marks'),
@@ -56,7 +56,7 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted,
-                                  implicated_gene_ids, submitted_addl_genes,
+                                  genomic_intervals, submitted_addl_genes,
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
@@ -72,6 +72,11 @@ def init_callback(app):
 
             list_addl_genes = list(
                 filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+
+            # Perform lift-over if it has not been performed.
+            # Otherwise, just fetch the results from the file
+            implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                1]
 
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))

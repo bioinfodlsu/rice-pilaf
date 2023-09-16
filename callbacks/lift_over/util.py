@@ -1,5 +1,5 @@
 import pickle
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 
 import gffutils
 import pandas as pd
@@ -351,6 +351,29 @@ def get_nb_ortholog(gene, nb_ortholog_mapping):
 # ========================
 
 def get_genes_in_Nb(genomic_intervals):
+    temp_output_dir = get_path_to_temp(
+        genomic_intervals, Constants.TEMP_LIFT_OVER)
+
+    NB_GENES_FILENAME = f'{temp_output_dir}/nb_genes.csv'
+    if path_exists(NB_GENES_FILENAME):
+        nb_genes = pd.read_csv(NB_GENES_FILENAME)
+        return nb_genes, nb_genes['Name'].values.tolist()
+
+    make_dir(temp_output_dir)
+    NB_GENES_FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(
+        NB_GENES_FILENAME)
+
+    nb_genes = get_genes_in_Nb_if_not_exist(genomic_intervals)
+    nb_genes[0].to_csv(NB_GENES_FILENAME_WITH_TIMESTAMP, index=False)
+    try:
+        os.replace(NB_GENES_FILENAME_WITH_TIMESTAMP, NB_GENES_FILENAME)
+    except:
+        pass
+
+    return nb_genes
+
+
+def get_genes_in_Nb_if_not_exist(genomic_intervals):
     """
     Returns a data frame containing the genes in Nipponbare
 
@@ -537,19 +560,18 @@ def get_all_genes(refs, genomic_intervals):
     if path_exists(ALL_GENES_FILENAME):
         return pd.read_csv(ALL_GENES_FILENAME)
 
-    else:
-        make_dir(temp_output_dir)
-        ALL_GENES_FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(
-            ALL_GENES_FILENAME)
+    make_dir(temp_output_dir)
+    ALL_GENES_FILENAME_WITH_TIMESTAMP = append_timestamp_to_filename(
+        ALL_GENES_FILENAME)
 
-        all_genes = get_all_genes_if_not_exist(refs, genomic_intervals)
-        all_genes.to_csv(ALL_GENES_FILENAME_WITH_TIMESTAMP, index=False)
-        try:
-            os.replace(ALL_GENES_FILENAME_WITH_TIMESTAMP, ALL_GENES_FILENAME)
-        except:
-            pass
+    all_genes = get_all_genes_if_not_exist(refs, genomic_intervals)
+    all_genes.to_csv(ALL_GENES_FILENAME_WITH_TIMESTAMP, index=False)
+    try:
+        os.replace(ALL_GENES_FILENAME_WITH_TIMESTAMP, ALL_GENES_FILENAME)
+    except:
+        pass
 
-        return all_genes
+    return all_genes
 
 
 def get_all_genes_if_not_exist(refs, genomic_intervals):
