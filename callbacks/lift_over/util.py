@@ -293,7 +293,7 @@ def get_qtaro_entry(gene, mapping):
             qtaro_str += '<li>' + character_major + '<ul>'
             for character_minor in sorted(mapping[gene][character_major]):
                 pubs = ['<li>' + get_doi_link_single_str(
-                    pub) + '</li>' for pub in mapping[gene][character_major][character_minor]]
+                    pub) + '</li>' for pub in sorted(mapping[gene][character_major][character_minor])]
                 qtaro_str += '<li>' + character_minor + \
                     '<ul>' + ''.join(pubs) + '</ul></li>'
             qtaro_str += '</ul></li><br>'

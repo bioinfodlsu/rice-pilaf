@@ -694,8 +694,8 @@ def get_qtaro_entry(gene, mapping):
         for character_major in sorted(mapping[gene]):
             character_minors_list = []
             for character_minor in sorted(mapping[gene][character_major]):
-                pubs = [html.Li(get_doi_link_single_str(pub, dash=True)) for pub in mapping[gene]
-                        [character_major][character_minor]]
+                pubs = [html.Li(get_doi_link_single_str(pub, dash=True)) for pub in sorted(mapping[gene]
+                        [character_major][character_minor])]
                 character_minors_list.append(
                     html.Li([character_minor, html.Ul(pubs)]))
 
