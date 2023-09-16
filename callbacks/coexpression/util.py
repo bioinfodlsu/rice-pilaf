@@ -1,3 +1,4 @@
+from dash import html
 from ..constants import Constants
 from ..file_util import *
 from ..general_util import *
@@ -643,3 +644,26 @@ def count_genes_in_module(implicated_genes, module_idx, network, algo, parameter
             if idx == module_idx - 1:
                 module_genes = module.strip().split('\t')
                 return len(module_genes), len(set.intersection(set(module_genes), set(implicated_genes)))
+
+
+# =========================================
+# Functions related to graph interactivity
+# =========================================
+def get_qtaro_entry(mapping, gene):
+    try:
+        character_majors_list = []
+        for character_major in sorted(mapping[gene]):
+            character_minors_list = []
+            for character_minor in sorted(mapping[gene][character_major]):
+                pubs = [html.Li(get_doi_link_single_str(pub, dash=True)) for pub in mapping[gene]
+                        [character_major][character_minor]]
+                character_minors_list.append(
+                    html.Li([character_minor, html.Ul(pubs)]))
+
+            character_majors_list.append(
+                html.Li([character_major, html.Ul(character_minors_list)]))
+
+        return html.Ul(character_majors_list)
+
+    except KeyError:
+        return NULL_PLACEHOLDER

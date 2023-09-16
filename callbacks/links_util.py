@@ -1,3 +1,5 @@
+from dash import dcc, html
+
 A_HREF = '<a target = "_blank" href="'
 CLOSE_A_HREF = '">'
 LINK_ICON = '<span style="white-space:nowrap">&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></span></a>'
@@ -40,7 +42,19 @@ def get_pubmed_link(result, id_col):
         result[id_col] + LINK_ICON
 
 
-def get_doi_link_single_str(doi):
+def get_doi_link_single_str(doi, dash=False):
+    if dash:
+        return dcc.Link([
+            doi, html.Span([
+                ' ', html.I(
+                    id='demo-link',
+                    className='fa-solid fa-up-right-from-square fa-2xs ms-1'
+                )], style={'white-space': 'nowrap'}
+            )],
+            href='https://doi.org/' + doi,
+            target='_blank'
+        )
+
     return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + doi + LINK_ICON
 
 
