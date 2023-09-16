@@ -71,7 +71,6 @@ def init_callback(app):
         Output('tf-enrichment-result-table', 'columns'),
 
         Input('tfbs-is-submitted', 'data'),
-        State('lift-over-nb-entire-table', 'data'),
         State('tfbs-addl-genes', 'value'),
 
         State('homepage-genomic-intervals-submitted-input', 'data'),
@@ -79,7 +78,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-input', 'data')
     )
-    def display_enrichment_results(tfbs_is_submitted, lift_over_nb_entire_table, submitted_addl_genes,
+    def display_enrichment_results(tfbs_is_submitted, submitted_addl_genes,
                                    nb_interval_str, homepage_submitted, tfbs_submitted_input):
         if homepage_submitted and tfbs_is_submitted:
             tfbs_set = tfbs_submitted_input['tfbs_set']
@@ -92,6 +91,11 @@ def init_callback(app):
 
             list_addl_genes = list(
                 filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+
+            # Perform lift-over if it has not been performed.
+            # Otherwise, just fetch the results from the file
+            lift_over_nb_entire_table = lift_over_util.get_genes_in_Nb(nb_interval_str)[
+                0].to_dict('records')
 
             combined_genes = lift_over_nb_entire_table + \
                 get_annotations_addl_gene(list_addl_genes)
