@@ -286,7 +286,7 @@ def get_ogi_list(accession_ids, ogi_mapping):
 # ==================================================
 
 
-def get_qtaro_entry(mapping, gene):
+def get_qtaro_entry(gene, mapping):
     try:
         qtaro_str = '<ul style="margin-bottom: 0; padding: 0;">'
         for character_major in sorted(mapping[gene]):
@@ -305,7 +305,7 @@ def get_qtaro_entry(mapping, gene):
 
 
 def get_qtaro_entries(genes, qtaro_mapping):
-    return [get_qtaro_entry(qtaro_mapping, gene) for gene in genes]
+    return [get_qtaro_entry(gene, qtaro_mapping) for gene in genes]
 
 
 def get_pubmed_entry(gene, pubmed_mapping):
