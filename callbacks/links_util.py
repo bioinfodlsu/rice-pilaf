@@ -1,5 +1,4 @@
-A_HREF = '<a style="white-space:nowrap" target = "_blank" href="'
-A_HREF_WITH_WORD_WRAP = '<a target = "_blank" href="'
+A_HREF = '<a target = "_blank" href="'
 CLOSE_A_HREF = '">'
 LINK_ICON = '<span style="white-space:nowrap">&nbsp;&nbsp;<i class="fa-solid fa-up-right-from-square fa-2xs"></i></span></a>'
 
@@ -64,8 +63,12 @@ def get_rgi_orthogroup_link(result, id_col):
 
 
 def get_interpro_link_single_str(term, id):
-    return A_HREF_WITH_WORD_WRAP + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
+    return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
 
 
 def get_pfam_link_single_str(term, id):
-    return A_HREF_WITH_WORD_WRAP + 'https://www.ebi.ac.uk/interpro/entry/pfam/' + id + CLOSE_A_HREF + term + LINK_ICON
+    return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/pfam/' + id + CLOSE_A_HREF + term + LINK_ICON
+
+
+def get_rapdb_single_str(id):
+    return A_HREF + 'https://oryza.gramene.org/?filters={%22status%22:%22init%22,%22operation%22:%22AND%22,%22negate%22:false,%22marked%22:false,%22leftIdx%22:0,%22rightIdx%22:3,%22children%22:[{%22fq_field%22:%22id%22,%22fq_value%22:%22' + id + '%22,%22name%22:%22' + id + '%22,%22category%22:%22Genes%22,%22leftIdx%22:1,%22rightIdx%22:2,%22negate%22:false,%22showMenu%22:false,%22marked%22:true}],%22showMarked%22:true,%22showMenu%22:false,%22moveCopyMode%22:%22%22,%22searchOffset%22:0,%22rows%22:20}&genomes=' + CLOSE_A_HREF + id + LINK_ICON

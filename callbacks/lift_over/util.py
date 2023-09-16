@@ -351,6 +351,18 @@ def get_pfam_entries(genes, pfam_mapping, iric_mapping):
     return [get_pfam_entry(gene, pfam_mapping, iric_mapping) for gene in genes]
 
 
+def get_rapdb_entry(gene, rapdb_mapping):
+    if rapdb_mapping[gene]:
+        return '<br>'.join([get_rapdb_single_str(entry)
+                            for entry in sorted(rapdb_mapping[gene]) if entry])
+
+    return NULL_PLACEHOLDER
+
+
+def get_rapdb_entries(genes, rapdb_mapping):
+    return [get_rapdb_entry(gene, rapdb_mapping) for gene in genes]
+
+
 def get_nb_ortholog(gene, nb_ortholog_mapping):
     if nb_ortholog_mapping[gene]:
         return '<br>'.join(map(get_rgi_genecard_link_single_str, nb_ortholog_mapping[gene]))
@@ -403,13 +415,14 @@ def get_genes_in_Nb_if_not_exist(genomic_intervals):
     db = gffutils.FeatureDB(
         f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
 
-    with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file, open(f'{Constants.IRIC}/pfam.pickle', 'rb') as pfam_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file:
+    with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file, open(f'{Constants.IRIC}/pfam.pickle', 'rb') as pfam_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file, open(f'{Constants.MSU_MAPPING}/msu_to_rap.pickle', 'rb') as rapdb_file:
         ogi_mapping = pickle.load(ogi_file)
         qtaro_mapping = pickle.load(qtaro_file)
         interpro_mapping = pickle.load(interpro_file)
         pfam_mapping = pickle.load(pfam_file)
         iric_mapping = pickle.load(iric_mapping_file)
         pubmed_mapping = pickle.load(pubmed_file)
+        rapdb_mapping = pickle.load(rapdb_file)
 
         for nb_interval in nb_intervals:
             genes_in_interval = list(db.region(region=(nb_interval.chrom, nb_interval.start, nb_interval.stop),
@@ -430,7 +443,7 @@ def get_genes_in_Nb_if_not_exist(genomic_intervals):
                 'PubMed Article IDs': get_pubmed_entries(gene_ids_in_interval, pubmed_mapping),
                 'InterPro': get_interpro_entries(gene_ids_in_interval, interpro_mapping, iric_mapping),
                 'Pfam': get_pfam_entries(gene_ids_in_interval, pfam_mapping, iric_mapping),
-                'RAP-DB': get_interpro_entries(gene_ids_in_interval, pfam_mapping, iric_mapping),
+                'RAP-DB': get_rapdb_entries(gene_ids_in_interval, rapdb_mapping),
             })
 
             dfs.append(df)
