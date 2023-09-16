@@ -64,9 +64,11 @@ def purge_html_export_table(table):
                 row[key] = row[key].replace('&nbsp;', '')
                 row[key] = row[key].replace(NULL_PLACEHOLDER, '')
                 row[key] = row[key].replace('<br>', ';')
+                row[key] = row[key].replace('<li>', ';')
                 row[key] = row[key].replace('\n', ';')
                 row[key] = re.sub(r'<.+?>', '', row[key])
                 row[key] = re.sub(r';+', ';', row[key])
+                row[key] = re.sub(r'^;', '', row[key])
             except AttributeError:
                 pass
 

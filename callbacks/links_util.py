@@ -40,8 +40,8 @@ def get_pubmed_link(result, id_col):
         result[id_col] + LINK_ICON
 
 
-def get_doi_link_single_str(doi, pub_idx):
-    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + 'Publication ' + str(pub_idx) + LINK_ICON
+def get_doi_link_single_str(doi):
+    return A_HREF + 'https://doi.org/' + doi + CLOSE_A_HREF + doi + LINK_ICON
 
 
 def get_pubmed_link_single_str(pubmed):
