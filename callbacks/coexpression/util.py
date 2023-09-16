@@ -680,6 +680,14 @@ def get_pfam_entry(gene, pfam_mapping, iric_mapping):
         return NULL_PLACEHOLDER
 
 
+def get_interpro_entry(gene, interpro_mapping, iric_mapping):
+    try:
+        return html.Ul([html.Li(get_interpro_link_single_str(entry[1], entry[0], dash=True)) for entry in sorted(interpro_mapping[iric_mapping[gene]]) if entry[1]],
+                       className='no-bottom-space')
+    except KeyError:
+        return html.Span([NULL_PLACEHOLDER, html.Br()])
+
+
 def get_qtaro_entry(gene, mapping):
     try:
         character_majors_list = []

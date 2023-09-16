@@ -110,7 +110,15 @@ def get_rgi_orthogroup_link(result, id_col):
     return A_HREF + 'https://riceome.hzau.edu.cn/orthogroup/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
 
 
-def get_interpro_link_single_str(term, id):
+def get_interpro_link_single_str(term, id, dash=False):
+    LINK = 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id
+    if dash:
+        return dcc.Link([
+            term, LINK_ICON_DASH],
+            href=LINK,
+            target='_blank'
+        )
+
     return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
 
 
