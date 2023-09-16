@@ -11,4 +11,5 @@
     border-right: 1px solid var(--table-button-gray);
     border-top: 1px solid var(--table-button-gray);
     border-bottom: 1px solid var(--table-button-gray);
+    overflow: auto;
 }
