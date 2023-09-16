@@ -56,3 +56,7 @@ th, td {
 table tr td ul {
     text-align: left !important;
 }
+
+#lift-over-results-table {
+    overflow-x: scroll;
+}

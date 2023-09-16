@@ -557,11 +557,11 @@ def init_callback(app):
     def display_node_data(node_data):
         if node_data:
             with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file:
-                ogi_mapping = pickle.load(ogi_file)
-                qtaro_mapping = pickle.load(qtaro_file)
+                pickle.load(ogi_file)
+                pickle.load(qtaro_file)
                 interpro_mapping = pickle.load(interpro_file)
                 iric_mapping = pickle.load(iric_mapping_file)
-                pubmed_mapping = pickle.load(pubmed_file)
+                pickle.load(pubmed_file)
 
                 gene = node_data['id']
                 interpro = lift_over_util.get_interpro_entry(
