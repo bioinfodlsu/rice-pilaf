@@ -106,3 +106,8 @@ def get_pfam_link_single_str(term, id, dash=False):
 def get_rapdb_single_str(id, dash=False):
     LINK = 'https://ensembl.gramene.org/Oryza_sativa/Gene/Summary?db=core;g=' + id
     return construct_link(LINK, id, dash)
+
+
+def get_gramene_transcript_single_str(id):
+    LINK = 'https://ensembl.gramene.org/Oryza_sativa/Gene/Summary?db=core;t=' + id
+    return construct_link(LINK, id)
