@@ -347,6 +347,8 @@ def convert_to_df_to(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_to_po_link(result, 'ID')
 
@@ -367,6 +369,8 @@ def convert_to_df_po(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_to_po_link(result, 'ID')
 
