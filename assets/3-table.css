@@ -57,6 +57,6 @@ table tr td ul {
     text-align: left !important;
 }
 
-#lift-over-results-table {
+#lift-over-results-table, #coexpression-pathways {
     overflow-x: auto;
 }

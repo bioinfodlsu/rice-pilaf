@@ -253,6 +253,9 @@ def construct_contigency_table(background_genes, implicated_genes, module_genes)
 # Utility functions for the display of the tables showing the results of the enrichment analysis
 # ===============================================================================================
 
+def add_link_to_genes(gene_ids_str):
+    return '\n'.join([get_rgi_genecard_link_single_str(gene_id) for gene_id in gene_ids_str.split('\n')])
+
 
 def convert_transcript_to_msu_id(transcript_ids_str, network):
     """
@@ -272,10 +275,10 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     transcript_ids = transcript_ids_str.split('\n')
     for transcript_id in transcript_ids:
         for msu_id in mapping_dict[transcript_id]:
-            output_str += f'{msu_id}\n({transcript_id})\n\n'
+            output_str += f'{get_rgi_genecard_link_single_str(msu_id)}\n({get_gramene_transcript_single_str(transcript_id)})<br><br>'
 
     # Remove trailing newline characters
-    return output_str[:-2]
+    return output_str[:-len('<br><br>')]
 
 
 def get_genes_in_module(module_idx, network, algo, parameters):
@@ -322,6 +325,8 @@ def convert_to_df_go(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_go_link(result, 'ID')
 
@@ -342,6 +347,8 @@ def convert_to_df_to(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_to_po_link(result, 'ID')
 
@@ -362,6 +369,8 @@ def convert_to_df_po(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_to_po_link(result, 'ID')
 

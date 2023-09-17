@@ -11,6 +11,18 @@ LINK_ICON_DASH = html.Span([
 )
 
 
+def construct_link(link, text, dash=False):
+    if dash:
+        return dcc.Link([
+            text, LINK_ICON_DASH],
+            href=link,
+            target='_blank'
+        )
+
+    # Do not use formatted strings since some functions operate on Series
+    return A_HREF + link + CLOSE_A_HREF + text + LINK_ICON
+
+
 def get_genes_from_kegg_link(link):
     idx = link.find('?')
     query = link[idx:].split('+')
@@ -19,136 +31,83 @@ def get_genes_from_kegg_link(link):
 
 
 def get_kegg_link(result, id_col, genes_col):
-    return A_HREF + 'http://www.genome.jp/kegg-bin/show_pathway?' + \
-        result[id_col] + '+' + result[genes_col].str.split('\n').str.join('+') + \
-        CLOSE_A_HREF + result[id_col] + LINK_ICON
+    LINK = 'http://www.genome.jp/kegg-bin/show_pathway?' + \
+        result[id_col] + '+' + result[genes_col].str.split('\n').str.join('+')
+    return construct_link(LINK, result[id_col])
 
 
 def get_go_link(result, id_col):
-    return A_HREF + 'https://amigo.geneontology.org/amigo/term/' + \
-        result[id_col] + \
-        CLOSE_A_HREF + result[id_col] + LINK_ICON
+    LINK = 'https://amigo.geneontology.org/amigo/term/' + result[id_col]
+    return construct_link(LINK, result[id_col])
 
 
 def get_to_po_link(result, id_col):
-    return A_HREF + 'https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
-        result[id_col].str.replace(':', '_') + \
-        CLOSE_A_HREF + result[id_col] + LINK_ICON
+    LINK = 'https://www.ebi.ac.uk/ols4/ontologies/to/classes/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252F' + \
+        result[id_col].str.replace(':', '_')
+    return construct_link(LINK, result[id_col])
 
 
 def get_uniprot_link(result, id_col):
-    return A_HREF + 'https://www.uniprot.org/uniprotkb/' + \
-        result[id_col] + '/entry' + CLOSE_A_HREF + \
-        result[id_col] + LINK_ICON
+    LINK = 'https://www.uniprot.org/uniprotkb/' + result[id_col] + '/entry'
+    return construct_link(LINK, result[id_col])
 
 
 def get_uniprot_link_single_str(id, dash=False):
     LINK = 'https://www.uniprot.org/uniprotkb/' + id + '/entry'
-    if dash:
-        return dcc.Link([
-            id, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + id + LINK_ICON
+    return construct_link(LINK, id, dash)
 
 
 def get_pubmed_link(result, id_col):
-    return A_HREF + 'https://pubmed.ncbi.nlm.nih.gov/' + \
-        result[id_col] + '/entry' + CLOSE_A_HREF + \
-        result[id_col] + LINK_ICON
+    LINK = 'https://pubmed.ncbi.nlm.nih.gov/' + result[id_col] + '/entry'
+    return construct_link(LINK, result[id_col])
 
 
 def get_doi_link_single_str(doi, dash=False):
     LINK = 'https://doi.org/' + doi
-    if dash:
-        return dcc.Link([
-            doi, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + doi + LINK_ICON
+    return construct_link(LINK, doi, dash)
 
 
 def get_pubmed_link_single_str(pubmed, dash=False):
     LINK = 'https://pubmed.ncbi.nlm.nih.gov/' + \
         pubmed + '/entry'
-    if dash:
-        return dcc.Link([
-            pubmed, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + \
-        pubmed + LINK_ICON
+    return construct_link(LINK, pubmed, dash)
 
 
 def get_rgi_genecard_link_single_str(accession, dash=False):
     LINK = 'https://riceome.hzau.edu.cn/genecard/' + accession
-    if dash:
-        return dcc.Link([
-            accession, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + accession + LINK_ICON
+    return construct_link(LINK, accession, dash)
 
 
 def get_rgi_genecard_link(result, id_col):
-    return A_HREF + 'https://riceome.hzau.edu.cn/genecard/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
+    LINK = 'https://riceome.hzau.edu.cn/genecard/' + result[id_col]
+    return construct_link(LINK, result[id_col])
 
 
 def get_rgi_orthogroup_link_single_str(accession, dash=False):
     LINK = 'https://riceome.hzau.edu.cn/orthogroup/' + accession
-    if dash:
-        return dcc.Link([
-            accession, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + accession + LINK_ICON
+    return construct_link(LINK, accession, dash)
 
 
 def get_rgi_orthogroup_link(result, id_col):
-    return A_HREF + 'https://riceome.hzau.edu.cn/orthogroup/' + result[id_col] + CLOSE_A_HREF + result[id_col] + LINK_ICON
+    LINK = 'https://riceome.hzau.edu.cn/orthogroup/' + result[id_col]
+    return construct_link(LINK, result[id_col])
 
 
 def get_interpro_link_single_str(term, id, dash=False):
     LINK = 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id
-    if dash:
-        return dcc.Link([
-            term, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + 'https://www.ebi.ac.uk/interpro/entry/InterPro/' + id + CLOSE_A_HREF + term + LINK_ICON
+    return construct_link(LINK, term, dash)
 
 
 def get_pfam_link_single_str(term, id, dash=False):
     LINK = 'https://www.ebi.ac.uk/interpro/entry/pfam/' + id
-    if dash:
-        return dcc.Link([
-            term, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
-
-    return A_HREF + LINK + CLOSE_A_HREF + term + LINK_ICON
+    return construct_link(LINK, term, dash)
 
 
 def get_rapdb_single_str(id, dash=False):
     LINK = 'https://ensembl.gramene.org/Oryza_sativa/Gene/Summary?db=core;g=' + id
-    if dash:
-        return dcc.Link([
-            id, LINK_ICON_DASH],
-            href=LINK,
-            target='_blank'
-        )
+    return construct_link(LINK, id, dash)
 
-    return A_HREF + LINK + CLOSE_A_HREF + id + LINK_ICON
+
+def get_gramene_transcript_single_str(id):
+    LINK = 'https://ensembl.gramene.org/Oryza_sativa/Gene/Summary?db=core;t=' + id
+    return construct_link(LINK, id)
