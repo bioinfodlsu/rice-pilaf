@@ -7,6 +7,7 @@
 #text-mining-result-table + div,
 #tf-enrichment-result-table + div,
 #coexpression-module-graph + div,
+#coexpression-module-graph-node-data + div,
 #coexpression-graph-container {
     display: block !important;
     height: 0 !important;

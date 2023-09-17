@@ -5,7 +5,7 @@
     border: 1px solid var(--table-button-gray);
 }
 
-#coexpression-module-graph-node-data {
+#coexpression-module-graph-node-data-container {
     height: 100vh;
     background-color: var(--bg-gray-darker);
     border-right: 1px solid var(--table-button-gray);

@@ -535,7 +535,15 @@ layout = html.Div(
                             ], className='w-75'),
 
                             html.Div(
-                                id='coexpression-module-graph-node-data', className='w-25 p-3'),
+                                dcc.Loading(
+                                    html.Div(
+                                        id='coexpression-module-graph-node-data',
+                                        className='p-3'
+                                    )
+                                ),
+                                className='w-25',
+                                id='coexpression-module-graph-node-data-container'
+                            ),
                         ], className='d-flex flex-row'),
 
                         # This is for adding padding at the bottom of the graph
