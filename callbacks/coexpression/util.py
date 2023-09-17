@@ -253,6 +253,9 @@ def construct_contigency_table(background_genes, implicated_genes, module_genes)
 # Utility functions for the display of the tables showing the results of the enrichment analysis
 # ===============================================================================================
 
+def add_link_to_genes(gene_ids_str):
+    return '\n'.join([get_rgi_genecard_link_single_str(gene_id) for gene_id in gene_ids_str.split('\n')])
+
 
 def convert_transcript_to_msu_id(transcript_ids_str, network):
     """
@@ -322,6 +325,8 @@ def convert_to_df_go(result):
 
     # Prettify display of genes
     result['Genes'] = result['Genes'].str.split('/').str.join('\n')
+    result['Genes'] = result.apply(
+        lambda x: add_link_to_genes(x['Genes']), axis=1)
 
     result['ID'] = get_go_link(result, 'ID')
 
