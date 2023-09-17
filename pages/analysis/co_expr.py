@@ -537,6 +537,7 @@ layout = html.Div(
                             html.Div(
                                 dcc.Loading(
                                     html.Div(
+                                        children='Click on a node to display information about the gene.',
                                         id='coexpression-module-graph-node-data',
                                         className='p-3'
                                     )

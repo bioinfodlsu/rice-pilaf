@@ -315,17 +315,17 @@ def init_callback(app):
 
                 if not modules:
                     module_graph = load_module_graph(
-                        combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout)
+                        combined_gene_ids, 'Click on a node to display information about the gene.', submitted_network, submitted_algo, parameters, layout)
                 else:
                     module_graph = load_module_graph(
                         combined_gene_ids, module, submitted_network, submitted_algo, parameters, layout)
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, None, {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, 'Click on a node to display information about the gene.', {'height': '0em'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
-                                       'height': '100vh'}, None, {'height': '1.5em'})
+                                       'height': '100vh'}, 'Click on a node to display information about the gene.', {'height': '1.5em'})
 
         raise PreventUpdate
 
