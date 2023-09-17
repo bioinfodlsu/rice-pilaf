@@ -655,7 +655,7 @@ def get_rapdb_entry(gene, rapdb_mapping):
         return html.Ul([html.Li(get_rapdb_single_str(entry, dash=True)) for entry in sorted(rapdb_mapping[gene]) if entry],
                        className='no-bottom-space')
 
-    return NULL_PLACEHOLDER
+    return html.Span([NULL_PLACEHOLDER, html.Br()])
 
 
 def get_gene_description_entry(gene, gene_descriptions_mapping):
