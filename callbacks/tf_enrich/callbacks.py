@@ -27,7 +27,6 @@ def init_callback(app):
 
     @app.callback(
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
-        Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-addl-genes-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-set-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-prediction-technique-submitted-input', 'data', allow_duplicate=True),
@@ -42,10 +41,7 @@ def init_callback(app):
     )
     def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
         if homepage_is_submitted and tfbs_submitted_n_clicks >= 1:
-            submitted_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique)._asdict()
-
-            return True, submitted_input, addl_genes, tfbs_set, tfbs_prediction_technique
+            return True, addl_genes, tfbs_set, tfbs_prediction_technique
 
         raise PreventUpdate
 
@@ -79,14 +75,12 @@ def init_callback(app):
         State('homepage-genomic-intervals-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('tfbs-submitted-input', 'data')
+        State('tfbs-set-submitted-input', 'data'),
+        State('tfbs-prediction-technique-submitted-input', 'data'),
     )
     def display_enrichment_results(tfbs_is_submitted, submitted_addl_genes,
-                                   nb_interval_str, homepage_submitted, tfbs_submitted_input):
+                                   nb_interval_str, homepage_submitted, tfbs_set, tfbs_prediction_technique):
         if homepage_submitted and tfbs_is_submitted:
-            tfbs_set = tfbs_submitted_input['tfbs_set']
-            tfbs_prediction_technique = tfbs_submitted_input['tfbs_prediction_technique']
-
             if submitted_addl_genes:
                 submitted_addl_genes = submitted_addl_genes.strip()
             else:

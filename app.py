@@ -222,11 +222,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='tfbs-submitted-input',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='tfbs-is-submitted',
                 storage_type='session'
             ),
