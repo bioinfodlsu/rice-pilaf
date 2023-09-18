@@ -6,6 +6,8 @@ from .util import *
 from ..lift_over import util as lift_over_util
 from ..branch import *
 
+import json
+
 Input_parameter_module = namedtuple('Input_parameter_module', [
     'param_slider_marks', 'param_slider_value'])
 
@@ -46,9 +48,9 @@ def init_callback(app):
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
-        State('homepage-genomic-intervals-submitted-input', 'data'),
-        State('coexpression-addl-genes', 'value'),
+        State('lift-over-nb-table', 'data'),
 
+        State('coexpression-addl-genes', 'value'),
         State('coexpression-network', 'value'),
         State('coexpression-clustering-algo', 'value'),
         State('coexpression-parameter-slider', 'marks'),
@@ -56,7 +58,7 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted,
-                                  genomic_intervals, submitted_addl_genes,
+                                  implicated_gene_ids, submitted_addl_genes,
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
@@ -72,11 +74,6 @@ def init_callback(app):
 
             list_addl_genes = list(
                 filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
-
-            # Perform lift-over if it has not been performed.
-            # Otherwise, just fetch the results from the file
-            implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
-                1]
 
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
@@ -287,8 +284,6 @@ def init_callback(app):
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
-        Output('coexpression-module-graph-node-data',
-               'children', allow_duplicate=True),
         Output('coexpression-extra-bottom-div', 'style', allow_duplicate=True),
 
         Input('coexpression-combined-genes', 'data'),
@@ -315,17 +310,17 @@ def init_callback(app):
 
                 if not modules:
                     module_graph = load_module_graph(
-                        combined_gene_ids, 'Click on a node to display information about the gene.', submitted_network, submitted_algo, parameters, layout)
+                        combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout)
                 else:
                     module_graph = load_module_graph(
                         combined_gene_ids, module, submitted_network, submitted_algo, parameters, layout)
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, 'Click on a node to display information about the gene.', {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, {'height': '0em'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
-                                       'height': '100vh'}, 'Click on a node to display information about the gene.', {'height': '1.5em'})
+                                       'height': '100vh'}, {'height': '1.5em'})
 
         raise PreventUpdate
 
@@ -466,13 +461,17 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-input', 'children'),
         Input('coexpression-is-submitted', 'data'),
-        State('coexpression-addl-genes', 'value'),
-        State('coexpression-network', 'value'),
-        State('coexpression-clustering-algo', 'value'),
-        State('coexpression-parameter-slider', 'value')
+        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-parameter-module', 'data'),
     )
-    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, parameters):
+    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, submitted_parameter_module):
         if coexpression_is_submitted:
+            parameters = 0
+            if submitted_parameter_module: 
+                parameters = submitted_parameter_module[algo]['param_slider_value']
+
             if not genes:
                 genes = 'None'
             else:
@@ -536,19 +535,12 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-download-graph-to-json', 'data'),
         Input('coexpression-export-graph', 'n_clicks'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
-        State('coexpression-submitted-network', 'data'),
-        State('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-submitted-parameter-module', 'data'),
-        State('coexpression-modules', 'value'),
+        State('coexpression-module-graph', 'elements'),
+        State('homepage-genomic-intervals-submitted-input', 'data')
     )
-    def download_coexpression_graph_to_tsv(download_n_clicks, genomic_intervals, submitted_network, submitted_algo, submitted_parameter_module, module):
+    def download_coexpression_graph_to_csv(download_n_clicks, coexpression_dict, genomic_intervals):
         if download_n_clicks >= 1:
-            parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
-            module_idx = int(module.split(' ')[1])
-            df = pd.read_csv(
-                f'{Constants.TEMP}/{submitted_network}/{submitted_algo}/modules/{parameters}/module-{module_idx}.tsv', sep='\t')
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
+            return dict(content='Hello world!', filename=f'[{genomic_intervals}] Co-Expression Network Analysis Graph.txt')
 
         raise PreventUpdate
 
@@ -558,38 +550,6 @@ def init_callback(app):
     )
     def display_node_data(node_data):
         if node_data:
-            with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file, open(f'{Constants.IRIC}/pfam.pickle', 'rb') as pfam_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file, open(f'{Constants.MSU_MAPPING}/msu_to_rap.pickle', 'rb') as rapdb_file, open(f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.pickle', 'rb') as gene_descriptions_file:
-                ogi_mapping = pickle.load(ogi_file)
-                qtaro_mapping = pickle.load(qtaro_file)
-                interpro_mapping = pickle.load(interpro_file)
-                pfam_mapping = pickle.load(pfam_file)
-                iric_mapping = pickle.load(iric_mapping_file)
-                pubmed_mapping = pickle.load(pubmed_file)
-                rapdb_mapping = pickle.load(rapdb_file)
-                gene_descriptions_mapping = pickle.load(gene_descriptions_file)
-
-                gene = node_data['id']
-
-                node_data = [html.B('Name: '), get_rgi_genecard_link_single_str(gene, dash=True), html.Br(),
-                             html.B('OGI: '), get_rgi_orthogroup_link_single_str(
-                                 ogi_mapping[gene], dash=True), html.Br(),
-                             html.B(
-                                 'RAP-DB: ', ), get_rapdb_entry(gene, rapdb_mapping), html.Br(),
-
-                             html.B(
-                                 'Description: '), get_gene_description_entry(gene, gene_descriptions_mapping), html.Br(),
-                             html.B(
-                                 'UniProtKB/Swiss-Prot: '), get_uniprot_entry(gene, gene_descriptions_mapping), html.Br(), html.Br(),
-
-                             html.B('Pfam: '), get_pfam_entry(
-                                 gene, pfam_mapping, iric_mapping), html.Br(),
-                             html.B('InterPro: '), get_interpro_entry(
-                                 gene, interpro_mapping, iric_mapping), html.Br(),
-
-                             html.B('QTL Analyses: '), get_qtaro_entry(
-                                 gene, qtaro_mapping), html.Br(),
-                             html.B('PubMed Article IDs: '), get_pubmed_entry(gene, pubmed_mapping)]
-
-                return node_data
-
+            return json.dumps(node_data)
+        
         raise PreventUpdate
