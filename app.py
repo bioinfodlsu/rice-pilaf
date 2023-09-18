@@ -237,6 +237,11 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='tfbs-prediction-technique-submitted-input',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='tfbs-set-submitted-input',
                 storage_type='session'
             ),

@@ -30,7 +30,8 @@ def init_callback(app):
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-addl-genes-submitted-input', 'data', allow_duplicate=True),
         Output('tfbs-set-submitted-input', 'data', allow_duplicate=True),
-
+        Output('tfbs-prediction-technique-submitted-input', 'data', allow_duplicate=True),
+        
         Input('tfbs-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
@@ -44,7 +45,7 @@ def init_callback(app):
             submitted_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique)._asdict()
 
-            return True, submitted_input, addl_genes, tfbs_set
+            return True, submitted_input, addl_genes, tfbs_set, tfbs_prediction_technique
 
         raise PreventUpdate
 
@@ -117,8 +118,9 @@ def init_callback(app):
         Input('tfbs-is-submitted', 'data'),
         State('tfbs-addl-genes-submitted-input', 'data'),
         State('tfbs-set-submitted-input', 'data'),
+        State('tfbs-prediction-technique-submitted-input', 'data')
     )
-    def display_tfbs_submitted_input(tfbs_is_submitted, genes, tfbs_set):
+    def display_tfbs_submitted_input(tfbs_is_submitted, genes, tfbs_set, tfbs_prediction_technique):
         if tfbs_is_submitted:
             if not genes:
                 genes = 'None'
@@ -127,6 +129,8 @@ def init_callback(app):
                     list(filter(None, [gene.strip() for gene in genes.split(';')])))
 
             return [html.B('Additional Genes: '), genes,
+                    html.Br(),
+                    html.B('Selected Tf Binding Site Region Prediction Technique: '), tfbs_prediction_technique,
                     html.Br(), 
                     html.B('Selected Tf Binding Site Region: '), tfbs_set,
                     html.Br()]
