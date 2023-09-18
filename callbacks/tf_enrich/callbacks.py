@@ -28,6 +28,7 @@ def init_callback(app):
     @app.callback(
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-input', 'data', allow_duplicate=True),
+        Output('tfbs-addl-genes-submitted-input', 'data', allow_duplicate=True),
 
         Input('tfbs-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -42,7 +43,7 @@ def init_callback(app):
             submitted_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique)._asdict()
 
-            return True, submitted_input
+            return True, submitted_input, addl_genes
 
         raise PreventUpdate
 
@@ -107,6 +108,24 @@ def init_callback(app):
                        for x in enrichment_results_df.columns]
 
             return enrichment_results_df.to_dict('records'), columns
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('tfbs-input', 'children'),
+        Input('tfbs-is-submitted', 'data'),
+        State('tfbs-addl-genes-submitted-input', 'data'),
+    )
+    def display_tfbs_submitted_input(tfbs_is_submitted, genes):
+        if tfbs_is_submitted:
+            if not genes:
+                genes = 'None'
+            else:
+                genes = '; '.join(
+                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
+
+            return [html.B('Additional Genes: '), genes,
+                    html.Br()]
 
         raise PreventUpdate
 

@@ -25,9 +25,7 @@ app = dash.Dash(__name__, use_pages=True,
                                       dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
                 server=server,
                 title='RicePilaf',
-                update_title='Loading...',
-                meta_tags=[{'name': 'viewport',
-                            'content': 'width=1024'}])
+                update_title='Loading...')
 
 welcome = dcc.Markdown(
     '''
@@ -128,6 +126,16 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            dcc.Store(
+                id='lift-over-nb-table',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='lift-over-nb-entire-table',
+                storage_type='session'
+            ),
+
             # ============
             # IGV Browser
             # ============
@@ -220,6 +228,11 @@ app.layout = lambda: dbc.Container([
 
             dcc.Store(
                 id='tfbs-is-submitted',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='tfbs-addl-genes-submitted-input',
                 storage_type='session'
             ),
 

@@ -102,6 +102,15 @@ layout = html.Div(
             children=[
                 html.Hr(className='mt-3 mb-4'),
                 dcc.Loading([
+                    html.Br(),
+
+                    html.Div(
+                        id='tfbs-input',
+                        className='analysis-intro p-3'
+                    ),
+
+                    html.Br(),
+                    
                     html.P(
                         html.Div([
                             dbc.Button([html.I(
