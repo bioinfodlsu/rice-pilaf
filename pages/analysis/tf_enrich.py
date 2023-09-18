@@ -131,7 +131,8 @@ layout = html.Div(
                                         'placeholder_text': '🔎︎ Search Column'},
                         page_action='native',
                         page_size=15,
-                        cell_selectable=False
+                        cell_selectable=False,
+                        style_table={'overflowX': 'auto'}
                     )
                 ])
             ])
