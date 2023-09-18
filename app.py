@@ -236,6 +236,11 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            dcc.Store(
+                id='tfbs-set-submitted-input',
+                storage_type='session'
+            ),
+
             # ============
             # Text Mining
             # ============
