@@ -121,7 +121,8 @@ layout = html.Div(
                                         'placeholder_text': '🔎︎ Search Column'},
                         page_action='native',
                         page_size=10,
-                        cell_selectable=False
+                        cell_selectable=False,
+                        style_table={'overflowX': 'auto'}
                     )
                 ])
             ], className='mt-2')
