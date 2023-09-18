@@ -227,6 +227,11 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='tfbs-addl-genes-saved-input',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='tfbs-addl-genes-submitted-input',
                 storage_type='session'
             ),

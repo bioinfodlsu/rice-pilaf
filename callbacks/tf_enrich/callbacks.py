@@ -133,33 +133,39 @@ def init_callback(app):
 
     @app.callback(
         Output('tfbs-saved-input', 'data', allow_duplicate=True),
+        Output('tfbs-addl-genes-saved-input', 'data', allow_duplicate=True),
+        Input('tfbs-addl-genes', 'value'),
         Input('tfbs-set', 'value'),
         Input('tfbs-prediction-technique', 'value'),
         State('homepage-is-submitted', 'data'),
+        Input('tfbs-submit', 'n_clicks'),
         prevent_initial_call=True
     )
-    def set_input_tfbs_session_state(tfbs_set, tfbs_prediction_technique, homepage_is_submitted):
+    def set_input_tfbs_session_state(genes, tfbs_set, tfbs_prediction_technique, homepage_is_submitted, *_):
         if homepage_is_submitted:
             tfbs_saved_input = Tfbs_input(
                 tfbs_set, tfbs_prediction_technique)._asdict()
 
-            return tfbs_saved_input
+            return tfbs_saved_input, genes
 
         raise PreventUpdate
 
     @app.callback(
+        Output('tfbs-addl-genes', 'value'),
         Output('tfbs-set', 'value'),
         Output('tfbs-prediction-technique', 'value'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-saved-input', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data')
+        State('tfbs-addl-genes-saved-input', 'data'),
+        #Input('homepage-genomic-intervals-submitted-input', 'data')
+        Input('tfbs-submit', 'n_clicks')
     )
-    def get_input_tfbs_session_state(homepage_is_submitted, tfbs_saved_input, *_):
+    def get_input_tfbs_session_state(homepage_is_submitted, tfbs_saved_input, genes, *_):
         if homepage_is_submitted:
             if not tfbs_saved_input:
-                return 'promoters', 'FunTFBS'
+                return None, 'promoters', 'FunTFBS'
 
-            return tfbs_saved_input['tfbs-set'], tfbs_saved_input['tfbs-prediction-technique']
+            return genes, tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
 
         raise PreventUpdate
 
