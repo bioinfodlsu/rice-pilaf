@@ -5,9 +5,6 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 
-Tfbs_input = namedtuple(
-    'Tfbs_input', ['tfbs_set', 'tfbs_prediction_technique'])
-
 
 def init_callback(app):
     @app.callback(
@@ -132,8 +129,9 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-saved-input', 'data', allow_duplicate=True),
         Output('tfbs-addl-genes-saved-input', 'data', allow_duplicate=True),
+        Output('tfbs-set-saved-input', 'data', allow_duplicate=True),
+        Output('tfbs-prediction-technique-saved-input', 'data', allow_duplicate=True),
         Input('tfbs-addl-genes', 'value'),
         Input('tfbs-set', 'value'),
         Input('tfbs-prediction-technique', 'value'),
@@ -143,10 +141,7 @@ def init_callback(app):
     )
     def set_input_tfbs_session_state(genes, tfbs_set, tfbs_prediction_technique, homepage_is_submitted, *_):
         if homepage_is_submitted:
-            tfbs_saved_input = Tfbs_input(
-                tfbs_set, tfbs_prediction_technique)._asdict()
-
-            return tfbs_saved_input, genes
+            return genes, tfbs_set, tfbs_prediction_technique
 
         raise PreventUpdate
 
@@ -155,17 +150,14 @@ def init_callback(app):
         Output('tfbs-set', 'value'),
         Output('tfbs-prediction-technique', 'value'),
         State('homepage-is-submitted', 'data'),
-        State('tfbs-saved-input', 'data'),
         State('tfbs-addl-genes-saved-input', 'data'),
-        #Input('homepage-genomic-intervals-submitted-input', 'data')
+        State('tfbs-set-saved-input', 'data'),
+        State('tfbs-prediction-technique-saved-input', 'data'),
         Input('tfbs-submit', 'n_clicks')
     )
-    def get_input_tfbs_session_state(homepage_is_submitted, tfbs_saved_input, genes, *_):
+    def get_input_tfbs_session_state(homepage_is_submitted, genes, tfbs_set, tfbs_prediction_technique, *_):
         if homepage_is_submitted:
-            if not tfbs_saved_input:
-                return None, 'promoters', 'FunTFBS'
-
-            return genes, tfbs_saved_input['tfbs_set'], tfbs_saved_input['tfbs_prediction_technique']
+            return genes, tfbs_set, tfbs_prediction_technique
 
         raise PreventUpdate
 
