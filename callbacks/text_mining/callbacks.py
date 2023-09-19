@@ -24,7 +24,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Output('text-mining-saved-query', 'data', allow_duplicate=True),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
@@ -36,7 +36,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('text-mining-query-saved-input', 'data', allow_duplicate=True),
+        Output('text-mining-saved-query', 'data', allow_duplicate=True),
         Input('text-mining-query', 'value'),
         prevent_initial_call=True
     )
@@ -45,7 +45,7 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-query', 'value'),
-        Input('text-mining-query-saved-input', 'data'),
+        Input('text-mining-saved-query', 'data'),
     )
     def get_input_homepage_session_state(query):
         return query
@@ -55,7 +55,7 @@ def init_callback(app):
         Output('text-mining-input-error', 'children'),
 
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
-        Output('text-mining-query-submitted-input',
+        Output('text-mining-submitted-query',
                'data', allow_duplicate=True),
         Input('text-mining-submit', 'n_clicks'),
         Input('text-mining-query', 'n_submit'),
@@ -107,7 +107,7 @@ def init_callback(app):
 
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('text-mining-query-submitted-input', 'data')
+        State('text-mining-submitted-query', 'data')
     )
     def display_text_mining_results(text_mining_is_submitted, homepage_submitted, text_mining_query_submitted_input):
         if homepage_submitted and text_mining_is_submitted:

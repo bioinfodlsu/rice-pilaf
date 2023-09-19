@@ -253,12 +253,12 @@ app.layout = lambda: dbc.Container([
             # ============
 
             dcc.Store(
-                id='text-mining-query-saved-input',
+                id='text-mining-saved-query',
                 storage_type='session'
             ),
 
             dcc.Store(
-                id='text-mining-query-submitted-input',
+                id='text-mining-submitted-query',
                 storage_type='session'
             ),
 
