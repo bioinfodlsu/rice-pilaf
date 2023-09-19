@@ -330,11 +330,11 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-addl-genes-saved-input',
+        Output('coexpression-saved-addl-genes',
                'data', allow_duplicate=True),
-        Output('coexpression-network-saved-input',
+        Output('coexpression-saved-network',
                'data', allow_duplicate=True),
-        Output('coexpression-clustering-algo-saved-input',
+        Output('coexpression-saved-clustering-algo',
                'data', allow_duplicate=True),
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
@@ -393,11 +393,10 @@ def init_callback(app):
         Output('coexpression-addl-genes', 'value'),
         Output('coexpression-network', 'value'),
         State('homepage-is-submitted', 'data'),
-        State('coexpression-clustering-algo-saved-input', 'data'),
-        State('coexpression-addl-genes-saved-input', 'data'),
-        State('coexpression-network-saved-input', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        #Input('coexpression-submit', 'n_clicks')
+        State('coexpression-saved-clustering-algo', 'data'),
+        State('coexpression-saved-addl-genes', 'data'),
+        State('coexpression-saved-network', 'data'),
+        Input('coexpression-submit', 'n_clicks')
     )
     def get_input_coexpression_session_state(homepage_is_submitted, algo, genes, network, *_):
         if homepage_is_submitted:

@@ -155,7 +155,7 @@ app.layout = lambda: dbc.Container([
             # Co-expression
             # ==============
             dcc.Store(
-                id='coexpression-addl-genes-saved-input',
+                id='coexpression-saved-addl-genes',
                 storage_type='session'
             ),
 
@@ -170,7 +170,7 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-network-saved-input',
+                id='coexpression-saved-network',
                 storage_type='session'
             ),
 
@@ -180,7 +180,7 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-clustering-algo-saved-input',
+                id='coexpression-saved-clustering-algo',
                 storage_type='session'
             ),
 
