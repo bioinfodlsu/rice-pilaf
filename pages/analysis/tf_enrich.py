@@ -100,8 +100,18 @@ layout = html.Div(
             id='tfbs-results-container',
             style={'display': 'none'},
             children=[
-                html.Hr(className='mt-3 mb-4'),
                 dcc.Loading([
+                    html.Hr(className='mt-3 mb-3'),
+
+                    html.Br(),
+
+                    html.Div(
+                        id='tfbs-input',
+                        className='analysis-intro p-3'
+                    ),
+
+                    html.Br(),
+
                     html.P(
                         html.Div([
                             dbc.Button([html.I(
@@ -131,7 +141,8 @@ layout = html.Div(
                                         'placeholder_text': '🔎︎ Search Column'},
                         page_action='native',
                         page_size=15,
-                        cell_selectable=False
+                        cell_selectable=False,
+                        style_table={'overflowX': 'auto'}
                     )
                 ])
             ])
