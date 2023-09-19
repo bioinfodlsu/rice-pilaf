@@ -9,7 +9,7 @@ from ..general_util import *
 def init_callback(app):
     @app.callback(
         Output('lift-over-genomic-intervals-input', 'children'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('lift-over-submit', 'n_clicks')
     )
@@ -70,7 +70,7 @@ def init_callback(app):
         Output('lift-over-overlap-table-filter', 'options'),
         Output('lift-over-overlap-table-filter', 'value'),
 
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('lift-over-submitted-other-refs', 'data'),
 
         State('homepage-is-submitted', 'data'),
@@ -173,7 +173,7 @@ def init_callback(app):
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
         State('lift-over-saved-other-refs', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-submitted-genomic-intervals', 'data'),
         Input('lift-over-submit', 'n_clicks')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
@@ -217,7 +217,7 @@ def init_callback(app):
         Output('lift-over-results-statistics', 'children'),
         Output('lift-over-results-tabs', 'className'),
 
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-submitted-genomic-intervals', 'data'),
         Input('lift-over-submitted-other-refs', 'data'),
 
         State('homepage-is-submitted', 'data'),
@@ -303,7 +303,7 @@ def init_callback(app):
         Output('lift-over-results-table', 'columns'),
         Output('lift-over-results-table', 'data'),
 
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
+        Input('homepage-submitted-genomic-intervals', 'data'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
         Input('lift-over-submitted-other-refs', 'data'),
@@ -428,7 +428,7 @@ def init_callback(app):
         Output('lift-over-download-df-to-csv', 'data'),
         Input('lift-over-export-table', 'n_clicks'),
         State('lift-over-results-table', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data')
+        State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
         if download_n_clicks >= 1:

@@ -51,8 +51,8 @@ def init_callback(app):
         Output('input-error', 'children'),
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
-        Output('homepage-genomic-intervals-submitted-input', 'data'),
-        Output('homepage-genomic-intervals-saved-input',
+        Output('homepage-submitted-genomic-intervals', 'data'),
+        Output('homepage-saved-genomic-intervals',
                'data', allow_duplicate=True),
 
         State('homepage-genomic-intervals', 'value'),
@@ -88,7 +88,7 @@ def init_callback(app):
                 else:
                     # clear data for items in dcc.Store found in session-container
                     dccStore_children = get_cleared_dccStore_data_excluding_some_data(
-                        dccStore_children, 'homepage-genomic-intervals-saved-input')
+                        dccStore_children, 'homepage-saved-genomic-intervals')
 
                     browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
@@ -100,7 +100,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-genomic-intervals-saved-input',
+        Output('homepage-saved-genomic-intervals',
                'data', allow_duplicate=True),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
@@ -113,7 +113,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-genomic-intervals-saved-input',
+        Output('homepage-saved-genomic-intervals',
                'data', allow_duplicate=True),
         Input('homepage-genomic-intervals', 'value'),
         prevent_initial_call=True
@@ -147,7 +147,7 @@ def init_callback(app):
 
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
-        Input('homepage-genomic-intervals-saved-input', 'data'),
+        Input('homepage-saved-genomic-intervals', 'data'),
     )
     def get_input_homepage_session_state(genomic_intervals):
         return genomic_intervals

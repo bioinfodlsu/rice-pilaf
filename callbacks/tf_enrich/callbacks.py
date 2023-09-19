@@ -8,7 +8,7 @@ from ..lift_over import util as lift_over_util
 def init_callback(app):
     @app.callback(
         Output('tf-enrichment-genomic-intervals-input', 'children'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('tfbs-submit', 'n_clicks')
     )
@@ -68,7 +68,7 @@ def init_callback(app):
         Output('tf-enrichment-result-table', 'columns'),
         Input('tfbs-is-submitted', 'data'),
         State('tfbs-submitted-addl-genes', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-set', 'data'),
         State('tfbs-submitted-prediction-technique', 'data'),
@@ -180,7 +180,7 @@ def init_callback(app):
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
         State('tf-enrichment-result-table', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data')
+        State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
         if download_n_clicks >= 1:

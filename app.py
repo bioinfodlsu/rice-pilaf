@@ -84,12 +84,12 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='homepage-genomic-intervals-saved-input',
+                id='homepage-saved-genomic-intervals',
                 storage_type='session'
             ),
 
             dcc.Store(
-                id='homepage-genomic-intervals-submitted-input',
+                id='homepage-submitted-genomic-intervals',
                 storage_type='session'
             ),
 

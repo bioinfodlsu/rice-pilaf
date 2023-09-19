@@ -10,7 +10,7 @@ def init_callback(app):
     # to display user input interval in the top nav
     @app.callback(
         Output('text-mining-genomic-intervals-input', 'children'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('text-mining-submit', 'n_clicks')
     )
