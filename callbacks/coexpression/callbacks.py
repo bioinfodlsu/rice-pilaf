@@ -339,7 +339,7 @@ def init_callback(app):
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
 
-        State('coexpression-addl-genes', 'value'),
+        Input('coexpression-addl-genes', 'value'),
         Input('coexpression-network', 'value'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
@@ -350,6 +350,8 @@ def init_callback(app):
     )
     def set_input_coexpression_session_state(addl_genes, network, algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_module):
         if homepage_is_submitted:
+            print("no?")
+            print(addl_genes)
             input_paramater_module_value = Input_parameter_module(
                 parameter_mark, parameter_value)._asdict()
 
