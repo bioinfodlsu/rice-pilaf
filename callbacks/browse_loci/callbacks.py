@@ -31,7 +31,7 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-selected-genomic-intervals-submitted-input', 'data'),
+        Output('igv-submitted-selected-genomic-intervals', 'data'),
         Input('igv-submit', 'n_clicks'),
         State('igv-genomic-intervals', 'value'),
         State('igv-track-filter', 'value'),
@@ -106,7 +106,7 @@ def init_callback(app):
         Input('homepage-genomic-intervals-submitted-input', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('igv-selected-genomic-intervals-saved-input', 'data'),
+        State('igv-saved-selected-genomic-intervals', 'data'),
         Input('igv-submit', 'n_clicks')
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
@@ -125,9 +125,9 @@ def init_callback(app):
         Output('igv-track-intro', 'children'),
         Output('igv-track-filter', 'options'),
         Output('igv-track-filter', 'value'),
-        Input('igv-selected-genomic-intervals-submitted-input', 'data'),
+        Input('igv-submitted-selected-genomic-intervals', 'data'),
         State('homepage-is-submitted', 'data'),
-        Input('igv-selected-tracks-submitted-input', 'data'),
+        Input('igv-submitted-selected-tracks', 'data'),
         State('igv-is-submitted', 'data')
     )
     def display_igv_tracks_filter(nb_intervals_str, homepage_is_submitted, selected_tracks, igv_is_submitted):
@@ -143,8 +143,8 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-display', 'children'),
-        State('igv-selected-genomic-intervals-submitted-input', 'data'),
-        Input('igv-selected-tracks-submitted-input', 'data'),
+        State('igv-submitted-selected-genomic-intervals', 'data'),
+        Input('igv-submitted-selected-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
         State('igv-is-submitted', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data')
@@ -193,7 +193,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-selected-genomic-intervals-saved-input',
+        Output('igv-saved-selected-genomic-intervals',
                'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
         State('homepage-is-submitted', 'data'),
@@ -208,7 +208,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-selected-tracks-submitted-input',
+        Output('igv-submitted-selected-tracks',
                'data', allow_duplicate=True),
         Input('igv-track-filter', 'value'),
         State('homepage-is-submitted', 'data'),
