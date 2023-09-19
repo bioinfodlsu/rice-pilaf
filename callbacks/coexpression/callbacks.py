@@ -397,7 +397,7 @@ def init_callback(app):
         State('coexpression-addl-genes-saved-input', 'data'),
         State('coexpression-network-saved-input', 'data'),
         Input('homepage-genomic-intervals-submitted-input', 'data'),
-        Input('coexpression-submit', 'n_clicks')
+        #Input('coexpression-submit', 'n_clicks')
     )
     def get_input_coexpression_session_state(homepage_is_submitted, algo, genes, network, *_):
         if homepage_is_submitted:
@@ -413,7 +413,7 @@ def init_callback(app):
             return algo, genes, network
 
         raise PreventUpdate
-
+    
     @app.callback(
         Output('coexpression-graph-layout', 'value'),
         Output('coexpression-modules-pathway', 'active_tab'),
@@ -441,13 +441,17 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-input', 'children'),
         Input('coexpression-is-submitted', 'data'),
-        State('coexpression-addl-genes', 'value'),
-        State('coexpression-network', 'value'),
-        State('coexpression-clustering-algo', 'value'),
-        State('coexpression-parameter-slider', 'value')
+        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-parameter-module', 'data')
     )
-    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, parameters):
+    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, submitted_parameter_module):
         if coexpression_is_submitted:
+            parameters = 0
+            if submitted_parameter_module: 
+                parameters = submitted_parameter_module[algo]['param_slider_value']
+
             if not genes:
                 genes = 'None'
             else:
