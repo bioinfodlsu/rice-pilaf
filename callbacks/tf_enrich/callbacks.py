@@ -67,7 +67,7 @@ def init_callback(app):
         Output('tf-enrichment-result-table', 'data'),
         Output('tf-enrichment-result-table', 'columns'),
         Input('tfbs-is-submitted', 'data'),
-        State('tfbs-addl-genes', 'value'),
+        State('tfbs-addl-genes-submitted-input', 'data'),
         State('homepage-genomic-intervals-submitted-input', 'data'),
         State('homepage-is-submitted', 'data'),
         State('tfbs-set-submitted-input', 'data'),
