@@ -7,8 +7,6 @@ from ..lift_over import util as lift_over_util
 from ..branch import *
 
 Parameter_slider = namedtuple('Parameter_slider', ['marks', 'value'])
-Input_parameter_module = namedtuple('Input_parameter_module', [
-    'param_slider_marks', 'param_slider_value'])
 
 def init_callback(app):
     @app.callback(
