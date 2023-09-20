@@ -155,6 +155,11 @@ app.layout = lambda: dbc.Container([
             # Co-expression
             # ==============
             dcc.Store(
+                id='coexpression-submitted-parameter-slider',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='coexpression-submitted-module',
                 storage_type='session'
             ),
@@ -204,10 +209,10 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
-            dcc.Store(
-                id='coexpression-submitted-parameter-module',
-                storage_type='session'
-            ),
+            #dcc.Store(
+            #    id='coexpression-submitted-parameter-module',
+            #    storage_type='session'
+            #),
 
             dcc.Store(
                 id='coexpression-parameter-module-saved-input',
