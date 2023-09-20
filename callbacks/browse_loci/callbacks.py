@@ -176,28 +176,27 @@ def init_callback(app):
     @app.callback(
         Output('igv-saved-genomic-intervals',
                'data', allow_duplicate=True),
+        Output('igv-saved-tracks', 'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
-        State('homepage-is-submitted', 'data'),
         Input('igv-tracks', 'value'),
+        State('homepage-is-submitted', 'data'),
 
         prevent_initial_call=True
     )
-    def set_input_igv_session_state(selected_nb_intervals_str, homepage_is_submitted, *_):
+    def set_input_igv_session_state(selected_nb_intervals_str, igv_tracks, homepage_is_submitted):
         if homepage_is_submitted:
-            return selected_nb_intervals_str
+            return selected_nb_intervals_str, igv_tracks
 
         raise PreventUpdate
-
+    
     @app.callback(
-        Output('igv-submitted-tracks',
-               'data', allow_duplicate=True),
-        Input('igv-tracks', 'value'),
+        Output('igv-tracks', 'value'),
+        State('igv-saved-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('igv-is-submitted', 'data'),
-        prevent_initial_call=True
+        Input('igv-submit', 'n_clicks'),
     )
-    def set_submitted_igv_session_state(selected_tracks, homepage_is_submitted, igv_is_submitted):
-        if homepage_is_submitted and igv_is_submitted:
-            return selected_tracks
-
+    def get_input_igv_session_state(igv_tracks, homepage_is_submitted, *_):
+        if homepage_is_submitted:
+            return igv_tracks
+        
         raise PreventUpdate
