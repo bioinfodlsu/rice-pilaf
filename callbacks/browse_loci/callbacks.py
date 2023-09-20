@@ -35,7 +35,7 @@ def init_callback(app):
         Output('igv-submitted-tracks', 'data', allow_duplicate=True),
         Input('igv-submit', 'n_clicks'),
         State('igv-genomic-intervals', 'value'),
-        State('igv-track-filter', 'value'),
+        State('igv-tracks', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
@@ -178,7 +178,7 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Input('igv-genomic-intervals', 'value'),
         State('homepage-is-submitted', 'data'),
-        Input('igv-track-filter', 'value'),
+        Input('igv-tracks', 'value'),
 
         prevent_initial_call=True
     )
@@ -191,7 +191,7 @@ def init_callback(app):
     @app.callback(
         Output('igv-submitted-tracks',
                'data', allow_duplicate=True),
-        Input('igv-track-filter', 'value'),
+        Input('igv-tracks', 'value'),
         State('homepage-is-submitted', 'data'),
         State('igv-is-submitted', 'data'),
         prevent_initial_call=True

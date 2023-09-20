@@ -37,7 +37,7 @@ layout = html.Div(
             dbc.Label(['Select the tracks to be displayed']),
 
             dbc.Checklist(
-                id='igv-track-filter',
+                id='igv-tracks',
                 options=construct_options_igv_tracks(),
                 inline=True,
                 className='ms-3'),
