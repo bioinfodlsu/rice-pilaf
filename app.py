@@ -155,6 +155,11 @@ app.layout = lambda: dbc.Container([
             # Co-expression
             # ==============
             dcc.Store(
+                id='coexpression-submitted-layout',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='coexpression-saved-addl-genes',
                 storage_type='session'
             ),

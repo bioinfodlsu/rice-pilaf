@@ -10,7 +10,7 @@ Input_parameter_module = namedtuple('Input_parameter_module', [
     'param_slider_marks', 'param_slider_value'])
 
 Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
-    'param_slider_marks', 'param_slider_value', 'param_module', 'layout', 'pathway_active_tab'])
+    'param_slider_marks', 'param_slider_value', 'param_module', 'pathway_active_tab'])
 
 
 def init_callback(app):
@@ -60,7 +60,7 @@ def init_callback(app):
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
-                submitted_slider_marks, submitted_slider_value, '', 'circle', 'tab-0')._asdict()
+                submitted_slider_marks, submitted_slider_value, '', 'tab-0')._asdict()
 
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
@@ -131,14 +131,17 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
+        State('coexpression-submitted-layout', 'data'),
 
         prevent_initial_call=True
     )
-    def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
+    def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module, layout):
         if coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_module:
                 parameters = submitted_parameter_module[submitted_algo]['param_slider_value']
-                layout = submitted_parameter_module[submitted_algo]['layout']
+                if not layout:
+                    layout = 'circle'
+                #layout = submitted_parameter_module[submitted_algo]['layout']
 
                 return load_module_graph(
                     combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
@@ -366,6 +369,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-submitted-parameter-module',
                'data', allow_duplicate=True),
+        Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
 
         Input('coexpression-modules', 'value'),
         Input('coexpression-graph-layout', 'value'),
@@ -381,10 +385,10 @@ def init_callback(app):
         if homepage_is_submitted:
             if submitted_network and submitted_parameter_module and submitted_algo in submitted_parameter_module:
                 submitted_parameter_module[submitted_algo]['param_module'] = module
-                submitted_parameter_module[submitted_algo]['layout'] = layout
+                #submitted_parameter_module[submitted_algo]['layout'] = layout
                 submitted_parameter_module[submitted_algo]['pathway_active_tab'] = active_tab
 
-                return submitted_parameter_module
+                return submitted_parameter_module, layout
 
         raise PreventUpdate
 
@@ -420,14 +424,17 @@ def init_callback(app):
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-module', 'data')
+        State('coexpression-submitted-parameter-module', 'data'),
+        State('coexpression-submitted-layout', 'data')
     )
-    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module):
+    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_module, layout):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_module:
-                layout = 'circle'
-                if submitted_parameter_module[submitted_algo]['layout']:
-                    layout = submitted_parameter_module[submitted_algo]['layout']
+                if not layout:
+                    layout = 'circle'
+                #layout = 'circle'
+                #if submitted_parameter_module[submitted_algo]['layout']:
+                #    layout = submitted_parameter_module[submitted_algo]['layout']
 
                 active_tab = 'tab-0'
                 if submitted_parameter_module[submitted_algo]['pathway_active_tab']:
