@@ -10,7 +10,7 @@ Input_parameter_module = namedtuple('Input_parameter_module', [
     'param_slider_marks', 'param_slider_value'])
 
 Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
-    'param_slider_marks', 'param_slider_value', 'param_module'])
+    'param_slider_marks', 'param_slider_value'])
 
 
 def init_callback(app):
@@ -60,7 +60,7 @@ def init_callback(app):
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             paramater_module_value = Submitted_parameter_module(
-                submitted_slider_marks, submitted_slider_value, '')._asdict()
+                submitted_slider_marks, submitted_slider_value)._asdict()
 
             submitted_parameter_module = {
                 submitted_algo: paramater_module_value}
@@ -181,10 +181,11 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('homepage-is-submitted', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),
+        State('coexpression-submitted-module', 'data'),
         State('coexpression-is-submitted', 'data')
     )
     def perform_module_enrichment(genomic_intervals, combined_gene_ids, submitted_addl_genes,
-                                  submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_module, coexpression_is_submitted):
+                                  submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_module, module, coexpression_is_submitted):
         if homepage_is_submitted:
             if coexpression_is_submitted:
                 if submitted_algo and submitted_algo in submitted_parameter_module:
@@ -213,10 +214,12 @@ def init_callback(app):
                         first_module = enriched_modules[0]
                     else:
                         return enriched_modules, first_module, {'display': 'none'}, stats
-
-                    if submitted_parameter_module and submitted_algo in submitted_parameter_module:
-                        if submitted_parameter_module[submitted_algo]['param_module']:
-                            first_module = submitted_parameter_module[submitted_algo]['param_module']
+                    
+                    #if submitted_parameter_module and submitted_algo in submitted_parameter_module:
+                    #    if submitted_parameter_module[submitted_algo]['param_module']:
+                    #        first_module = submitted_parameter_module[submitted_algo]['param_module']
+                    if module:
+                        first_module = module
 
                     return enriched_modules, first_module, {'display': 'block'}, stats
 
@@ -371,6 +374,7 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
         Output('coexpression-pathway-active-tab', 'data', allow_duplicate=True),
+        Output('coexpression-submitted-module', 'data', allow_duplicate=True),
 
         Input('coexpression-modules', 'value'),
         Input('coexpression-graph-layout', 'value'),
@@ -384,12 +388,12 @@ def init_callback(app):
     )
     def set_submitted_coexpression_session_state(module, layout, active_tab, submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_module):
         if homepage_is_submitted:
-            if submitted_network and submitted_parameter_module and submitted_algo in submitted_parameter_module:
-                submitted_parameter_module[submitted_algo]['param_module'] = module
+            #if submitted_network and submitted_parameter_module and submitted_algo in submitted_parameter_module:
+               # submitted_parameter_module[submitted_algo]['param_module'] = module
                 #submitted_parameter_module[submitted_algo]['layout'] = layout
                 #submitted_parameter_module[submitted_algo]['pathway_active_tab'] = active_tab
 
-                return submitted_parameter_module, layout, active_tab
+            return submitted_parameter_module, layout, active_tab, module
 
         raise PreventUpdate
 

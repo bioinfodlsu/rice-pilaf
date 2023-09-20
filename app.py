@@ -155,6 +155,11 @@ app.layout = lambda: dbc.Container([
             # Co-expression
             # ==============
             dcc.Store(
+                id='coexpression-submitted-module',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='coexpression-pathway-active-tab',
                 storage_type='session'
             ),
