@@ -55,6 +55,9 @@ def init_callback(app):
         else:
             return {'display': 'none'}
 
+    """
+    Helpful for debugging: tells you if there's a problem with Flask serving the file
+    """
     # Lifted from https://flask.palletsprojects.com/en/2.2.x/errorhandling/#:~:text=When%20an%20error%20occurs%20in,user%20when%20an%20error%20occurs.
     @app.server.errorhandler(HTTPException)
     def handle_exception(e):
@@ -70,22 +73,32 @@ def init_callback(app):
         response.content_type = "application/json"
         return response
 
+    """
+    If the app sees the route ('/genomes..'), this callback will be called
+    """
     @app.server.route('/genomes_nipponbare/<path:filename>')
     def send_genomes_nipponbare_url(filename):
         try:
+            # serves / retrieves the file using Flask 
             return send_from_directory(Constants.GENOMES_NIPPONBARE, filename)
         except FileNotFoundError:
             abort(404)
 
+    """
+    If the app sees the route ('/annotations..'), this callback will be called
+    """
     @app.server.route('/annotations_nb/<nb_intervals_str>/<path:foldername>/<selected_interval_str>/<file_format>')
     def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
         try:
+            # gets the path to the temp igv folder
             temp_output_folder_dir = get_path_to_temp(
                 nb_intervals_str, Constants.TEMP_IGV, foldername)
 
+            # sanitizes the filename for the nb_interval
             selected_interval_str_filename = convert_text_to_path(
                 selected_interval_str)
 
+            # appends the file extension (file_format)
             selected_interval_str_file = f'{selected_interval_str_filename}.{file_format}'
 
             return send_from_directory(temp_output_folder_dir, selected_interval_str_file)
@@ -112,9 +125,11 @@ def init_callback(app):
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
+            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';' 
             igv_options = util.sanitize_nb_intervals_str(nb_intervals_str) 
             igv_options = igv_options.split(';')
 
+            # if no genomic intervals are selected, use the first option
             if not selected_nb_interval:
                 selected_nb_interval = igv_options[0]
 
@@ -132,12 +147,13 @@ def init_callback(app):
     )
     def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
+            # list of tracks info
             track_info = [
                 {
                     "name": "MSU V7 genes",
                     "format": "gff3",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff", 
+                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",  # this one will call out the send_annotations_nb_url callback function
                     "displayMode": "EXPANDED",
                     "height": 200
                 },
@@ -145,15 +161,18 @@ def init_callback(app):
                     "name": "chromatin open",
                     "format": "bed",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
+                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed", # this one will call out the send_open_chromatin_panicle_url callback function
                     "displayMode": "EXPANDED",
                     "height": 200
                 }
             ]
 
+            # only display the tracks that were chosen by the user previously
             display_tracks = [
                 track for track in track_info if selected_tracks and track['name'] in selected_tracks]
 
+            # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
+            # the igv will be only displayed if the input follows the format of "Chr01"
             selected_nb_intervals_str = lift_over_util.to_genomic_interval(selected_nb_intervals_str)
             selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
 
@@ -173,6 +192,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    # saves the input objects to the respective dcc Stores 
     @app.callback(
         Output('igv-saved-genomic-intervals',
                'data', allow_duplicate=True),
@@ -189,6 +209,7 @@ def init_callback(app):
 
         raise PreventUpdate
     
+    # displays the saved inputs to the respective input objects
     @app.callback(
         Output('igv-tracks', 'value'),
         State('igv-saved-tracks', 'data'),
