@@ -104,13 +104,9 @@ def init_callback(app):
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
         Input('coexpression-clustering-algo', 'value'),
-        #State('coexpression-parameter-module-saved-input', 'data')
         State('coexpression-saved-parameter-slider', 'data')
     )
     def set_parameter_slider(algo, parameter_slider):
-        #if parameter_module and algo in parameter_module:
-        #    return parameter_module[algo]['param_slider_marks'], parameter_module[algo]['param_slider_value']
-        
         if parameter_slider and algo in parameter_slider:
             return parameter_slider[algo]['marks'], parameter_slider[algo]['value']
 
@@ -344,21 +340,11 @@ def init_callback(app):
         Input('coexpression-parameter-slider', 'value'),
         State('coexpression-parameter-slider', 'marks'),
         State('homepage-is-submitted', 'data'),
-        #State('coexpression-parameter-module-saved-input', 'data'),
         State('coexpression-saved-parameter-slider', 'data'),
         prevent_initial_call='True'
     )
     def set_input_coexpression_session_state(addl_genes, network, algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_slider):
         if homepage_is_submitted:
-            #input_paramater_module_value = Input_parameter_module(
-            #    parameter_mark, parameter_value)._asdict()
-            
-            #if input_parameter_module:
-            #    input_parameter_module[algo] = input_paramater_module_value
-
-            #else:
-            #    input_parameter_module = {algo: input_paramater_module_value}
-            
             input_paramater_slider_value = Parameter_slider(
                 parameter_mark, parameter_value)._asdict()
 
