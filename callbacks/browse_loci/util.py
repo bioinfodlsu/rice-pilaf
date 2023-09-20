@@ -3,6 +3,13 @@ import gffutils
 from ..file_util import *
 from ..constants import Constants
 
+igv_tracks = {'MSU V7 genes': 'MSU V7 genes', 
+              'chromatin open': 'chromatin open'}
+
+def construct_options_igv_tracks():
+    return [
+        {'value': symbol, 'label': name } for symbol, name in igv_tracks.items()]
+
 
 def write_igv_tracks_to_file(nb_intervals_str):
     # tracks found in igv

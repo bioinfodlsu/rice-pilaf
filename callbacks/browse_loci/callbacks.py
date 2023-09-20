@@ -31,7 +31,8 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-submitted-selected-genomic-intervals', 'data'),
+        Output('igv-submitted-selected-genomic-intervals', 'data', allow_duplicate=True),
+        Output('igv-submitted-tracks', 'data', allow_duplicate=True),
         Input('igv-submit', 'n_clicks'),
         State('igv-genomic-intervals', 'value'),
         State('igv-track-filter', 'value'),
@@ -40,7 +41,7 @@ def init_callback(app):
     )
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval
+            return True, selected_nb_interval, selected_tracks
 
         raise PreventUpdate
 
@@ -122,31 +123,11 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-track-intro', 'children'),
-        Output('igv-track-filter', 'options'),
-        Output('igv-track-filter', 'value'),
-        Input('igv-submitted-selected-genomic-intervals', 'data'),
-        State('homepage-is-submitted', 'data'),
-        Input('igv-submitted-selected-tracks', 'data'),
-        State('igv-is-submitted', 'data')
-    )
-    def display_igv_tracks_filter(nb_intervals_str, homepage_is_submitted, selected_tracks, igv_is_submitted):
-        if homepage_is_submitted and igv_is_submitted:
-            tracks = ['MSU V7 genes', 'chromatin open']
-
-            if not selected_tracks:
-                selected_tracks = [tracks[0]]
-
-            return 'Select the tracks to be displayed', \
-                tracks, selected_tracks
-        raise PreventUpdate
-
-    @app.callback(
         Output('igv-display', 'children'),
         State('igv-submitted-selected-genomic-intervals', 'data'),
-        Input('igv-submitted-selected-tracks', 'data'),
+        State('igv-submitted-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('igv-is-submitted', 'data'),
+        Input('igv-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
@@ -156,7 +137,7 @@ def init_callback(app):
                     "name": "MSU V7 genes",
                     "format": "gff3",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff", 
                     "displayMode": "EXPANDED",
                     "height": 200
                 },
@@ -208,7 +189,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-submitted-selected-tracks',
+        Output('igv-submitted-tracks',
                'data', allow_duplicate=True),
         Input('igv-track-filter', 'value'),
         State('homepage-is-submitted', 'data'),

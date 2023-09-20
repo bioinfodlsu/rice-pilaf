@@ -142,7 +142,12 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='igv-submitted-selected-tracks',
+                id='igv-saved-tracks',
+                storage_type='session'
+            ),
+            
+            dcc.Store(
+                id='igv-submitted-tracks',
                 storage_type='session'
             ),
 
