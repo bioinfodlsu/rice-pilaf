@@ -132,12 +132,12 @@ app.layout = lambda: dbc.Container([
             # IGV Browser
             # ============
             dcc.Store(
-                id='igv-saved-selected-genomic-intervals',
+                id='igv-saved-genomic-intervals',
                 storage_type='session'
             ),
 
             dcc.Store(
-                id='igv-submitted-selected-genomic-intervals',
+                id='igv-submitted-genomic-intervals',
                 storage_type='session'
             ),
 
