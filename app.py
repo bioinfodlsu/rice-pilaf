@@ -155,6 +155,31 @@ app.layout = lambda: dbc.Container([
             # Co-expression
             # ==============
             dcc.Store(
+                id='coexpression-submitted-parameter-slider',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-saved-parameter-slider',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-submitted-module',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-pathway-active-tab',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='coexpression-submitted-layout',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='coexpression-saved-addl-genes',
                 storage_type='session'
             ),
@@ -186,16 +211,6 @@ app.layout = lambda: dbc.Container([
 
             dcc.Store(
                 id='coexpression-submitted-clustering-algo',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-submitted-parameter-module',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-parameter-module-saved-input',
                 storage_type='session'
             ),
 
