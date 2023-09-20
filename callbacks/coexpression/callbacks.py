@@ -16,7 +16,7 @@ Submitted_parameter_module = namedtuple('Submitted_parameter_module', [
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('coexpression-submit', 'n_clicks')
     )
@@ -46,7 +46,7 @@ def init_callback(app):
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         State('coexpression-addl-genes', 'value'),
 
         State('coexpression-network', 'value'),
@@ -169,7 +169,7 @@ def init_callback(app):
         Output('coexpression-results-module-tabs-container', 'style'),
         Output('coexpression-module-stats', 'children'),
 
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('coexpression-combined-genes', 'data'),
         Input('coexpression-submitted-addl-genes', 'data'),
@@ -330,16 +330,16 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-addl-genes-saved-input',
+        Output('coexpression-saved-addl-genes',
                'data', allow_duplicate=True),
-        Output('coexpression-network-saved-input',
+        Output('coexpression-saved-network',
                'data', allow_duplicate=True),
-        Output('coexpression-clustering-algo-saved-input',
+        Output('coexpression-saved-clustering-algo',
                'data', allow_duplicate=True),
         Output('coexpression-parameter-module-saved-input',
                'data', allow_duplicate=True),
 
-        State('coexpression-addl-genes', 'value'),
+        Input('coexpression-addl-genes', 'value'),
         Input('coexpression-network', 'value'),
         Input('coexpression-clustering-algo', 'value'),
         Input('coexpression-parameter-slider', 'value'),
@@ -393,11 +393,10 @@ def init_callback(app):
         Output('coexpression-addl-genes', 'value'),
         Output('coexpression-network', 'value'),
         State('homepage-is-submitted', 'data'),
-        State('coexpression-clustering-algo-saved-input', 'data'),
-        State('coexpression-addl-genes-saved-input', 'data'),
-        State('coexpression-network-saved-input', 'data'),
-        Input('homepage-genomic-intervals-submitted-input', 'data'),
-        #Input('coexpression-submit', 'n_clicks')
+        State('coexpression-saved-clustering-algo', 'data'),
+        State('coexpression-saved-addl-genes', 'data'),
+        State('coexpression-saved-network', 'data'),
+        Input('coexpression-submit', 'n_clicks')
     )
     def get_input_coexpression_session_state(homepage_is_submitted, algo, genes, network, *_):
         if homepage_is_submitted:
@@ -503,7 +502,7 @@ def init_callback(app):
         Output('coexpression-download-df-to-csv', 'data'),
         Input('coexpression-export-table', 'n_clicks'),
         State('coexpression-pathways', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data')
+        State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
         if download_n_clicks >= 1:
@@ -515,7 +514,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-download-graph-to-json', 'data'),
         Input('coexpression-export-graph', 'n_clicks'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-module', 'data'),

@@ -8,7 +8,7 @@ from ..lift_over import util as lift_over_util
 def init_callback(app):
     @app.callback(
         Output('tf-enrichment-genomic-intervals-input', 'children'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('tfbs-submit', 'n_clicks')
     )
@@ -23,10 +23,10 @@ def init_callback(app):
 
     @app.callback(
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
-        Output('tfbs-addl-genes-submitted-input',
+        Output('tfbs-submitted-addl-genes',
                'data', allow_duplicate=True),
-        Output('tfbs-set-submitted-input', 'data', allow_duplicate=True),
-        Output('tfbs-prediction-technique-submitted-input',
+        Output('tfbs-submitted-set', 'data', allow_duplicate=True),
+        Output('tfbs-submitted-prediction-technique',
                'data', allow_duplicate=True),
 
         Input('tfbs-submit', 'n_clicks'),
@@ -67,11 +67,11 @@ def init_callback(app):
         Output('tf-enrichment-result-table', 'data'),
         Output('tf-enrichment-result-table', 'columns'),
         Input('tfbs-is-submitted', 'data'),
-        State('tfbs-addl-genes-submitted-input', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data'),
+        State('tfbs-submitted-addl-genes', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('tfbs-set-submitted-input', 'data'),
-        State('tfbs-prediction-technique-submitted-input', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data'),
     )
     def display_enrichment_results(tfbs_is_submitted, submitted_addl_genes,
                                    nb_interval_str, homepage_submitted, tfbs_set, tfbs_prediction_technique):
@@ -105,9 +105,9 @@ def init_callback(app):
     @app.callback(
         Output('tfbs-input', 'children'),
         Input('tfbs-is-submitted', 'data'),
-        State('tfbs-addl-genes-submitted-input', 'data'),
-        State('tfbs-set-submitted-input', 'data'),
-        State('tfbs-prediction-technique-submitted-input', 'data')
+        State('tfbs-submitted-addl-genes', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data')
     )
     def display_tfbs_submitted_input(tfbs_is_submitted, genes, tfbs_set, tfbs_prediction_technique):
         if tfbs_is_submitted:
@@ -128,9 +128,9 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-addl-genes-saved-input', 'data', allow_duplicate=True),
-        Output('tfbs-set-saved-input', 'data', allow_duplicate=True),
-        Output('tfbs-prediction-technique-saved-input',
+        Output('tfbs-saved-addl-genes', 'data', allow_duplicate=True),
+        Output('tfbs-saved-set', 'data', allow_duplicate=True),
+        Output('tfbs-saved-prediction-technique',
                'data', allow_duplicate=True),
         Input('tfbs-addl-genes', 'value'),
         Input('tfbs-set', 'value'),
@@ -152,9 +152,9 @@ def init_callback(app):
 
         State('homepage-is-submitted', 'data'),
 
-        State('tfbs-addl-genes-saved-input', 'data'),
-        State('tfbs-prediction-technique-saved-input', 'data'),
-        State('tfbs-set-saved-input', 'data'),
+        State('tfbs-saved-addl-genes', 'data'),
+        State('tfbs-saved-prediction-technique', 'data'),
+        State('tfbs-saved-set', 'data'),
         Input('tfbs-submit', 'n_clicks')
     )
     def get_input_tfbs_session_state(homepage_is_submitted, genes, tfbs_prediction_technique, tfbs_set, *_):
@@ -180,7 +180,7 @@ def init_callback(app):
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
         State('tf-enrichment-result-table', 'data'),
-        State('homepage-genomic-intervals-submitted-input', 'data')
+        State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
         if download_n_clicks >= 1:
