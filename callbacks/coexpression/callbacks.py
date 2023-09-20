@@ -363,8 +363,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('coexpression-submitted-parameter-slider',
-               'data', allow_duplicate=True),
         Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
         Output('coexpression-pathway-active-tab', 'data', allow_duplicate=True),
         Output('coexpression-submitted-module', 'data', allow_duplicate=True),
@@ -373,15 +371,12 @@ def init_callback(app):
         Input('coexpression-graph-layout', 'value'),
         Input('coexpression-modules-pathway', 'active_tab'),
 
-        State('coexpression-submitted-network', 'data'),
-        State('coexpression-submitted-clustering-algo', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data'),
         prevent_initial_call=True
     )
-    def set_submitted_coexpression_session_state(module, layout, active_tab, submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider):
+    def set_submitted_coexpression_session_state(module, layout, active_tab, homepage_is_submitted):
         if homepage_is_submitted:
-            return submitted_parameter_slider, layout, active_tab, module
+            return layout, active_tab, module
 
         raise PreventUpdate
 
@@ -417,11 +412,11 @@ def init_callback(app):
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data'),
+
         State('coexpression-submitted-layout', 'data'),
         State('coexpression-pathway-active-tab', 'data')
     )
-    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_slider, layout, active_tab):
+    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, layout, active_tab):
         if coexpression_is_submitted:
             if not layout:
                 layout = 'circle'
