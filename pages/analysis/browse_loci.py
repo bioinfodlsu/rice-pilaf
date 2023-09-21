@@ -2,6 +2,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 from callbacks.constants import Constants
 
+from callbacks.browse_loci.util import *
 
 layout = html.Div(
     id={
@@ -33,6 +34,16 @@ layout = html.Div(
 
             html.Br(),
 
+            dbc.Label(['Select the tracks to be displayed']),
+
+            dbc.Checklist(
+                id='igv-tracks',
+                options=construct_options_igv_tracks(),
+                inline=True,
+                className='ms-3'),
+
+            html.Br(),
+                        
             dbc.Button('Submit',
                        id='igv-submit',
                        n_clicks=0,
@@ -46,14 +57,7 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 html.Hr(className='mt-3 mb-4'),
-                dbc.Label(id='igv-track-intro'),
-
-                dcc.Loading(dbc.Checklist(id='igv-track-filter',
-                                          inline=True,
-                                          className='ms-3')),
-
-                html.Br(),
-
+                
                 dcc.Loading(id='igv-display')
             ]
         )
