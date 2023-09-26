@@ -95,6 +95,9 @@ def init_callback(app):
             enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
                                                               tfbs_set, tfbs_prediction_technique, nb_interval_str)
 
+            enrichment_results_df['Transcription Factor'] = get_msu_browser_link(
+                enrichment_results_df, 'Transcription Factor')
+
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in enrichment_results_df.columns]
 

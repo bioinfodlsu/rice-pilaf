@@ -152,9 +152,6 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     results_df['Family'] = results_df['Transcription Factor'].apply(
         get_family)
 
-    results_df['Transcription Factor'] = get_msu_browser_link(
-        results_df, 'Transcription Factor')
-
     results_df = results_df[COLUMNS]
 
     results_df.to_csv(
