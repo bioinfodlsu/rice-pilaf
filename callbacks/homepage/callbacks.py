@@ -123,15 +123,16 @@ def init_callback(app):
 
     @app.callback(
         Output('homepage-results-container', 'style'),
+        Output('about-the-app', 'style'),
         Input('homepage-is-submitted', 'data'),
         Input('homepage-submit', 'n_clicks'),
     )
     def display_homepage_output(homepage_is_submitted, *_):
         if homepage_is_submitted:
-            return {'display': 'block'}
+            return {'display': 'block'}, {'display': 'none'}
 
         else:
-            return {'display': 'none'}
+            return {'display': 'none'}, {'display': 'block'}
 
     @app.callback(
         Output('current-analysis-page-nav', 'data'),

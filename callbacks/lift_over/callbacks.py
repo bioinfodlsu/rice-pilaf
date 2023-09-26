@@ -326,7 +326,7 @@ def init_callback(app):
                     all_genes_raw, 'OGI')
                 if 'Nipponbare' in all_genes_raw.columns:
                     mask = (all_genes_raw['Nipponbare'] != NULL_PLACEHOLDER)
-                    all_genes_raw.loc[mask, 'Nipponbare'] = get_rgi_genecard_link(
+                    all_genes_raw.loc[mask, 'Nipponbare'] = get_msu_browser_link(
                         all_genes_raw, 'Nipponbare')
 
                 for cultivar in other_ref_genomes:
@@ -353,7 +353,7 @@ def init_callback(app):
 
                 if 'Nipponbare' in common_genes_raw.columns:
                     mask = (common_genes_raw['Nipponbare'] != NULL_PLACEHOLDER)
-                    common_genes_raw.loc[mask, 'Nipponbare'] = get_rgi_genecard_link(
+                    common_genes_raw.loc[mask, 'Nipponbare'] = get_msu_browser_link(
                         common_genes_raw, 'Nipponbare')
 
                 for cultivar in other_ref_genomes:
@@ -379,7 +379,7 @@ def init_callback(app):
                     genes_from_Nb_raw, 'OGI')
 
                 mask = (genes_from_Nb_raw['Name'] != NULL_PLACEHOLDER)
-                genes_from_Nb_raw.loc[mask, 'Name'] = get_rgi_genecard_link(
+                genes_from_Nb_raw.loc[mask, 'Name'] = get_msu_browser_link(
                     genes_from_Nb_raw, 'Name')
 
                 genes_from_Nb = genes_from_Nb_raw.to_dict('records')

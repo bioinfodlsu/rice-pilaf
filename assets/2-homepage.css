@@ -2,7 +2,7 @@
     height: 30px;
 }
 
-#genome-ref-input-container {
+#genome-ref-input-container, .gray-container {
     background-color: var(--bg-gray-darker);
 }
 
@@ -26,6 +26,10 @@
 
 #top-navbar {
     background-color: var(--green-top) !important;
+}
+
+#footer {
+    background-color: var(--green-top-hover) !important;
 }
 
 .home-button {
@@ -103,4 +107,17 @@
 
 #page {
     margin-left: 3em;
+}
+
+.img-about-the-app {
+    width: 45%;
+    height: auto;
+}
+
+.alt-row {
+    padding-right: 2em;
+}
+
+.info-div {
+    padding-top: 2.5em;
 }
