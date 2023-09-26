@@ -8,6 +8,7 @@ from ..branch import *
 
 Parameter_slider = namedtuple('Parameter_slider', ['marks', 'value'])
 
+
 def init_callback(app):
     @app.callback(
         Output('coexpression-genomic-intervals-input', 'children'),
@@ -35,7 +36,8 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Output('coexpression-submitted-clustering-algo',
                'data', allow_duplicate=True),
-        Output('coexpression-submitted-parameter-slider', 'data', allow_duplicate=True),
+        Output('coexpression-submitted-parameter-slider',
+               'data', allow_duplicate=True),
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -53,8 +55,10 @@ def init_callback(app):
                                   genomic_intervals, submitted_addl_genes,
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
-            parameter_slider_value = Parameter_slider(submitted_slider_marks, submitted_slider_value)._asdict()
-            submitted_parameter_slider = {submitted_algo: parameter_slider_value}
+            parameter_slider_value = Parameter_slider(
+                submitted_slider_marks, submitted_slider_value)._asdict()
+            submitted_parameter_slider = {
+                submitted_algo: parameter_slider_value}
 
             if submitted_addl_genes:
                 submitted_addl_genes = submitted_addl_genes.strip()
@@ -72,10 +76,11 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            return True, submitted_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider#, submitted_parameter_module
+            # , submitted_parameter_module
+            return True, submitted_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider
 
         raise PreventUpdate
-    
+
     @app.callback(
         Output('coexpression-results-container', 'style'),
         Input('coexpression-is-submitted', 'data'),
@@ -178,7 +183,7 @@ def init_callback(app):
                                   submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider, module, coexpression_is_submitted):
         if homepage_is_submitted:
             if coexpression_is_submitted:
-                if submitted_algo and submitted_algo in submitted_parameter_slider:   
+                if submitted_algo and submitted_algo in submitted_parameter_slider:
                     parameters = submitted_parameter_slider[submitted_algo]['value']
 
                     enriched_modules = do_module_enrichment_analysis(
@@ -204,7 +209,7 @@ def init_callback(app):
                         first_module = enriched_modules[0]
                     else:
                         return enriched_modules, first_module, {'display': 'none'}, stats
-                    
+
                     if module:
                         first_module = module
 
@@ -243,7 +248,7 @@ def init_callback(app):
                         active_tab, None, submitted_network, submitted_algo, parameters)
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
-                            for x in table.columns]
+                           for x in table.columns]
 
                 num_enriched = get_num_unique_entries(table, 'ID')
                 if num_enriched == 1:
@@ -282,6 +287,8 @@ def init_callback(app):
         Output('coexpression-graph-container', 'style', allow_duplicate=True),
         Output('coexpression-module-graph-node-data',
                'children', allow_duplicate=True),
+        Output('coexpression-module-graph-node-data-container',
+               'style', allow_duplicate=True),
         Output('coexpression-extra-bottom-div', 'style', allow_duplicate=True),
 
         Input('coexpression-combined-genes', 'data'),
@@ -315,10 +322,10 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, 'Click on a node to display information about the gene.', {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0em'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
-                                        'height': '100vh'}, 'Click on a node to display information about the gene.', {'height': '1.5em'})
+                                        'height': '100vh'}, 'Click on a node to display information about the gene.', {'display': 'block'}, {'height': '1.5em'})
 
         raise PreventUpdate
 
@@ -358,7 +365,8 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
-        Output('coexpression-pathway-active-tab', 'data', allow_duplicate=True),
+        Output('coexpression-pathway-active-tab',
+               'data', allow_duplicate=True),
         Output('coexpression-submitted-module', 'data', allow_duplicate=True),
 
         Input('coexpression-modules', 'value'),
@@ -386,7 +394,7 @@ def init_callback(app):
     )
     def get_input_coexpression_session_state(homepage_is_submitted, algo, genes, network, *_):
         if homepage_is_submitted:
-            if not algo: 
+            if not algo:
                 algo = 'clusterone'
 
             if not genes:
@@ -398,7 +406,7 @@ def init_callback(app):
             return algo, genes, network
 
         raise PreventUpdate
-    
+
     @app.callback(
         Output('coexpression-graph-layout', 'value'),
         Output('coexpression-modules-pathway', 'active_tab'),
