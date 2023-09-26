@@ -152,7 +152,40 @@ layout = html.Div([
 
     html.Div(
         id='about-the-app',
-        children='hello'
+        children=[
+            dbc.Row([
+                dbc.Col([
+                    html.H5('RicePilaf: A Post-GWAS/QTL Dashboard'),
+                    html.P('RicePilaf is  a web app for post-GWAS/QTL analysis that performs a slew of novel bioinformatics analyses to cross GWAS results and QTL mapping with a host of publicly available rice databases. ', className='pt-3'),
+                    html.P('It integrates (1) pan-genomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, regulatory information from rice transcription factor databases, (4) epigenomic information from multiple high-throughput epigenetic experiments, and (5) text-mining information extracted from scientific abstracts linking genes and traits.')
+                ], className='col-sm-9'),
+
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/rice1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center')
+            ], className='ps-5 pt-3 pb-4'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/table1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center'),
+
+                dbc.Col([
+                    html.H5('Lift-Over'),
+                    html.P('Nipponbare serves as the gold-standard reference genome sequence and genomic coordinate system. However, for GWAS/QTL analysis on populations that are not derived from or include in Nipponbare, by relying only on its genome and its annotation, we likely will miss genes and regulatory features linked to the phenotype of interest.', className='pt-3'),
+                    html.P(
+                        'RicePilaf can lift over the intervals in the Nipponbare reference coordinates to several other recently published genomes, representing major rice populations. Using the Rice Gene Index database, it retrieves the genes overlapping the lifted-over intervals and their orthologs. This pan-genomic view of gene sets may be useful, for example if the GWAS/QTL mapping is on an accession that is closer to a genome other than Nipponbare.')
+                ], className='col-sm-9 pe-6 alt-row')
+            ], className='gray-container ps-3 pt-5 pb-3')
+        ]
     ),
 
     html.Div(

@@ -78,3 +78,12 @@ hr {
     padding-bottom: 0;
     margin-bottom: 0;
 }
+
+.img-about-the-app {
+    width: 45%;
+    height: auto;
+}
+
+.alt-row {
+    padding-right: 2em;
+}

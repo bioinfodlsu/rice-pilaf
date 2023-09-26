@@ -2,7 +2,7 @@
     height: 30px;
 }
 
-#genome-ref-input-container {
+#genome-ref-input-container, .gray-container {
     background-color: var(--bg-gray-darker);
 }
 
