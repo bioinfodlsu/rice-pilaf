@@ -541,7 +541,7 @@ def init_callback(app):
 
                 gene = node_data['id']
 
-                node_data = [html.B('Name: '), get_rgi_genecard_link_single_str(gene, dash=True), html.Br(),
+                node_data = [html.B('Name: '), get_msu_browser_link_single_str(gene, dash=True), html.Br(),
                              html.B('OGI: '), get_rgi_orthogroup_link_single_str(
                                  ogi_mapping[gene], dash=True), html.Br(),
                              html.B(

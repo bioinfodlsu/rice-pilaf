@@ -83,6 +83,16 @@ def get_rgi_genecard_link(result, id_col):
     return construct_link(LINK, result[id_col])
 
 
+def get_msu_browser_link_single_str(accession, dash=False):
+    LINK = 'http://rice.uga.edu/cgi-bin/gbrowse/rice/?name=' + accession
+    return construct_link(LINK, accession, dash)
+
+
+def get_msu_browser_link(result, id_col):
+    LINK = 'http://rice.uga.edu/cgi-bin/gbrowse/rice/?name=' + result[id_col]
+    return construct_link(LINK, result[id_col])
+
+
 def get_rgi_orthogroup_link_single_str(accession, dash=False):
     LINK = 'https://riceome.hzau.edu.cn/orthogroup/' + accession
     return construct_link(LINK, accession, dash)

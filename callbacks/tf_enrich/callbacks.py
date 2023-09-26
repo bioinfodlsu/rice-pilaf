@@ -184,7 +184,7 @@ def init_callback(app):
     )
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
         if download_n_clicks >= 1:
-            df = pd.DataFrame(tfbs_df)
+            df = pd.DataFrame(purge_html_export_table(tfbs_df))
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
 
         raise PreventUpdate
