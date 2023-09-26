@@ -237,17 +237,15 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.Div(
-                        html.Img(src='assets/images/gene1.png',
+                        html.Img(src='assets/images/beads1.png',
                                  className='img-about-the-app py-auto'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center'),
 
                 dbc.Col([
-                    html.H5('Regulatory Feature Enrichment'),
-                    html.P('GWAS/QTL mappings also report many non-coding trait-associated variants. It is likely these influence the activity of regulatory elements. One possible causal link is that variants could alter transcription factor binding affinity leading to changes in the expression of target genes, ultimately resulting in phenotypic variation.', className='pt-3'),
-                    html.P(
-                        'To investigate variants that might be affecting the binding activity of transcription factors, RicePilaf searches for transcription factors whose known/predicted binding sites provided by PlantRegMap significantly overlap with the input intervals.')
+                    html.H5('Epigenomic Information'),
+                    html.P('For traits that are tissue-specific, it may be desirable to deprioritize genes whose epigenetic markers suggest transcriptional inactivity. Using the embeddable IGV genome browser, RicePilaf displays select BED files obtained from the RiceEncode project database, which contains tissue-specific chromatin accessibility, histone modification, DNA methylation data among others, obtained from high-throughput sequencing experiments.', className='pt-3')
                 ], className='col-sm-9 pe-6 alt-row')
             ], className='gray-container ps-3 pb-4 info-div'),
 
