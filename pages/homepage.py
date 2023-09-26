@@ -151,6 +151,11 @@ layout = html.Div([
     html.Br(),
 
     html.Div(
+        id='about-the-app',
+        children='hello'
+    ),
+
+    html.Div(
         id='homepage-results-container',
         style={'display': 'none'},
         children=[

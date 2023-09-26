@@ -145,7 +145,7 @@ app.layout = lambda: dbc.Container([
                 id='igv-saved-tracks',
                 storage_type='session'
             ),
-            
+
             dcc.Store(
                 id='igv-submitted-tracks',
                 storage_type='session'
@@ -280,7 +280,7 @@ app.layout = lambda: dbc.Container([
             dcc.Store(
                 id='text-mining-is-submitted',
                 storage_type='session'
-            ),
+            )
         ])
 ], fluid=True, className='pb-4')
 
