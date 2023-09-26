@@ -6,6 +6,7 @@ import pickle
 from ..file_util import *
 from ..constants import Constants
 from ..general_util import *
+from ..links_util import *
 
 import gffutils
 import pybedtools
@@ -148,13 +149,16 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     results_df = multiple_testing_correction(results_no_adj_df)
     display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
-    results_df.to_csv(
-        f'{out_dir}/BH_corrected.csv', index=False)
-
     results_df['Family'] = results_df['Transcription Factor'].apply(
         get_family)
 
+    results_df['Transcription Factor'] = get_msu_browser_link(
+        results_df, 'Transcription Factor')
+
     results_df = results_df[COLUMNS]
+
+    results_df.to_csv(
+        f'{out_dir}/BH_corrected.csv', index=False)
 
     return results_df
 
