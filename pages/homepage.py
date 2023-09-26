@@ -221,14 +221,13 @@ layout = html.Div([
 
             dbc.Row([
                 dbc.Col([
-                    html.H5('Co-Expression Network Analysis'),
-                    html.P('Co-expression networks provide a means to identify sets of genes acting together to produce a trait. For genes with poor annotation or unknown functions, their membership in a dense subnetwork containing well characterized genes might be a way to uncover incomplete functional information.', className='pt-3'),
-                    html.P('To identify genes that may be acting collectively to result in a trait, RicePilaf searches rice co-expression networks, RiceNetv2 and RCRN, for communities of genes that are statistically enriched in the genes overlapping the input intervals. Functional characterization of the modules is done via enrichment analysis against several ontology and pathway databases from agriGO, KEGG, and Oryzabase.')
+                    html.H5('Text Mining'),
+                    html.P('The gene list provided to the co-expression and regulatory enrichment analyses can be supplemented by genes retrieved from the pan-genome liftover and from querying our in-house dataset obtained from text-mining PubMed abstracts on rice gene-trait associations. Additionally, the same text-mining dataset is used to find scientific literature related to the genes overlapping the input interval.', className='pt-3'),
                 ], className='col-sm-9'),
 
                 dbc.Col([
                     html.Div(
-                        html.Img(src='assets/images/network1.png',
+                        html.Img(src='assets/images/book1.png',
                                  className='img-about-the-app py-auto'),
                         className='text-center'
                     )
@@ -250,7 +249,17 @@ layout = html.Div([
                     html.P(
                         'To investigate variants that might be affecting the binding activity of transcription factors, RicePilaf searches for transcription factors whose known/predicted binding sites provided by PlantRegMap significantly overlap with the input intervals.')
                 ], className='col-sm-9 pe-6 alt-row')
-            ], className='gray-container ps-3 pb-4 info-div')
+            ], className='gray-container ps-3 pb-4 info-div'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Span(
+                        '© 2023 | Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
+                    html.Br(),
+                    html.Span(
+                        'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
+                ], className='col-sm-9')
+            ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
         ]
     ),
 
@@ -260,17 +269,19 @@ layout = html.Div([
         children=[
             html.Div(
                 id='post-gwas-analysis-container',
-                children=[dbc.Row([
-                    dbc.Col(
-                        [html.H5('Select an analysis', id='post-gwas-hdr'),
-                         analysis_nav.navbar()],
-                        xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
-                    dbc.Col(
-                        children=analysis_layout.layout,
-                        xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
-                        id='page',
-                    )
-                ], className='ps-5 py-2')]
+                children=[
+                    dbc.Row([
+                        dbc.Col([
+                            html.H5('Select an analysis', id='post-gwas-hdr'),
+                            analysis_nav.navbar()
+                        ], xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
+                        dbc.Col(
+                            children=analysis_layout.layout,
+                            xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
+                            id='page',
+                        )
+                    ], className='ps-5 py-2 pb-4')
+                ]
             )
         ]
     )
