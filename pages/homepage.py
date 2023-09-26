@@ -157,7 +157,7 @@ layout = html.Div([
                 dbc.Col([
                     html.H5('RicePilaf: A Post-GWAS/QTL Dashboard'),
                     html.P('RicePilaf is  a web app for post-GWAS/QTL analysis that performs a slew of novel bioinformatics analyses to cross GWAS results and QTL mapping with a host of publicly available rice databases. ', className='pt-3'),
-                    html.P('It integrates (1) pan-genomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, regulatory information from rice transcription factor databases, (4) epigenomic information from multiple high-throughput epigenetic experiments, and (5) text-mining information extracted from scientific abstracts linking genes and traits.')
+                    html.P('It integrates (1) pan-genomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, (4) regulatory information from rice transcription factor databases, (5) epigenomic information from multiple high-throughput epigenetic experiments, and (6) text-mining information extracted from scientific abstracts linking genes and traits.')
                 ], className='col-sm-9'),
 
                 dbc.Col([
@@ -184,7 +184,73 @@ layout = html.Div([
                     html.P(
                         'RicePilaf can lift over the intervals in the Nipponbare reference coordinates to several other recently published genomes, representing major rice populations. Using the Rice Gene Index database, it retrieves the genes overlapping the lifted-over intervals and their orthologs. This pan-genomic view of gene sets may be useful, for example if the GWAS/QTL mapping is on an accession that is closer to a genome other than Nipponbare.')
                 ], className='col-sm-9 pe-6 alt-row')
-            ], className='gray-container ps-3 pt-5 pb-3')
+            ], className='gray-container ps-3 pb-4 info-div'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.H5('Co-Expression Network Analysis'),
+                    html.P('Co-expression networks provide a means to identify sets of genes acting together to produce a trait. For genes with poor annotation or unknown functions, their membership in a dense subnetwork containing well characterized genes might be a way to uncover incomplete functional information.', className='pt-3'),
+                    html.P('To identify genes that may be acting collectively to result in a trait, RicePilaf searches rice co-expression networks, RiceNetv2 and RCRN, for communities of genes that are statistically enriched in the genes overlapping the input intervals. Functional characterization of the modules is done via enrichment analysis against several ontology and pathway databases from agriGO, KEGG, and Oryzabase.')
+                ], className='col-sm-9'),
+
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/network1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center')
+            ], className='ps-5 pb-4 info-div'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/gene1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center'),
+
+                dbc.Col([
+                    html.H5('Regulatory Feature Enrichment'),
+                    html.P('GWAS/QTL mappings also report many non-coding trait-associated variants. It is likely these influence the activity of regulatory elements. One possible causal link is that variants could alter transcription factor binding affinity leading to changes in the expression of target genes, ultimately resulting in phenotypic variation.', className='pt-3'),
+                    html.P(
+                        'To investigate variants that might be affecting the binding activity of transcription factors, RicePilaf searches for transcription factors whose known/predicted binding sites provided by PlantRegMap significantly overlap with the input intervals.')
+                ], className='col-sm-9 pe-6 alt-row')
+            ], className='gray-container ps-3 pb-4 info-div'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.H5('Co-Expression Network Analysis'),
+                    html.P('Co-expression networks provide a means to identify sets of genes acting together to produce a trait. For genes with poor annotation or unknown functions, their membership in a dense subnetwork containing well characterized genes might be a way to uncover incomplete functional information.', className='pt-3'),
+                    html.P('To identify genes that may be acting collectively to result in a trait, RicePilaf searches rice co-expression networks, RiceNetv2 and RCRN, for communities of genes that are statistically enriched in the genes overlapping the input intervals. Functional characterization of the modules is done via enrichment analysis against several ontology and pathway databases from agriGO, KEGG, and Oryzabase.')
+                ], className='col-sm-9'),
+
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/network1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center')
+            ], className='ps-5 pb-4 info-div'),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Div(
+                        html.Img(src='assets/images/gene1.png',
+                                 className='img-about-the-app py-auto'),
+                        className='text-center'
+                    )
+                ], className='col-sm-3 d-flex flex-wrap align-items-center'),
+
+                dbc.Col([
+                    html.H5('Regulatory Feature Enrichment'),
+                    html.P('GWAS/QTL mappings also report many non-coding trait-associated variants. It is likely these influence the activity of regulatory elements. One possible causal link is that variants could alter transcription factor binding affinity leading to changes in the expression of target genes, ultimately resulting in phenotypic variation.', className='pt-3'),
+                    html.P(
+                        'To investigate variants that might be affecting the binding activity of transcription factors, RicePilaf searches for transcription factors whose known/predicted binding sites provided by PlantRegMap significantly overlap with the input intervals.')
+                ], className='col-sm-9 pe-6 alt-row')
+            ], className='gray-container ps-3 pb-4 info-div')
         ]
     ),
 

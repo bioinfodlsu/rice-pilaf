@@ -282,7 +282,7 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             )
         ])
-], fluid=True, className='pb-4')
+], fluid=True)
 
 callbacks.homepage.callbacks.init_callback(app)
 
