@@ -14,7 +14,6 @@ from callbacks.constants import Constants
 
 def get_analaysis_layout_dictionary():
     return OrderedDict({
-        Constants.LABEL_INTRO: 'Introduction',
         Constants.LABEL_LIFT_OVER: 'Gene List and Lift-Over',
         Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
         Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',
