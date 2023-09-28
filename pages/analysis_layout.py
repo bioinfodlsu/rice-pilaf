@@ -1,5 +1,6 @@
 from dash import html
 
+import pages.analysis.intro as intro
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
@@ -13,6 +14,7 @@ from callbacks.constants import Constants
 
 def get_analaysis_layout_dictionary():
     return OrderedDict({
+        Constants.LABEL_INTRO: 'Introduction',
         Constants.LABEL_LIFT_OVER: 'Gene List and Lift-Over',
         Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
         Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',
@@ -22,6 +24,7 @@ def get_analaysis_layout_dictionary():
 
 
 layout = html.Div(children=[
+    intro.layout,
     lift_over.layout,
     text_mining.layout,
     co_expr.layout,
