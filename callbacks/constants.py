@@ -1,4 +1,5 @@
 class Constants(object):
+    LABEL_INTRO = 'intro'
     LABEL_LIFT_OVER = 'lift-over'
     LABEL_COEXPRESSION = 'co-expression'
     LABEL_TFBS = 'tf-enrichment'

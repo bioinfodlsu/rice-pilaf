@@ -1,5 +1,6 @@
 from dash import html
 
+import pages.analysis.intro as intro
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
@@ -22,6 +23,7 @@ def get_analaysis_layout_dictionary():
 
 
 layout = html.Div(children=[
+    intro.layout,
     lift_over.layout,
     text_mining.layout,
     co_expr.layout,
