@@ -156,8 +156,8 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.H5('RicePilaf: A Post-GWAS/QTL Dashboard'),
-                    html.P('RicePilaf is  a web app for post-GWAS/QTL analysis that performs a slew of novel bioinformatics analyses to cross GWAS results and QTL mapping with a host of publicly available rice databases. ', className='pt-3'),
-                    html.P('It integrates (1) pan-genomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, (4) regulatory information from rice transcription factor databases, (5) epigenomic information from multiple high-throughput epigenetic experiments, and (6) text-mining information extracted from scientific abstracts linking genes and traits.')
+                    html.P('RicePilaf is a web app for post-GWAS/QTL analysis that performs a slew of novel bioinformatics analyses to cross GWAS results and QTL mapping with a host of publicly available rice databases. ', className='pt-3'),
+                    html.P('It integrates (1) pangenomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, (4) regulatory information from rice transcription factor databases, (5) epigenomic information from multiple high-throughput epigenetic experiments, and (6) text-mining information extracted from scientific abstracts linking genes and traits.')
                 ], className='col-sm-9'),
 
                 dbc.Col([
@@ -182,7 +182,7 @@ layout = html.Div([
                     html.H5('Lift-Over'),
                     html.P('Nipponbare serves as the gold-standard reference genome sequence and genomic coordinate system. However, for GWAS/QTL analysis on populations that are not derived from or include in Nipponbare, by relying only on its genome and its annotation, we likely will miss genes and regulatory features linked to the phenotype of interest.', className='pt-3'),
                     html.P(
-                        'RicePilaf can lift over the intervals in the Nipponbare reference coordinates to several other recently published genomes, representing major rice populations. Using the Rice Gene Index database, it retrieves the genes overlapping the lifted-over intervals and their orthologs. This pan-genomic view of gene sets may be useful, for example if the GWAS/QTL mapping is on an accession that is closer to a genome other than Nipponbare.')
+                        'RicePilaf can lift over the intervals in the Nipponbare reference coordinates to several other recently published genomes, representing major rice populations. Using the Rice Gene Index database, it retrieves the genes overlapping the lifted-over intervals and their orthologs. This pangenomic view of gene sets may be useful, for example if the GWAS/QTL mapping is on an accession that is closer to a genome other than Nipponbare.')
                 ], className='col-sm-9 pe-6 alt-row')
             ], className='gray-container ps-3 pb-4 info-div'),
 
@@ -222,7 +222,7 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.H5('Text Mining'),
-                    html.P('The gene list provided to the co-expression and regulatory enrichment analyses can be supplemented by genes retrieved from the pan-genome liftover and from querying our in-house dataset obtained from text-mining PubMed abstracts on rice gene-trait associations. Additionally, the same text-mining dataset is used to find scientific literature related to the genes overlapping the input interval.', className='pt-3'),
+                    html.P('The gene list provided to the co-expression and regulatory enrichment analyses can be supplemented by genes retrieved from the pangenome lift-over and from querying our in-house dataset obtained from text-mining PubMed abstracts on rice gene-trait associations. Additionally, the same text-mining dataset is used to find scientific literature related to the genes overlapping the input interval.', className='pt-3'),
                 ], className='col-sm-9'),
 
                 dbc.Col([

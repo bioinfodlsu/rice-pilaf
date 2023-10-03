@@ -259,7 +259,7 @@ layout = html.Div(
 
         html.Div([
             dbc.Label(
-                'Include additional genes from the pan-genome lift-over or the text mining results'),
+                'Include additional genes from the pangenome lift-over or the text mining results'),
             html.Br(),
             dbc.Label(
                 'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)',
