@@ -5,13 +5,21 @@ from ..links_util import *
 import regex as re
 import ftfy
 import rapidfuzz
+import pickle
 
 from ..file_util import *
 
 
-COLNAMES = ['Gene', 'PMID', 'Title', 'Sentence', 'Score']
+COLNAMES = ['Gene', 'MSU ID', 'PMID', 'Title', 'Sentence', 'Score']
 SIMILARITY_CUTOFF = 85
 MAX_NUM_RESULTS = 100
+
+
+def get_msu_id(gene, genesymbol_to_msu_mapping):
+    try:
+        return '<br>'.join(map(get_msu_browser_link_single_str, genesymbol_to_msu_mapping[gene.lower()]))
+    except KeyError:
+        return NULL_PLACEHOLDER
 
 
 def sanitize_text(text):
@@ -103,7 +111,8 @@ def text_mining_query_search(query_string):
     pubmed_matches = set()
     pubmed_matches_100 = set()
 
-    with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f:
+    with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f, open(f'{Constants.MSU_MAPPING}/genesymbol_to_msu.pickle', 'rb') as g:
+        genesymbol_mapping = pickle.load(g)
         for line in f:
             similarity = rapidfuzz.fuzz.partial_ratio_alignment(
                 query_string, line.lower(), score_cutoff=SIMILARITY_CUTOFF)
@@ -174,8 +183,10 @@ def text_mining_query_search(query_string):
                                 Entity = display_aligned_substring_in_bold(
                                     Entity, entity_sim)
 
+                        Gene = get_msu_id(Entity, genesymbol_mapping)
+
                         pubmed_matches.add(PMID)
-                        df.loc[len(df.index)] = [Entity, PMID,
+                        df.loc[len(df.index)] = [Entity, Gene, PMID,
                                                  Title, Sentence, similarity.score]
 
                         if similarity.score == 100:
