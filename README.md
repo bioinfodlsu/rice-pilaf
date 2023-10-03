@@ -1,4 +1,4 @@
-# <img src="https://github.com/bioinfodlsu/rice-pilaf/blob/coexpression/assets/rice_pilaf_logo_dark.png" height="30"> RicePilaf
+# <img src="https://github.com/bioinfodlsu/rice-pilaf/blob/coexpression/assets/rice_pilaf_logo_dark.png" height="30" style="margin-right:7px;">RicePilaf
 Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard. 
 Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients,
 this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci. 
