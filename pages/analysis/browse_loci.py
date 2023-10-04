@@ -12,7 +12,8 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.P('In this page, you can genome-browse your input intervals.')
+            html.P('In this page, you can genome-browse your loci and overlay epigenomic information '
+                   'such as chromatin accessibility and histone modification marks.')
         ], className='analysis-intro p-3'),
 
         html.Br(),
@@ -33,9 +34,26 @@ layout = html.Div(
             ),
 
             html.Br(),
+            dbc.Label('Select a tissue: ',
+                      className='mb-2'),
 
-            dbc.Label(['Select the tracks to be displayed']),
+            dbc.RadioItems(
+                id='epigenome-tissue',
+                options= list(RICE_ENCODE_SAMPLES.keys()),
+                value=list(RICE_ENCODE_SAMPLES.keys())[0],
+                inline=True,
+                className='ms-3 mt-1'
+            ),
 
+            html.Br(),
+
+            dbc.Label(['Select tracks to be displayed:']),
+
+            dbc.Checklist(id='epigenome-tracks',inline=True,className='ms-3'),
+
+            html.Br(),
+
+            dbc.Label(['(Old. Please remove.) Select tracks to be displayed']),
             dbc.Checklist(
                 id='igv-tracks',
                 options=construct_options_igv_tracks(),

@@ -25,8 +25,9 @@ layout = html.Div(
                 html.Li([html.B('Regulatory Feature Enrichment'), html.Br(),
                          'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,the idea being that your intervals might contain variants that affect the binding affinity of transcription factors.'],
                         className='pb-3'),
-                html.Li([html.B('Browse Loci'), html.Br(),
-                         'In this page, you can genome-browse your input intervals.'])
+                html.Li([html.B('Epigenomic Information'), html.Br(),
+                         'In this page, you can genome-browse your loci and overlay epigenomic information '
+                         'such as chromatin accessibility and histone modification marks.'])
             ], className='pb-0 mb-1')
         ], className='analysis-intro p-3'),
     ], className='mt-2'

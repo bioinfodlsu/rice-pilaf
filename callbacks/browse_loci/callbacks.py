@@ -30,6 +30,15 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('epigenome-tracks','options'),
+        Input('epigenome-tissue','value'),
+    )
+    def set_track_options(selected_tissue):
+        print("Selected tissue is:")
+        print(selected_tissue)
+        return [{'label':i,'value':i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
+
+    @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
         Output('igv-submitted-genomic-intervals', 'data', allow_duplicate=True),
         Output('igv-submitted-tracks', 'data', allow_duplicate=True),
@@ -148,17 +157,26 @@ def init_callback(app):
     def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
             # list of tracks info
+            gene_annotation_track = {
+                "name": "MSU V7 genes",
+                "format": "gff3",
+                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                # this one will call out the send_annotations_nb_url callback function
+                "displayMode": "EXPANDED",
+                "height": 200
+            }
             track_info = [
+                # {
+                #     "name": "MSU V7 genes",
+                #     "format": "gff3",
+                #     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                #     "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",  # this one will call out the send_annotations_nb_url callback function
+                #     "displayMode": "EXPANDED",
+                #     "height": 200
+                # },
                 {
-                    "name": "MSU V7 genes",
-                    "format": "gff3",
-                    "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",  # this one will call out the send_annotations_nb_url callback function
-                    "displayMode": "EXPANDED",
-                    "height": 200
-                },
-                {
-                    "name": "chromatin open",
+                    "name": "ATAC-seq",
                     "format": "bed",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
                     "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed", # this one will call out the send_open_chromatin_panicle_url callback function
@@ -167,9 +185,8 @@ def init_callback(app):
                 }
             ]
 
-            # only display the tracks that were chosen by the user previously
-            display_tracks = [
-                track for track in track_info if selected_tracks and track['name'] in selected_tracks]
+            # only display the tracks that were chosen by the user previously. gene annotation track is always shown
+            display_tracks = [gene_annotation_track] + [track for track in track_info if selected_tracks and track['name'] in selected_tracks]
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"

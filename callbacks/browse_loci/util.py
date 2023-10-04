@@ -3,8 +3,13 @@ import gffutils
 from ..file_util import *
 from ..constants import Constants
 
-igv_tracks = {'MSU V7 genes': 'MSU V7 genes', 
-              'chromatin open': 'chromatin open'}
+RICE_ENCODE_SAMPLES = {
+    'Leaf':['ATAC-Seq', 'FAIRE-Seq'],
+    'Panicle':['FAIRE-Seq']
+}
+
+igv_tracks = {'MSU V7 genes': 'MSU V7 genes',
+             'chromatin open': 'chromatin open'}
 
 def construct_options_igv_tracks():
     return [
