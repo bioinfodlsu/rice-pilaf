@@ -39,7 +39,7 @@ layout = html.Div(
 
             dbc.RadioItems(
                 id='epigenome-tissue',
-                options= list(RICE_ENCODE_SAMPLES.keys()),
+                options=list(RICE_ENCODE_SAMPLES.keys()),
                 value=list(RICE_ENCODE_SAMPLES.keys())[0],
                 inline=True,
                 className='ms-3 mt-1'
@@ -49,19 +49,20 @@ layout = html.Div(
 
             dbc.Label(['Select tracks to be displayed:']),
 
-            dbc.Checklist(id='epigenome-tracks',inline=True,className='ms-3'),
+            dbc.Checklist(id='igv-tracks', inline=True,
+                          className='ms-3', value=[]),
 
             html.Br(),
 
-            dbc.Label(['(Old. Please remove.) Select tracks to be displayed']),
-            dbc.Checklist(
-                id='igv-tracks',
-                options=construct_options_igv_tracks(),
-                inline=True,
-                className='ms-3'),
+            # dbc.Label(['(Old. Please remove.) Select tracks to be displayed']),
+            # dbc.Checklist(
+            #     id='igv-tracks',
+            #     options=construct_options_igv_tracks(),
+            #     inline=True,
+            #     className='ms-3'),
 
             html.Br(),
-                        
+
             dbc.Button('Submit',
                        id='igv-submit',
                        n_clicks=0,
@@ -75,7 +76,7 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 html.Hr(className='mt-3 mb-4'),
-                
+
                 dcc.Loading(id='igv-display')
             ]
         )

@@ -30,17 +30,18 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('epigenome-tracks','options'),
-        Input('epigenome-tissue','value'),
+        Output('igv-tracks', 'options'),
+        Input('epigenome-tissue', 'value'),
     )
     def set_track_options(selected_tissue):
         print("Selected tissue is:")
         print(selected_tissue)
-        return [{'label':i,'value':i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-submitted-genomic-intervals', 'data', allow_duplicate=True),
+        Output('igv-submitted-genomic-intervals',
+               'data', allow_duplicate=True),
         Output('igv-submitted-tracks', 'data', allow_duplicate=True),
         Input('igv-submit', 'n_clicks'),
         State('igv-genomic-intervals', 'value'),
@@ -88,7 +89,7 @@ def init_callback(app):
     @app.server.route('/genomes_nipponbare/<path:filename>')
     def send_genomes_nipponbare_url(filename):
         try:
-            # serves / retrieves the file using Flask 
+            # serves / retrieves the file using Flask
             return send_from_directory(Constants.GENOMES_NIPPONBARE, filename)
         except FileNotFoundError:
             abort(404)
@@ -134,8 +135,8 @@ def init_callback(app):
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
-            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';' 
-            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str) 
+            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
+            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
             igv_options = igv_options.split(';')
 
             # if no genomic intervals are selected, use the first option
@@ -179,19 +180,23 @@ def init_callback(app):
                     "name": "ATAC-seq",
                     "format": "bed",
                     "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed", # this one will call out the send_open_chromatin_panicle_url callback function
+                    # this one will call out the send_open_chromatin_panicle_url callback function
+                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed",
                     "displayMode": "EXPANDED",
                     "height": 200
                 }
             ]
 
             # only display the tracks that were chosen by the user previously. gene annotation track is always shown
-            display_tracks = [gene_annotation_track] + [track for track in track_info if selected_tracks and track['name'] in selected_tracks]
+            display_tracks = [gene_annotation_track] + [
+                track for track in track_info if selected_tracks and track['name'] in selected_tracks]
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
-            selected_nb_intervals_str = lift_over_util.to_genomic_interval(selected_nb_intervals_str)
-            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
+            selected_nb_intervals_str = lift_over_util.to_genomic_interval(
+                selected_nb_intervals_str)
+            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(
+                selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
 
             return html.Div([
                 dashbio.Igv(
@@ -209,7 +214,7 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    # saves the input objects to the respective dcc Stores 
+    # saves the input objects to the respective dcc Stores
     @app.callback(
         Output('igv-saved-genomic-intervals',
                'data', allow_duplicate=True),
@@ -225,7 +230,7 @@ def init_callback(app):
             return selected_nb_intervals_str, igv_tracks
 
         raise PreventUpdate
-    
+
     # displays the saved inputs to the respective input objects
     @app.callback(
         Output('igv-tracks', 'value'),
@@ -236,5 +241,5 @@ def init_callback(app):
     def get_input_igv_session_state(igv_tracks, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return igv_tracks
-        
+
         raise PreventUpdate
