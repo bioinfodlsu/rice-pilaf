@@ -254,7 +254,7 @@ def construct_contigency_table(background_genes, implicated_genes, module_genes)
 # ===============================================================================================
 
 def add_link_to_genes(gene_ids_str):
-    return '\n'.join([get_rgi_genecard_link_single_str(gene_id) for gene_id in gene_ids_str.split('\n')])
+    return '\n'.join([get_msu_browser_link_single_str(gene_id) for gene_id in gene_ids_str.split('\n')])
 
 
 def convert_transcript_to_msu_id(transcript_ids_str, network):
@@ -275,7 +275,7 @@ def convert_transcript_to_msu_id(transcript_ids_str, network):
     transcript_ids = transcript_ids_str.split('\n')
     for transcript_id in transcript_ids:
         for msu_id in mapping_dict[transcript_id]:
-            output_str += f'{get_rgi_genecard_link_single_str(msu_id)}\n<span class="small">({get_gramene_transcript_single_str(transcript_id)})</span><br><br>'
+            output_str += f'{get_msu_browser_link_single_str(msu_id)}\n<span class="small">({get_gramene_transcript_single_str(transcript_id)})</span><br><br>'
 
     # Remove trailing newline characters
     return output_str[:-len('<br><br>')]
