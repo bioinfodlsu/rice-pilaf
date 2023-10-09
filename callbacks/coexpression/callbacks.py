@@ -295,7 +295,6 @@ def init_callback(app):
                'children', allow_duplicate=True),
         Output('coexpression-module-graph-node-data-container',
                'style', allow_duplicate=True),
-        Output('coexpression-extra-bottom-div', 'style', allow_duplicate=True),
 
         Input('coexpression-combined-genes', 'data'),
         Input('coexpression-modules', 'value'),
@@ -328,10 +327,9 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0'})
+                    return module_graph + ({'display': 'none'}, '', {'display': 'none'})
 
-                return module_graph + ({'visibility': 'visible', 'width': '100%',
-                                        'height': '100vh'}, 'Click on a node to display information about the gene.', {'display': 'block'}, {'height': '1.5em'})
+                return module_graph + ({'visibility': 'visible', 'width': '100%'}, 'Click on a node to display information about the gene.', {'display': 'block'})
 
         raise PreventUpdate
 
