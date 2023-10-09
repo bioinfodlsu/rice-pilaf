@@ -322,7 +322,7 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
                                         'height': '100vh'}, 'Click on a node to display information about the gene.', {'display': 'block'}, {'height': '1.5em'})
