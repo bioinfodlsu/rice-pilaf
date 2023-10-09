@@ -449,7 +449,7 @@ layout = html.Div(
 
                                 html.Div([
                                     html.P(
-                                        'The graph below shows the selected module. The connections indicate that the genes are co-expressed. The shaded nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
+                                        'The graph below shows the selected module. The connections indicate that the genes are co-expressed. The larger, outlined nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
 
                                     dbc.Label(
                                         'Select the graph display layout'),
@@ -510,9 +510,9 @@ layout = html.Div(
                                                 'selector': 'node',
                                                 'style': {
                                                     'content': 'data(id)',
-                                                    'height': '10px',
-                                                    'width': '10px',
-                                                    'font-size': '10px'
+                                                    'height': '12px',
+                                                    'width': '12px',
+                                                    'font-size': '12px'
                                                 }
                                             },
                                             {
@@ -524,10 +524,10 @@ layout = html.Div(
                                             {
                                                 'selector': '.shaded',
                                                 'style': {
-                                                    'background-color': '#254b5d',
-                                                    'line-color': '#254b5d',
-                                                    'height': '20px',
-                                                    'width': '20px'
+                                                    'border-color': '#5A5A5A',
+                                                    'border-width': '2px',
+                                                    'height': '25px',
+                                                    'width': '25px'
                                                 }
                                             }
                                         ]
