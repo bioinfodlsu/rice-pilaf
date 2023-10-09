@@ -510,9 +510,9 @@ layout = html.Div(
                                                 'selector': 'node',
                                                 'style': {
                                                     'content': 'data(id)',
-                                                    'height': '12px',
-                                                    'width': '12px',
-                                                    'font-size': '12px'
+                                                    'height': '10px',
+                                                    'width': '10px',
+                                                    'font-size': '10px'
                                                 }
                                             },
                                             {
@@ -524,10 +524,16 @@ layout = html.Div(
                                             {
                                                 'selector': '.shaded',
                                                 'style': {
-                                                    'border-color': '#5A5A5A',
-                                                    'border-width': '2px',
-                                                    'height': '25px',
-                                                    'width': '25px'
+                                                    'background-color': '#254b5d',
+                                                    'line-color': '#254b5d',
+                                                    'height': '20px',
+                                                    'width': '20px'
+                                                }
+                                            },
+                                            {
+                                                'selector': ':selected',
+                                                'style': {
+                                                    'background-color': '#6b6bb9',
                                                 }
                                             }
                                         ]
