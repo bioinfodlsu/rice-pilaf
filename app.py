@@ -84,7 +84,7 @@ app.layout = lambda: dbc.Container([
             html.Span('© 2023'),
             html.Span('|', className='px-3'),
             html.Span(
-                'Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
+                'Bioinformatics Lab, De La Salle University (DLSU), Manila, Philippines'),
             html.Br(),
             html.Span(
                 'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
