@@ -200,9 +200,11 @@ def init_callback(app):
                         stats += 'modules '
 
                     if num_enriched_modules == 1:
-                        stats += 'was found to be enriched (adjusted p-value < 0.05).'
+                        stats += 'was '
                     else:
-                        stats += 'were found to be enriched (adjusted p-value < 0.05).'
+                        stats += 'were '
+
+                    stats += 'found to be enriched (adjusted p-value < 0.05).'
 
                     first_module = None
                     if enriched_modules:
@@ -251,10 +253,11 @@ def init_callback(app):
                            for x in table.columns]
 
                 num_enriched = get_num_unique_entries(table, 'ID')
+                stats = f'This module is enriched in {num_enriched} '
                 if num_enriched == 1:
-                    stats = f'This module is enriched in {num_enriched} {get_noun_for_active_tab(active_tab).singular}.'
+                    stats += f'{get_noun_for_active_tab(active_tab).singular}.'
                 else:
-                    stats = f'This module is enriched in {num_enriched} {get_noun_for_active_tab(active_tab).plural}.'
+                    stats += f'{get_noun_for_active_tab(active_tab).plural}.'
 
                 graph_stats = 'The selected module has '
                 try:
@@ -264,14 +267,17 @@ def init_callback(app):
                     total_num_genes, num_combined_gene_ids = 0, 0
 
                 if total_num_genes == 1:
-                    graph_stats += f'{total_num_genes} gene, of which {num_combined_gene_ids} '
+                    graph_stats += f'{total_num_genes} gene'
                 else:
-                    graph_stats += f'{total_num_genes} genes, of which {num_combined_gene_ids} '
+                    graph_stats += f'{total_num_genes} genes'
+
+                graph_stats += f', among which {num_combined_gene_ids} '
 
                 if num_combined_gene_ids == 1:
-                    graph_stats += 'is implicated by your GWAS/QTL or part of the gene list you manually entered.'
+                    graph_stats += 'is '
                 else:
-                    graph_stats += 'are implicated by your GWAS/QTL or part of the gene list you manually entered.'
+                    graph_stats += 'are '
+                graph_stats += 'implicated by your GWAS/QTL or among those that you manually added.'
 
                 if total_num_genes == 0:
                     return table.to_dict('records'), columns, graph_stats, stats, {'display': 'none'}
@@ -322,7 +328,7 @@ def init_callback(app):
 
                 # No enriched modules
                 if not modules:
-                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0em'})
+                    return module_graph + ({'display': 'none'}, '', {'display': 'none'}, {'height': '0'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%',
                                         'height': '100vh'}, 'Click on a node to display information about the gene.', {'display': 'block'}, {'height': '1.5em'})
@@ -541,7 +547,10 @@ def init_callback(app):
 
                 gene = node_data['id']
 
-                node_data = [html.B('Name: '), get_msu_browser_link_single_str(gene, dash=True), html.Br(),
+                node_data = [html.H5('Gene Information', className='pb-3'),
+
+                             html.B('Name: '), get_msu_browser_link_single_str(
+                                 gene, dash=True), html.Br(),
                              html.B('OGI: '), get_rgi_orthogroup_link_single_str(
                                  ogi_mapping[gene], dash=True), html.Br(),
                              html.B(

@@ -449,7 +449,7 @@ layout = html.Div(
 
                                 html.Div([
                                     html.P(
-                                        'The graph below shows the selected module. The connections indicate that the genes are co-expressed. The shaded nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
+                                        'The graph below shows the selected module. The connections indicate that the genes are co-expressed. The larger, outlined nodes refer to the genes implicated by your GWAS/QTL, including those that you manually added.'),
 
                                     dbc.Label(
                                         'Select the graph display layout'),
@@ -528,6 +528,12 @@ layout = html.Div(
                                                     'line-color': '#254b5d',
                                                     'height': '20px',
                                                     'width': '20px'
+                                                }
+                                            },
+                                            {
+                                                'selector': ':selected',
+                                                'style': {
+                                                    'background-color': '#6b6bb9',
                                                 }
                                             }
                                         ]
