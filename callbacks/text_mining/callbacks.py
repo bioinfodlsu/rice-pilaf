@@ -125,11 +125,11 @@ def init_callback(app):
 
                 stats = 'Found matches across '
                 if num_unique_entries == 1:
-                    stats = f'{num_unique_entries} publication'
+                    stats += f'{num_unique_entries} publication'
                 elif num_unique_entries == MAX_NUM_RESULTS:
-                    stats = f'over {num_unique_entries} publications. Consider making your search query more specific'
+                    stats += f'over {num_unique_entries} publications. Consider making your search query more specific'
                 else:
-                    stats = f'{num_unique_entries} publications'
+                    stats += f'{num_unique_entries} publications'
 
                 return text_mining_results_df.to_dict('records'), columns, stats
 

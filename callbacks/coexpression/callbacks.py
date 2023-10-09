@@ -253,11 +253,11 @@ def init_callback(app):
                            for x in table.columns]
 
                 num_enriched = get_num_unique_entries(table, 'ID')
-                stats = 'This module is enriched in {num_enriched} '
+                stats = f'This module is enriched in {num_enriched} '
                 if num_enriched == 1:
-                    stats = f'{get_noun_for_active_tab(active_tab).singular}.'
+                    stats += f'{get_noun_for_active_tab(active_tab).singular}.'
                 else:
-                    stats = f'{get_noun_for_active_tab(active_tab).plural}.'
+                    stats += f'{get_noun_for_active_tab(active_tab).plural}.'
 
                 graph_stats = 'The selected module has '
                 try:
@@ -271,7 +271,7 @@ def init_callback(app):
                 else:
                     graph_stats += f'{total_num_genes} genes'
 
-                graph_stats += ', among which {num_combined_gene_ids} '
+                graph_stats += f', among which {num_combined_gene_ids} '
 
                 if num_combined_gene_ids == 1:
                     graph_stats += 'is '
