@@ -40,10 +40,11 @@ layout = html.Div(
                 id='igv-tracks',
                 options=construct_options_igv_tracks(),
                 inline=True,
-                className='ms-3'),
+                className='ms-3',
+                value=[]),
 
             html.Br(),
-                        
+
             dbc.Button('Submit',
                        id='igv-submit',
                        n_clicks=0,
@@ -57,7 +58,7 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 html.Hr(className='mt-3 mb-4'),
-                
+
                 dcc.Loading(id='igv-display')
             ]
         )

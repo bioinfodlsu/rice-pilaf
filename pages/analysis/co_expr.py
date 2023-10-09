@@ -503,7 +503,7 @@ layout = html.Div(
                                         id='coexpression-module-graph',
                                         className='mb-3',
                                         layout={'name': 'circle'},
-                                        style={'width': '75%',
+                                        style={'width': '100%',
                                             'height': '100vh'},          # Should be here (otherwise, initial loading does not consume entire width and height)
                                         stylesheet=[
                                             {
@@ -552,11 +552,7 @@ layout = html.Div(
                                 className='w-25',
                                 id='coexpression-module-graph-node-data-container'
                             ),
-                        ], className='d-flex flex-row'),
-
-                        # This is for adding padding at the bottom of the graph
-                        html.Div(id='coexpression-extra-bottom-div',
-                                 className='mb-4')
+                        ], className='d-flex flex-row')
                     ]
                 )
             ]
