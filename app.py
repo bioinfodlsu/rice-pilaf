@@ -71,6 +71,16 @@ app.layout = lambda: dbc.Container([
 
     dash.page_container,
 
+    dbc.Row([
+        dbc.Col([
+            html.Span(
+                '© 2023 | Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
+            html.Br(),
+            html.Span(
+                'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
+        ], className='col-sm-9')
+    ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
+
     # Session storage
     html.Div(
         id='session-container',

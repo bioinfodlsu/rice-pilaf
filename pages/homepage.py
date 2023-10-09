@@ -247,17 +247,7 @@ layout = html.Div([
                     html.H5('Epigenomic Information'),
                     html.P('For traits that are tissue-specific, it may be desirable to deprioritize genes whose epigenetic markers suggest transcriptional inactivity. Using the embeddable Integrated Genomics Viewer, RicePilaf displays selected BED files obtained from the RiceEncode database, which contains tissue-specific chromatin accessibility, histone modification, and DNA methylation data among others, obtained from high-throughput sequencing experiments.', className='pt-3')
                 ], className='col-sm-9 pe-6 alt-row')
-            ], className='gray-container ps-3 pb-4 info-div'),
-
-            dbc.Row([
-                dbc.Col([
-                    html.Span(
-                        '© 2023 | Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
-                    html.Br(),
-                    html.Span(
-                        'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
-                ], className='col-sm-9')
-            ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
+            ], className='gray-container ps-3 pb-4 info-div')
         ]
     ),
 
