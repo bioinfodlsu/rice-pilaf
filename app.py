@@ -142,6 +142,16 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='epigenome-saved-tissue',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='epigenome-submitted-tissue',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='igv-saved-tracks',
                 storage_type='session'
             ),

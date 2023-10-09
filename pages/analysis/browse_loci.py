@@ -51,16 +51,6 @@ layout = html.Div(
 
             dbc.Checklist(id='igv-tracks', inline=True,
                           className='ms-3', value=[]),
-
-            html.Br(),
-
-            # dbc.Label(['(Old. Please remove.) Select tracks to be displayed']),
-            # dbc.Checklist(
-            #     id='igv-tracks',
-            #     options=construct_options_igv_tracks(),
-            #     inline=True,
-            #     className='ms-3'),
-
             html.Br(),
 
             dbc.Button('Submit',
