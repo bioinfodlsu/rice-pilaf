@@ -38,6 +38,7 @@ def get_annotations_addl_gene(addl_genes):
 def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
     make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
 
+    # addl_genes has already been shortened by the time this function is called
     filepath_without_timestamp = get_path_to_temp(
         nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED)
     filepath = append_timestamp_to_filename(filepath_without_timestamp)
@@ -63,10 +64,11 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_gen
 
 
 def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
-    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes))
+    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
 
+    # addl_genes has already been shortened by the time this function is called
     filepath_without_timestamp = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, Constants.GENOME_WIDE_BED)
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.GENOME_WIDE_BED)
     filepath = append_timestamp_to_filename(filepath_without_timestamp)
 
     with open(filepath, "w") as f:
@@ -83,9 +85,8 @@ def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
 def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
                               tfbs_set, tfbs_prediction_technique,
                               nb_interval_str):
-
     out_dir_without_timestamp = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
+        nb_interval_str, Constants.TEMP_TFBS, shorten_name(addl_genes), tfbs_set, tfbs_prediction_technique)
 
     # if previously computed
     if path_exists(f'{out_dir_without_timestamp}/BH_corrected.csv'):
@@ -123,11 +124,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     # out_dir_tf_enrich = get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
         query_bed, query_bed_without_timestamp = write_query_promoter_intervals_to_file(
-            lift_over_nb_entire_table, nb_interval_str, addl_genes)
+            lift_over_nb_entire_table, nb_interval_str, shorten_name(addl_genes))
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
         query_bed, query_bed_without_timestamp = write_query_genome_intervals_to_file(
-            nb_interval_str, addl_genes)
+            nb_interval_str, shorten_name(addl_genes))
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
 
     # construct a pybedtool object. we will use pybedtools to compute if there
