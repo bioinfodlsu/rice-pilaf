@@ -96,8 +96,7 @@ def shorten_name(name):
 
             cursor.close()
             connection.close()
-        except sqlite3.Error as error:
-            print(error)
+        except sqlite3.Error:
             pass
 
         try:
@@ -112,21 +111,6 @@ def shorten_name(name):
             connection.close()
         except sqlite3.Error:
             pass
-        except IndexError:
-            try:
-                connection = sqlite3.connect(Constants.FILE_STATUS_DB)
-                cursor = connection.cursor()
-
-                query = f'INSERT OR IGNORE INTO {Constants.FILE_STATUS_TABLE}(name) VALUES("{name}")'
-
-                cursor.execute(query)
-                connection.commit()
-
-                cursor.close()
-                connection.close()
-            except sqlite3.Error as error:
-                print(error)
-                pass
 
         return str(row_id)
 
