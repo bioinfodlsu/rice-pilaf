@@ -97,6 +97,7 @@ def shorten_name(name):
             cursor.close()
             connection.close()
         except sqlite3.Error as error:
+            print(error)
             pass
 
         try:
