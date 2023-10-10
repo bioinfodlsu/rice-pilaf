@@ -4,8 +4,8 @@ from ..file_util import *
 from ..constants import Constants
 
 RICE_ENCODE_SAMPLES = {
-    'Leaf':['ATAC-Seq', 'FAIRE-Seq'],
-    'Panicle':['ATAC-Seq']
+    'Leaf': ['ATAC-Seq', 'FAIRE-Seq'],
+    'Panicle': ['ATAC-Seq']
 }
 
 
@@ -32,9 +32,9 @@ def write_igv_tracks_to_file(nb_intervals_str):
 
 def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
     if path_exists(source_dir):
-        loci_list = util.sanitize_nb_intervals_str(nb_intervals_str) 
+        loci_list = util.sanitize_nb_intervals_str(nb_intervals_str)
         loci_list = loci_list.split(';')
-        
+
         genomic_interval_list = util.get_genomic_intervals_from_input(
             nb_intervals_str)
 
@@ -65,16 +65,17 @@ def get_loci_data_in_gff_file(source_dir, nb_interval):
 
     return genes_in_interval
 
-def generate_tracks(selected_tissue,selected_tracks):
+
+def generate_tracks(selected_tissue, selected_tracks):
     tracks = []
     for track in selected_tracks:
         tracks.append(
             {
                 "name": f"{selected_tissue}-{track}",
                 "description": f"{selected_tissue}-{track}",
-                "format": "bed", #hard-coded for now
+                "format": "bed",  # hard-coded for now
                 "url": f"{selected_tissue}/{track}",
-                "displayMode":"EXPANDED"
+                "displayMode": "EXPANDED"
             }
         )
     return tracks
