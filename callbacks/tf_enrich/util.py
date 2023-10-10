@@ -37,8 +37,11 @@ def get_annotations_addl_gene(addl_genes):
 
 def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
     make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
-    filepath = get_path_to_temp(
+
+    filepath_without_timestamp = get_path_to_temp(
         nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED)
+    filepath = append_timestamp_to_filename(filepath_without_timestamp)
+
     with open(filepath, "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
@@ -53,7 +56,10 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_gen
                 assert promoter_end >= 0
                 f.write("{}\t{}\t{}\n".format(
                     gene['Chromosome'], promoter_end, promoter_start))
-    return filepath
+
+    # Renaming will be done once TF enrichment has finished
+
+    return filepath, filepath_without_timestamp
 
 
 def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
@@ -110,7 +116,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     # construct query BED file
     # out_dir_tf_enrich = get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
-        query_bed = write_query_promoter_intervals_to_file(
+        query_bed, query_bed_without_timestamp = write_query_promoter_intervals_to_file(
             lift_over_nb_entire_table, nb_interval_str, addl_genes)
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
@@ -163,7 +169,12 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
         os.replace(out_dir, out_dir_without_timestamp)
     except Exception as e:
         # Use shutil.rmtree to delete non-empty directory
-        shutil.rmtree(out_dir)
+        shutil.rmtree(out_dir, ignore_errors=True)
+        pass
+
+    try:
+        os.replace(query_bed, query_bed_without_timestamp)
+    except:
         pass
 
     return results_df
