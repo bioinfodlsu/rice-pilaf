@@ -107,7 +107,7 @@ def shorten_name(name):
 
             cursor.close()
             connection.close()
-        except sqlite3.Error as error:
+        except sqlite3.Error:
             pass
 
         # Insert the name into the database
