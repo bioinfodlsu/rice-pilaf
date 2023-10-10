@@ -64,14 +64,20 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_gen
 
 def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
     make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes))
-    filepath = get_path_to_temp(
+
+    filepath_without_timestamp = get_path_to_temp(
         nb_interval_str, Constants.TEMP_TFBS, Constants.GENOME_WIDE_BED)
+    filepath = append_timestamp_to_filename(filepath_without_timestamp)
+
     with open(filepath, "w") as f:
         for interval in nb_interval_str.split(";"):
             chrom, range = interval.split(":")
             beg, end = range.split("-")
             f.write("{}\t{}\t{}\n".format(chrom, beg, end))
-    return filepath
+
+    # Renaming will be done once TF enrichment has finished
+
+    return filepath, filepath_without_timestamp
 
 
 def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
@@ -120,7 +126,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
             lift_over_nb_entire_table, nb_interval_str, addl_genes)
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
-        query_bed = write_query_genome_intervals_to_file(
+        query_bed, query_bed_without_timestamp = write_query_genome_intervals_to_file(
             nb_interval_str, addl_genes)
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
 
