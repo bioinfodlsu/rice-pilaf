@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import shutil
 import subprocess
 import statsmodels.stats.multitest as sm
 import pickle
@@ -36,8 +37,12 @@ def get_annotations_addl_gene(addl_genes):
 
 def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
     make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
-    filepath = get_path_to_temp(
+
+    # addl_genes has already been shortened by the time this function is called
+    filepath_without_timestamp = get_path_to_temp(
         nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED)
+    filepath = append_timestamp_to_filename(filepath_without_timestamp)
+
     with open(filepath, "w") as f:
         for gene in gene_table:
             if gene['Strand'] == '+':
@@ -52,32 +57,41 @@ def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_gen
                 assert promoter_end >= 0
                 f.write("{}\t{}\t{}\n".format(
                     gene['Chromosome'], promoter_end, promoter_start))
-    return filepath
+
+    # Renaming will be done once TF enrichment has finished
+
+    return filepath, filepath_without_timestamp
 
 
 def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
-    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes))
-    filepath = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, Constants.GENOME_WIDE_BED)
+    make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
+
+    # addl_genes has already been shortened by the time this function is called
+    filepath_without_timestamp = get_path_to_temp(
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.GENOME_WIDE_BED)
+    filepath = append_timestamp_to_filename(filepath_without_timestamp)
+
     with open(filepath, "w") as f:
         for interval in nb_interval_str.split(";"):
             chrom, range = interval.split(":")
             beg, end = range.split("-")
             f.write("{}\t{}\t{}\n".format(chrom, beg, end))
-    return filepath
+
+    # Renaming will be done once TF enrichment has finished
+
+    return filepath, filepath_without_timestamp
 
 
 def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
                               tfbs_set, tfbs_prediction_technique,
                               nb_interval_str):
-
-    out_dir = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
+    out_dir_without_timestamp = get_path_to_temp(
+        nb_interval_str, Constants.TEMP_TFBS, shorten_name(addl_genes), tfbs_set, tfbs_prediction_technique)
 
     # if previously computed
-    if path_exists(f'{out_dir}/BH_corrected.csv'):
+    if path_exists(f'{out_dir_without_timestamp}/BH_corrected.csv'):
         results_df = pd.read_csv(
-            f'{out_dir}/BH_corrected.csv', dtype=object)
+            f'{out_dir_without_timestamp}/BH_corrected.csv', dtype=object)
 
         results_df['Family'] = results_df['Transcription Factor'].apply(
             get_family)
@@ -103,17 +117,18 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
         return results_df
     '''
+    out_dir = append_timestamp_to_filename(out_dir_without_timestamp)
     make_dir(out_dir)
 
     # construct query BED file
     # out_dir_tf_enrich = get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes)
     if tfbs_set == 'promoters':
-        query_bed = write_query_promoter_intervals_to_file(
-            lift_over_nb_entire_table, nb_interval_str, addl_genes)
+        query_bed, query_bed_without_timestamp = write_query_promoter_intervals_to_file(
+            lift_over_nb_entire_table, nb_interval_str, shorten_name(addl_genes))
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
     elif tfbs_set == 'genome':
-        query_bed = write_query_genome_intervals_to_file(
-            nb_interval_str, addl_genes)
+        query_bed, query_bed_without_timestamp = write_query_genome_intervals_to_file(
+            nb_interval_str, shorten_name(addl_genes))
         sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
 
     # construct a pybedtool object. we will use pybedtools to compute if there
@@ -156,6 +171,18 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected.csv', index=False)
+
+    try:
+        os.replace(out_dir, out_dir_without_timestamp)
+    except Exception as e:
+        # Use shutil.rmtree to delete non-empty directory
+        shutil.rmtree(out_dir, ignore_errors=True)
+        pass
+
+    try:
+        os.replace(query_bed, query_bed_without_timestamp)
+    except:
+        pass
 
     return results_df
 

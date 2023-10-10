@@ -84,34 +84,37 @@ def get_path_to_text_mining_temp(analysis_type, *args):
 
 
 def shorten_name(name):
-    try:
-        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
-        cursor = connection.cursor()
+    if name and len(name) > 0:
+        try:
+            connection = sqlite3.connect(Constants.FILE_STATUS_DB)
+            cursor = connection.cursor()
 
-        query = f'INSERT OR IGNORE INTO {Constants.FILE_STATUS_TABLE}(name) VALUES("{name}")'
+            query = f'INSERT OR IGNORE INTO {Constants.FILE_STATUS_TABLE}(name) VALUES("{name}")'
 
-        cursor.execute(query)
-        connection.commit()
+            cursor.execute(query)
+            connection.commit()
 
-        cursor.close()
-        connection.close()
-    except sqlite3.Error as error:
-        pass
+            cursor.close()
+            connection.close()
+        except sqlite3.Error as error:
+            pass
 
-    try:
-        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
-        cursor = connection.cursor()
+        try:
+            connection = sqlite3.connect(Constants.FILE_STATUS_DB)
+            cursor = connection.cursor()
 
-        query = f'SELECT rowid FROM {Constants.FILE_STATUS_TABLE} WHERE name = "{name}"'
-        cursor.execute(query)
-        row_id = cursor.fetchall()[0][0]
+            query = f'SELECT rowid FROM {Constants.FILE_STATUS_TABLE} WHERE name = "{name}"'
+            cursor.execute(query)
+            row_id = cursor.fetchall()[0][0]
 
-        cursor.close()
-        connection.close()
-    except sqlite3.Error as error:
-        pass
+            cursor.close()
+            connection.close()
+        except sqlite3.Error as error:
+            pass
 
-    return str(row_id)
+        return str(row_id)
+
+    return name
 
 
 def append_timestamp_to_filename(filename):
