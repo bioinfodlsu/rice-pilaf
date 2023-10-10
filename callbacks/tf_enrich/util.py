@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import shutil
 import subprocess
 import statsmodels.stats.multitest as sm
 import pickle
@@ -71,13 +72,13 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
                               tfbs_set, tfbs_prediction_technique,
                               nb_interval_str):
 
-    out_dir = get_path_to_temp(
+    out_dir_without_timestamp = get_path_to_temp(
         nb_interval_str, Constants.TEMP_TFBS, addl_genes, tfbs_set, tfbs_prediction_technique)
 
     # if previously computed
-    if path_exists(f'{out_dir}/BH_corrected.csv'):
+    if path_exists(f'{out_dir_without_timestamp}/BH_corrected.csv'):
         results_df = pd.read_csv(
-            f'{out_dir}/BH_corrected.csv', dtype=object)
+            f'{out_dir_without_timestamp}/BH_corrected.csv', dtype=object)
 
         results_df['Family'] = results_df['Transcription Factor'].apply(
             get_family)
@@ -103,6 +104,7 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
         return results_df
     '''
+    out_dir = append_timestamp_to_filename(out_dir_without_timestamp)
     make_dir(out_dir)
 
     # construct query BED file
@@ -156,6 +158,13 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected.csv', index=False)
+
+    try:
+        os.replace(out_dir, out_dir_without_timestamp)
+    except Exception as e:
+        # Use shutil.rmtree to delete non-empty directory
+        shutil.rmtree(out_dir)
+        pass
 
     return results_df
 
