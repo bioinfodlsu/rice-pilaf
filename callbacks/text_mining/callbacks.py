@@ -123,12 +123,13 @@ def init_callback(app):
                 num_unique_entries = get_num_unique_entries(
                     text_mining_results_df, "PMID")
 
+                stats = 'Found matches across '
                 if num_unique_entries == 1:
-                    stats = f'Found matches across {num_unique_entries} publication'
+                    stats += f'{num_unique_entries} publication'
                 elif num_unique_entries == MAX_NUM_RESULTS:
-                    stats = f'Found matches across over {num_unique_entries} publications. Consider making your search query more specific'
+                    stats += f'over {num_unique_entries} publications. Consider making your search query more specific'
                 else:
-                    stats = f'Found matches across {num_unique_entries} publications'
+                    stats += f'{num_unique_entries} publications'
 
                 return text_mining_results_df.to_dict('records'), columns, stats
 

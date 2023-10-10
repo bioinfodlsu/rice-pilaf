@@ -71,6 +71,24 @@ app.layout = lambda: dbc.Container([
 
     dash.page_container,
 
+    dbc.Row([
+        dbc.Col(
+            dcc.Link(
+                html.Img(src='assets/bioinfo_lab_logo.png',
+                         height='45px'),
+                href='https://bioinfodlsu.com/',
+                target='_blank'
+            ), className='col-auto text-center'
+        ),
+        dbc.Col([
+            html.Span(
+                '© 2023 | Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
+            html.Br(),
+            html.Span(
+                'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
+        ], className='col-sm-11')
+    ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
+
     # Session storage
     html.Div(
         id='session-container',

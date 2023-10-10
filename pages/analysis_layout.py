@@ -22,11 +22,13 @@ def get_analaysis_layout_dictionary():
     })
 
 
-layout = html.Div(children=[
-    intro.layout,
-    lift_over.layout,
-    text_mining.layout,
-    co_expr.layout,
-    tf_enrich.layout,
-    browse_loci.layout
-])
+layout = html.Div(
+    children=[
+        intro.layout,
+        lift_over.layout,
+        text_mining.layout,
+        co_expr.layout,
+        tf_enrich.layout,
+        browse_loci.layout
+    ]
+)
