@@ -14,7 +14,7 @@ layout = html.Div(
         html.Div([
             html.P(
                 [
-                    'In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. '
+                    'In this page, you can retrieve gene names associated with traits, diseases, and chemicals, among others, '
                     'from a database constructed from text-mined PubMed abstracts. Click ',
                     dcc.Link(
                         ['here ', html.I(
