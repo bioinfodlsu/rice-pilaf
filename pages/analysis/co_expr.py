@@ -468,7 +468,10 @@ layout = html.Div(
                                     ),
 
                                     html.P(
-                                        'Click "Reset Graph Display" to position the graph at the center and restore default zoom settings.')
+                                        html.B(
+                                            'If the graph is mispositioned or not displayed, click "Reset Graph Display" to position the graph at the center and restore default zoom settings.'
+                                        )
+                                    )
                                 ], className='analysis-intro p-3'),
 
                                 html.Br(),
@@ -557,4 +560,5 @@ layout = html.Div(
                 )
             ]
         )
-    ], className='mt-2')
+    ], className='mt-2 mb-4'
+)

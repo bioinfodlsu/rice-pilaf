@@ -136,4 +136,5 @@ layout = html.Div(
                 ])
             ]
         )
-    ], className='mt-2')
+    ], className='mt-2 mb-4'
+)
