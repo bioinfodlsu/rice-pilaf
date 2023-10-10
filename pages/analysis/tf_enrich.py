@@ -12,8 +12,8 @@ layout = html.Div(
     children=[
         html.Div([
             html.P(
-                ['In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,'
-                 'the idea being that your intervals might contain variants that affect the binding affinity of transcription factors. Click ',
+                [Constants.INTRO_TFBS,
+                 ' Click ',
                  dcc.Link(
                      ['here ', html.I(
                          id='demo-link',
@@ -23,7 +23,7 @@ layout = html.Div(
                      target='_blank',
                      className='top-navbar-item'
                  ),
-                    ' for user guide.']
+                    ' for the user guide.']
             )
         ], className='analysis-intro p-3'),
 

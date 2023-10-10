@@ -13,8 +13,8 @@ layout = html.Div(
     children=[
         html.Div([
             html.P(
-                ['In this page, you can obtain the list of genes overlapping your input intervals. '
-                 'Optionally, you can choose genomes to lift-over your Nipponbare coordinates to. Click ',
+                [Constants.INTRO_LIFT_OVER,
+                 ' Click ',
                  dcc.Link(
                      ['here ', html.I(
                          id='demo-link',
@@ -24,7 +24,7 @@ layout = html.Div(
                      target='_blank',
                      className='top-navbar-item'
                  ),
-                 ' for user guide.'
+                 ' for the user guide.'
                  ]
             )
         ], className='analysis-intro p-3'),

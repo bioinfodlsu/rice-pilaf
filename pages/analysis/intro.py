@@ -14,19 +14,19 @@ layout = html.Div(
 
             html.Ul([
                 html.Li([html.B('Gene List and Lift-Over'), html.Br(),
-                        'In this page, you can obtain the list of genes overlapping your input intervals. Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'],
+                        Constants.INTRO_LIFT_OVER],
                         className='pb-3'),
                 html.Li([html.B('Gene Retrieval by Text Mining'), html.Br(),
-                         'In this page, you can retrieve gene names associated with traits, diseases, and chemicals, among others, from a database constructed from text-mined PubMed abstracts.'],
+                         Constants.INTRO_TEXT_MINING],
                         className='pb-3'),
                 html.Li([html.B('Co-Expression Network Analysis'), html.Br(),
-                         'In this page, you can search for modules (communities or clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.'],
+                         Constants.INTRO_COEXPRESSION],
                         className='pb-3'),
                 html.Li([html.B('Regulatory Feature Enrichment'), html.Br(),
-                         'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,the idea being that your intervals might contain variants that affect the binding affinity of transcription factors.'],
+                         Constants.INTRO_TFBS],
                         className='pb-3'),
                 html.Li([html.B('Epigenomic Information'), html.Br(),
-                         'In this page, you can genome-browse your loci and overlay epigenomic information such as chromatin accessibility and histone modification marks.'])
+                         Constants.INTRO_EPIGENOME])
             ], className='pb-0 mb-1')
         ], className='analysis-intro p-3'),
     ], className='mt-2 mb-4'

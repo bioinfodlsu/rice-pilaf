@@ -12,8 +12,7 @@ layout = html.Div(
     hidden=True,
     children=[
         html.Div([
-            html.P('In this page, you can genome-browse your loci and overlay epigenomic information '
-                   'such as chromatin accessibility and histone modification marks.')
+            html.P(Constants.INTRO_EPIGENOME)
         ], className='analysis-intro p-3'),
 
         html.Br(),
