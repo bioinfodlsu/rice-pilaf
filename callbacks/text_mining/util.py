@@ -206,7 +206,14 @@ def text_mining_query_search(query_string):
         df = create_empty_df_with_cols(COLNAMES)
         df = df.drop(columns=['Score'])
 
-    df.to_csv(f'{text_mining_path}', index=False)
+    text_mining_path_with_timestamp = append_timestamp_to_filename(
+        text_mining_path)
+    df.to_csv(f'{text_mining_path_with_timestamp}', index=False)
+
+    try:
+        os.replace(text_mining_path_with_timestamp, text_mining_path)
+    except:
+        pass
 
     return df
 
