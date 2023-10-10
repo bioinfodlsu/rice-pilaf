@@ -49,9 +49,9 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue,selected_tracks, homepage_is_submitted):
+    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval, selected_tissue,selected_tracks
+            return True, selected_nb_interval, selected_tissue, selected_tracks
 
         raise PreventUpdate
 
@@ -117,9 +117,9 @@ def init_callback(app):
             abort(404)
 
     @app.server.route('/<tissue>/<path:filename>')
-    def send_track_url(tissue,filename):
+    def send_track_url(tissue, filename):
         try:
-            return send_from_directory(f'{Constants.EPIGENOME}/{tissue}',filename)
+            return send_from_directory(f'{Constants.EPIGENOME}/{tissue}', filename)
 
         except FileNotFoundError:
             abort(404)
@@ -156,19 +156,21 @@ def init_callback(app):
         Input('igv-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tissue,selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
+    def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
             # list of tracks info
             gene_annotation_track = {
                 "name": "MSU V7 genes",
                 "format": "gff3",
                 "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff", # this will call out the send_annotations_nb_url callback function
+                # this will call out the send_annotations_nb_url callback function
+                "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                 "displayMode": "EXPANDED",
             }
 
             # only display the tracks that were chosen by user. gene annotation track is always shown
-            display_tracks = [gene_annotation_track] + generate_tracks(selected_tissue,selected_tracks)
+            display_tracks = [gene_annotation_track] + \
+                generate_tracks(selected_tissue, selected_tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
@@ -195,23 +197,26 @@ def init_callback(app):
 
     # saves the input objects to the respective dcc Stores
     @app.callback(
-        Output('igv-saved-genomic-intervals','data', allow_duplicate=True),
-        Output('igv-saved-tracks', 'data', allow_duplicate=True),
+        Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
         Output('epigenome-saved-tissue', 'data', allow_duplicate=True),
+        Output('igv-saved-tracks', 'data', allow_duplicate=True),
+
+
         Input('igv-genomic-intervals', 'value'),
         Input('epigenome-tissue', 'value'),
         Input('igv-tracks', 'value'),
+
         State('homepage-is-submitted', 'data'),
 
         prevent_initial_call=True
     )
-    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue,igv_tracks, homepage_is_submitted):
+    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue, igv_tracks, homepage_is_submitted):
         if homepage_is_submitted:
             return selected_nb_intervals_str, selected_tissue, igv_tracks
 
         raise PreventUpdate
 
-    #displays the saved inputs to the respective input objects
+    # displays the saved inputs to the respective input objects
     @app.callback(
         Output('epigenome-tissue', 'value'),
         Output('igv-tracks', 'value'),
@@ -222,8 +227,8 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def get_input_igv_session_state(epigenome_tissue,igv_tracks, homepage_is_submitted, igv_submit, *_):
+    def get_input_igv_session_state(epigenome_tissue, igv_tracks, homepage_is_submitted, *_):
         if homepage_is_submitted:
-            return epigenome_tissue,igv_tracks
+            return epigenome_tissue, igv_tracks
 
         raise PreventUpdate
