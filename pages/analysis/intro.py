@@ -29,5 +29,5 @@ layout = html.Div(
                          'In this page, you can genome-browse your input intervals.'])
             ], className='pb-0 mb-1')
         ], className='analysis-intro p-3'),
-    ], className='mt-2'
+    ], className='mt-2 mb-4'
 )

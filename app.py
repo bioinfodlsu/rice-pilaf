@@ -81,8 +81,10 @@ app.layout = lambda: dbc.Container([
             ), className='col-auto text-center'
         ),
         dbc.Col([
+            html.Span('© 2023'),
+            html.Span('|', className='px-3'),
             html.Span(
-                '© 2023 | Bioinformatics Laboratory, De La Salle University (DLSU), Manila, Philippines'),
+                'Bioinformatics Lab, De La Salle University (DLSU), Manila, Philippines'),
             html.Br(),
             html.Span(
                 'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')

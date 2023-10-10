@@ -209,6 +209,7 @@ def init_callback(app):
                     first_module = None
                     if enriched_modules:
                         first_module = enriched_modules[0]
+                        module = first_module
                     else:
                         return enriched_modules, first_module, {'display': 'none'}, stats
 
