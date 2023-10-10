@@ -30,18 +30,28 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('igv-tracks', 'options'),
+        Input('epigenome-tissue', 'value')
+    )
+    def set_track_options(selected_tissue):
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
+
+    @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-submitted-genomic-intervals', 'data', allow_duplicate=True),
+        Output('igv-submitted-genomic-intervals',
+               'data', allow_duplicate=True),
+        Output('epigenome-submitted-tissue', 'data', allow_duplicate=True),
         Output('igv-submitted-tracks', 'data', allow_duplicate=True),
         Input('igv-submit', 'n_clicks'),
         State('igv-genomic-intervals', 'value'),
+        State('epigenome-tissue', 'value'),
         State('igv-tracks', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tracks, homepage_is_submitted):
+    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval, selected_tracks
+            return True, selected_nb_interval, selected_tissue, selected_tracks
 
         raise PreventUpdate
 
@@ -79,7 +89,7 @@ def init_callback(app):
     @app.server.route('/genomes_nipponbare/<path:filename>')
     def send_genomes_nipponbare_url(filename):
         try:
-            # serves / retrieves the file using Flask 
+            # serves / retrieves the file using Flask
             return send_from_directory(Constants.GENOMES_NIPPONBARE, filename)
         except FileNotFoundError:
             abort(404)
@@ -106,10 +116,10 @@ def init_callback(app):
         except FileNotFoundError:
             abort(404)
 
-    @app.server.route('/open_chromatin_panicle/<path:filename>')
-    def send_open_chromatin_panicle_url(filename):
+    @app.server.route('/<tissue>/<path:filename>')
+    def send_track_url(tissue, filename):
         try:
-            return send_from_directory(Constants.OPEN_CHROMATIN_PANICLE, filename)
+            return send_from_directory(f'{Constants.EPIGENOME}/{tissue}', filename)
 
         except FileNotFoundError:
             abort(404)
@@ -125,8 +135,8 @@ def init_callback(app):
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
-            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';' 
-            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str) 
+            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
+            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
             igv_options = igv_options.split(';')
 
             # if no genomic intervals are selected, use the first option
@@ -140,41 +150,34 @@ def init_callback(app):
     @app.callback(
         Output('igv-display', 'children'),
         State('igv-submitted-genomic-intervals', 'data'),
+        State('epigenome-submitted-tissue', 'data'),
         State('igv-submitted-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
         Input('igv-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
+    def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
         if homepage_is_submitted and igv_is_submitted:
             # list of tracks info
-            track_info = [
-                {
-                    "name": "MSU V7 genes",
-                    "format": "gff3",
-                    "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",  # this one will call out the send_annotations_nb_url callback function
-                    "displayMode": "EXPANDED",
-                    "height": 200
-                },
-                {
-                    "name": "chromatin open",
-                    "format": "bed",
-                    "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
-                    "url": f"open_chromatin_panicle/SRR7126116_ATAC-Seq_Panicles.bed", # this one will call out the send_open_chromatin_panicle_url callback function
-                    "displayMode": "EXPANDED",
-                    "height": 200
-                }
-            ]
+            gene_annotation_track = {
+                "name": "MSU V7 genes",
+                "format": "gff3",
+                "description": " <a target = \"_blank\" href = \"http://rice.uga.edu/\">Rice Genome Annotation Project</a>",
+                # this will call out the send_annotations_nb_url callback function
+                "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
+                "displayMode": "EXPANDED",
+            }
 
-            # only display the tracks that were chosen by the user previously
-            display_tracks = [
-                track for track in track_info if selected_tracks and track['name'] in selected_tracks]
+            # only display the tracks that were chosen by user. gene annotation track is always shown
+            display_tracks = [gene_annotation_track] + \
+                generate_tracks(selected_tissue, selected_tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
-            selected_nb_intervals_str = lift_over_util.to_genomic_interval(selected_nb_intervals_str)
-            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
+            selected_nb_intervals_str = lift_over_util.to_genomic_interval(
+                selected_nb_intervals_str)
+            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(
+                selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
 
             return html.Div([
                 dashbio.Igv(
@@ -192,32 +195,40 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    # saves the input objects to the respective dcc Stores 
+    # saves the input objects to the respective dcc Stores
     @app.callback(
-        Output('igv-saved-genomic-intervals',
-               'data', allow_duplicate=True),
+        Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
+        Output('epigenome-saved-tissue', 'data', allow_duplicate=True),
         Output('igv-saved-tracks', 'data', allow_duplicate=True),
+
+
         Input('igv-genomic-intervals', 'value'),
+        Input('epigenome-tissue', 'value'),
         Input('igv-tracks', 'value'),
+
         State('homepage-is-submitted', 'data'),
 
         prevent_initial_call=True
     )
-    def set_input_igv_session_state(selected_nb_intervals_str, igv_tracks, homepage_is_submitted):
+    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue, igv_tracks, homepage_is_submitted):
         if homepage_is_submitted:
-            return selected_nb_intervals_str, igv_tracks
+            return selected_nb_intervals_str, selected_tissue, igv_tracks
 
         raise PreventUpdate
-    
+
     # displays the saved inputs to the respective input objects
     @app.callback(
+        Output('epigenome-tissue', 'value'),
         Output('igv-tracks', 'value'),
+        State('epigenome-saved-tissue', 'data'),
         State('igv-saved-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
         Input('igv-submit', 'n_clicks'),
+
+        prevent_initial_call=True
     )
-    def get_input_igv_session_state(igv_tracks, homepage_is_submitted, *_):
+    def get_input_igv_session_state(epigenome_tissue, igv_tracks, homepage_is_submitted, *_):
         if homepage_is_submitted:
-            return igv_tracks
-        
+            return epigenome_tissue, igv_tracks
+
         raise PreventUpdate
