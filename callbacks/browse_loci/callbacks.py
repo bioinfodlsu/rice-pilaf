@@ -128,24 +128,24 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
-        #Output('igv-genomic-intervals', 'value'),
+        Output('igv-genomic-intervals', 'value'),
         Input('homepage-submitted-genomic-intervals', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        #State('igv-saved-genomic-intervals', 'data'),
-        Input('igv-submit', 'n_clicks')
+        State('igv-submitted-genomic-intervals', 'data'),
+        Input('igv-is-submitted', 'data')
     )
-    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, *_): #selected_nb_interval, *_):
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
             # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
             igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
             igv_options = igv_options.split(';')
 
             # if no genomic intervals are selected, use the first option
-            #if not selected_nb_interval:
-            #    selected_nb_interval = igv_options[0]
+            if not selected_nb_interval:
+                selected_nb_interval = igv_options[0]
 
-            return igv_options#, selected_nb_interval
+            return igv_options, selected_nb_interval
 
         raise PreventUpdate
 
