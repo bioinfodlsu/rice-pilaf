@@ -31,10 +31,12 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-tracks', 'options'),
-        Input('epigenome-tissue', 'value')
+        Output('igv-tracks', 'value'),
+        Input('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tissue', 'data'),
     )
-    def set_track_options(selected_tissue):
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
+    def set_track_options(selected_tissue, submitted_selected_tissue):
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], []
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
@@ -126,24 +128,24 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-genomic-intervals', 'options'),
-        Output('igv-genomic-intervals', 'value'),
+        #Output('igv-genomic-intervals', 'value'),
         Input('homepage-submitted-genomic-intervals', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('igv-saved-genomic-intervals', 'data'),
+        #State('igv-saved-genomic-intervals', 'data'),
         Input('igv-submit', 'n_clicks')
     )
-    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, *_): #selected_nb_interval, *_):
         if homepage_is_submitted:
             # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
             igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
             igv_options = igv_options.split(';')
 
             # if no genomic intervals are selected, use the first option
-            if not selected_nb_interval:
-                selected_nb_interval = igv_options[0]
+            #if not selected_nb_interval:
+            #    selected_nb_interval = igv_options[0]
 
-            return igv_options, selected_nb_interval
+            return igv_options#, selected_nb_interval
 
         raise PreventUpdate
 
@@ -194,7 +196,7 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
-
+    """
     # saves the input objects to the respective dcc Stores
     @app.callback(
         Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
@@ -232,3 +234,4 @@ def init_callback(app):
             return epigenome_tissue, igv_tracks
 
         raise PreventUpdate
+    """

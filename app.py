@@ -185,11 +185,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-saved-parameter-slider',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='coexpression-submitted-module',
                 storage_type='session'
             ),
