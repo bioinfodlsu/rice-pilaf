@@ -103,11 +103,6 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
-            #dcc.Store(
-            #    id='homepage-saved-genomic-intervals',
-            #    storage_type='session'
-            #),
-
             dcc.Store(
                 id='homepage-submitted-genomic-intervals',
                 storage_type='session'
