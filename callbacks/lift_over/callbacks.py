@@ -158,18 +158,15 @@ def init_callback(app):
     @app.callback(
         Output('lift-over-other-refs', 'value'),
         State('lift-over-other-refs', 'multi'),
-        State('homepage-is-submitted', 'data'),
         State('lift-over-submitted-other-refs', 'data'),
         Input('lift-over-is-submitted', 'data')
     )
-    def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
-        if homepage_is_submitted:
-            if not is_multi_other_refs and other_refs:
-                other_refs = other_refs[0]
+    def get_input_lift_over_session_state(is_multi_other_refs, other_refs, *_):
+        if not is_multi_other_refs and other_refs:
+            other_refs = other_refs[0]
 
-            return other_refs
+        return other_refs
 
-        raise PreventUpdate
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
