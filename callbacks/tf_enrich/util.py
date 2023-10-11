@@ -16,6 +16,21 @@ import pybedtools
 COLUMNS = ['Transcription Factor', 'Family',
            'p-value', 'Adj. p-value']  # , 'Significant?']
 
+TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL = [
+    {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
+    {'value': 'CE', 'label': 'motif conservation',
+     'label_id': 'motif conservation'},
+    {'value': 'motif', 'label': 'motif scan',
+     'label_id': 'motif scan'}
+]
+
+TFBS_SET_VALUE_LABEL = [
+    {'value': 'promoters', 'label': 'promoters',
+     'label_id': 'promoters'},
+    {'value': 'genome', 'label': 'genome',
+     'label_id': 'genome'}
+]
+
 
 def create_empty_df():
     return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
