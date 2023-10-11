@@ -107,7 +107,7 @@ def init_callback(app):
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
         Input('coexpression-clustering-algo', 'value'),
-        State('coexpression-saved-parameter-slider', 'data')
+        State('coexpression-submitted-parameter-slider', 'data')
     )
     def set_parameter_slider(algo, parameter_slider):
         if parameter_slider and algo in parameter_slider:
@@ -333,7 +333,7 @@ def init_callback(app):
                 return module_graph + ({'visibility': 'visible', 'width': '100%'}, 'Click on a node to display information about the gene.', {'display': 'block'})
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('coexpression-saved-addl-genes',
                'data', allow_duplicate=True),
@@ -367,7 +367,7 @@ def init_callback(app):
             return addl_genes, network, algo, input_parameter_slider
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
         Output('coexpression-pathway-active-tab',
@@ -386,7 +386,7 @@ def init_callback(app):
             return layout, active_tab, module
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('coexpression-clustering-algo', 'value'),
         Output('coexpression-addl-genes', 'value'),
@@ -411,6 +411,28 @@ def init_callback(app):
             return algo, genes, network
 
         raise PreventUpdate
+    """
+
+    @app.callback(
+        Output('coexpression-clustering-algo', 'value'),
+        Output('coexpression-addl-genes', 'value'),
+        Output('coexpression-network', 'value'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        Input('coexpression-is-submitted', 'data')
+    )
+    def get_input_coexpression_session_state(algo, genes, network, *_):
+        if not algo:
+            algo = 'clusterone'
+
+        if not genes:
+            genes = ''
+
+        if not network:
+            network = 'OS-CX'
+
+        return algo, genes, network
 
     @app.callback(
         Output('coexpression-graph-layout', 'value'),
