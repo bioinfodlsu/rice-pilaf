@@ -166,6 +166,7 @@ def init_callback(app):
                 # this will call out the send_annotations_nb_url callback function
                 "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                 "displayMode": "EXPANDED",
+                "order":1
             }
 
             # only display the tracks that were chosen by user. gene annotation track is always shown
