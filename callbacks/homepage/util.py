@@ -16,21 +16,6 @@ def clear_cache_folder():
     if os.path.exists(Constants.TEMP):
         shutil.rmtree(Constants.TEMP, ignore_errors=True)
 
-    # Drop the table
-    try:
-        connection = sqlite3.connect(Constants.FILE_STATUS_DB)
-        cursor = connection.cursor()
-
-        query = f'DROP TABLE {Constants.FILE_STATUS_TABLE}'
-
-        cursor.execute(query)
-        connection.commit()
-
-        cursor.close()
-        connection.close()
-    except:
-        pass
-
     # Recreate the database
     make_dir(Constants.TEMP)
 

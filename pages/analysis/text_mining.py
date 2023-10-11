@@ -14,8 +14,8 @@ layout = html.Div(
         html.Div([
             html.P(
                 [
-                    'In this page, you can retrieve gene names associated with traits, diseases, chemicals, etc. '
-                    'from a database constructed from text-mined PubMed abstracts. Click ',
+                    Constants.INTRO_TEXT_MINING,
+                    ' Click ',
                     dcc.Link(
                         ['here ', html.I(
                             id='demo-link',
@@ -25,7 +25,7 @@ layout = html.Div(
                         target='_blank',
                         className='top-navbar-item'
                     ),
-                    ' for user guide.'
+                    ' for the user guide.'
                 ]
 
             ),

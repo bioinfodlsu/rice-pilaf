@@ -23,3 +23,10 @@ def show_if_in_demo_branch():
         return {'display': 'block'}
 
     return {'display': 'none'}
+
+
+def show_if_not_in_demo_branch():
+    if not is_in_demo_branch():
+        return {'display': 'block'}
+
+    return {'display': 'none'}

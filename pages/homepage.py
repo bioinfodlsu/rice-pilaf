@@ -5,6 +5,8 @@ from dash import html
 import pages.navigation.analysis_nav as analysis_nav
 import pages.analysis_layout as analysis_layout
 
+from callbacks.branch import *
+
 dash.register_page(__name__, path='/', name='RicePilaf', location='app-topbar')
 
 
@@ -90,7 +92,8 @@ submit_clear_buttons = dbc.Row([
                        color='danger',
                        outline=True,
                        n_clicks=0,
-                       className='home-button'),
+                       className='home-button',
+                       style=show_if_not_in_demo_branch()),
             xs=4, sm=4, md=2, lg=2, xl=2, xxl=2),
 ], className='pt-2')
 

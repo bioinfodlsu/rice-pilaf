@@ -85,6 +85,32 @@ def get_path_to_text_mining_temp(analysis_type, *args):
 
 def shorten_name(name):
     if name and len(name) > 0:
+        # Recreate the database
+
+        # We have to recreate the database here to address the problem in the deployed version
+        #    where the Clear Cache button is not exposed to the user.
+
+        # Since the Clear Cache button is not exposed to the user, clearing the cache
+        #    is done using some script in the server. However, due to permission complications
+        #    in Linux, this results in the database being read-only. As a workaround, the database
+        #    has to be created by the application itself (not by some other script in the server).
+        make_dir(Constants.TEMP)
+
+        try:
+            connection = sqlite3.connect(Constants.FILE_STATUS_DB)
+            cursor = connection.cursor()
+
+            query = f'CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+
+            cursor.execute(query)
+            connection.commit()
+
+            cursor.close()
+            connection.close()
+        except sqlite3.Error:
+            pass
+
+        # Insert the name into the database
         try:
             connection = sqlite3.connect(Constants.FILE_STATUS_DB)
             cursor = connection.cursor()
@@ -96,9 +122,10 @@ def shorten_name(name):
 
             cursor.close()
             connection.close()
-        except sqlite3.Error as error:
+        except sqlite3.Error:
             pass
 
+        # Retrieve the shortened name from the database
         try:
             connection = sqlite3.connect(Constants.FILE_STATUS_DB)
             cursor = connection.cursor()
@@ -109,7 +136,7 @@ def shorten_name(name):
 
             cursor.close()
             connection.close()
-        except sqlite3.Error as error:
+        except sqlite3.Error:
             pass
 
         return str(row_id)

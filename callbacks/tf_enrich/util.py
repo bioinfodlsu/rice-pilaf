@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import shutil
 import subprocess
-import statsmodels.stats.multitest as sm
+from scipy.stats import false_discovery_control
 import pickle
 from ..file_util import *
 from ..constants import Constants
@@ -93,10 +93,13 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
         results_df = pd.read_csv(
             f'{out_dir_without_timestamp}/BH_corrected.csv', dtype=object)
 
-        results_df['Family'] = results_df['Transcription Factor'].apply(
-            get_family)
+        try:
+            results_df['Family'] = results_df['Transcription Factor'].apply(
+                get_family)
 
-        results_df = results_df[COLUMNS]
+            results_df = results_df[COLUMNS]
+        except KeyError:
+            results_df = create_empty_df()
 
         return results_df
 
@@ -162,12 +165,16 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
         f'{out_dir}/results_before_multiple_corrections.csv', index=False)
 
     results_df = multiple_testing_correction(results_no_adj_df)
-    display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
-    results_df['Family'] = results_df['Transcription Factor'].apply(
-        get_family)
+    if results_df.empty:
+        results_df = create_empty_df()
+    else:
+        display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
 
-    results_df = results_df[COLUMNS]
+        results_df['Family'] = results_df['Transcription Factor'].apply(
+            get_family)
+
+        results_df = results_df[COLUMNS]
 
     results_df.to_csv(
         f'{out_dir}/BH_corrected.csv', index=False)
@@ -202,13 +209,8 @@ def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
 
 def multiple_testing_correction(single_tf_results):
     pvalues = single_tf_results['p-value'].tolist()
-    sig, adj_pvalue, _, _ = sm.multipletests(
-        pvalues,  method='fdr_bh', is_sorted=False, returnsorted=False)
-    sig = sig.tolist()
-    sig = list(map(str, sig))
-    adj_pvalue = adj_pvalue.tolist()
+    adj_pvalue = false_discovery_control(pvalues, method='bh')
     single_tf_results['Adj. p-value'] = adj_pvalue
-    # single_tf_results['Significant?'] = sig
     single_tf_results.sort_values(by=['p-value'], inplace=True)
     return single_tf_results
 
