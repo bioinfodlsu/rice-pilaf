@@ -134,11 +134,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='lift-over-saved-other-refs',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='lift-over-submitted-other-refs',
                 storage_type='session'
             ),

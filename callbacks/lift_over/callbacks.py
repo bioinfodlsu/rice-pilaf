@@ -139,19 +139,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('lift-over-saved-other-refs',
-               'data', allow_duplicate=True),
-        Input('lift-over-other-refs', 'value'),
-        State('homepage-is-submitted', 'data'),
-        prevent_initial_call=True
-    )
-    def set_input_lift_over_session_state(other_refs, homepage_is_submitted):
-        if homepage_is_submitted:
-            return other_refs
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('lift-over-active-tab', 'data', allow_duplicate=True),
         Output('lift-over-active-filter', 'data', allow_duplicate=True),
 
@@ -172,9 +159,8 @@ def init_callback(app):
         Output('lift-over-other-refs', 'value'),
         State('lift-over-other-refs', 'multi'),
         State('homepage-is-submitted', 'data'),
-        State('lift-over-saved-other-refs', 'data'),
-        Input('homepage-submitted-genomic-intervals', 'data'),
-        Input('lift-over-submit', 'n_clicks')
+        State('lift-over-submitted-other-refs', 'data'),
+        Input('lift-over-is-submitted', 'data')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, homepage_is_submitted, other_refs, *_):
         if homepage_is_submitted:
