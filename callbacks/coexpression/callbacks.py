@@ -333,41 +333,7 @@ def init_callback(app):
                 return module_graph + ({'visibility': 'visible', 'width': '100%'}, 'Click on a node to display information about the gene.', {'display': 'block'})
 
         raise PreventUpdate
-    """
-    @app.callback(
-        Output('coexpression-saved-addl-genes',
-               'data', allow_duplicate=True),
-        Output('coexpression-saved-network',
-               'data', allow_duplicate=True),
-        Output('coexpression-saved-clustering-algo',
-               'data', allow_duplicate=True),
-        Output('coexpression-saved-parameter-slider',
-               'data', allow_duplicate=True),
 
-        Input('coexpression-addl-genes', 'value'),
-        Input('coexpression-network', 'value'),
-        Input('coexpression-clustering-algo', 'value'),
-        Input('coexpression-parameter-slider', 'value'),
-        State('coexpression-parameter-slider', 'marks'),
-        State('homepage-is-submitted', 'data'),
-        State('coexpression-saved-parameter-slider', 'data'),
-        prevent_initial_call='True'
-    )
-    def set_input_coexpression_session_state(addl_genes, network, algo, parameter_value, parameter_mark, homepage_is_submitted, input_parameter_slider):
-        if homepage_is_submitted:
-            input_paramater_slider_value = Parameter_slider(
-                parameter_mark, parameter_value)._asdict()
-
-            if input_parameter_slider:
-                input_parameter_slider[algo] = input_paramater_slider_value
-
-            else:
-                input_parameter_slider = {algo: input_paramater_slider_value}
-
-            return addl_genes, network, algo, input_parameter_slider
-
-        raise PreventUpdate
-    """
     @app.callback(
         Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
         Output('coexpression-pathway-active-tab',
@@ -386,32 +352,6 @@ def init_callback(app):
             return layout, active_tab, module
 
         raise PreventUpdate
-    """
-    @app.callback(
-        Output('coexpression-clustering-algo', 'value'),
-        Output('coexpression-addl-genes', 'value'),
-        Output('coexpression-network', 'value'),
-        State('homepage-is-submitted', 'data'),
-        State('coexpression-saved-clustering-algo', 'data'),
-        State('coexpression-saved-addl-genes', 'data'),
-        State('coexpression-saved-network', 'data'),
-        Input('coexpression-submit', 'n_clicks')
-    )
-    def get_input_coexpression_session_state(homepage_is_submitted, algo, genes, network, *_):
-        if homepage_is_submitted:
-            if not algo:
-                algo = 'clusterone'
-
-            if not genes:
-                genes = ''
-
-            if not network:
-                network = 'OS-CX'
-
-            return algo, genes, network
-
-        raise PreventUpdate
-    """
 
     @app.callback(
         Output('coexpression-clustering-algo', 'value'),
