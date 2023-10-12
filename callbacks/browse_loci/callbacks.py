@@ -31,10 +31,12 @@ def init_callback(app):
 
     @app.callback(
         Output('igv-tracks', 'options'),
-        Input('epigenome-tissue', 'value')
+        Output('igv-tracks', 'value'),
+        Input('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tissue', 'data'),
     )
-    def set_track_options(selected_tissue):
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]]
+    def set_track_options(selected_tissue, submitted_selected_tissue):
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], []
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
@@ -130,8 +132,8 @@ def init_callback(app):
         Input('homepage-submitted-genomic-intervals', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('igv-saved-genomic-intervals', 'data'),
-        Input('igv-submit', 'n_clicks')
+        State('igv-submitted-genomic-intervals', 'data'),
+        Input('igv-is-submitted', 'data')
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
@@ -166,6 +168,7 @@ def init_callback(app):
                 # this will call out the send_annotations_nb_url callback function
                 "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                 "displayMode": "EXPANDED",
+                "order":1
             }
 
             # only display the tracks that were chosen by user. gene annotation track is always shown
@@ -194,7 +197,7 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
-
+    """
     # saves the input objects to the respective dcc Stores
     @app.callback(
         Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
@@ -232,3 +235,4 @@ def init_callback(app):
             return epigenome_tissue, igv_tracks
 
         raise PreventUpdate
+    """

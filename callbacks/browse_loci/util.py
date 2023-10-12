@@ -5,14 +5,10 @@ from ..constants import Constants
 
 RICE_ENCODE_SAMPLES = {
     'Leaf': ['ATAC-Seq', 'FAIRE-Seq'],
-    'Panicle': ['ATAC-Seq']
+    'Panicle': ['ATAC-Seq','FAIRE-Seq'],
+    'Root':['ATAC-Seq','FAIRE-Seq'],
+    'Seedling':['FAIRE-Seq','MNase-Seq']
 }
-
-
-# def construct_options_igv_tracks():
-#     return [
-#         {'value': symbol, 'label': name } for symbol, name in igv_tracks.items()]
-
 
 def write_igv_tracks_to_file(nb_intervals_str):
     # tracks found in igv

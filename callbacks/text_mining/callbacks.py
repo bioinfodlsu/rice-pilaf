@@ -24,7 +24,7 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('text-mining-saved-query', 'data', allow_duplicate=True),
+        Output('text-mining-query', 'value', allow_duplicate=True),
         Input({'type': 'example-text-mining',
                'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
@@ -36,18 +36,11 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('text-mining-saved-query', 'data', allow_duplicate=True),
-        Input('text-mining-query', 'value'),
-        prevent_initial_call=True
-    )
-    def set_input_fields(query_string):
-        return query_string
-
-    @app.callback(
         Output('text-mining-query', 'value'),
-        Input('text-mining-saved-query', 'data'),
+        State('text-mining-submitted-query', 'data'),
+        Input('text-mining-is-submitted', 'data')
     )
-    def get_input_homepage_session_state(query):
+    def get_input_homepage_session_state(query, *_):
         return query
 
     @app.callback(
