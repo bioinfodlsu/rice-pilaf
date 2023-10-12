@@ -22,7 +22,6 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     # =================
     # Input-related
     # =================
@@ -126,13 +125,23 @@ def init_callback(app):
         return ctx.triggered_id == 'tfbs-submit' and n_clicks > 0
 
     @app.callback(
+        Output('tfbs-prediction-technique-modal', 'is_open'),
+        Output('tfbs-set-modal', 'is_open'),
         Output('tfbs-converter-modal', 'is_open'),
 
-        Input('tfbs-converter-tooltip', 'n_clicks'),
+        Input('tfbs-prediction-technique-tooltip', 'n_clicks'),
+        Input('tfbs-set-tooltip', 'n_clicks'),
+        Input('tfbs-converter-tooltip', 'n_clicks')
     )
-    def open_modals(converter_tooltip_n_clicks):
+    def open_modals(prediction_technique_tooltip_n_clicks, set_tooltip_n_clicks, converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'tfbs-prediction-technique-tooltip' and prediction_technique_tooltip_n_clicks > 0:
+            return True, False, False
+
+        if ctx.triggered_id == 'tfbs-set-tooltip' and set_tooltip_n_clicks > 0:
+            return False, True, False
+
         if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
-            return True
+            return False, False, True
 
         raise PreventUpdate
 
@@ -159,7 +168,6 @@ def init_callback(app):
                     html.Br()]
 
         raise PreventUpdate
-
 
     # =================
     # Table-related
@@ -219,7 +227,6 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
 
         raise PreventUpdate
-
 
     # =================
     # Session-related
