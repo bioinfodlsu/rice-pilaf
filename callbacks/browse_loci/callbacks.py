@@ -74,7 +74,6 @@ def init_callback(app):
             submitted_tissue_tracks = {
                 selected_tissue: tissue_tracks_value}
 
-            print(submitted_tissue_tracks)
             return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
 
         raise PreventUpdate
@@ -223,42 +222,3 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
-    """
-    # saves the input objects to the respective dcc Stores
-    @app.callback(
-        Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
-        Output('epigenome-saved-tissue', 'data', allow_duplicate=True),
-        Output('igv-saved-tracks', 'data', allow_duplicate=True),
-
-
-        Input('igv-genomic-intervals', 'value'),
-        Input('epigenome-tissue', 'value'),
-        Input('igv-tracks', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-
-        prevent_initial_call=True
-    )
-    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue, igv_tracks, homepage_is_submitted):
-        if homepage_is_submitted:
-            return selected_nb_intervals_str, selected_tissue, igv_tracks
-
-        raise PreventUpdate
-
-    # displays the saved inputs to the respective input objects
-    @app.callback(
-        Output('epigenome-tissue', 'value'),
-        Output('igv-tracks', 'value'),
-        State('epigenome-saved-tissue', 'data'),
-        State('igv-saved-tracks', 'data'),
-        State('homepage-is-submitted', 'data'),
-        Input('igv-submit', 'n_clicks'),
-
-        prevent_initial_call=True
-    )
-    def get_input_igv_session_state(epigenome_tissue, igv_tracks, homepage_is_submitted, *_):
-        if homepage_is_submitted:
-            return epigenome_tissue, igv_tracks
-
-        raise PreventUpdate
-    """

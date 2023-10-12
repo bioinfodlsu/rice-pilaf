@@ -141,30 +141,15 @@ app.layout = lambda: dbc.Container([
             # ============
             # IGV Browser
             # ============
-            # dcc.Store(
-            #    id='igv-saved-genomic-intervals',
-            #    storage_type='session'
-            # ),
-
             dcc.Store(
                 id='igv-submitted-genomic-intervals',
                 storage_type='session'
             ),
 
-            # dcc.Store(
-            #    id='epigenome-saved-tissue',
-            #    storage_type='session'
-            # ),
-
             dcc.Store(
                 id='epigenome-submitted-tissue',
                 storage_type='session'
             ),
-
-            # dcc.Store(
-            #    id='igv-saved-tracks',
-            #    storage_type='session'
-            # ),
 
             dcc.Store(
                 id='igv-submitted-tracks',
