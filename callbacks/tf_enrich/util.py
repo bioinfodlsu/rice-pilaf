@@ -18,16 +18,16 @@ COLUMNS = ['Transcription Factor', 'Family',
 
 TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL = [
     {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-    {'value': 'CE', 'label': 'motif conservation',
-     'label_id': 'motif conservation'},
-    {'value': 'motif', 'label': 'motif scan',
-     'label_id': 'motif scan'}
+    {'value': 'CE', 'label': 'Motif Conservation',
+     'label_id': 'motif-conservation'},
+    {'value': 'motif', 'label': 'Motif Scan',
+     'label_id': 'motif-scan'}
 ]
 
 TFBS_SET_VALUE_LABEL = [
-    {'value': 'promoters', 'label': 'promoters',
+    {'value': 'promoters', 'label': 'Promoters',
      'label_id': 'promoters'},
-    {'value': 'genome', 'label': 'genome',
+    {'value': 'genome', 'label': 'Genome',
      'label_id': 'genome'}
 ]
 
