@@ -10,7 +10,9 @@ from ..style_util import *
 
 
 def init_callback(app):
-
+    # =================
+    # Layout-related
+    # =================
     @app.callback(
         Output({'type': 'analysis-nav', 'label': ALL}, 'className'),
         Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
@@ -46,12 +48,17 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    # =================
+    # Input-related
+    # =================
+
     @app.callback(
         Output('session-container', 'children'),
         Output('input-error', 'children'),
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
         Output('homepage-submitted-genomic-intervals', 'data'),
+        Output('homepage-is-resetted', 'data'),
 
         State('homepage-genomic-intervals', 'value'),
 
@@ -73,7 +80,7 @@ def init_callback(app):
             dccStore_children = get_cleared_dccStore_data_excluding_some_data(
                 dccStore_children)
 
-            return dccStore_children, None, {'display': 'none'}, False, ''
+            return dccStore_children, None, {'display': 'none'}, False, '', True
 
         if n_submit >= 1 or ('homepage-submit' == ctx.triggered_id and n_clicks >= 1):
             if nb_intervals_str:
@@ -82,7 +89,7 @@ def init_callback(app):
 
                 if lift_over_util.is_error(intervals):
                     return dccStore_children, [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, False, nb_intervals_str
+                        {'display': 'block'}, False, nb_intervals_str, True
                 else:
                     # clear data for items in dcc.Store found in session-container
                     dccStore_children = get_cleared_dccStore_data_excluding_some_data(
@@ -90,10 +97,10 @@ def init_callback(app):
 
                     browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
-                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str
+                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str, True
             else:
                 return dccStore_children, [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, False, nb_intervals_str
+                    {'display': 'block'}, False, nb_intervals_str, True
 
         raise PreventUpdate
 
@@ -124,6 +131,20 @@ def init_callback(app):
             return {'display': 'none'}, {'display': 'block'}
 
     @app.callback(
+        Output('genomic-interval-modal', 'is_open'),
+        Input('genomic-interval-tooltip', 'n_clicks')
+    )
+    def open_modals(tooltip_n_clicks):
+        if tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
+        
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
         Output('current-analysis-page-nav', 'data'),
         Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
@@ -147,12 +168,4 @@ def init_callback(app):
         
         raise PreventUpdate
         
-    @app.callback(
-        Output('genomic-interval-modal', 'is_open'),
-        Input('genomic-interval-tooltip', 'n_clicks')
-    )
-    def open_modals(tooltip_n_clicks):
-        if tooltip_n_clicks > 0:
-            return True
-
-        raise PreventUpdate
+    

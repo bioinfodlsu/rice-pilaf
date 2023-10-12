@@ -25,16 +25,14 @@ layout = html.Div(
         html.Br(),
 
         html.Div([
-            dbc.Label('Select an interval: ',
-                      className='mb-2'),
+            dbc.Label('Select an interval', className='mb-2'),
 
             dcc.Dropdown(
                 id='igv-genomic-intervals',
             ),
 
             html.Br(),
-            dbc.Label('Select a tissue: ',
-                      className='mb-2'),
+            dbc.Label('Select a tissue'),
 
             dbc.RadioItems(
                 id='epigenome-tissue',
@@ -45,11 +43,11 @@ layout = html.Div(
             ),
 
             html.Br(),
-
-            dbc.Label(['Select tracks to be displayed:']),
+            dbc.Label('Select tracks to be displayed '),
 
             dbc.Checklist(id='igv-tracks', inline=True,
-                          className='ms-3', value=[]),
+                          className='ms-3 mt-1', value=[]),
+
             html.Br(),
 
             dbc.Button('Submit',

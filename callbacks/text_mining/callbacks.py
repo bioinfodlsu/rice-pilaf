@@ -22,7 +22,10 @@ def init_callback(app):
                 return None
 
         raise PreventUpdate
-
+    
+    # =================
+    # Input-related
+    # =================
     @app.callback(
         Output('text-mining-query', 'value', allow_duplicate=True),
         Input({'type': 'example-text-mining',
@@ -34,18 +37,10 @@ def init_callback(app):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
-
+        
     @app.callback(
-        Output('text-mining-query', 'value'),
-        State('text-mining-submitted-query', 'data'),
-        Input('text-mining-is-submitted', 'data')
-    )
-    def get_input_homepage_session_state(query, *_):
-        return query
-
-    @app.callback(
-        Output('text-mining-input-error', 'style'),
-        Output('text-mining-input-error', 'children'),
+        Output('text-mining-input-error', 'style', allow_duplicate=True),
+        Output('text-mining-input-error', 'children', allow_duplicate=True),
 
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
         Output('text-mining-submitted-query',
@@ -63,7 +58,7 @@ def init_callback(app):
             if not is_there_error:
                 return {'display': 'none'}, message, True, text_mining_query
             else:
-                return {'display': 'block'}, message, False, no_update
+                return {'display': 'block'}, message, False, text_mining_query
 
         raise PreventUpdate
 
@@ -77,6 +72,17 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+
+    @app.callback(
+        Output('text-mining-input-error', 'style'),
+        Output('text-mining-input-error', 'children'),
+        Input('homepage-is-resetted', 'data')
+    )
+    def clear_coexpression_error_messages(homepage_is_resetted):
+        if homepage_is_resetted:
+            return {'display': 'none'}, None
+
+        raise PreventUpdate
 
     @app.callback(
         Output('text-mining-submit', 'disabled'),
@@ -93,6 +99,10 @@ def init_callback(app):
 
         return ctx.triggered_id == 'text-mining-submit' and n_clicks > 0
 
+
+    # =================
+    # Table-related
+    # =================
     @app.callback(
         Output('text-mining-results-table', 'data'),
         Output('text-mining-results-table', 'columns'),
@@ -151,3 +161,15 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{submitted_query}] Text Mining Analysis Table.csv', index=False)
 
         raise PreventUpdate
+    
+    # =================
+    # Session-related
+    # =================
+    @app.callback(
+        Output('text-mining-query', 'value'),
+        State('text-mining-submitted-query', 'data'),
+
+        Input('text-mining-is-submitted', 'data'),
+    )
+    def get_input_homepage_session_state(query,  *_):
+        return query

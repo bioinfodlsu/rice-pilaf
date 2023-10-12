@@ -23,6 +23,10 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    # =================
+    # Input-related
+    # =================
+
     @app.callback(
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-submitted-other-refs',
@@ -63,109 +67,10 @@ def init_callback(app):
     def disable_lift_over_button_upon_run(n_clicks,  *_):
         return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
 
-    @app.callback(
-        Output('lift-over-results-intro', 'children'),
-        Output('lift-over-results-tabs', 'children'),
 
-        Output('lift-over-overlap-table-filter', 'options'),
-        Output('lift-over-overlap-table-filter', 'value'),
-
-        State('homepage-submitted-genomic-intervals', 'data'),
-        Input('lift-over-submitted-other-refs', 'data'),
-
-        State('homepage-is-submitted', 'data'),
-
-        State('lift-over-active-filter', 'data'),
-        State('lift-over-is-submitted', 'data')
-    )
-    def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter, lift_over_is_submitted):
-        if homepage_is_submitted and lift_over_is_submitted:
-            if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
-                tabs = get_tabs()
-
-                other_refs = sanitize_other_refs(other_refs)
-
-                if other_refs:
-                    tabs = tabs + other_refs
-
-                tabs_children = [dcc.Tab(label=tab, value=tab) if idx < len(get_tabs())
-                                 else dcc.Tab(label=f'Unique to {tab}', value=tab)
-                                 for idx, tab in enumerate(tabs)]
-
-                if not active_filter:
-                    active_filter = tabs[len(get_tabs()) - 1:]
-
-                gene_list_msg = [html.Span(
-                    'The tabs below show the implicated genes in '), html.B('Nipponbare')]
-
-                if other_refs:
-                    other_refs_str = other_refs[0]
-                    if len(other_refs) == 2:
-                        other_refs_str += f' and {other_refs[1]}'
-                    elif len(other_refs) > 2:
-                        for idx, other_ref in enumerate(other_refs[1:]):
-                            if idx != len(other_refs) - 2:
-                                other_refs_str += f', '
-                            else:
-                                other_refs_str += f', and '
-
-                            other_refs_str += f'{other_ref} ({other_ref_genomes[other_ref]})'
-
-                    gene_list_msg += [html.Span(' and in orthologous regions of '),
-                                      html.B(other_refs_str)]
-
-                gene_list_msg += [html.Span(':')]
-
-                return gene_list_msg, tabs_children, tabs[len(get_tabs()) - 1:], active_filter
-            else:
-                return None, None, [], None
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('lift-over-results-tabs', 'active_tab'),
-        State('homepage-is-submitted', 'data'),
-        State('lift-over-active-tab', 'data'),
-        State('lift-over-is-submitted', 'data'),
-        Input('lift-over-submitted-other-refs', 'data')
-    )
-    def display_active_tab(homepage_is_submitted, saved_active_tab, lift_over_is_submitted, *_):
-        if homepage_is_submitted and lift_over_is_submitted:
-            if not saved_active_tab:
-                return 'tab-0'
-
-            return saved_active_tab
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('lift-over-active-tab', 'data', allow_duplicate=True),
-        Output('lift-over-active-filter', 'data', allow_duplicate=True),
-
-        Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-overlap-table-filter', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-        State('lift-over-is-submitted', 'data'),
-        prevent_initial_call=True,
-    )
-    def get_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
-        if homepage_is_submitted and lift_over_is_submitted:
-            return active_tab, filter_rice_variants
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('lift-over-other-refs', 'value'),
-        State('lift-over-other-refs', 'multi'),
-        State('lift-over-submitted-other-refs', 'data'),
-        Input('lift-over-is-submitted', 'data')
-    )
-    def get_input_lift_over_session_state(is_multi_other_refs, other_refs, *_):
-        if not is_multi_other_refs and other_refs:
-            other_refs = other_refs[0]
-
-        return other_refs
+    # =================
+    # Table-related
+    # =================
 
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
@@ -278,6 +183,81 @@ def init_callback(app):
 
             # Setting the class name of lift-over-results-tabs to None is for removing the top margin during loading
             return gene_statistics_items, None
+
+        raise PreventUpdate
+    
+    @app.callback(
+        Output('lift-over-results-intro', 'children'),
+        Output('lift-over-results-tabs', 'children'),
+
+        Output('lift-over-overlap-table-filter', 'options'),
+        Output('lift-over-overlap-table-filter', 'value'),
+
+        State('homepage-submitted-genomic-intervals', 'data'),
+        Input('lift-over-submitted-other-refs', 'data'),
+
+        State('homepage-is-submitted', 'data'),
+
+        State('lift-over-active-filter', 'data'),
+        State('lift-over-is-submitted', 'data')
+    )
+    def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter, lift_over_is_submitted):
+        if homepage_is_submitted and lift_over_is_submitted:
+            if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
+                tabs = get_tabs()
+
+                other_refs = sanitize_other_refs(other_refs)
+
+                if other_refs:
+                    tabs = tabs + other_refs
+
+                tabs_children = [dcc.Tab(label=tab, value=tab) if idx < len(get_tabs())
+                                 else dcc.Tab(label=f'Unique to {tab}', value=tab)
+                                 for idx, tab in enumerate(tabs)]
+
+                if not active_filter:
+                    active_filter = tabs[len(get_tabs()) - 1:]
+
+                gene_list_msg = [html.Span(
+                    'The tabs below show the implicated genes in '), html.B('Nipponbare')]
+
+                if other_refs:
+                    other_refs_str = other_refs[0]
+                    if len(other_refs) == 2:
+                        other_refs_str += f' and {other_refs[1]}'
+                    elif len(other_refs) > 2:
+                        for idx, other_ref in enumerate(other_refs[1:]):
+                            if idx != len(other_refs) - 2:
+                                other_refs_str += f', '
+                            else:
+                                other_refs_str += f', and '
+
+                            other_refs_str += f'{other_ref} ({other_ref_genomes[other_ref]})'
+
+                    gene_list_msg += [html.Span(' and in orthologous regions of '),
+                                      html.B(other_refs_str)]
+
+                gene_list_msg += [html.Span(':')]
+
+                return gene_list_msg, tabs_children, tabs[len(get_tabs()) - 1:], active_filter
+            else:
+                return None, None, [], None
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('lift-over-results-tabs', 'active_tab'),
+        State('homepage-is-submitted', 'data'),
+        State('lift-over-active-tab', 'data'),
+        State('lift-over-is-submitted', 'data'),
+        Input('lift-over-submitted-other-refs', 'data')
+    )
+    def display_active_tab(homepage_is_submitted, saved_active_tab, lift_over_is_submitted, *_):
+        if homepage_is_submitted and lift_over_is_submitted:
+            if not saved_active_tab:
+                return 'tab-0'
+
+            return saved_active_tab
 
         raise PreventUpdate
 
@@ -421,3 +401,37 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
 
         raise PreventUpdate
+
+
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
+        Output('lift-over-active-tab', 'data', allow_duplicate=True),
+        Output('lift-over-active-filter', 'data', allow_duplicate=True),
+
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+
+        State('homepage-is-submitted', 'data'),
+        State('lift-over-is-submitted', 'data'),
+        prevent_initial_call=True,
+    )
+    def get_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
+        if homepage_is_submitted and lift_over_is_submitted:
+            return active_tab, filter_rice_variants
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('lift-over-other-refs', 'value'),
+        State('lift-over-other-refs', 'multi'),
+        State('lift-over-submitted-other-refs', 'data'),
+        Input('lift-over-is-submitted', 'data')
+    )
+    def get_input_lift_over_session_state(is_multi_other_refs, other_refs, *_):
+        if not is_multi_other_refs and other_refs:
+            other_refs = other_refs[0]
+
+        return other_refs

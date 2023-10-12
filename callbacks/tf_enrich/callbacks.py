@@ -22,6 +22,10 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    # =================
+    # Input-related
+    # =================
+
     @app.callback(
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-addl-genes',
@@ -121,34 +125,23 @@ def init_callback(app):
         return ctx.triggered_id == 'tfbs-submit' and n_clicks > 0
 
     @app.callback(
-        Output('tfbs-results-table', 'data'),
-        Output('tfbs-results-table', 'columns'),
+        Output('tfbs-prediction-technique-modal', 'is_open'),
+        Output('tfbs-set-modal', 'is_open'),
+        Output('tfbs-converter-modal', 'is_open'),
 
-        State('homepage-submitted-genomic-intervals', 'data'),
-
-        Input('tfbs-combined-genes', 'data'),
-        Input('tfbs-submitted-addl-genes', 'data'),
-
-        State('homepage-is-submitted', 'data'),
-        State('tfbs-submitted-set', 'data'),
-        State('tfbs-submitted-prediction-technique', 'data'),
-        State('tfbs-is-submitted', 'data')
+        Input('tfbs-prediction-technique-tooltip', 'n_clicks'),
+        Input('tfbs-set-tooltip', 'n_clicks'),
+        Input('tfbs-converter-tooltip', 'n_clicks')
     )
-    def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
-                                   homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
-        if homepage_submitted and tfbs_is_submitted:
-            enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
-                                                              tfbs_set, tfbs_prediction_technique, genomic_intervals)
+    def open_modals(prediction_technique_tooltip_n_clicks, set_tooltip_n_clicks, converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'tfbs-prediction-technique-tooltip' and prediction_technique_tooltip_n_clicks > 0:
+            return True, False, False
 
-            mask = (
-                enrichment_results_df['Transcription Factor'] != NULL_PLACEHOLDER)
-            enrichment_results_df.loc[mask, 'Transcription Factor'] = get_msu_browser_link(
-                enrichment_results_df, 'Transcription Factor')
+        if ctx.triggered_id == 'tfbs-set-tooltip' and set_tooltip_n_clicks > 0:
+            return False, True, False
 
-            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
-                       for x in enrichment_results_df.columns]
-
-            return enrichment_results_df.to_dict('records'), columns
+        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return False, False, True
 
         raise PreventUpdate
 
@@ -176,33 +169,51 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    @app.callback(
-        Output('tfbs-addl-genes', 'value'),
-        Output('tfbs-prediction-technique', 'value'),
-        Output('tfbs-set', 'value'),
+    # =================
+    # Table-related
+    # =================
 
-        State('tfbs-submitted-addl-genes', 'data'),
-        State('tfbs-submitted-prediction-technique', 'data'),
+    @app.callback(
+        Output('tfbs-results-table', 'data'),
+        Output('tfbs-results-table', 'columns'),
+        Output('tfbs-table-stats', 'children'),
+
+        State('homepage-submitted-genomic-intervals', 'data'),
+
+        Input('tfbs-combined-genes', 'data'),
+        Input('tfbs-submitted-addl-genes', 'data'),
+
+        State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-set', 'data'),
-        Input('tfbs-is-submitted', 'data')
+        State('tfbs-submitted-prediction-technique', 'data'),
+        State('tfbs-is-submitted', 'data')
     )
-    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
-        if not tfbs_prediction_technique:
-            tfbs_prediction_technique = 'FunTFBS'
+    def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
+                                   homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
+        if homepage_submitted and tfbs_is_submitted:
+            enrichment_results_df, num_tf = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
+                                                                      tfbs_set, tfbs_prediction_technique, genomic_intervals)
 
-        if not tfbs_set:
-            tfbs_set = 'promoters'
+            mask = (
+                enrichment_results_df['Transcription Factor'] != NULL_PLACEHOLDER)
+            enrichment_results_df.loc[mask, 'Transcription Factor'] = get_msu_browser_link(
+                enrichment_results_df, 'Transcription Factor')
 
-        return addl_genes, tfbs_prediction_technique, tfbs_set
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                       for x in enrichment_results_df.columns]
 
-    @app.callback(
-        Output('tfbs-converter-modal', 'is_open'),
+            num_nonzero_overlap = get_num_unique_entries(
+                enrichment_results_df, 'Transcription Factor')
 
-        Input('tfbs-converter-tooltip', 'n_clicks'),
-    )
-    def open_modals(converter_tooltip_n_clicks):
-        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
-            return True
+            stats = f'{num_nonzero_overlap} out of {num_tf} transcription '
+            if num_nonzero_overlap == 1:
+                stats += ' factor has '
+            else:
+                stats += ' factors have '
+
+            stats += 'predicted binding sites that overlap with your GWAS/QTL intervals.'
+
+            return enrichment_results_df.to_dict('records'), columns, stats
 
         raise PreventUpdate
 
@@ -228,3 +239,26 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
 
         raise PreventUpdate
+
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
+        Output('tfbs-addl-genes', 'value'),
+        Output('tfbs-prediction-technique', 'value'),
+        Output('tfbs-set', 'value'),
+
+        State('tfbs-submitted-addl-genes', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        Input('tfbs-is-submitted', 'data')
+    )
+    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
+        if not tfbs_prediction_technique:
+            tfbs_prediction_technique = 'FunTFBS'
+
+        if not tfbs_set:
+            tfbs_set = 'promoters'
+
+        return addl_genes, tfbs_prediction_technique, tfbs_set

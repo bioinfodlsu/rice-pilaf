@@ -18,16 +18,16 @@ COLUMNS = ['Transcription Factor', 'Family',
 
 TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL = [
     {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-    {'value': 'CE', 'label': 'motif conservation',
-     'label_id': 'motif conservation'},
-    {'value': 'motif', 'label': 'motif scan',
-     'label_id': 'motif scan'}
+    {'value': 'CE', 'label': 'Motif Conservation',
+     'label_id': 'motif-conservation'},
+    {'value': 'motif', 'label': 'Motif Scan',
+     'label_id': 'motif-scan'}
 ]
 
 TFBS_SET_VALUE_LABEL = [
-    {'value': 'promoters', 'label': 'promoters',
+    {'value': 'promoters', 'label': 'Promoters',
      'label_id': 'promoters'},
-    {'value': 'genome', 'label': 'genome',
+    {'value': 'genome', 'label': 'Genome',
      'label_id': 'genome'}
 ]
 
@@ -125,25 +125,12 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
         except KeyError:
             results_df = create_empty_df()
 
-        return results_df
+        # Count number of transcription factors
+        # Subtract 2 to exclude the two generated CSV files
+        num_tf = len(os.listdir(out_dir_without_timestamp)) - 2
 
-    '''
-    # single-TF p-values already computed, but not BH_corrected, possibly FDR value changed
-    elif path_exists(f'{out_dir}/results_before_multiple_corrections.csv'):
-        results_before_multiple_corrections = pd.read_csv(
-            f'{out_dir}/results_before_multiple_corrections.csv')
-        results_df = multiple_testing_correction(results_before_multiple_corrections,
-                                                 float(tfbs_fdr))
-        results_df.to_csv(
-            f'{out_dir}/BH_corrected_fdr_{tfbs_fdr}.csv', index=False)
+        return results_df, num_tf
 
-        results_df['Family'] = results_df['Transcription Factor'].apply(
-            get_family)
-
-        results_df = results_df[COLUMNS]
-
-        return results_df
-    '''
     out_dir = append_timestamp_to_filename(out_dir_without_timestamp)
     make_dir(out_dir)
 
@@ -215,7 +202,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     except:
         pass
 
-    return results_df
+    # Count number of transcription factors
+    # Subtract 2 to exclude the two generated CSV files
+    num_tf = len(os.listdir(out_dir_without_timestamp)) - 2
+
+    return results_df, num_tf
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
