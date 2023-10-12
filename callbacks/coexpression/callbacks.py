@@ -213,42 +213,41 @@ def init_callback(app):
     )
     def perform_module_enrichment(genomic_intervals, combined_gene_ids, submitted_addl_genes,
                                   submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider, module, coexpression_is_submitted):
-        if homepage_is_submitted:
-            if coexpression_is_submitted:
-                if submitted_algo and submitted_algo in submitted_parameter_slider:
-                    parameters = submitted_parameter_slider[submitted_algo]['value']
+        if homepage_is_submitted and coexpression_is_submitted:
+            if submitted_algo and submitted_algo in submitted_parameter_slider:
+                parameters = submitted_parameter_slider[submitted_algo]['value']
 
-                    enriched_modules = do_module_enrichment_analysis(
-                        combined_gene_ids, genomic_intervals, submitted_addl_genes, submitted_network, submitted_algo, parameters)
+                enriched_modules = do_module_enrichment_analysis(
+                    combined_gene_ids, genomic_intervals, submitted_addl_genes, submitted_network, submitted_algo, parameters)
 
-                    # Display statistics
-                    num_enriched_modules = len(enriched_modules)
-                    total_num_modules = count_modules(
-                        submitted_network, submitted_algo, parameters)
-                    stats = f'{num_enriched_modules} out of {total_num_modules} '
-                    if total_num_modules == 1:
-                        stats += 'module '
-                    else:
-                        stats += 'modules '
+                # Display statistics
+                num_enriched_modules = len(enriched_modules)
+                total_num_modules = count_modules(
+                    submitted_network, submitted_algo, parameters)
+                stats = f'{num_enriched_modules} out of {total_num_modules} '
+                if total_num_modules == 1:
+                    stats += 'module '
+                else:
+                    stats += 'modules '
 
-                    if num_enriched_modules == 1:
-                        stats += 'was '
-                    else:
-                        stats += 'were '
+                if num_enriched_modules == 1:
+                    stats += 'was '
+                else:
+                    stats += 'were '
 
-                    stats += 'found to be enriched (adjusted p-value < 0.05).'
+                stats += 'found to be enriched (adjusted p-value < 0.05).'
 
-                    first_module = None
-                    if enriched_modules:
-                        first_module = enriched_modules[0]
-                        module = first_module
-                    else:
-                        return enriched_modules, first_module, {'display': 'none'}, stats
+                first_module = None
+                if enriched_modules:
+                    first_module = enriched_modules[0]
+                    module = first_module
+                else:
+                    return enriched_modules, first_module, {'display': 'none'}, stats
 
-                    if module:
-                        first_module = module
+                if module:
+                    first_module = module
 
-                    return enriched_modules, first_module, {'display': 'block'}, stats
+                return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
 
