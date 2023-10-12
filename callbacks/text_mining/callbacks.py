@@ -130,20 +130,14 @@ def init_callback(app):
 
     @app.callback(
         Output('text-mining-results-table', 'filter_query'),
-        Input('text-mining-reset-table', 'n_clicks')
-    )
-    def reset_table_filters(*_):
-        return ''
-
-    @app.callback(
         Output('text-mining-results-table', 'page_current'),
 
         Input('text-mining-reset-table', 'n_clicks'),
         Input('text-mining-submit', 'n_clicks'),
         Input('text-mining-query', 'n_submit')
     )
-    def reset_table_page(*_):
-        return 0
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('text-mining-download-df-to-csv', 'data'),

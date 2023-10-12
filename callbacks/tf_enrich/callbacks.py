@@ -197,10 +197,13 @@ def init_callback(app):
 
     @app.callback(
         Output('tf-enrichment-results-table', 'filter_query'),
-        Input('tfbs-reset-table', 'n_clicks')
+        Output('tf-enrichment-results-table', 'page_current'),
+
+        Input('tfbs-reset-table', 'n_clicks'),
+        Input('tfbs-submit', 'n_clicks')
     )
-    def reset_table_filters(*_):
-        return ''
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),

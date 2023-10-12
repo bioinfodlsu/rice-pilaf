@@ -452,26 +452,16 @@ def init_callback(app):
 
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),
-        Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-reset-table', 'n_clicks'),
-
-        Input('coexpression-combined-genes', 'data'),
-        Input('coexpression-submitted-network', 'data'),
-        Input('coexpression-submitted-clustering-algo', 'data'),
-        Input('coexpression-modules', 'value'),
-    )
-    def reset_table_filters(*_):
-        return ''
-
-    @app.callback(
         Output('coexpression-pathways', 'page_current'),
 
         Input('coexpression-reset-table', 'n_clicks'),
+        Input('coexpression-submit', 'n_clicks'),
+
         Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-submit', 'n_clicks')
+        Input('coexpression-modules', 'value')
     )
-    def reset_table_page(*_):
-        return 0
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('coexpression-download-df-to-csv', 'data'),
@@ -493,7 +483,7 @@ def init_callback(app):
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
-        State('coexpression-modules', 'value'),
+        State('coexpression-modules', 'value')
     )
     def download_coexpression_graph_to_tsv(download_n_clicks, genomic_intervals, submitted_network, submitted_algo, submitted_parameter_slider, module):
         if download_n_clicks >= 1:

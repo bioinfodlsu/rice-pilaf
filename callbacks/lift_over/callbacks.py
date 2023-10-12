@@ -398,24 +398,16 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-table', 'filter_query'),
-
-        Input('lift-over-reset-table', 'n_clicks'),
-        Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-overlap-table-filter', 'value')
-    )
-    def reset_table_filters(*_):
-        return ''
-
-    @app.callback(
         Output('lift-over-results-table', 'page_current'),
 
         Input('lift-over-reset-table', 'n_clicks'),
+        Input('lift-over-submit', 'n_clicks'),
+
         Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-overlap-table-filter', 'value'),
-        Input('lift-over-submit', 'n_clicks')
+        Input('lift-over-overlap-table-filter', 'value')
     )
-    def reset_table_page(*_):
-        return 0
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('lift-over-download-df-to-csv', 'data'),
