@@ -3,6 +3,7 @@ from dash.exceptions import PreventUpdate
 
 from .util import *
 from ..lift_over import util as lift_over_util
+from ..coexpression import util as coexpression_util
 
 
 def init_callback(app):
@@ -25,21 +26,77 @@ def init_callback(app):
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-addl-genes',
                'data', allow_duplicate=True),
+        Output('tfbs-valid-addl-genes',
+               'data', allow_duplicate=True),
+        Output('tfbs-combined-genes',
+               'data', allow_duplicate=True),
+
         Output('tfbs-submitted-set', 'data', allow_duplicate=True),
         Output('tfbs-submitted-prediction-technique',
                'data', allow_duplicate=True),
 
+        Output('tfbs-addl-genes-error', 'style'),
+        Output('tfbs-addl-genes-error', 'children'),
+
         Input('tfbs-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
+        State('homepage-submitted-genomic-intervals', 'data'),
         State('tfbs-addl-genes', 'value'),
+
         State('tfbs-set', 'value'),
         State('tfbs-prediction-technique', 'value'),
         prevent_initial_call=True
     )
-    def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
+    def submit_tfbs_input(tfbs_submitted_n_clicks, homepage_is_submitted,
+                          genomic_intervals, submitted_addl_genes,
+                          submitted_tfbs_set, submitted_tfbs_prediction_technique):
         if homepage_is_submitted and tfbs_submitted_n_clicks >= 1:
-            return True, addl_genes, tfbs_set, tfbs_prediction_technique
+            if submitted_addl_genes:
+                submitted_addl_genes = submitted_addl_genes.strip()
+            else:
+                submitted_addl_genes = ''
+
+            list_addl_genes = list(
+                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+
+            # Check which genes are valid MSU IDs
+            list_addl_genes, invalid_genes = coexpression_util.check_if_valid_msu_ids(
+                list_addl_genes)
+
+            if not invalid_genes:
+                error_display = {'display': 'none'}
+                error = None
+            else:
+                error_display = {'display': 'block'}
+
+                if len(invalid_genes) == 1:
+                    error_msg = invalid_genes[0] + \
+                        ' is not a valid MSU accession ID.'
+                    error_msg_ignore = 'It'
+                else:
+                    if len(invalid_genes) == 2:
+                        error_msg = invalid_genes[0] + \
+                            ' and ' + invalid_genes[1]
+                    else:
+                        error_msg = ', '.join(
+                            invalid_genes[:-1]) + ', and ' + invalid_genes[-1]
+
+                    error_msg += ' are not valid MSU accession IDs.'
+                    error_msg_ignore = 'They'
+
+                error = [html.Span(error_msg), html.Br(), html.Span(
+                    f'{error_msg_ignore} will be ignored when running the analysis.')]
+
+            # Perform lift-over if it has not been performed.
+            # Otherwise, just fetch the results from the file
+            lift_over_nb_entire_table = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                0].to_dict('records')
+
+            combined_genes = lift_over_nb_entire_table + \
+                get_annotations_addl_gene(list_addl_genes)
+
+            return True, submitted_addl_genes, list_addl_genes, combined_genes, submitted_tfbs_set, submitted_tfbs_prediction_technique, error_display, error
 
         raise PreventUpdate
 
@@ -66,34 +123,22 @@ def init_callback(app):
     @app.callback(
         Output('tfbs-results-table', 'data'),
         Output('tfbs-results-table', 'columns'),
-        Input('tfbs-is-submitted', 'data'),
-        State('tfbs-submitted-addl-genes', 'data'),
+
         State('homepage-submitted-genomic-intervals', 'data'),
+
+        Input('tfbs-combined-genes', 'data'),
+        Input('tfbs-submitted-addl-genes', 'data'),
+
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-set', 'data'),
         State('tfbs-submitted-prediction-technique', 'data'),
+        State('tfbs-is-submitted', 'data')
     )
-    def display_enrichment_results(tfbs_is_submitted, submitted_addl_genes,
-                                   nb_interval_str, homepage_submitted, tfbs_set, tfbs_prediction_technique):
+    def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
+                                   homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
         if homepage_submitted and tfbs_is_submitted:
-            if submitted_addl_genes:
-                submitted_addl_genes = submitted_addl_genes.strip()
-            else:
-                submitted_addl_genes = ''
-
-            list_addl_genes = list(
-                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
-
-            # Perform lift-over if it has not been performed.
-            # Otherwise, just fetch the results from the file
-            lift_over_nb_entire_table = lift_over_util.get_genes_in_Nb(nb_interval_str)[
-                0].to_dict('records')
-
-            combined_genes = lift_over_nb_entire_table + \
-                get_annotations_addl_gene(list_addl_genes)
-
             enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
-                                                              tfbs_set, tfbs_prediction_technique, nb_interval_str)
+                                                              tfbs_set, tfbs_prediction_technique, genomic_intervals)
 
             mask = (
                 enrichment_results_df['Transcription Factor'] != NULL_PLACEHOLDER)
@@ -110,19 +155,18 @@ def init_callback(app):
     @app.callback(
         Output('tfbs-input', 'children'),
         Input('tfbs-is-submitted', 'data'),
-        State('tfbs-submitted-addl-genes', 'data'),
+        State('tfbs-valid-addl-genes', 'data'),
         State('tfbs-submitted-set', 'data'),
         State('tfbs-submitted-prediction-technique', 'data')
     )
-    def display_tfbs_submitted_input(tfbs_is_submitted, genes, tfbs_set, tfbs_prediction_technique):
+    def display_tfbs_submitted_input(tfbs_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
         if tfbs_is_submitted:
-            if not genes:
-                genes = 'None'
+            if not addl_genes:
+                addl_genes = 'None'
             else:
-                genes = '; '.join(
-                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
+                addl_genes = '; '.join(set(addl_genes))
 
-            return [html.B('Additional Genes: '), genes,
+            return [html.B('Additional Genes: '), addl_genes,
                     html.Br(),
                     html.B(
                         'Selected TF Binding Site Prediction Technique: '), tfbs_prediction_technique,
@@ -131,50 +175,6 @@ def init_callback(app):
                     html.Br()]
 
         raise PreventUpdate
-    """
-    @app.callback(
-        Output('tfbs-saved-addl-genes', 'data', allow_duplicate=True),
-        Output('tfbs-saved-set', 'data', allow_duplicate=True),
-        Output('tfbs-saved-prediction-technique',
-               'data', allow_duplicate=True),
-        Input('tfbs-addl-genes', 'value'),
-        Input('tfbs-set', 'value'),
-        Input('tfbs-prediction-technique', 'value'),
-        State('homepage-is-submitted', 'data'),
-        Input('tfbs-submit', 'n_clicks'),
-        prevent_initial_call=True
-    )
-    def set_input_tfbs_session_state(genes, tfbs_set, tfbs_prediction_technique, homepage_is_submitted, *_):
-        if homepage_is_submitted:
-            return genes, tfbs_set, tfbs_prediction_technique
-
-        raise PreventUpdate
-    """
-    """
-    @app.callback(
-        Output('tfbs-addl-genes', 'value'),
-        Output('tfbs-prediction-technique', 'value'),
-        Output('tfbs-set', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-
-        State('tfbs-saved-addl-genes', 'data'),
-        State('tfbs-saved-prediction-technique', 'data'),
-        State('tfbs-saved-set', 'data'),
-        Input('tfbs-submit', 'n_clicks')
-    )
-    def get_input_tfbs_session_state(homepage_is_submitted, genes, tfbs_prediction_technique, tfbs_set, *_):
-        if homepage_is_submitted:
-            if not tfbs_prediction_technique:
-                tfbs_prediction_technique = 'FunTFBS'
-
-            if not tfbs_set:
-                tfbs_set = 'promoters'
-
-            return genes, tfbs_prediction_technique, tfbs_set
-
-        raise PreventUpdate
-    """
 
     @app.callback(
         Output('tfbs-addl-genes', 'value'),
@@ -186,14 +186,14 @@ def init_callback(app):
         State('tfbs-submitted-set', 'data'),
         Input('tfbs-is-submitted', 'data')
     )
-    def get_input_tfbs_session_state(genes, tfbs_prediction_technique, tfbs_set, *_):
+    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
         if not tfbs_prediction_technique:
             tfbs_prediction_technique = 'FunTFBS'
 
         if not tfbs_set:
             tfbs_set = 'promoters'
 
-        return genes, tfbs_prediction_technique, tfbs_set
+        return addl_genes, tfbs_prediction_technique, tfbs_set
 
     @app.callback(
         Output('tfbs-converter-modal', 'is_open'),

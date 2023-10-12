@@ -143,10 +143,11 @@ def init_callback(app):
         Output('text-mining-download-df-to-csv', 'data'),
         Input('text-mining-export-table', 'n_clicks'),
         State('text-mining-results-table', 'data'),
+        State('text-mining-submitted-query', 'data')
     )
-    def download_text_mining_table_to_csv(download_n_clicks, text_mining_df, ):
+    def download_text_mining_table_to_csv(download_n_clicks, text_mining_df, submitted_query):
         if download_n_clicks >= 1:
             df = pd.DataFrame(purge_html_export_table(text_mining_df))
-            return dcc.send_data_frame(df.to_csv, f'Text Mining Analysis Table.csv', index=False)
+            return dcc.send_data_frame(df.to_csv, f'[{submitted_query}] Text Mining Analysis Table.csv', index=False)
 
         raise PreventUpdate

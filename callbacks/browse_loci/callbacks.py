@@ -5,6 +5,7 @@ from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
+from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
@@ -12,6 +13,7 @@ from ..file_util import *
 
 from ..constants import Constants
 
+Tissue_tracks = namedtuple('Tissue_tracks', ['tracks'])
 
 def init_callback(app):
     @app.callback(
@@ -33,10 +35,25 @@ def init_callback(app):
         Output('igv-tracks', 'options'),
         Output('igv-tracks', 'value'),
         Input('epigenome-tissue', 'value'),
-        State('epigenome-submitted-tissue', 'data'),
+        State('igv-submitted-tracks', 'data'),
     )
-    def set_track_options(selected_tissue, submitted_selected_tissue):
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], []
+    def set_track_options(selected_tissue, submitted_selected_tracks):
+        selected_tracks = []
+        if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
+            selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
+
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], selected_tracks
+
+    @app.callback(
+        Output('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tissue', 'data'),
+        Input('igv-is-submitted', 'data')
+    )
+    def get_input_igv_session_state(selected_tissue, *_):
+        if not selected_tissue:
+            selected_tissue = 'Leaf'
+        
+        return selected_tissue
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
@@ -53,7 +70,11 @@ def init_callback(app):
     )
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval, selected_tissue, selected_tracks
+            tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
+            submitted_tissue_tracks = {
+                selected_tissue: tissue_tracks_value}
+
+            return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
 
         raise PreventUpdate
 
@@ -171,9 +192,13 @@ def init_callback(app):
                 "order":1
             }
 
+            tracks = []
+            if selected_tracks and selected_tissue in selected_tracks:
+                tracks = selected_tracks[selected_tissue]['tracks']
+
             # only display the tracks that were chosen by user. gene annotation track is always shown
             display_tracks = [gene_annotation_track] + \
-                generate_tracks(selected_tissue, selected_tracks)
+                generate_tracks(selected_tissue, tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
@@ -197,42 +222,3 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
-    """
-    # saves the input objects to the respective dcc Stores
-    @app.callback(
-        Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
-        Output('epigenome-saved-tissue', 'data', allow_duplicate=True),
-        Output('igv-saved-tracks', 'data', allow_duplicate=True),
-
-
-        Input('igv-genomic-intervals', 'value'),
-        Input('epigenome-tissue', 'value'),
-        Input('igv-tracks', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-
-        prevent_initial_call=True
-    )
-    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue, igv_tracks, homepage_is_submitted):
-        if homepage_is_submitted:
-            return selected_nb_intervals_str, selected_tissue, igv_tracks
-
-        raise PreventUpdate
-
-    # displays the saved inputs to the respective input objects
-    @app.callback(
-        Output('epigenome-tissue', 'value'),
-        Output('igv-tracks', 'value'),
-        State('epigenome-saved-tissue', 'data'),
-        State('igv-saved-tracks', 'data'),
-        State('homepage-is-submitted', 'data'),
-        Input('igv-submit', 'n_clicks'),
-
-        prevent_initial_call=True
-    )
-    def get_input_igv_session_state(epigenome_tissue, igv_tracks, homepage_is_submitted, *_):
-        if homepage_is_submitted:
-            return epigenome_tissue, igv_tracks
-
-        raise PreventUpdate
-    """
