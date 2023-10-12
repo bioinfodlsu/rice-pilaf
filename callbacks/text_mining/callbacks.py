@@ -38,16 +38,11 @@ def init_callback(app):
     @app.callback(
         Output('text-mining-query', 'value'),
         State('text-mining-submitted-query', 'data'),
-        
-        State('text-mining-input-error', 'children'),
 
         Input('text-mining-is-submitted', 'data'),
     )
-    def get_input_homepage_session_state(query, err_mssg, *_):
-        if not err_mssg:
-            return query
-
-        raise PreventUpdate
+    def get_input_homepage_session_state(query,  *_):
+        return query
 
     @app.callback(
         Output('text-mining-input-error', 'style', allow_duplicate=True),
@@ -69,7 +64,7 @@ def init_callback(app):
             if not is_there_error:
                 return {'display': 'none'}, message, True, text_mining_query
             else:
-                return {'display': 'block'}, message, False, no_update
+                return {'display': 'block'}, message, False, text_mining_query
 
         raise PreventUpdate
 
