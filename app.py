@@ -113,6 +113,11 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            dcc.Store(
+                id='homepage-is-resetted',
+                storage_type='session'
+            ),
+
 
 
             # ==========

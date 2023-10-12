@@ -41,8 +41,8 @@ def init_callback(app):
         Output('coexpression-submitted-parameter-slider',
                'data', allow_duplicate=True),
 
-        Output('coexpression-addl-genes-error', 'style'),
-        Output('coexpression-addl-genes-error', 'children'),
+        Output('coexpression-addl-genes-error', 'style', allow_duplicate=True),
+        Output('coexpression-addl-genes-error', 'children', allow_duplicate=True),
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -123,6 +123,17 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+    
+    @app.callback(
+        Output('coexpression-addl-genes-error', 'style'),
+        Output('coexpression-addl-genes-error', 'children'),
+        Input('homepage-is-resetted', 'data')
+    )
+    def clear_coexpression_error_messages(homepage_is_resetted):
+        if homepage_is_resetted:
+            return {'display': 'none'}, None
+            
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-submit', 'disabled'),
