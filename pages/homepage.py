@@ -25,7 +25,7 @@ genomic_interval_modal = dbc.Modal([
         html.P([
             html.Span(
                 'Multiple intervals should be separated by a semicolon like so: '),
-            html.Span('Chr01:100000-200000;Chr02:300000-400000',
+            html.Span('Chr01:100000-200000; Chr02:300000-400000',
                       className='text-muted')
         ]),
         html.P(

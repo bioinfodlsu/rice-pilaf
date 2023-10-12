@@ -5,6 +5,7 @@ from ..general_util import *
 from ..links_util import *
 import os
 import pickle
+import regex as re
 
 import pandas as pd
 import networkx as nx
@@ -245,6 +246,26 @@ def construct_contigency_table(background_genes, implicated_genes, module_genes)
     return table
 
 
+def check_if_valid_msu_ids(list_addl_genes):
+    valid_genes = []
+    invalid_genes = []
+
+    for addl_gene in list_addl_genes:
+        if re.fullmatch('LOC_Os\d{2}g\d{5}', addl_gene):
+            valid_genes.append(addl_gene)
+        else:
+            invalid_genes.append(addl_gene)
+
+    return valid_genes, invalid_genes
+
+
+def sanitize_msu_id(gene_id):
+    gene_id = re.sub('loc_os', 'LOC_Os', gene_id, flags=re.IGNORECASE)
+    gene_id = re.sub('G', 'g', gene_id)
+
+    return gene_id
+
+
 # ===============================================================================================
 # Utility functions for the display of the tables showing the results of the enrichment analysis
 # ===============================================================================================
@@ -407,14 +428,10 @@ def convert_to_df_ora(result, network):
 
 def convert_to_df_pe(result, module_idx, network, algo, parameters):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
-            'Adj. ORA p-value', 'Adj. Perturbation p-value',
             'Adj. Combined p-value', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
-
-    result = result.loc[result['Adj. Combined p-value']
-                        < Constants.P_VALUE_CUTOFF]
 
     # IMPORTANT: Do not change ordering of instructions
 
@@ -444,18 +461,14 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
 
 
 def convert_to_df_spia(result, network):
-    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
+    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
             'Adj. Combined p-value', 'Pathway Status', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value']
-                        < Constants.P_VALUE_CUTOFF]
-
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']
-    result['Total Acc. Perturbation'] = result['tA']
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['View on KEGG'].apply(

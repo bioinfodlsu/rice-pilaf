@@ -2,7 +2,7 @@ class Constants(object):
     LABEL_INTRO = 'intro'
     LABEL_LIFT_OVER = 'lift-over'
     LABEL_COEXPRESSION = 'co-expression'
-    LABEL_TFBS = 'tf-enrichment'
+    LABEL_TFBS = 'tfbs'
     LABEL_IGV = 'browse-loci'
     LABEL_TEXT_MINING = 'text-mining'
 

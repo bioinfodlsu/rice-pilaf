@@ -29,6 +29,8 @@ def init_callback(app):
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-addl-genes',
                'data', allow_duplicate=True),
+        Output('coexpression-valid-addl-genes',
+               'data', allow_duplicate=True),
         Output('coexpression-combined-genes',
                'data', allow_duplicate=True),
 
@@ -38,6 +40,9 @@ def init_callback(app):
                'data', allow_duplicate=True),
         Output('coexpression-submitted-parameter-slider',
                'data', allow_duplicate=True),
+
+        Output('coexpression-addl-genes-error', 'style'),
+        Output('coexpression-addl-genes-error', 'children'),
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -66,7 +71,35 @@ def init_callback(app):
                 submitted_addl_genes = ''
 
             list_addl_genes = list(
-                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+                filter(None, [sanitize_msu_id(gene.strip()) for gene in submitted_addl_genes.split(';')]))
+
+            # Check which genes are valid MSU IDs
+            list_addl_genes, invalid_genes = check_if_valid_msu_ids(
+                list_addl_genes)
+
+            if not invalid_genes:
+                error_display = {'display': 'none'}
+                error = None
+            else:
+                error_display = {'display': 'block'}
+
+                if len(invalid_genes) == 1:
+                    error_msg = invalid_genes[0] + \
+                        ' is not a valid MSU accession ID.'
+                    error_msg_ignore = 'It'
+                else:
+                    if len(invalid_genes) == 2:
+                        error_msg = invalid_genes[0] + \
+                            ' and ' + invalid_genes[1]
+                    else:
+                        error_msg = ', '.join(
+                            invalid_genes[:-1]) + ', and ' + invalid_genes[-1]
+
+                    error_msg += ' are not valid MSU accession IDs.'
+                    error_msg_ignore = 'They'
+
+                error = [html.Span(error_msg), html.Br(), html.Span(
+                    f'{error_msg_ignore} will be ignored when running the analysis.')]
 
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
@@ -76,8 +109,7 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            # , submitted_parameter_module
-            return True, submitted_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider
+            return True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider, error_display, error
 
         raise PreventUpdate
 
@@ -400,7 +432,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-input', 'children'),
         Input('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data')
@@ -414,8 +446,7 @@ def init_callback(app):
             if not genes:
                 genes = 'None'
             else:
-                genes = '; '.join(
-                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
+                genes = '; '.join(set(genes))
 
             return [html.B('Additional Genes: '), genes,
                     html.Br(),
@@ -433,30 +464,40 @@ def init_callback(app):
         Output('coexpression-clustering-algo-modal', 'is_open'),
         Output('coexpression-network-modal', 'is_open'),
         Output('coexpression-parameter-modal', 'is_open'),
+        Output('coexpression-converter-modal', 'is_open'),
 
         Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
         Input('coexpression-network-tooltip', 'n_clicks'),
-        Input('coexpression-parameter-tooltip', 'n_clicks')
+        Input('coexpression-parameter-tooltip', 'n_clicks'),
+        Input('coexpression-converter-tooltip', 'n_clicks')
     )
-    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks):
+    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks, converter_tooltip_n_clicks):
         if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
-            return True, False, False
+            return True, False, False, False
 
         if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
-            return False, True, False
+            return False, True, False, False
 
         if ctx.triggered_id == 'coexpression-parameter-tooltip' and parameter_tooltip_n_clicks > 0:
-            return False, False, True
+            return False, False, True, False
+
+        if ctx.triggered_id == 'coexpression-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return False, False, False, True
 
         raise PreventUpdate
 
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),
+        Output('coexpression-pathways', 'page_current'),
+
+        Input('coexpression-reset-table', 'n_clicks'),
+        Input('coexpression-submit', 'n_clicks'),
+
         Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-reset-table', 'n_clicks')
+        Input('coexpression-modules', 'value')
     )
-    def reset_table_filters(*_):
-        return ''
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('coexpression-download-df-to-csv', 'data'),
@@ -478,7 +519,7 @@ def init_callback(app):
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
-        State('coexpression-modules', 'value'),
+        State('coexpression-modules', 'value')
     )
     def download_coexpression_graph_to_tsv(download_n_clicks, genomic_intervals, submitted_network, submitted_algo, submitted_parameter_slider, module):
         if download_n_clicks >= 1:

@@ -108,7 +108,7 @@ layout = html.Div(
                     ),
 
                     dash_table.DataTable(
-                        id='text-mining-result-table',
+                        id='text-mining-results-table',
                         style_data={
                             'whiteSpace': 'normal',
                             'height': 'auto',

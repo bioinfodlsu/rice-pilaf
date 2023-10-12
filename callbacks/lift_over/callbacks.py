@@ -167,7 +167,6 @@ def init_callback(app):
 
         return other_refs
 
-
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-overlap-table-filter', 'style'),
@@ -399,13 +398,16 @@ def init_callback(app):
 
     @app.callback(
         Output('lift-over-results-table', 'filter_query'),
+        Output('lift-over-results-table', 'page_current'),
 
         Input('lift-over-reset-table', 'n_clicks'),
+        Input('lift-over-submit', 'n_clicks'),
+
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value')
     )
-    def reset_table_filters(*_):
-        return ''
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('lift-over-download-df-to-csv', 'data'),

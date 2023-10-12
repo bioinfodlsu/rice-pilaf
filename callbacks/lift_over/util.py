@@ -78,6 +78,14 @@ def get_error_message(error_code):
             return code_message.message
 
 
+def trim_leading_zeroes_chromosome(chromosome):
+    return re.sub('Chr0+', 'Chr', chromosome)
+
+
+def trim_leading_zeroes_interval(interval):
+    return re.sub('^0+', '', interval)
+
+
 def is_one_digit_chromosome(chromosome):
     """
     Checks if given chromosome only has a single digit (e.g., Chr1, Chr2)
@@ -122,11 +130,17 @@ def to_genomic_interval(genomic_interval_str):
     """
     try:
         chrom, interval = genomic_interval_str.split(":")
+        interval = trim_leading_zeroes_interval(interval)
+        chrom = trim_leading_zeroes_chromosome(chrom)
         if is_one_digit_chromosome(chrom):
             chrom = pad_one_digit_chromosome(chrom)
 
         # Change 'chr' to 'Chr'
         chrom = re.sub(r'chr', 'Chr', chrom, flags=re.IGNORECASE)
+
+        # Remove commas in 'Chr1,001:1,234,567'
+        chrom = re.sub(',', '', chrom)
+        interval = re.sub(',', '', interval)
 
         if not chrom.startswith('Chr') or not chrom[3].isdigit():
             return errors['NO_CHROM_INTERVAL_SEP'].code, genomic_interval_str

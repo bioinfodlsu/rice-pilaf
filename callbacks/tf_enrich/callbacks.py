@@ -7,7 +7,7 @@ from ..lift_over import util as lift_over_util
 
 def init_callback(app):
     @app.callback(
-        Output('tf-enrichment-genomic-intervals-input', 'children'),
+        Output('tfbs-genomic-intervals-input', 'children'),
         State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
         Input('tfbs-submit', 'n_clicks')
@@ -58,14 +58,14 @@ def init_callback(app):
         Output('tfbs-submit', 'disabled'),
 
         Input('tfbs-submit', 'n_clicks'),
-        Input('tf-enrichment-result-table', 'data')
+        Input('tfbs-results-table', 'data')
     )
     def disable_tfbs_button_upon_run(n_clicks,  *_):
         return ctx.triggered_id == 'tfbs-submit' and n_clicks > 0
 
     @app.callback(
-        Output('tf-enrichment-result-table', 'data'),
-        Output('tf-enrichment-result-table', 'columns'),
+        Output('tfbs-results-table', 'data'),
+        Output('tfbs-results-table', 'columns'),
         Input('tfbs-is-submitted', 'data'),
         State('tfbs-submitted-addl-genes', 'data'),
         State('homepage-submitted-genomic-intervals', 'data'),
@@ -195,18 +195,31 @@ def init_callback(app):
 
         return genes, tfbs_prediction_technique, tfbs_set
 
+    @app.callback(
+        Output('tfbs-converter-modal', 'is_open'),
+
+        Input('tfbs-converter-tooltip', 'n_clicks'),
+    )
+    def open_modals(converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
 
     @app.callback(
-        Output('tf-enrichment-result-table', 'filter_query'),
-        Input('tfbs-reset-table', 'n_clicks')
+        Output('tfbs-results-table', 'filter_query'),
+        Output('tfbs-results-table', 'page_current'),
+
+        Input('tfbs-reset-table', 'n_clicks'),
+        Input('tfbs-submit', 'n_clicks')
     )
-    def reset_table_filters(*_):
-        return ''
+    def reset_table_filter_page(*_):
+        return '', 0
 
     @app.callback(
         Output('tfbs-download-df-to-csv', 'data'),
         Input('tfbs-export-table', 'n_clicks'),
-        State('tf-enrichment-result-table', 'data'),
+        State('tfbs-results-table', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
