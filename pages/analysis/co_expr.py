@@ -235,12 +235,18 @@ parameter_modal = dbc.Modal([
 
 converter_modal = dbc.Modal([
     dbc.ModalHeader(
-        dbc.ModalTitle('Rice ID converter')
+        dbc.ModalTitle('Rice ID Converter')
     ),
     dbc.ModalBody([
         html.P(
-            'Hello world'
-        )
+            'RicePilaf requires MSU accession IDs (i.e., those prefixed by "LOC_Os"). '),
+        html.P([
+            'To convert across different rice IDs, you may use this ',
+            html.A(
+                'tool', href='https://rapdb.dna.affrc.go.jp/converter/', target='_blank'
+            ),
+            ' from The Rice Annotation Project Database.'
+        ])
     ])],
     id='coexpression-converter-modal',
     is_open=False,
