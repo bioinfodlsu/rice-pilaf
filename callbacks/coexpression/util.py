@@ -259,6 +259,13 @@ def check_if_valid_msu_ids(list_addl_genes):
     return valid_genes, invalid_genes
 
 
+def sanitize_msu_id(gene_id):
+    gene_id = re.sub('loc_os', 'LOC_Os', gene_id, flags=re.IGNORECASE)
+    gene_id = re.sub('G', 'g', gene_id)
+
+    return gene_id
+
+
 # ===============================================================================================
 # Utility functions for the display of the tables showing the results of the enrichment analysis
 # ===============================================================================================

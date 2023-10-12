@@ -68,7 +68,7 @@ def init_callback(app):
                 submitted_addl_genes = ''
 
             list_addl_genes = list(
-                filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
+                filter(None, [sanitize_msu_id(gene.strip()) for gene in submitted_addl_genes.split(';')]))
 
             # Check which genes are valid MSU IDs
             list_addl_genes, invalid_genes = check_if_valid_msu_ids(
