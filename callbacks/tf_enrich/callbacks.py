@@ -159,14 +159,14 @@ def init_callback(app):
         State('tfbs-submitted-set', 'data'),
         State('tfbs-submitted-prediction-technique', 'data')
     )
-    def display_tfbs_submitted_input(tfbs_is_submitted, genes, tfbs_set, tfbs_prediction_technique):
+    def display_tfbs_submitted_input(tfbs_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
         if tfbs_is_submitted:
-            if not genes:
-                genes = 'None'
+            if not addl_genes:
+                addl_genes = 'None'
             else:
-                genes = '; '.join(set(genes))
+                addl_genes = '; '.join(set(addl_genes))
 
-            return [html.B('Additional Genes: '), genes,
+            return [html.B('Additional Genes: '), addl_genes,
                     html.Br(),
                     html.B(
                         'Selected TF Binding Site Prediction Technique: '), tfbs_prediction_technique,
@@ -175,50 +175,6 @@ def init_callback(app):
                     html.Br()]
 
         raise PreventUpdate
-    """
-    @app.callback(
-        Output('tfbs-saved-addl-genes', 'data', allow_duplicate=True),
-        Output('tfbs-saved-set', 'data', allow_duplicate=True),
-        Output('tfbs-saved-prediction-technique',
-               'data', allow_duplicate=True),
-        Input('tfbs-addl-genes', 'value'),
-        Input('tfbs-set', 'value'),
-        Input('tfbs-prediction-technique', 'value'),
-        State('homepage-is-submitted', 'data'),
-        Input('tfbs-submit', 'n_clicks'),
-        prevent_initial_call=True
-    )
-    def set_input_tfbs_session_state(genes, tfbs_set, tfbs_prediction_technique, homepage_is_submitted, *_):
-        if homepage_is_submitted:
-            return genes, tfbs_set, tfbs_prediction_technique
-
-        raise PreventUpdate
-    """
-    """
-    @app.callback(
-        Output('tfbs-addl-genes', 'value'),
-        Output('tfbs-prediction-technique', 'value'),
-        Output('tfbs-set', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-
-        State('tfbs-saved-addl-genes', 'data'),
-        State('tfbs-saved-prediction-technique', 'data'),
-        State('tfbs-saved-set', 'data'),
-        Input('tfbs-submit', 'n_clicks')
-    )
-    def get_input_tfbs_session_state(homepage_is_submitted, genes, tfbs_prediction_technique, tfbs_set, *_):
-        if homepage_is_submitted:
-            if not tfbs_prediction_technique:
-                tfbs_prediction_technique = 'FunTFBS'
-
-            if not tfbs_set:
-                tfbs_set = 'promoters'
-
-            return genes, tfbs_prediction_technique, tfbs_set
-
-        raise PreventUpdate
-    """
 
     @app.callback(
         Output('tfbs-addl-genes', 'value'),
@@ -230,14 +186,14 @@ def init_callback(app):
         State('tfbs-submitted-set', 'data'),
         Input('tfbs-is-submitted', 'data')
     )
-    def get_input_tfbs_session_state(genes, tfbs_prediction_technique, tfbs_set, *_):
+    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
         if not tfbs_prediction_technique:
             tfbs_prediction_technique = 'FunTFBS'
 
         if not tfbs_set:
             tfbs_set = 'promoters'
 
-        return genes, tfbs_prediction_technique, tfbs_set
+        return addl_genes, tfbs_prediction_technique, tfbs_set
 
     @app.callback(
         Output('tfbs-converter-modal', 'is_open'),
