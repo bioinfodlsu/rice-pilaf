@@ -184,31 +184,65 @@ parameter_modal = dbc.Modal([
                 html.A(
                     'ClusterOne', href='https://doi.org/10.1038/nmeth.1938', target='_blank'),
                 html.Span(
-                    ', the parameter pertains to the minimum cluster density.')
+                    ', the parameter pertains to the minimum cluster density.'),
+                html.Br(),
+                html.Span(
+                    'Parameter values of 1, 2, 3, and 4 correspond to minimum cluster densities of 0, 0.30, 0.40, 0.60, and 0.90.'),
             ]),
+            html.Br(),
             html.Li([
                 html.Span('For '),
                 html.A(
                     'COACH', href='https://doi.org/10.1186/1471-2105-10-169', target='_blank'),
                 html.Span(
-                    ', the parameter pertains to the maximum core affinity.')
+                    ', the parameter pertains to the maximum core affinity.'),
+                html.Br(),
+                html.Span(
+                    'Parameter values of 1, 2, 3, and 4 correspond to maximum core affinities of 0.150, 0.175, 0.200, and 0.225.'),
             ]),
+            html.Br(),
             html.Li([
                 html.Span('For '),
                 html.A(
                     'DEMON', href='https://doi.org/10.1145/2339530.2339630', target='_blank'),
-                html.Span(', the parameter pertains to the merging threshold.')
+                html.Span(', the parameter pertains to the merging threshold.'),
+                html.Br(),
+                html.Span(
+                    'Parameter values of 1, 2, 3, and 4 correspond to merging thresholds of 0, 0.25, 0.50, and 0.75.'),
             ]),
+            html.Br(),
             html.Li([
                 html.Span('For '),
                 html.A('FOX', href='https://doi.org/10.1145/3404970',
                        target='_blank'),
                 html.Span(
-                    ', the parameter pertains to the weighted community clustering metric.')
+                    ', the parameter pertains to the weighted community clustering metric.'),
+                html.Br(),
+                html.Span(
+                    'Parameter values of 1, 2, 3, and 4 correspond to weighted community clustering metrics of 0.05, 0.20, 0.40, and 0.60.'),
             ])
         ])
     ])],
     id='coexpression-parameter-modal',
+    is_open=False,
+    size='xl',
+    scrollable=True
+)
+
+# =====================
+# Miscellaneous Modals
+# =====================
+
+converter_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Rice ID converter')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'Hello world'
+        )
+    ])],
+    id='coexpression-converter-modal',
     is_open=False,
     size='xl',
     scrollable=True
@@ -257,13 +291,15 @@ layout = html.Div(
         html.Br(),
 
         html.Div([
-            dbc.Label(
-                'Include additional genes from the pangenome lift-over or the text mining results'),
+            dbc.Label(['Include additional genes from the pangenome lift-over or the text mining results',
+                 html.I(
+                     className='bi bi-info-circle', id='coexpression-converter-tooltip', n_clicks=0)]),
             html.Br(),
             dbc.Label(
                 'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680; LOC_Os01g03690; LOC_Os01g04110)',
                 className='small text-muted'),
 
+            converter_modal,
             dbc.Textarea(id='coexpression-addl-genes'),
 
             html.Br(),
