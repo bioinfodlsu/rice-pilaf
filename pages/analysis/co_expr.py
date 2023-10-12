@@ -239,7 +239,7 @@ converter_modal = dbc.Modal([
     ),
     dbc.ModalBody([
         html.P(
-            'RicePilaf requires MSU accession IDs (i.e., those prefixed by "LOC_Os"). '),
+            'RicePilaf requires MSU accession IDs (i.e., IDs prefixed by "LOC_Os"). '),
         html.P([
             'To convert across different rice IDs, you may use this ',
             html.A(
@@ -250,7 +250,7 @@ converter_modal = dbc.Modal([
     ])],
     id='coexpression-converter-modal',
     is_open=False,
-    size='xl',
+    size='lg',
     scrollable=True
 )
 
