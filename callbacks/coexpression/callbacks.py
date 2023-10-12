@@ -45,7 +45,8 @@ def init_callback(app):
                'data', allow_duplicate=True),
 
         Output('coexpression-addl-genes-error', 'style', allow_duplicate=True),
-        Output('coexpression-addl-genes-error', 'children', allow_duplicate=True),
+        Output('coexpression-addl-genes-error',
+               'children', allow_duplicate=True),
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -126,7 +127,7 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
-    
+
     @app.callback(
         Output('coexpression-addl-genes-error', 'style'),
         Output('coexpression-addl-genes-error', 'children'),
@@ -174,7 +175,7 @@ def init_callback(app):
             return False, False, False, True
 
         raise PreventUpdate
-    
+
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
         Output('coexpression-parameter-slider', 'value'),
@@ -218,11 +219,10 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     # =================
     # Module-related
     # =================
-    
+
     @app.callback(
         Output('coexpression-modules', 'options'),
         Output('coexpression-modules', 'value'),
@@ -280,7 +280,6 @@ def init_callback(app):
                 return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
-
 
     # =================
     # Table-related
@@ -388,7 +387,6 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     # =================
     # Graph-related
     # =================
@@ -420,7 +418,7 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def display_graph(combined_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_slider,
-                            layout, coexpression_is_submitted, modules, *_):
+                      layout, coexpression_is_submitted, modules, *_):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -522,7 +520,6 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     @app.callback(
         Output('coexpression-download-graph-to-json', 'data'),
         Input('coexpression-export-graph', 'n_clicks'),
@@ -540,8 +537,6 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
 
         raise PreventUpdate
-
-
 
     # =================
     # Session-related
@@ -609,5 +604,3 @@ def init_callback(app):
             network = 'OS-CX'
 
         return algo, genes, network
-
-    

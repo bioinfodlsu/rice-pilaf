@@ -87,7 +87,7 @@ def init_callback(app):
     def clear_coexpression_error_messages(homepage_is_resetted):
         if homepage_is_resetted:
             return {'display': 'none'}, None
-            
+
         raise PreventUpdate
 
     @app.callback(
