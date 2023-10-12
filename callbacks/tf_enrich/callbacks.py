@@ -176,6 +176,7 @@ def init_callback(app):
     @app.callback(
         Output('tfbs-results-table', 'data'),
         Output('tfbs-results-table', 'columns'),
+        Output('tfbs-table-stats', 'children'),
 
         State('homepage-submitted-genomic-intervals', 'data'),
 
@@ -201,7 +202,19 @@ def init_callback(app):
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in enrichment_results_df.columns]
 
-            return enrichment_results_df.to_dict('records'), columns
+            num_nonzero_overlap = get_num_unique_entries(
+                enrichment_results_df, 'Transcription Factor')
+            num_tf = 200
+
+            stats = f'{num_nonzero_overlap} out of {num_tf} transcription '
+            if num_nonzero_overlap == 1:
+                stats += ' factor has '
+            else:
+                stats += ' factors have '
+
+            stats += 'predicted binding sites that overlap with your GWAS/QTL intervals.'
+
+            return enrichment_results_df.to_dict('records'), columns, stats
 
         raise PreventUpdate
 

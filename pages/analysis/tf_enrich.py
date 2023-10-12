@@ -260,6 +260,12 @@ layout = html.Div(
                                 html.Span(
                                     id='tfbs-table-stats')
                             ], className='mb-3 stats'),
+
+                            html.P(
+                                'The table below lists these transcription factors, along with the significance of the overlap.',
+                                className='text-start'
+                            ),
+
                             dbc.Button([html.I(
                                 className='bi bi-download me-2'),
                                 'Export to CSV'],
