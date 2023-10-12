@@ -40,12 +40,21 @@ def get_annotations_addl_gene(addl_genes):
     db = gffutils.FeatureDB(
         f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
 
+    valid_addl_genes = []
+    for addl_gene in addl_genes:
+        try:
+            db[addl_gene]
+            valid_addl_genes.append(addl_gene)
+        except gffutils.exceptions.FeatureNotFoundError:
+            pass
+
     return [{'ogi': None,
              'name': addl_gene,
              'Chromosome': db[addl_gene].chrom,
              'Start': db[addl_gene].start,
              'End': db[addl_gene].end,
-             'Strand': db[addl_gene].strand} for addl_gene in addl_genes]
+             'Strand': db[addl_gene].strand} for addl_gene in valid_addl_genes]
+
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 
