@@ -167,7 +167,6 @@ def init_callback(app):
 
         return other_refs
 
-
     @app.callback(
         Output('lift-over-results-gene-intro', 'children'),
         Output('lift-over-overlap-table-filter', 'style'),
@@ -406,6 +405,21 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+    @app.callback(
+        Output('lift-over-results-table', 'page_current'),
+
+        Input('lift-over-reset-table', 'n_clicks'),
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+
+        Input('homepage-submitted-genomic-intervals', 'data'),
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+        Input('lift-over-submitted-other-refs', 'data'),
+    )
+    def reset_table_page(*_):
+        return 0
 
     @app.callback(
         Output('lift-over-download-df-to-csv', 'data'),
