@@ -83,7 +83,7 @@ def init_callback(app):
 
                 if lift_over_util.is_error(intervals):
                     return dccStore_children, [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, False, nb_intervals_str, False
+                        {'display': 'block'}, False, nb_intervals_str, True
                 else:
                     # clear data for items in dcc.Store found in session-container
                     dccStore_children = get_cleared_dccStore_data_excluding_some_data(
@@ -91,10 +91,10 @@ def init_callback(app):
 
                     browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
-                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str, False
+                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str, True
             else:
                 return dccStore_children, [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, False, nb_intervals_str, False
+                    {'display': 'block'}, False, nb_intervals_str, True
 
         raise PreventUpdate
 

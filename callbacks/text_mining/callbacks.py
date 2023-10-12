@@ -44,8 +44,8 @@ def init_callback(app):
         return query
 
     @app.callback(
-        Output('text-mining-input-error', 'style'),
-        Output('text-mining-input-error', 'children'),
+        Output('text-mining-input-error', 'style', allow_duplicate=True),
+        Output('text-mining-input-error', 'children', allow_duplicate=True),
 
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
         Output('text-mining-submitted-query',
@@ -77,6 +77,17 @@ def init_callback(app):
 
         else:
             return {'display': 'none'}
+
+    @app.callback(
+        Output('text-mining-input-error', 'style'),
+        Output('text-mining-input-error', 'children'),
+        Input('homepage-is-resetted', 'data')
+    )
+    def clear_coexpression_error_messages(homepage_is_resetted):
+        if homepage_is_resetted:
+            return {'display': 'none'}, None
+            
+        raise PreventUpdate
 
     @app.callback(
         Output('text-mining-submit', 'disabled'),
