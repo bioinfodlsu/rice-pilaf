@@ -35,6 +35,9 @@ def init_callback(app):
         Output('tfbs-submitted-prediction-technique',
                'data', allow_duplicate=True),
 
+        Output('tfbs-addl-genes-error', 'style'),
+        Output('tfbs-addl-genes-error', 'children'),
+
         Input('tfbs-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
@@ -61,6 +64,30 @@ def init_callback(app):
             list_addl_genes, invalid_genes = coexpression_util.check_if_valid_msu_ids(
                 list_addl_genes)
 
+            if not invalid_genes:
+                error_display = {'display': 'none'}
+                error = None
+            else:
+                error_display = {'display': 'block'}
+
+                if len(invalid_genes) == 1:
+                    error_msg = invalid_genes[0] + \
+                        ' is not a valid MSU accession ID.'
+                    error_msg_ignore = 'It'
+                else:
+                    if len(invalid_genes) == 2:
+                        error_msg = invalid_genes[0] + \
+                            ' and ' + invalid_genes[1]
+                    else:
+                        error_msg = ', '.join(
+                            invalid_genes[:-1]) + ', and ' + invalid_genes[-1]
+
+                    error_msg += ' are not valid MSU accession IDs.'
+                    error_msg_ignore = 'They'
+
+                error = [html.Span(error_msg), html.Br(), html.Span(
+                    f'{error_msg_ignore} will be ignored when running the analysis.')]
+
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
             lift_over_nb_entire_table = lift_over_util.get_genes_in_Nb(genomic_intervals)[
@@ -69,7 +96,7 @@ def init_callback(app):
             combined_genes = lift_over_nb_entire_table + \
                 get_annotations_addl_gene(list_addl_genes)
 
-            return True, submitted_addl_genes, list_addl_genes, combined_genes, submitted_tfbs_set, submitted_tfbs_prediction_technique
+            return True, submitted_addl_genes, list_addl_genes, combined_genes, submitted_tfbs_set, submitted_tfbs_prediction_technique, error_display, error
 
         raise PreventUpdate
 

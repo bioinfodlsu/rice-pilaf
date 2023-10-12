@@ -77,6 +77,11 @@ layout = html.Div(
                 className='small text-muted'),
 
             converter_modal,
+            dbc.Alert(
+                id='tfbs-addl-genes-error',
+                color='danger',
+                style={'display': 'none'}
+            ),
             dbc.Textarea(id='tfbs-addl-genes'),
 
             html.Br(),
