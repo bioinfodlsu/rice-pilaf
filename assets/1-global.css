@@ -78,3 +78,7 @@ hr {
     padding-bottom: 0;
     margin-bottom: 0;
 }
+
+.reference i {
+    cursor: text;
+}
