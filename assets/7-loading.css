@@ -5,7 +5,7 @@
 #coexpression-pathways + div,
 #lift-over-results-table + div,
 #text-mining-results-table + div,
-#tf-enrichment-results-table + div,
+#tfbs-results-table + div,
 #coexpression-module-graph + div,
 #coexpression-module-graph-node-data + div {
     display: block !important;

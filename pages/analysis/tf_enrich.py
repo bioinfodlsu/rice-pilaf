@@ -4,6 +4,36 @@ from callbacks.constants import Constants
 from callbacks.tf_enrich.util import *
 
 
+# =====================
+# Miscellaneous Modals
+# =====================
+
+converter_modal = dbc.Modal([
+    dbc.ModalHeader(
+        dbc.ModalTitle('Rice ID Converter')
+    ),
+    dbc.ModalBody([
+        html.P(
+            'RicePilaf requires MSU accession IDs (i.e., those prefixed by "LOC_Os"). '),
+        html.P([
+            'To convert across different rice IDs, you may use this ',
+            html.A(
+                'tool', href='https://rapdb.dna.affrc.go.jp/converter/', target='_blank'
+            ),
+            ' from The Rice Annotation Project Database.'
+        ])
+    ])],
+    id='coexpression-converter-modal',
+    is_open=False,
+    size='xl',
+    scrollable=True
+)
+
+# ============
+# Main Layout
+# ============
+
+
 layout = html.Div(
     id={
         'type': 'analysis-layout',
@@ -32,14 +62,15 @@ layout = html.Div(
 
         html.Div([
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='tf-enrichment-genomic-intervals-input'),
+            html.Span(id='tfbs-genomic-intervals-input'),
         ], className='analysis-intro p-3'),
 
         html.Br(),
 
         html.Div([
-            dbc.Label(
-                'Include additional genes from the pangenome lift-over or the text mining results'),
+            dbc.Label(['Include additional genes from the pangenome lift-over or the text mining results',
+                 html.I(
+                     className='bi bi-info-circle', id='tfbs-converter-tooltip', n_clicks=0)]),
             html.Br(),
             dbc.Label(
                 'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680; LOC_Os01g03690; LOC_Os01g04110)',
@@ -52,7 +83,7 @@ layout = html.Div(
             dbc.Label(['Choose TF binding site prediction technique',
                        html.I(
                            className='bi bi-info-circle',
-                           id='tf-enrichment-technique-tooltip',
+                           id='tfbs-technique-tooltip',
                            n_clicks=0
                        )]),
             dbc.RadioItems(
@@ -66,7 +97,7 @@ layout = html.Div(
             dbc.Label(['Consider TF binding sites in the following regions',
                        html.I(
                            className='bi bi-info-circle',
-                           id='tf-enrichment-binding-site-tooltip',
+                           id='tfbs-binding-site-tooltip',
                            n_clicks=0
                        )]),
             dbc.RadioItems(
@@ -124,7 +155,7 @@ layout = html.Div(
                     ),
 
                     dash_table.DataTable(
-                        id='tf-enrichment-results-table',
+                        id='tfbs-results-table',
                         style_cell={
                             'whiteSpace': 'pre-line'
                         },
