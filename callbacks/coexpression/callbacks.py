@@ -453,10 +453,29 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-pathways', 'filter_query'),
         Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-reset-table', 'n_clicks')
+        Input('coexpression-reset-table', 'n_clicks'),
+
+        Input('coexpression-combined-genes', 'data'),
+        Input('coexpression-submitted-network', 'data'),
+        Input('coexpression-submitted-clustering-algo', 'data'),
+        Input('coexpression-modules', 'value'),
     )
     def reset_table_filters(*_):
         return ''
+
+    @app.callback(
+        Output('coexpression-pathways', 'page_current'),
+
+        Input('coexpression-reset-table', 'n_clicks'),
+        Input('coexpression-modules-pathway', 'active_tab'),
+
+        Input('homepage-submitted-genomic-intervals', 'data'),
+        Input('lift-over-results-tabs', 'active_tab'),
+        Input('lift-over-overlap-table-filter', 'value'),
+        Input('lift-over-submitted-other-refs', 'data'),
+    )
+    def reset_table_page(*_):
+        return 0
 
     @app.callback(
         Output('coexpression-download-df-to-csv', 'data'),

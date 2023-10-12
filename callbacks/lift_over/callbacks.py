@@ -414,7 +414,6 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value'),
 
         Input('homepage-submitted-genomic-intervals', 'data'),
-        Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
         Input('lift-over-submitted-other-refs', 'data'),
     )
