@@ -22,6 +22,11 @@ def init_callback(app):
 
         raise PreventUpdate
 
+
+    # =================
+    # Input-related
+    # =================
+
     @app.callback(
         Output('tfbs-is-submitted', 'data', allow_duplicate=True),
         Output('tfbs-submitted-addl-genes',
@@ -121,6 +126,46 @@ def init_callback(app):
         return ctx.triggered_id == 'tfbs-submit' and n_clicks > 0
 
     @app.callback(
+        Output('tfbs-converter-modal', 'is_open'),
+
+        Input('tfbs-converter-tooltip', 'n_clicks'),
+    )
+    def open_modals(converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('tfbs-input', 'children'),
+        Input('tfbs-is-submitted', 'data'),
+        State('tfbs-valid-addl-genes', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data')
+    )
+    def display_tfbs_submitted_input(tfbs_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
+        if tfbs_is_submitted:
+            if not addl_genes:
+                addl_genes = 'None'
+            else:
+                addl_genes = '; '.join(set(addl_genes))
+
+            return [html.B('Additional Genes: '), addl_genes,
+                    html.Br(),
+                    html.B(
+                        'Selected TF Binding Site Prediction Technique: '), tfbs_prediction_technique,
+                    html.Br(),
+                    html.B('Selected TF Binding Site Regions: '), tfbs_set,
+                    html.Br()]
+
+        raise PreventUpdate
+
+
+    # =================
+    # Table-related
+    # =================
+
+    @app.callback(
         Output('tfbs-results-table', 'data'),
         Output('tfbs-results-table', 'columns'),
 
@@ -153,60 +198,6 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-input', 'children'),
-        Input('tfbs-is-submitted', 'data'),
-        State('tfbs-valid-addl-genes', 'data'),
-        State('tfbs-submitted-set', 'data'),
-        State('tfbs-submitted-prediction-technique', 'data')
-    )
-    def display_tfbs_submitted_input(tfbs_is_submitted, addl_genes, tfbs_set, tfbs_prediction_technique):
-        if tfbs_is_submitted:
-            if not addl_genes:
-                addl_genes = 'None'
-            else:
-                addl_genes = '; '.join(set(addl_genes))
-
-            return [html.B('Additional Genes: '), addl_genes,
-                    html.Br(),
-                    html.B(
-                        'Selected TF Binding Site Prediction Technique: '), tfbs_prediction_technique,
-                    html.Br(),
-                    html.B('Selected TF Binding Site Regions: '), tfbs_set,
-                    html.Br()]
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('tfbs-addl-genes', 'value'),
-        Output('tfbs-prediction-technique', 'value'),
-        Output('tfbs-set', 'value'),
-
-        State('tfbs-submitted-addl-genes', 'data'),
-        State('tfbs-submitted-prediction-technique', 'data'),
-        State('tfbs-submitted-set', 'data'),
-        Input('tfbs-is-submitted', 'data')
-    )
-    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
-        if not tfbs_prediction_technique:
-            tfbs_prediction_technique = 'FunTFBS'
-
-        if not tfbs_set:
-            tfbs_set = 'promoters'
-
-        return addl_genes, tfbs_prediction_technique, tfbs_set
-
-    @app.callback(
-        Output('tfbs-converter-modal', 'is_open'),
-
-        Input('tfbs-converter-tooltip', 'n_clicks'),
-    )
-    def open_modals(converter_tooltip_n_clicks):
-        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
-            return True
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('tfbs-results-table', 'filter_query'),
         Output('tfbs-results-table', 'page_current'),
 
@@ -228,3 +219,27 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
 
         raise PreventUpdate
+
+
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
+        Output('tfbs-addl-genes', 'value'),
+        Output('tfbs-prediction-technique', 'value'),
+        Output('tfbs-set', 'value'),
+
+        State('tfbs-submitted-addl-genes', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        Input('tfbs-is-submitted', 'data')
+    )
+    def get_input_tfbs_session_state(addl_genes, tfbs_prediction_technique, tfbs_set, *_):
+        if not tfbs_prediction_technique:
+            tfbs_prediction_technique = 'FunTFBS'
+
+        if not tfbs_set:
+            tfbs_set = 'promoters'
+
+        return addl_genes, tfbs_prediction_technique, tfbs_set
