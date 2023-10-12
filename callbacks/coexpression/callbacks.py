@@ -29,6 +29,8 @@ def init_callback(app):
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-addl-genes',
                'data', allow_duplicate=True),
+        Output('coexpression-valid-addl-genes',
+               'data', allow_duplicate=True),
         Output('coexpression-combined-genes',
                'data', allow_duplicate=True),
 
@@ -68,6 +70,10 @@ def init_callback(app):
             list_addl_genes = list(
                 filter(None, [gene.strip() for gene in submitted_addl_genes.split(';')]))
 
+            # Check which genes are valid MSU IDs
+            list_addl_genes, invalid_genes = check_if_valid_msu_ids(
+                list_addl_genes)
+
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
             implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
@@ -76,8 +82,7 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            # , submitted_parameter_module
-            return True, submitted_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider
+            return True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider
 
         raise PreventUpdate
 
@@ -400,7 +405,7 @@ def init_callback(app):
     @app.callback(
         Output('coexpression-input', 'children'),
         Input('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data')
@@ -414,8 +419,7 @@ def init_callback(app):
             if not genes:
                 genes = 'None'
             else:
-                genes = '; '.join(
-                    list(filter(None, [gene.strip() for gene in genes.split(';')])))
+                genes = '; '.join(genes)
 
             return [html.B('Additional Genes: '), genes,
                     html.Br(),

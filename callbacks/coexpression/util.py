@@ -5,6 +5,7 @@ from ..general_util import *
 from ..links_util import *
 import os
 import pickle
+import regex as re
 
 import pandas as pd
 import networkx as nx
@@ -243,6 +244,19 @@ def construct_contigency_table(background_genes, implicated_genes, module_genes)
              [in_implicated_not_in_module, not_in_implicated_not_in_module]]
 
     return table
+
+
+def check_if_valid_msu_ids(list_addl_genes):
+    valid_genes = []
+    invalid_genes = []
+
+    for addl_gene in list_addl_genes:
+        if re.fullmatch('LOC_Os\d{2}g\d{5}', addl_gene):
+            valid_genes.append(addl_gene)
+        else:
+            invalid_genes.append(addl_gene)
+
+    return valid_genes, invalid_genes
 
 
 # ===============================================================================================

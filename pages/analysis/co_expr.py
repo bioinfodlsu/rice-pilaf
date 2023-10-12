@@ -306,6 +306,11 @@ layout = html.Div(
                 className='small text-muted'),
 
             converter_modal,
+            dbc.Alert(
+                id='coexpression-addl-genes-error',
+                color='danger',
+                style={'display': 'none'}
+            ),
             dbc.Textarea(id='coexpression-addl-genes'),
 
             html.Br(),
