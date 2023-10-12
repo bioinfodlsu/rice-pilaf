@@ -23,7 +23,7 @@ converter_modal = dbc.Modal([
             ' from The Rice Annotation Project Database.'
         ])
     ])],
-    id='coexpression-converter-modal',
+    id='tfbs-converter-modal',
     is_open=False,
     size='xl',
     scrollable=True
@@ -76,6 +76,7 @@ layout = html.Div(
                 'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680; LOC_Os01g03690; LOC_Os01g04110)',
                 className='small text-muted'),
 
+            converter_modal,
             dbc.Textarea(id='tfbs-addl-genes'),
 
             html.Br(),

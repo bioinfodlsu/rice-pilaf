@@ -196,6 +196,17 @@ def init_callback(app):
         return genes, tfbs_prediction_technique, tfbs_set
 
     @app.callback(
+        Output('tfbs-converter-modal', 'is_open'),
+
+        Input('tfbs-converter-tooltip', 'n_clicks'),
+    )
+    def open_modals(converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'tfbs-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('tfbs-results-table', 'filter_query'),
         Output('tfbs-results-table', 'page_current'),
 
