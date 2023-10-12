@@ -71,7 +71,7 @@ def init_callback(app):
         Output('text-mining-results-container', 'style'),
         Input('text-mining-is-submitted', 'data')
     )
-    def display_coexpression_output(text_mining_is_submitted):
+    def display_text_mining_output(text_mining_is_submitted):
         if text_mining_is_submitted:
             return {'display': 'block'}
 
@@ -134,6 +134,17 @@ def init_callback(app):
     )
     def reset_table_filters(*_):
         return ''
+
+    @app.callback(
+        Output('text-mining-result-table', 'page_current'),
+
+        Input('text-mining-reset-table', 'n_clicks'),
+
+        Input('text-mining-submit', 'n_clicks'),
+        Input('text-mining-query', 'n_submit')
+    )
+    def reset_table_page(*_):
+        return 0
 
     @app.callback(
         Output('text-mining-download-df-to-csv', 'data'),
