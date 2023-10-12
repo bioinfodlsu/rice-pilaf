@@ -22,7 +22,10 @@ def init_callback(app):
                 return None
 
         raise PreventUpdate
-
+    
+    # =================
+    # Input-related
+    # =================
     @app.callback(
         Output('text-mining-query', 'value', allow_duplicate=True),
         Input({'type': 'example-text-mining',
@@ -34,16 +37,7 @@ def init_callback(app):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('text-mining-query', 'value'),
-        State('text-mining-submitted-query', 'data'),
-
-        Input('text-mining-is-submitted', 'data'),
-    )
-    def get_input_homepage_session_state(query,  *_):
-        return query
-
+        
     @app.callback(
         Output('text-mining-input-error', 'style', allow_duplicate=True),
         Output('text-mining-input-error', 'children', allow_duplicate=True),
@@ -105,6 +99,10 @@ def init_callback(app):
 
         return ctx.triggered_id == 'text-mining-submit' and n_clicks > 0
 
+
+    # =================
+    # Table-related
+    # =================
     @app.callback(
         Output('text-mining-results-table', 'data'),
         Output('text-mining-results-table', 'columns'),
@@ -163,3 +161,15 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{submitted_query}] Text Mining Analysis Table.csv', index=False)
 
         raise PreventUpdate
+    
+    # =================
+    # Session-related
+    # =================
+    @app.callback(
+        Output('text-mining-query', 'value'),
+        State('text-mining-submitted-query', 'data'),
+
+        Input('text-mining-is-submitted', 'data'),
+    )
+    def get_input_homepage_session_state(query,  *_):
+        return query

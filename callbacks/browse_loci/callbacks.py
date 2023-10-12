@@ -31,30 +31,10 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    @app.callback(
-        Output('igv-tracks', 'options'),
-        Output('igv-tracks', 'value'),
-        Input('epigenome-tissue', 'value'),
-        State('igv-submitted-tracks', 'data'),
-    )
-    def set_track_options(selected_tissue, submitted_selected_tracks):
-        selected_tracks = []
-        if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
-            selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
 
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], selected_tracks
-
-    @app.callback(
-        Output('epigenome-tissue', 'value'),
-        State('epigenome-submitted-tissue', 'data'),
-        Input('igv-is-submitted', 'data')
-    )
-    def get_input_igv_session_state(selected_tissue, *_):
-        if not selected_tissue:
-            selected_tissue = 'Leaf'
-        
-        return selected_tissue
-
+    # =================
+    # Input-related
+    # =================
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
         Output('igv-submitted-genomic-intervals',
@@ -88,6 +68,45 @@ def init_callback(app):
         else:
             return {'display': 'none'}
 
+    @app.callback(
+        Output('igv-genomic-intervals', 'options'),
+        Output('igv-genomic-intervals', 'value'),
+        Input('homepage-submitted-genomic-intervals', 'data'),
+
+        State('homepage-is-submitted', 'data'),
+        State('igv-submitted-genomic-intervals', 'data'),
+        Input('igv-is-submitted', 'data')
+    )
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
+        if homepage_is_submitted:
+            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
+            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
+            igv_options = igv_options.split(';')
+
+            # if no genomic intervals are selected, use the first option
+            if not selected_nb_interval:
+                selected_nb_interval = igv_options[0]
+
+            return igv_options, selected_nb_interval
+
+        raise PreventUpdate
+    
+    @app.callback(
+        Output('igv-tracks', 'options'),
+        Output('igv-tracks', 'value'),
+        Input('epigenome-tissue', 'value'),
+        State('igv-submitted-tracks', 'data'),
+    )
+    def set_track_options(selected_tissue, submitted_selected_tracks):
+        selected_tracks = []
+        if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
+            selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
+
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], selected_tracks
+
+    # =================
+    # Dash-bio-related
+    # =================
     """
     Helpful for debugging: tells you if there's a problem with Flask serving the file
     """
@@ -148,29 +167,6 @@ def init_callback(app):
             abort(404)
 
     @app.callback(
-        Output('igv-genomic-intervals', 'options'),
-        Output('igv-genomic-intervals', 'value'),
-        Input('homepage-submitted-genomic-intervals', 'data'),
-
-        State('homepage-is-submitted', 'data'),
-        State('igv-submitted-genomic-intervals', 'data'),
-        Input('igv-is-submitted', 'data')
-    )
-    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
-        if homepage_is_submitted:
-            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
-            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
-            igv_options = igv_options.split(';')
-
-            # if no genomic intervals are selected, use the first option
-            if not selected_nb_interval:
-                selected_nb_interval = igv_options[0]
-
-            return igv_options, selected_nb_interval
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('igv-display', 'children'),
         State('igv-submitted-genomic-intervals', 'data'),
         State('epigenome-submitted-tissue', 'data'),
@@ -222,3 +218,17 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
+
+    # =================
+    # Session-related
+    # =================
+    @app.callback(
+        Output('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tissue', 'data'),
+        Input('igv-is-submitted', 'data')
+    )
+    def get_input_igv_session_state(selected_tissue, *_):
+        if not selected_tissue:
+            selected_tissue = 'Leaf'
+        
+        return selected_tissue
