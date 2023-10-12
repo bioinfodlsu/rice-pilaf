@@ -40,7 +40,7 @@ motif_conservation = html.Li([
 ])
 
 motif_scanning = html.Li([
-    html.B('Motif Conservation'), html.Br(),
+    html.B('Motif Scan'), html.Br(),
     html.Span('Simple motif scanning using FIMO',
               className='algo-desc'),
     html.Div([
@@ -209,7 +209,8 @@ layout = html.Div(
                 id='tfbs-prediction-technique',
                 options=TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL,
                 value='FunTFBS',
-                inline=True
+                inline=True,
+                className='ms-3 mt-1'
             ),
 
             html.Br(),
@@ -225,7 +226,8 @@ layout = html.Div(
                 id='tfbs-set',
                 options=TFBS_SET_VALUE_LABEL,
                 value='promoters',
-                inline=True
+                inline=True,
+                className='ms-3 mt-1'
             ),
 
             html.Br(),
