@@ -261,7 +261,7 @@ layout = html.Div(
                 'Include additional genes from the pangenome lift-over or the text mining results'),
             html.Br(),
             dbc.Label(
-                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680;LOC_Os01g03690;LOC_Os01g04110)',
+                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680; LOC_Os01g03690; LOC_Os01g04110)',
                 className='small text-muted'),
 
             dbc.Textarea(id='coexpression-addl-genes'),

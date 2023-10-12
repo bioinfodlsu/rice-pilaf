@@ -8,7 +8,7 @@ import sqlite3
 
 
 example_genomic_intervals = {
-    'pre-harvest': 'Chr01:1523625-1770814;Chr04:4662701-4670717',
+    'pre-harvest': 'Chr01:1523625-1770814; Chr04:4662701-4670717',
     'anaerobic-germination': 'Chr07:6000000-6900000'}
 
 
