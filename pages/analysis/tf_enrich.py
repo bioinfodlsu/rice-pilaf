@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
+from callbacks.tf_enrich.util import *
 
 
 layout = html.Div(
@@ -56,13 +57,7 @@ layout = html.Div(
                        )]),
             dbc.RadioItems(
                 id='tfbs-prediction-technique',
-                options=[
-                    {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-                    {'value': 'CE', 'label': 'motif conservation',
-                     'label_id': 'motif conservation'},
-                    {'value': 'motif', 'label': 'motif scan',
-                     'label_id': 'motif scan'}
-                ],
+                options=TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL,
                 value='FunTFBS',
                 inline=True
             ),
@@ -76,12 +71,7 @@ layout = html.Div(
                        )]),
             dbc.RadioItems(
                 id='tfbs-set',
-                options=[
-                    {'value': 'promoters', 'label': 'promoters',
-                        'label_id': 'promoters'},
-                    {'value': 'genome', 'label': 'genome',
-                     'label_id': 'genome'}
-                ],
+                options=TFBS_SET_VALUE_LABEL,
                 value='promoters',
                 inline=True
             ),
@@ -114,6 +104,10 @@ layout = html.Div(
 
                     html.P(
                         html.Div([
+                            html.Div([
+                                html.Span(
+                                    id='tfbs-table-stats')
+                            ], className='mb-3 stats'),
                             dbc.Button([html.I(
                                 className='bi bi-download me-2'),
                                 'Export to CSV'],

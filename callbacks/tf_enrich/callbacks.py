@@ -131,7 +131,7 @@ def init_callback(app):
                     html.Br()]
 
         raise PreventUpdate
-
+    """
     @app.callback(
         Output('tfbs-saved-addl-genes', 'data', allow_duplicate=True),
         Output('tfbs-saved-set', 'data', allow_duplicate=True),
@@ -149,7 +149,8 @@ def init_callback(app):
             return genes, tfbs_set, tfbs_prediction_technique
 
         raise PreventUpdate
-
+    """
+    """
     @app.callback(
         Output('tfbs-addl-genes', 'value'),
         Output('tfbs-prediction-technique', 'value'),
@@ -173,6 +174,27 @@ def init_callback(app):
             return genes, tfbs_prediction_technique, tfbs_set
 
         raise PreventUpdate
+    """
+
+    @app.callback(
+        Output('tfbs-addl-genes', 'value'),
+        Output('tfbs-prediction-technique', 'value'),
+        Output('tfbs-set', 'value'),
+
+        State('tfbs-submitted-addl-genes', 'data'),
+        State('tfbs-submitted-prediction-technique', 'data'),
+        State('tfbs-submitted-set', 'data'),
+        Input('tfbs-is-submitted', 'data')
+    )
+    def get_input_tfbs_session_state(genes, tfbs_prediction_technique, tfbs_set, *_):
+        if not tfbs_prediction_technique:
+            tfbs_prediction_technique = 'FunTFBS'
+
+        if not tfbs_set:
+            tfbs_set = 'promoters'
+
+        return genes, tfbs_prediction_technique, tfbs_set
+
 
     @app.callback(
         Output('tf-enrichment-result-table', 'filter_query'),

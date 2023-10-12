@@ -357,7 +357,8 @@ layout = html.Div(
                             html.Div(
                                 id='coexpression-results-module-tabs-container',
                                 children=[
-                                    dbc.Label('Select an enriched module'),
+                                    dbc.Label(
+                                        'Select an enriched module to infer its likely function via ontology and pathway enrichment analysis'),
                                     dcc.Dropdown(id='coexpression-modules'),
                                 ],
                                 className='pt-3 pb-2'

@@ -52,8 +52,6 @@ def init_callback(app):
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
         Output('homepage-submitted-genomic-intervals', 'data'),
-        Output('homepage-saved-genomic-intervals',
-               'data', allow_duplicate=True),
 
         State('homepage-genomic-intervals', 'value'),
 
@@ -75,7 +73,7 @@ def init_callback(app):
             dccStore_children = get_cleared_dccStore_data_excluding_some_data(
                 dccStore_children)
 
-            return dccStore_children, None, {'display': 'none'}, False, '', nb_intervals_str
+            return dccStore_children, None, {'display': 'none'}, False, ''
 
         if n_submit >= 1 or ('homepage-submit' == ctx.triggered_id and n_clicks >= 1):
             if nb_intervals_str:
@@ -84,24 +82,24 @@ def init_callback(app):
 
                 if lift_over_util.is_error(intervals):
                     return dccStore_children, [f'Error encountered while parsing genomic interval {intervals[1]}', html.Br(), lift_over_util.get_error_message(intervals[0])], \
-                        {'display': 'block'}, False, nb_intervals_str, nb_intervals_str
+                        {'display': 'block'}, False, nb_intervals_str
                 else:
                     # clear data for items in dcc.Store found in session-container
                     dccStore_children = get_cleared_dccStore_data_excluding_some_data(
-                        dccStore_children, 'homepage-saved-genomic-intervals')
+                        dccStore_children)
 
                     browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
 
-                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str, nb_intervals_str
+                    return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str
             else:
                 return dccStore_children, [f'Error: Input for genomic interval should not be empty.'], \
-                    {'display': 'block'}, False, nb_intervals_str, nb_intervals_str
+                    {'display': 'block'}, False, nb_intervals_str
 
         raise PreventUpdate
 
     @app.callback(
-        Output('homepage-saved-genomic-intervals',
-               'data', allow_duplicate=True),
+        Output('homepage-genomic-intervals',
+               'value', allow_duplicate=True),
         Input({'type': 'example-genomic-interval',
               'description': ALL}, 'n_clicks'),
         prevent_initial_call=True
@@ -111,15 +109,6 @@ def init_callback(app):
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
         raise PreventUpdate
-
-    @app.callback(
-        Output('homepage-saved-genomic-intervals',
-               'data', allow_duplicate=True),
-        Input('homepage-genomic-intervals', 'value'),
-        prevent_initial_call=True
-    )
-    def set_input_fields(genomic_intervals):
-        return genomic_intervals
 
     @app.callback(
         Output('homepage-results-container', 'style'),
@@ -148,11 +137,16 @@ def init_callback(app):
 
     @app.callback(
         Output('homepage-genomic-intervals', 'value'),
-        Input('homepage-saved-genomic-intervals', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
+        State('homepage-is-submitted', 'data'),
+        Input('homepage-submit', 'value'),
     )
-    def get_input_homepage_session_state(genomic_intervals):
-        return genomic_intervals
-
+    def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
+        if homepage_is_submitted:
+            return genomic_intervals
+        
+        raise PreventUpdate
+        
     @app.callback(
         Output('genomic-interval-modal', 'is_open'),
         Input('genomic-interval-tooltip', 'n_clicks')

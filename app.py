@@ -104,11 +104,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='homepage-saved-genomic-intervals',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='homepage-submitted-genomic-intervals',
                 storage_type='session'
             ),
@@ -134,11 +129,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='lift-over-saved-other-refs',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='lift-over-submitted-other-refs',
                 storage_type='session'
             ),
@@ -151,30 +141,30 @@ app.layout = lambda: dbc.Container([
             # ============
             # IGV Browser
             # ============
-            dcc.Store(
-                id='igv-saved-genomic-intervals',
-                storage_type='session'
-            ),
+            #dcc.Store(
+            #    id='igv-saved-genomic-intervals',
+            #    storage_type='session'
+            #),
 
             dcc.Store(
                 id='igv-submitted-genomic-intervals',
                 storage_type='session'
             ),
 
-            dcc.Store(
-                id='epigenome-saved-tissue',
-                storage_type='session'
-            ),
+            #dcc.Store(
+            #    id='epigenome-saved-tissue',
+            #    storage_type='session'
+            #),
 
             dcc.Store(
                 id='epigenome-submitted-tissue',
                 storage_type='session'
             ),
 
-            dcc.Store(
-                id='igv-saved-tracks',
-                storage_type='session'
-            ),
+            #dcc.Store(
+            #    id='igv-saved-tracks',
+            #    storage_type='session'
+            #),
 
             dcc.Store(
                 id='igv-submitted-tracks',
@@ -195,11 +185,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-saved-parameter-slider',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='coexpression-submitted-module',
                 storage_type='session'
             ),
@@ -215,11 +200,6 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-saved-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='coexpression-submitted-addl-genes',
                 storage_type='session'
             ),
@@ -230,17 +210,7 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-saved-network',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='coexpression-submitted-network',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-saved-clustering-algo',
                 storage_type='session'
             ),
 
@@ -264,27 +234,12 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='tfbs-saved-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='tfbs-submitted-addl-genes',
                 storage_type='session'
             ),
 
             dcc.Store(
-                id='tfbs-saved-prediction-technique',
-                storage_type='session'
-            ),
-
-            dcc.Store(
                 id='tfbs-submitted-prediction-technique',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-saved-set',
                 storage_type='session'
             ),
 
@@ -296,11 +251,6 @@ app.layout = lambda: dbc.Container([
             # ============
             # Text Mining
             # ============
-
-            dcc.Store(
-                id='text-mining-saved-query',
-                storage_type='session'
-            ),
 
             dcc.Store(
                 id='text-mining-submitted-query',
