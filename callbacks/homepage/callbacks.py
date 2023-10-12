@@ -10,7 +10,9 @@ from ..style_util import *
 
 
 def init_callback(app):
-
+    # =================
+    # Layout-related
+    # =================
     @app.callback(
         Output({'type': 'analysis-nav', 'label': ALL}, 'className'),
         Output({'type': 'analysis-layout', 'label': ALL}, 'hidden'),
@@ -45,6 +47,10 @@ def init_callback(app):
             return update_nav_class_name, update_layout_hidden
 
         raise PreventUpdate
+
+    # =================
+    # Input-related
+    # =================
 
     @app.callback(
         Output('session-container', 'children'),
@@ -125,6 +131,20 @@ def init_callback(app):
             return {'display': 'none'}, {'display': 'block'}
 
     @app.callback(
+        Output('genomic-interval-modal', 'is_open'),
+        Input('genomic-interval-tooltip', 'n_clicks')
+    )
+    def open_modals(tooltip_n_clicks):
+        if tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
+        
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
         Output('current-analysis-page-nav', 'data'),
         Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
     )
@@ -148,12 +168,4 @@ def init_callback(app):
         
         raise PreventUpdate
         
-    @app.callback(
-        Output('genomic-interval-modal', 'is_open'),
-        Input('genomic-interval-tooltip', 'n_clicks')
-    )
-    def open_modals(tooltip_n_clicks):
-        if tooltip_n_clicks > 0:
-            return True
-
-        raise PreventUpdate
+    
