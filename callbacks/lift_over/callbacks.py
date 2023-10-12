@@ -412,10 +412,7 @@ def init_callback(app):
         Input('lift-over-reset-table', 'n_clicks'),
         Input('lift-over-results-tabs', 'active_tab'),
         Input('lift-over-overlap-table-filter', 'value'),
-
-        Input('homepage-submitted-genomic-intervals', 'data'),
-        Input('lift-over-overlap-table-filter', 'value'),
-        Input('lift-over-submitted-other-refs', 'data')
+        Input('lift-over-submit', 'n_clicks')
     )
     def reset_table_page(*_):
         return 0

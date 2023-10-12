@@ -468,11 +468,7 @@ def init_callback(app):
 
         Input('coexpression-reset-table', 'n_clicks'),
         Input('coexpression-modules-pathway', 'active_tab'),
-
-        Input('homepage-submitted-genomic-intervals', 'data'),
-        Input('lift-over-results-tabs', 'active_tab'),
-        Input('lift-over-overlap-table-filter', 'value'),
-        Input('lift-over-submitted-other-refs', 'data')
+        Input('coexpression-submit', 'n_clicks')
     )
     def reset_table_page(*_):
         return 0

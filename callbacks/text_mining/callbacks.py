@@ -139,7 +139,6 @@ def init_callback(app):
         Output('text-mining-results-table', 'page_current'),
 
         Input('text-mining-reset-table', 'n_clicks'),
-
         Input('text-mining-submit', 'n_clicks'),
         Input('text-mining-query', 'n_submit')
     )
