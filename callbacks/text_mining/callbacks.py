@@ -83,7 +83,7 @@ def init_callback(app):
 
         Input('text-mining-submit', 'n_clicks'),
         State('text-mining-query', 'value'),
-        Input('text-mining-result-table', 'data'),
+        Input('text-mining-results-table', 'data'),
     )
     def disable_text_mining_button_upon_run(n_clicks, text_mining_query, *_):
         is_there_error, _ = is_error(text_mining_query)
@@ -94,8 +94,8 @@ def init_callback(app):
         return ctx.triggered_id == 'text-mining-submit' and n_clicks > 0
 
     @app.callback(
-        Output('text-mining-result-table', 'data'),
-        Output('text-mining-result-table', 'columns'),
+        Output('text-mining-results-table', 'data'),
+        Output('text-mining-results-table', 'columns'),
         Output('text-mining-results-stats', 'children'),
 
         Input('text-mining-is-submitted', 'data'),
@@ -129,14 +129,14 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('text-mining-result-table', 'filter_query'),
+        Output('text-mining-results-table', 'filter_query'),
         Input('text-mining-reset-table', 'n_clicks')
     )
     def reset_table_filters(*_):
         return ''
 
     @app.callback(
-        Output('text-mining-result-table', 'page_current'),
+        Output('text-mining-results-table', 'page_current'),
 
         Input('text-mining-reset-table', 'n_clicks'),
 
@@ -149,7 +149,7 @@ def init_callback(app):
     @app.callback(
         Output('text-mining-download-df-to-csv', 'data'),
         Input('text-mining-export-table', 'n_clicks'),
-        State('text-mining-result-table', 'data'),
+        State('text-mining-results-table', 'data'),
     )
     def download_text_mining_table_to_csv(download_n_clicks, text_mining_df, ):
         if download_n_clicks >= 1:

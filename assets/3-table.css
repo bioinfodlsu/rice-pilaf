@@ -41,11 +41,11 @@ th, td {
     background-color: var(--td-gray);
 }
 
-#text-mining-result-table th {
+#text-mining-results-table th {
     text-align: center;
 }
 
-#text-mining-result-table table tr td div {
+#text-mining-results-table table tr td div {
     text-align: left !important;
 }
 

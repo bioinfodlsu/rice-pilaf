@@ -124,7 +124,7 @@ layout = html.Div(
                     ),
 
                     dash_table.DataTable(
-                        id='tf-enrichment-result-table',
+                        id='tf-enrichment-results-table',
                         style_cell={
                             'whiteSpace': 'pre-line'
                         },
