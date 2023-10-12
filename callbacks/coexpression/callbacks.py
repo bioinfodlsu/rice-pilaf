@@ -41,6 +41,9 @@ def init_callback(app):
         Output('coexpression-submitted-parameter-slider',
                'data', allow_duplicate=True),
 
+        Output('coexpression-addl-genes-error', 'style'),
+        Output('coexpression-addl-genes-error', 'children'),
+
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
 
@@ -74,6 +77,30 @@ def init_callback(app):
             list_addl_genes, invalid_genes = check_if_valid_msu_ids(
                 list_addl_genes)
 
+            if not invalid_genes:
+                error_display = {'display': 'none'}
+                error = None
+            else:
+                error_display = {'display': 'block'}
+
+                if len(invalid_genes) == 1:
+                    error_msg = invalid_genes[0] + \
+                        ' is not a valid MSU accession ID.'
+                    error_msg_ignore = 'It'
+                else:
+                    if len(invalid_genes) == 2:
+                        error_msg = invalid_genes[0] + \
+                            ' and ' + invalid_genes[1]
+                    else:
+                        error_msg = ', '.join(
+                            invalid_genes[:-1]) + ', and ' + invalid_genes[-1]
+
+                    error_msg += ' are not valid MSU accession IDs.'
+                    error_msg_ignore = 'They'
+
+                error = [html.Span(error_msg), html.Br(), html.Span(
+                    f'{error_msg_ignore} will be ignored when running the analysis.')]
+
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
             implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
@@ -82,7 +109,7 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            return True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider
+            return True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider, error_display, error
 
         raise PreventUpdate
 
@@ -419,7 +446,7 @@ def init_callback(app):
             if not genes:
                 genes = 'None'
             else:
-                genes = '; '.join(genes)
+                genes = '; '.join(set(genes))
 
             return [html.B('Additional Genes: '), genes,
                     html.Br(),
