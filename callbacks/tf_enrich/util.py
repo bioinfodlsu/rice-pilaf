@@ -125,7 +125,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
         except KeyError:
             results_df = create_empty_df()
 
-        return results_df
+        # Count number of transcription factors
+        # Subtract 2 to exclude the two generated CSV files
+        num_tf = len(os.listdir(out_dir_without_timestamp)) - 2
+
+        return results_df, num_tf
 
     out_dir = append_timestamp_to_filename(out_dir_without_timestamp)
     make_dir(out_dir)
@@ -198,7 +202,11 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     except:
         pass
 
-    return results_df
+    # Count number of transcription factors
+    # Subtract 2 to exclude the two generated CSV files
+    num_tf = len(os.listdir(out_dir_without_timestamp)) - 2
+
+    return results_df, num_tf
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):

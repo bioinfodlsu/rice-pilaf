@@ -191,8 +191,8 @@ def init_callback(app):
     def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
                                    homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
         if homepage_submitted and tfbs_is_submitted:
-            enrichment_results_df = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
-                                                              tfbs_set, tfbs_prediction_technique, genomic_intervals)
+            enrichment_results_df, num_tf = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
+                                                                      tfbs_set, tfbs_prediction_technique, genomic_intervals)
 
             mask = (
                 enrichment_results_df['Transcription Factor'] != NULL_PLACEHOLDER)
@@ -204,7 +204,6 @@ def init_callback(app):
 
             num_nonzero_overlap = get_num_unique_entries(
                 enrichment_results_df, 'Transcription Factor')
-            num_tf = 200
 
             stats = f'{num_nonzero_overlap} out of {num_tf} transcription '
             if num_nonzero_overlap == 1:
