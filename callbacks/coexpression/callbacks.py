@@ -502,31 +502,30 @@ def init_callback(app):
         Output('coexpression-download-df-to-csv', 'data'),
         Input('coexpression-export-table', 'n_clicks'),
         State('coexpression-pathways', 'data'),
-        State('homepage-submitted-genomic-intervals', 'data')
+        State('coexpression-modules', 'value')
     )
-    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, module):
         if download_n_clicks >= 1:
             df = pd.DataFrame(purge_html_export_table(coexpression_df))
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
+            return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Table.csv', index=False)
 
         raise PreventUpdate
 
     @app.callback(
         Output('coexpression-download-graph-to-json', 'data'),
         Input('coexpression-export-graph', 'n_clicks'),
-        State('homepage-submitted-genomic-intervals', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
         State('coexpression-modules', 'value')
     )
-    def download_coexpression_graph_to_tsv(download_n_clicks, genomic_intervals, submitted_network, submitted_algo, submitted_parameter_slider, module):
+    def download_coexpression_graph_to_tsv(download_n_clicks, submitted_network, submitted_algo, submitted_parameter_slider, module):
         if download_n_clicks >= 1:
             parameters = submitted_parameter_slider[submitted_algo]['value']
             module_idx = int(module.split(' ')[1])
             df = pd.read_csv(
                 f'{Constants.TEMP}/{submitted_network}/{submitted_algo}/modules/{parameters}/module-{module_idx}.tsv', sep='\t')
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
+            return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
 
         raise PreventUpdate
 
