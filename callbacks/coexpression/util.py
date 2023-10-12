@@ -407,14 +407,10 @@ def convert_to_df_ora(result, network):
 
 def convert_to_df_pe(result, module_idx, network, algo, parameters):
     cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
-            'Adj. ORA p-value', 'Adj. Perturbation p-value',
             'Adj. Combined p-value', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
-
-    result = result.loc[result['Adj. Combined p-value']
-                        < Constants.P_VALUE_CUTOFF]
 
     # IMPORTANT: Do not change ordering of instructions
 
@@ -444,18 +440,14 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
 
 
 def convert_to_df_spia(result, network):
-    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Total Acc. Perturbation', 'Perturbation p-value', 'Combined p-value',
+    cols = ['ID', 'KEGG Pathway', 'ORA p-value', 'Perturbation p-value', 'Combined p-value',
             'Adj. Combined p-value', 'Pathway Status', 'Genes']
 
     if result.empty:
         return create_empty_df_with_cols(cols)
 
-    result = result.loc[result['Adj. Combined p-value']
-                        < Constants.P_VALUE_CUTOFF]
-
     # Prettify display of ID
     result['ID'] = 'dosa' + result['ID']
-    result['Total Acc. Perturbation'] = result['tA']
 
     # Prettify display of genes and convert to MSU accessions
     result['Genes'] = result['View on KEGG'].apply(
