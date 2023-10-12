@@ -3,6 +3,9 @@ from dash import dash_table, dcc, html
 from callbacks.constants import Constants
 from callbacks.tf_enrich.util import *
 
+# =======
+# Modals
+# =======
 
 # =====================
 # Miscellaneous Modals
