@@ -5,6 +5,7 @@ from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
+from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
@@ -12,6 +13,7 @@ from ..file_util import *
 
 from ..constants import Constants
 
+Tissue_tracks = namedtuple('Tissue_tracks', ['tracks'])
 
 def init_callback(app):
     @app.callback(
@@ -33,10 +35,25 @@ def init_callback(app):
         Output('igv-tracks', 'options'),
         Output('igv-tracks', 'value'),
         Input('epigenome-tissue', 'value'),
-        State('epigenome-submitted-tissue', 'data'),
+        State('igv-submitted-tracks', 'data'),
     )
-    def set_track_options(selected_tissue, submitted_selected_tissue):
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], []
+    def set_track_options(selected_tissue, submitted_selected_tracks):
+        selected_tracks = []
+        if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
+            selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
+
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], selected_tracks
+
+    @app.callback(
+        Output('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tissue', 'data'),
+        Input('igv-is-submitted', 'data')
+    )
+    def get_input_igv_session_state(selected_tissue, *_):
+        if not selected_tissue:
+            selected_tissue = 'Leaf'
+        
+        return selected_tissue
 
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
@@ -53,7 +70,12 @@ def init_callback(app):
     )
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval, selected_tissue, selected_tracks
+            tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
+            submitted_tissue_tracks = {
+                selected_tissue: tissue_tracks_value}
+
+            print(submitted_tissue_tracks)
+            return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
 
         raise PreventUpdate
 
@@ -171,9 +193,13 @@ def init_callback(app):
                 "order":1
             }
 
+            tracks = []
+            if selected_tracks and selected_tissue in selected_tracks:
+                tracks = selected_tracks[selected_tissue]['tracks']
+
             # only display the tracks that were chosen by user. gene annotation track is always shown
             display_tracks = [gene_annotation_track] + \
-                generate_tracks(selected_tissue, selected_tracks)
+                generate_tracks(selected_tissue, tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
