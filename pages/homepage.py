@@ -271,7 +271,7 @@ layout = html.Div([
                             xs=7, sm=7, md=9, lg=9, xl=9, xxl=9,
                             id='page',
                         )
-                    ], className='ps-5 py-2 pb-4')
+                    ], className='ps-5 py-2 pb-5')
                 ]
             )
         ]
