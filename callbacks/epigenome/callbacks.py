@@ -18,10 +18,10 @@ Tissue_tracks = namedtuple('Tissue_tracks', ['tracks'])
 
 def init_callback(app):
     @app.callback(
-        Output('igv-genomic-intervals-input', 'children'),
+        Output('epigenome-genomic-intervals-input', 'children'),
         State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
-        Input('igv-submit', 'n_clicks')
+        Input('epigenome-submit', 'n_clicks')
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
@@ -37,15 +37,15 @@ def init_callback(app):
     # =================
 
     @app.callback(
-        Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-submitted-genomic-intervals',
+        Output('epigenome-is-submitted', 'data', allow_duplicate=True),
+        Output('epigenome-submitted-genomic-intervals',
                'data', allow_duplicate=True),
         Output('epigenome-submitted-tissue', 'data', allow_duplicate=True),
-        Output('igv-submitted-tracks', 'data', allow_duplicate=True),
-        Input('igv-submit', 'n_clicks'),
-        State('igv-genomic-intervals', 'value'),
+        Output('epigenome-submitted-tracks', 'data', allow_duplicate=True),
+        Input('epigenome-submit', 'n_clicks'),
+        State('epigenome-genomic-intervals', 'value'),
         State('epigenome-tissue', 'value'),
-        State('igv-tracks', 'value'),
+        State('epigenome-tracks', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
@@ -60,8 +60,8 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-results-container', 'style'),
-        Input('igv-is-submitted', 'data')
+        Output('epigenome-results-container', 'style'),
+        Input('epigenome-is-submitted', 'data')
     )
     def display_igv_output(igv_is_submitted):
         if igv_is_submitted:
@@ -70,13 +70,13 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
-        Output('igv-genomic-intervals', 'options'),
-        Output('igv-genomic-intervals', 'value'),
+        Output('epigenome-genomic-intervals', 'options'),
+        Output('epigenome-genomic-intervals', 'value'),
         Input('homepage-submitted-genomic-intervals', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('igv-submitted-genomic-intervals', 'data'),
-        Input('igv-is-submitted', 'data')
+        State('epigenome-submitted-genomic-intervals', 'data'),
+        Input('epigenome-is-submitted', 'data')
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
         if homepage_is_submitted:
@@ -93,10 +93,10 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-tracks', 'options'),
-        Output('igv-tracks', 'value'),
+        Output('epigenome-tracks', 'options'),
+        Output('epigenome-tracks', 'value'),
         Input('epigenome-tissue', 'value'),
-        State('igv-submitted-tracks', 'data'),
+        State('epigenome-submitted-tracks', 'data'),
     )
     def set_track_options(selected_tissue, submitted_selected_tracks):
         selected_tracks = []
@@ -168,12 +168,12 @@ def init_callback(app):
             abort(404)
 
     @app.callback(
-        Output('igv-display', 'children'),
-        State('igv-submitted-genomic-intervals', 'data'),
+        Output('epigenome-display', 'children'),
+        State('epigenome-submitted-genomic-intervals', 'data'),
         State('epigenome-submitted-tissue', 'data'),
-        State('igv-submitted-tracks', 'data'),
+        State('epigenome-submitted-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
-        Input('igv-is-submitted', 'data'),
+        Input('epigenome-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
@@ -206,7 +206,7 @@ def init_callback(app):
 
             return html.Div([
                 dashbio.Igv(
-                    id='igv-Nipponbare-local',
+                    id='epigenome-Nipponbare-local',
                     reference={
                         "id": "GCF_001433935.1",
                         "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
@@ -226,7 +226,7 @@ def init_callback(app):
     @app.callback(
         Output('epigenome-tissue', 'value'),
         State('epigenome-submitted-tissue', 'data'),
-        Input('igv-is-submitted', 'data')
+        Input('epigenome-is-submitted', 'data')
     )
     def get_input_igv_session_state(selected_tissue, *_):
         if not selected_tissue:
