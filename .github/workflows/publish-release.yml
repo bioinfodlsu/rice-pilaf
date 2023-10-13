@@ -1,17 +1,25 @@
-name: Publish release 
+name: Publish release
 
-on: 
-  push:
-    branches:
-      - release
-    
+on:
+    workflow_run:
+        workflows: [Check for syntax errors]
+        types: [completed]
+        branches: [main]
+
 jobs:
-  release-on-push:
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    steps:
-      - uses: rymndhng/release-on-push-action@master
-        with:
-          bump_version_scheme: norelease
+    release-on-push:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        steps:
+            - uses: rymndhng/release-on-push-action@master
+              with:
+                  bump_version_scheme: norelease
+
+    on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        steps:
+            - run: echo 'The triggering workflow failed'
