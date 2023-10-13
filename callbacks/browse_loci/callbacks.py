@@ -15,6 +15,7 @@ from ..constants import Constants
 
 Tissue_tracks = namedtuple('Tissue_tracks', ['tracks'])
 
+
 def init_callback(app):
     @app.callback(
         Output('igv-genomic-intervals-input', 'children'),
@@ -31,10 +32,10 @@ def init_callback(app):
 
         raise PreventUpdate
 
-
     # =================
     # Input-related
     # =================
+
     @app.callback(
         Output('igv-is-submitted', 'data', allow_duplicate=True),
         Output('igv-submitted-genomic-intervals',
@@ -90,7 +91,7 @@ def init_callback(app):
             return igv_options, selected_nb_interval
 
         raise PreventUpdate
-    
+
     @app.callback(
         Output('igv-tracks', 'options'),
         Output('igv-tracks', 'value'),
@@ -185,7 +186,7 @@ def init_callback(app):
                 # this will call out the send_annotations_nb_url callback function
                 "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                 "displayMode": "EXPANDED",
-                "order":1
+                "order": 1
             }
 
             tracks = []
@@ -230,5 +231,5 @@ def init_callback(app):
     def get_input_igv_session_state(selected_tissue, *_):
         if not selected_tissue:
             selected_tissue = 'Leaf'
-        
+
         return selected_tissue

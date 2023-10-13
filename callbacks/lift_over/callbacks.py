@@ -67,7 +67,6 @@ def init_callback(app):
     def disable_lift_over_button_upon_run(n_clicks,  *_):
         return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
 
-
     # =================
     # Table-related
     # =================
@@ -185,7 +184,7 @@ def init_callback(app):
             return gene_statistics_items, None
 
         raise PreventUpdate
-    
+
     @app.callback(
         Output('lift-over-results-intro', 'children'),
         Output('lift-over-results-tabs', 'children'),
@@ -401,7 +400,6 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
 
         raise PreventUpdate
-
 
     # =================
     # Session-related

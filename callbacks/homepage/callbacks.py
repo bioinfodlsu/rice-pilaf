@@ -139,7 +139,7 @@ def init_callback(app):
             return True
 
         raise PreventUpdate
-        
+
     # =================
     # Session-related
     # =================
@@ -165,7 +165,5 @@ def init_callback(app):
     def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return genomic_intervals
-        
+
         raise PreventUpdate
-        
-    
