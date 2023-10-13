@@ -1,10 +1,9 @@
 name: Publish release
 
 on:
-    workflow_run:
-        workflows: [Check for syntax errors]
-        types: [completed]
-        branches: [main]
+    push:
+        branches:
+            - release
 
 jobs:
     release-on-push:
@@ -14,7 +13,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
-            - uses: rymndhng/release-on-push-action@master
+            - uses: memgonzales/release-on-push-action@master
               with:
                   bump_version_scheme: norelease
 
