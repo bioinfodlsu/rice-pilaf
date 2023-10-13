@@ -1,9 +1,9 @@
-name: Publish hotfix
+name: Publish patch
 
 on:
     push:
         branches:
-            - hotfix
+            - patch
 
 jobs:
     release-on-push:
@@ -25,4 +25,4 @@ jobs:
         steps:
             - uses: dawidd6/action-delete-branch@v3
               with:
-                  branches: hotfix
+                  branches: patch
