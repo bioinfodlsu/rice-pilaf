@@ -86,7 +86,7 @@ prediction_technique_modal = dbc.Modal([
 set_modal = dbc.Modal([
     dbc.ModalHeader(
         dbc.ModalTitle(
-            'Transcription Factor Binding Site Prediction Technique'),
+            'Target Sequence for Transcription Factor Binding Site Prediction'),
     ),
     dbc.ModalBody([
         html.P(

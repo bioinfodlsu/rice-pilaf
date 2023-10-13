@@ -22,7 +22,7 @@ def init_callback(app):
                 return None
 
         raise PreventUpdate
-    
+
     # =================
     # Input-related
     # =================
@@ -37,7 +37,7 @@ def init_callback(app):
             return ctx.triggered_id['description']
 
         raise PreventUpdate
-        
+
     @app.callback(
         Output('text-mining-input-error', 'style', allow_duplicate=True),
         Output('text-mining-input-error', 'children', allow_duplicate=True),
@@ -78,7 +78,7 @@ def init_callback(app):
         Output('text-mining-input-error', 'children'),
         Input('homepage-is-resetted', 'data')
     )
-    def clear_coexpression_error_messages(homepage_is_resetted):
+    def clear_text_mining_error_messages(homepage_is_resetted):
         if homepage_is_resetted:
             return {'display': 'none'}, None
 
@@ -99,10 +99,10 @@ def init_callback(app):
 
         return ctx.triggered_id == 'text-mining-submit' and n_clicks > 0
 
-
     # =================
     # Table-related
     # =================
+
     @app.callback(
         Output('text-mining-results-table', 'data'),
         Output('text-mining-results-table', 'columns'),
@@ -161,7 +161,7 @@ def init_callback(app):
             return dcc.send_data_frame(df.to_csv, f'[{submitted_query}] Text Mining Analysis Table.csv', index=False)
 
         raise PreventUpdate
-    
+
     # =================
     # Session-related
     # =================

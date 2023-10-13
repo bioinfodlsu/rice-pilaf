@@ -3,7 +3,7 @@ from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
-from ..browse_loci import util as browse_loci_util
+from ..epigenome import util as epigenome_util
 from ..constants import Constants
 
 from ..style_util import *
@@ -95,7 +95,7 @@ def init_callback(app):
                     dccStore_children = get_cleared_dccStore_data_excluding_some_data(
                         dccStore_children)
 
-                    browse_loci_util.write_igv_tracks_to_file(nb_intervals_str)
+                    epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
 
                     return dccStore_children, None, {'display': 'none'}, True, nb_intervals_str, True
             else:
@@ -139,7 +139,7 @@ def init_callback(app):
             return True
 
         raise PreventUpdate
-        
+
     # =================
     # Session-related
     # =================
@@ -165,7 +165,5 @@ def init_callback(app):
     def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
         if homepage_is_submitted:
             return genomic_intervals
-        
+
         raise PreventUpdate
-        
-    

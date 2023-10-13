@@ -79,6 +79,6 @@ hr {
     margin-bottom: 0;
 }
 
-.reference i {
-    cursor: text;
+#_pages_content {
+    min-height: 100vh;
 }
