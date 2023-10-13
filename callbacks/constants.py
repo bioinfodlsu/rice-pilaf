@@ -70,7 +70,7 @@ class Constants(object):
     INTRO_LIFT_OVER = 'In this page, you can obtain the list of genes overlapping your input intervals. Optionally, you can choose genomes to lift-over your Nipponbare coordinates to.'
     INTRO_TEXT_MINING = 'In this page, you can retrieve gene names associated with traits, diseases, and chemicals, among others, from a database constructed from text-mined PubMed abstracts.'
     INTRO_COEXPRESSION = 'In this page, you can search for modules (communities or clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.'
-    INTRO_TFBS = 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals,the idea being that your intervals might contain variants that affect the binding affinity of transcription factors.'
+    INTRO_TFBS = 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals, the idea being that your intervals might contain variants that affect the binding affinity of transcription factors.'
     INTRO_EPIGENOME = 'In this page, you can genome-browse your loci and overlay epigenomic information such as chromatin accessibility and histone modification marks.'
 
     def __init__(self):

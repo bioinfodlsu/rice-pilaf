@@ -5,6 +5,7 @@ from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 from flask import json, send_from_directory, abort
 from werkzeug.exceptions import HTTPException
+from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
@@ -12,13 +13,15 @@ from ..file_util import *
 
 from ..constants import Constants
 
+Tissue_tracks = namedtuple('Tissue_tracks', ['tracks'])
+
 
 def init_callback(app):
     @app.callback(
-        Output('igv-genomic-intervals-input', 'children'),
+        Output('epigenome-genomic-intervals-input', 'children'),
         State('homepage-submitted-genomic-intervals', 'data'),
         Input('homepage-is-submitted', 'data'),
-        Input('igv-submit', 'n_clicks')
+        Input('epigenome-submit', 'n_clicks')
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         if homepage_is_submitted:
@@ -29,37 +32,36 @@ def init_callback(app):
 
         raise PreventUpdate
 
-    @app.callback(
-        Output('igv-tracks', 'options'),
-        Output('igv-tracks', 'value'),
-        Input('epigenome-tissue', 'value'),
-        State('epigenome-submitted-tissue', 'data'),
-    )
-    def set_track_options(selected_tissue, submitted_selected_tissue):
-        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], []
+    # =================
+    # Input-related
+    # =================
 
     @app.callback(
-        Output('igv-is-submitted', 'data', allow_duplicate=True),
-        Output('igv-submitted-genomic-intervals',
+        Output('epigenome-is-submitted', 'data', allow_duplicate=True),
+        Output('epigenome-submitted-genomic-intervals',
                'data', allow_duplicate=True),
         Output('epigenome-submitted-tissue', 'data', allow_duplicate=True),
-        Output('igv-submitted-tracks', 'data', allow_duplicate=True),
-        Input('igv-submit', 'n_clicks'),
-        State('igv-genomic-intervals', 'value'),
+        Output('epigenome-submitted-tracks', 'data', allow_duplicate=True),
+        Input('epigenome-submit', 'n_clicks'),
+        State('epigenome-genomic-intervals', 'value'),
         State('epigenome-tissue', 'value'),
-        State('igv-tracks', 'value'),
+        State('epigenome-tracks', 'value'),
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
-            return True, selected_nb_interval, selected_tissue, selected_tracks
+            tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
+            submitted_tissue_tracks = {
+                selected_tissue: tissue_tracks_value}
+
+            return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
 
         raise PreventUpdate
 
     @app.callback(
-        Output('igv-results-container', 'style'),
-        Input('igv-is-submitted', 'data')
+        Output('epigenome-results-container', 'style'),
+        Input('epigenome-is-submitted', 'data')
     )
     def display_igv_output(igv_is_submitted):
         if igv_is_submitted:
@@ -67,6 +69,45 @@ def init_callback(app):
         else:
             return {'display': 'none'}
 
+    @app.callback(
+        Output('epigenome-genomic-intervals', 'options'),
+        Output('epigenome-genomic-intervals', 'value'),
+        Input('homepage-submitted-genomic-intervals', 'data'),
+
+        State('homepage-is-submitted', 'data'),
+        State('epigenome-submitted-genomic-intervals', 'data'),
+        Input('epigenome-is-submitted', 'data')
+    )
+    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
+        if homepage_is_submitted:
+            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
+            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
+            igv_options = igv_options.split(';')
+
+            # if no genomic intervals are selected, use the first option
+            if not selected_nb_interval:
+                selected_nb_interval = igv_options[0]
+
+            return igv_options, selected_nb_interval
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('epigenome-tracks', 'options'),
+        Output('epigenome-tracks', 'value'),
+        Input('epigenome-tissue', 'value'),
+        State('epigenome-submitted-tracks', 'data'),
+    )
+    def set_track_options(selected_tissue, submitted_selected_tracks):
+        selected_tracks = []
+        if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
+            selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
+
+        return [{'label': i, 'value': i} for i in RICE_ENCODE_SAMPLES[selected_tissue]], selected_tracks
+
+    # =================
+    # Dash-bio-related
+    # =================
     """
     Helpful for debugging: tells you if there's a problem with Flask serving the file
     """
@@ -127,35 +168,12 @@ def init_callback(app):
             abort(404)
 
     @app.callback(
-        Output('igv-genomic-intervals', 'options'),
-        Output('igv-genomic-intervals', 'value'),
-        Input('homepage-submitted-genomic-intervals', 'data'),
-
-        State('homepage-is-submitted', 'data'),
-        State('igv-submitted-genomic-intervals', 'data'),
-        Input('igv-is-submitted', 'data')
-    )
-    def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
-        if homepage_is_submitted:
-            # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
-            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
-            igv_options = igv_options.split(';')
-
-            # if no genomic intervals are selected, use the first option
-            if not selected_nb_interval:
-                selected_nb_interval = igv_options[0]
-
-            return igv_options, selected_nb_interval
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('igv-display', 'children'),
-        State('igv-submitted-genomic-intervals', 'data'),
+        Output('epigenome-display', 'children'),
+        State('epigenome-submitted-genomic-intervals', 'data'),
         State('epigenome-submitted-tissue', 'data'),
-        State('igv-submitted-tracks', 'data'),
+        State('epigenome-submitted-tracks', 'data'),
         State('homepage-is-submitted', 'data'),
-        Input('igv-is-submitted', 'data'),
+        Input('epigenome-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
@@ -168,12 +186,16 @@ def init_callback(app):
                 # this will call out the send_annotations_nb_url callback function
                 "url": f"annotations_nb/{nb_intervals_str}/IRGSPMSU.gff.db/{selected_nb_intervals_str}/gff",
                 "displayMode": "EXPANDED",
-                "order":1
+                "order": 1
             }
+
+            tracks = []
+            if selected_tracks and selected_tissue in selected_tracks:
+                tracks = selected_tracks[selected_tissue]['tracks']
 
             # only display the tracks that were chosen by user. gene annotation track is always shown
             display_tracks = [gene_annotation_track] + \
-                generate_tracks(selected_tissue, selected_tracks)
+                generate_tracks(selected_tissue, tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
@@ -184,7 +206,7 @@ def init_callback(app):
 
             return html.Div([
                 dashbio.Igv(
-                    id='igv-Nipponbare-local',
+                    id='epigenome-Nipponbare-local',
                     reference={
                         "id": "GCF_001433935.1",
                         "name": "O. sativa IRGSP-1.0 (GCF_001433935.1)",
@@ -197,42 +219,17 @@ def init_callback(app):
             ])
 
         raise PreventUpdate
-    """
-    # saves the input objects to the respective dcc Stores
-    @app.callback(
-        Output('igv-saved-genomic-intervals', 'data', allow_duplicate=True),
-        Output('epigenome-saved-tissue', 'data', allow_duplicate=True),
-        Output('igv-saved-tracks', 'data', allow_duplicate=True),
 
-
-        Input('igv-genomic-intervals', 'value'),
-        Input('epigenome-tissue', 'value'),
-        Input('igv-tracks', 'value'),
-
-        State('homepage-is-submitted', 'data'),
-
-        prevent_initial_call=True
-    )
-    def set_input_igv_session_state(selected_nb_intervals_str, selected_tissue, igv_tracks, homepage_is_submitted):
-        if homepage_is_submitted:
-            return selected_nb_intervals_str, selected_tissue, igv_tracks
-
-        raise PreventUpdate
-
-    # displays the saved inputs to the respective input objects
+    # =================
+    # Session-related
+    # =================
     @app.callback(
         Output('epigenome-tissue', 'value'),
-        Output('igv-tracks', 'value'),
-        State('epigenome-saved-tissue', 'data'),
-        State('igv-saved-tracks', 'data'),
-        State('homepage-is-submitted', 'data'),
-        Input('igv-submit', 'n_clicks'),
-
-        prevent_initial_call=True
+        State('epigenome-submitted-tissue', 'data'),
+        Input('epigenome-is-submitted', 'data')
     )
-    def get_input_igv_session_state(epigenome_tissue, igv_tracks, homepage_is_submitted, *_):
-        if homepage_is_submitted:
-            return epigenome_tissue, igv_tracks
+    def get_input_igv_session_state(selected_tissue, *_):
+        if not selected_tissue:
+            selected_tissue = 'Leaf'
 
-        raise PreventUpdate
-    """
+        return selected_tissue

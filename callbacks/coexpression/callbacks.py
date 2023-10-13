@@ -25,6 +25,9 @@ def init_callback(app):
 
         raise PreventUpdate
 
+    # =================
+    # Input-related
+    # =================
     @app.callback(
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-addl-genes',
@@ -41,8 +44,9 @@ def init_callback(app):
         Output('coexpression-submitted-parameter-slider',
                'data', allow_duplicate=True),
 
-        Output('coexpression-addl-genes-error', 'style'),
-        Output('coexpression-addl-genes-error', 'children'),
+        Output('coexpression-addl-genes-error', 'style', allow_duplicate=True),
+        Output('coexpression-addl-genes-error',
+               'children', allow_duplicate=True),
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
@@ -125,6 +129,17 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
+        Output('coexpression-addl-genes-error', 'style'),
+        Output('coexpression-addl-genes-error', 'children'),
+        Input('homepage-is-resetted', 'data')
+    )
+    def clear_coexpression_error_messages(homepage_is_resetted):
+        if homepage_is_resetted:
+            return {'display': 'none'}, None
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('coexpression-submit', 'disabled'),
 
         Input('coexpression-submit', 'n_clicks'),
@@ -134,6 +149,32 @@ def init_callback(app):
     )
     def disable_coexpression_button_upon_run(n_clicks,  *_):
         return ctx.triggered_id == 'coexpression-submit' and n_clicks > 0
+
+    @app.callback(
+        Output('coexpression-clustering-algo-modal', 'is_open'),
+        Output('coexpression-network-modal', 'is_open'),
+        Output('coexpression-parameter-modal', 'is_open'),
+        Output('coexpression-converter-modal', 'is_open'),
+
+        Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
+        Input('coexpression-network-tooltip', 'n_clicks'),
+        Input('coexpression-parameter-tooltip', 'n_clicks'),
+        Input('coexpression-converter-tooltip', 'n_clicks')
+    )
+    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks, converter_tooltip_n_clicks):
+        if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
+            return True, False, False, False
+
+        if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
+            return False, True, False, False
+
+        if ctx.triggered_id == 'coexpression-parameter-tooltip' and parameter_tooltip_n_clicks > 0:
+            return False, False, True, False
+
+        if ctx.triggered_id == 'coexpression-converter-tooltip' and converter_tooltip_n_clicks > 0:
+            return False, False, False, True
+
+        raise PreventUpdate
 
     @app.callback(
         Output('coexpression-parameter-slider', 'marks'),
@@ -148,50 +189,39 @@ def init_callback(app):
         return get_parameters_for_algo(algo), module_detection_algos[algo].default_param * module_detection_algos[algo].multiplier
 
     @app.callback(
-        Output('coexpression-module-graph', 'elements'),
-        Output('coexpression-module-graph', 'layout'),
-        Output('coexpression-module-graph', 'style', allow_duplicate=True),
-        Output('coexpression-graph-container', 'style'),
-
-        Input('coexpression-combined-genes', 'data'),
-
-        Input('coexpression-submitted-network', 'data'),
-        Input('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-is-submitted', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data'),
-        State('coexpression-submitted-layout', 'data'),
-
-        prevent_initial_call=True
+        Output('coexpression-input', 'children'),
+        Input('coexpression-is-submitted', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-parameter-slider', 'data')
     )
-    def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_slider, layout):
+    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, submitted_parameter_slider):
         if coexpression_is_submitted:
-            if submitted_algo and submitted_algo in submitted_parameter_slider:
-                parameters = submitted_parameter_slider[submitted_algo]['value']
-                if not layout:
-                    layout = 'circle'
+            parameters = 0
+            if submitted_parameter_slider and algo in submitted_parameter_slider:
+                parameters = submitted_parameter_slider[algo]['value']
 
-                return load_module_graph(
-                    combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
+            if not genes:
+                genes = 'None'
+            else:
+                genes = '; '.join(set(genes))
+
+            return [html.B('Additional Genes: '), genes,
+                    html.Br(),
+                    html.B('Selected Co-Expression Network: '), get_user_facing_network(
+                        network),
+                    html.Br(),
+                    html.B('Selected Module Detection Algorithm: '), get_user_facing_algo(
+                        algo),
+                    html.Br(),
+                    html.B('Selected Algorithm Parameter: '), get_user_facing_parameter(algo, parameters)]
 
         raise PreventUpdate
 
-    @app.callback(
-        Output('coexpression-table-container', 'style', allow_duplicate=True),
-        Input('coexpression-submit', 'n_clicks'),
-
-        prevent_initial_call=True
-    )
-    def hide_table(*_):
-        return {'visibility': 'hidden'}
-
-    @app.callback(
-        Output('coexpression-module-graph', 'style', allow_duplicate=True),
-        Input('coexpression-modules', 'value'),
-
-        prevent_initial_call=True
-    )
-    def hide_graph(*_):
-        return {'visibility': 'hidden'}
+    # =================
+    # Module-related
+    # =================
 
     @app.callback(
         Output('coexpression-modules', 'options'),
@@ -213,44 +243,47 @@ def init_callback(app):
     )
     def perform_module_enrichment(genomic_intervals, combined_gene_ids, submitted_addl_genes,
                                   submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider, module, coexpression_is_submitted):
-        if homepage_is_submitted:
-            if coexpression_is_submitted:
-                if submitted_algo and submitted_algo in submitted_parameter_slider:
-                    parameters = submitted_parameter_slider[submitted_algo]['value']
+        if homepage_is_submitted and coexpression_is_submitted:
+            if submitted_algo and submitted_algo in submitted_parameter_slider:
+                parameters = submitted_parameter_slider[submitted_algo]['value']
 
-                    enriched_modules = do_module_enrichment_analysis(
-                        combined_gene_ids, genomic_intervals, submitted_addl_genes, submitted_network, submitted_algo, parameters)
+                enriched_modules = do_module_enrichment_analysis(
+                    combined_gene_ids, genomic_intervals, submitted_addl_genes, submitted_network, submitted_algo, parameters)
 
-                    # Display statistics
-                    num_enriched_modules = len(enriched_modules)
-                    total_num_modules = count_modules(
-                        submitted_network, submitted_algo, parameters)
-                    stats = f'{num_enriched_modules} out of {total_num_modules} '
-                    if total_num_modules == 1:
-                        stats += 'module '
-                    else:
-                        stats += 'modules '
+                # Display statistics
+                num_enriched_modules = len(enriched_modules)
+                total_num_modules = count_modules(
+                    submitted_network, submitted_algo, parameters)
+                stats = f'{num_enriched_modules} out of {total_num_modules} '
+                if total_num_modules == 1:
+                    stats += 'module '
+                else:
+                    stats += 'modules '
 
-                    if num_enriched_modules == 1:
-                        stats += 'was '
-                    else:
-                        stats += 'were '
+                if num_enriched_modules == 1:
+                    stats += 'was '
+                else:
+                    stats += 'were '
 
-                    stats += 'found to be enriched (adjusted p-value < 0.05).'
+                stats += 'found to be enriched (adjusted p-value < 0.05).'
 
-                    first_module = None
-                    if enriched_modules:
-                        first_module = enriched_modules[0]
-                        module = first_module
-                    else:
-                        return enriched_modules, first_module, {'display': 'none'}, stats
+                first_module = None
+                if enriched_modules:
+                    first_module = enriched_modules[0]
+                    module = first_module
+                else:
+                    return enriched_modules, first_module, {'display': 'none'}, stats
 
-                    if module:
-                        first_module = module
+                if module:
+                    first_module = module
 
-                    return enriched_modules, first_module, {'display': 'block'}, stats
+                return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
+
+    # =================
+    # Table-related
+    # =================
 
     @app.callback(
         Output('coexpression-pathways', 'data'),
@@ -320,6 +353,45 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
+        Output('coexpression-pathways', 'filter_query'),
+        Output('coexpression-pathways', 'page_current'),
+
+        Input('coexpression-reset-table', 'n_clicks'),
+        Input('coexpression-submit', 'n_clicks'),
+
+        Input('coexpression-modules-pathway', 'active_tab'),
+        Input('coexpression-modules', 'value')
+    )
+    def reset_table_filter_page(*_):
+        return '', 0
+
+    @app.callback(
+        Output('coexpression-table-container', 'style', allow_duplicate=True),
+        Input('coexpression-submit', 'n_clicks'),
+
+        prevent_initial_call=True
+    )
+    def hide_table(*_):
+        return {'visibility': 'hidden'}
+
+    @app.callback(
+        Output('coexpression-download-df-to-csv', 'data'),
+        Input('coexpression-export-table', 'n_clicks'),
+        State('coexpression-pathways', 'data'),
+        State('coexpression-modules', 'value')
+    )
+    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, module):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(purge_html_export_table(coexpression_df))
+            return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Table.csv', index=False)
+
+        raise PreventUpdate
+
+    # =================
+    # Graph-related
+    # =================
+
+    @app.callback(
         Output('coexpression-module-graph', 'elements', allow_duplicate=True),
         Output('coexpression-module-graph', 'layout', allow_duplicate=True),
         Output('coexpression-module-graph', 'style', allow_duplicate=True),
@@ -345,8 +417,8 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def display_table_graph(combined_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_slider,
-                            layout, coexpression_is_submitted, modules, *_):
+    def display_graph(combined_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_slider,
+                      layout, coexpression_is_submitted, modules, *_):
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -363,171 +435,6 @@ def init_callback(app):
                     return module_graph + ({'display': 'none'}, '', {'display': 'none'})
 
                 return module_graph + ({'visibility': 'visible', 'width': '100%'}, 'Click on a node to display information about the gene.', {'display': 'block'})
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
-        Output('coexpression-pathway-active-tab',
-               'data', allow_duplicate=True),
-        Output('coexpression-submitted-module', 'data', allow_duplicate=True),
-
-        Input('coexpression-modules', 'value'),
-        Input('coexpression-graph-layout', 'value'),
-        Input('coexpression-modules-pathway', 'active_tab'),
-
-        State('homepage-is-submitted', 'data'),
-        prevent_initial_call=True
-    )
-    def set_submitted_coexpression_session_state(module, layout, active_tab, homepage_is_submitted):
-        if homepage_is_submitted:
-            return layout, active_tab, module
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-clustering-algo', 'value'),
-        Output('coexpression-addl-genes', 'value'),
-        Output('coexpression-network', 'value'),
-        State('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-submitted-addl-genes', 'data'),
-        State('coexpression-submitted-network', 'data'),
-        Input('coexpression-is-submitted', 'data')
-    )
-    def get_input_coexpression_session_state(algo, genes, network, *_):
-        if not algo:
-            algo = 'clusterone'
-
-        if not genes:
-            genes = ''
-
-        if not network:
-            network = 'OS-CX'
-
-        return algo, genes, network
-
-    @app.callback(
-        Output('coexpression-graph-layout', 'value'),
-        Output('coexpression-modules-pathway', 'active_tab'),
-
-        Input('coexpression-submitted-network', 'data'),
-        Input('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-is-submitted', 'data'),
-
-        State('coexpression-submitted-layout', 'data'),
-        State('coexpression-pathway-active-tab', 'data')
-    )
-    def display_selected_graph_layout(submitted_network, submitted_algo, coexpression_is_submitted, layout, active_tab):
-        if coexpression_is_submitted:
-            if not layout:
-                layout = 'circle'
-
-            if not active_tab:
-                active_tab = 'tab-0'
-
-            return layout, active_tab
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-input', 'children'),
-        Input('coexpression-is-submitted', 'data'),
-        State('coexpression-valid-addl-genes', 'data'),
-        State('coexpression-submitted-network', 'data'),
-        State('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data')
-    )
-    def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, submitted_parameter_slider):
-        if coexpression_is_submitted:
-            parameters = 0
-            if submitted_parameter_slider and algo in submitted_parameter_slider:
-                parameters = submitted_parameter_slider[algo]['value']
-
-            if not genes:
-                genes = 'None'
-            else:
-                genes = '; '.join(set(genes))
-
-            return [html.B('Additional Genes: '), genes,
-                    html.Br(),
-                    html.B('Selected Co-Expression Network: '), get_user_facing_network(
-                        network),
-                    html.Br(),
-                    html.B('Selected Module Detection Algorithm: '), get_user_facing_algo(
-                        algo),
-                    html.Br(),
-                    html.B('Selected Algorithm Parameter: '), get_user_facing_parameter(algo, parameters)]
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-clustering-algo-modal', 'is_open'),
-        Output('coexpression-network-modal', 'is_open'),
-        Output('coexpression-parameter-modal', 'is_open'),
-        Output('coexpression-converter-modal', 'is_open'),
-
-        Input('coexpression-clustering-algo-tooltip', 'n_clicks'),
-        Input('coexpression-network-tooltip', 'n_clicks'),
-        Input('coexpression-parameter-tooltip', 'n_clicks'),
-        Input('coexpression-converter-tooltip', 'n_clicks')
-    )
-    def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks, converter_tooltip_n_clicks):
-        if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
-            return True, False, False, False
-
-        if ctx.triggered_id == 'coexpression-network-tooltip' and network_tooltip_n_clicks > 0:
-            return False, True, False, False
-
-        if ctx.triggered_id == 'coexpression-parameter-tooltip' and parameter_tooltip_n_clicks > 0:
-            return False, False, True, False
-
-        if ctx.triggered_id == 'coexpression-converter-tooltip' and converter_tooltip_n_clicks > 0:
-            return False, False, False, True
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-pathways', 'filter_query'),
-        Output('coexpression-pathways', 'page_current'),
-
-        Input('coexpression-reset-table', 'n_clicks'),
-        Input('coexpression-submit', 'n_clicks'),
-
-        Input('coexpression-modules-pathway', 'active_tab'),
-        Input('coexpression-modules', 'value')
-    )
-    def reset_table_filter_page(*_):
-        return '', 0
-
-    @app.callback(
-        Output('coexpression-download-df-to-csv', 'data'),
-        Input('coexpression-export-table', 'n_clicks'),
-        State('coexpression-pathways', 'data'),
-        State('homepage-submitted-genomic-intervals', 'data')
-    )
-    def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, genomic_intervals):
-        if download_n_clicks >= 1:
-            df = pd.DataFrame(purge_html_export_table(coexpression_df))
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Table.csv', index=False)
-
-        raise PreventUpdate
-
-    @app.callback(
-        Output('coexpression-download-graph-to-json', 'data'),
-        Input('coexpression-export-graph', 'n_clicks'),
-        State('homepage-submitted-genomic-intervals', 'data'),
-        State('coexpression-submitted-network', 'data'),
-        State('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data'),
-        State('coexpression-modules', 'value')
-    )
-    def download_coexpression_graph_to_tsv(download_n_clicks, genomic_intervals, submitted_network, submitted_algo, submitted_parameter_slider, module):
-        if download_n_clicks >= 1:
-            parameters = submitted_parameter_slider[submitted_algo]['value']
-            module_idx = int(module.split(' ')[1])
-            df = pd.read_csv(
-                f'{Constants.TEMP}/{submitted_network}/{submitted_algo}/modules/{parameters}/module-{module_idx}.tsv', sep='\t')
-            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
 
         raise PreventUpdate
 
@@ -575,3 +482,125 @@ def init_callback(app):
                 return node_data
 
         raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        Input('coexpression-modules', 'value'),
+
+        prevent_initial_call=True
+    )
+    def hide_graph(*_):
+        return {'visibility': 'hidden'}
+
+    @app.callback(
+        Output('coexpression-module-graph', 'elements'),
+        Output('coexpression-module-graph', 'layout'),
+        Output('coexpression-module-graph', 'style', allow_duplicate=True),
+        Output('coexpression-graph-container', 'style'),
+
+        Input('coexpression-combined-genes', 'data'),
+
+        Input('coexpression-submitted-network', 'data'),
+        Input('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-is-submitted', 'data'),
+        State('coexpression-submitted-parameter-slider', 'data'),
+        State('coexpression-submitted-layout', 'data'),
+
+        prevent_initial_call=True
+    )
+    def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_slider, layout):
+        if coexpression_is_submitted:
+            if submitted_algo and submitted_algo in submitted_parameter_slider:
+                parameters = submitted_parameter_slider[submitted_algo]['value']
+                if not layout:
+                    layout = 'circle'
+
+                return load_module_graph(
+                    combined_gene_ids, None, submitted_network, submitted_algo, parameters, layout) + ({'visibility': 'hidden'}, )
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-download-graph-to-json', 'data'),
+        Input('coexpression-export-graph', 'n_clicks'),
+        State('coexpression-submitted-network', 'data'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-parameter-slider', 'data'),
+        State('coexpression-modules', 'value')
+    )
+    def download_coexpression_graph_to_tsv(download_n_clicks, submitted_network, submitted_algo, submitted_parameter_slider, module):
+        if download_n_clicks >= 1:
+            parameters = submitted_parameter_slider[submitted_algo]['value']
+            module_idx = int(module.split(' ')[1])
+            df = pd.read_csv(
+                f'{Constants.TEMP}/{submitted_network}/{submitted_algo}/modules/{parameters}/module-{module_idx}.tsv', sep='\t')
+            return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Graph.tsv', index=False, sep='\t')
+
+        raise PreventUpdate
+
+    # =================
+    # Session-related
+    # =================
+
+    @app.callback(
+        Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
+        Output('coexpression-pathway-active-tab',
+               'data', allow_duplicate=True),
+        Output('coexpression-submitted-module', 'data', allow_duplicate=True),
+
+        Input('coexpression-modules', 'value'),
+        Input('coexpression-graph-layout', 'value'),
+        Input('coexpression-modules-pathway', 'active_tab'),
+
+        State('homepage-is-submitted', 'data'),
+        prevent_initial_call=True
+    )
+    def set_submitted_coexpression_session_state(module, layout, active_tab, homepage_is_submitted):
+        if homepage_is_submitted:
+            return layout, active_tab, module
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-graph-layout', 'value'),
+        Output('coexpression-modules-pathway', 'active_tab'),
+
+        Input('coexpression-submitted-network', 'data'),
+        Input('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-is-submitted', 'data'),
+
+        State('coexpression-submitted-layout', 'data'),
+        State('coexpression-pathway-active-tab', 'data')
+    )
+    def get_submitted_coexpression_session_state(submitted_network, submitted_algo, coexpression_is_submitted, layout, active_tab):
+        if coexpression_is_submitted:
+            if not layout:
+                layout = 'circle'
+
+            if not active_tab:
+                active_tab = 'tab-0'
+
+            return layout, active_tab
+
+        raise PreventUpdate
+
+    @app.callback(
+        Output('coexpression-clustering-algo', 'value'),
+        Output('coexpression-addl-genes', 'value'),
+        Output('coexpression-network', 'value'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        Input('coexpression-is-submitted', 'data')
+    )
+    def get_input_coexpression_session_state(algo, genes, network, *_):
+        if not algo:
+            algo = 'clusterone'
+
+        if not genes:
+            genes = ''
+
+        if not network:
+            network = 'OS-CX'
+
+        return algo, genes, network

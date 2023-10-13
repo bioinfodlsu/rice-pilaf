@@ -4,7 +4,7 @@ import pages.analysis.intro as intro
 import pages.analysis.lift_over as lift_over
 import pages.analysis.co_expr as co_expr
 import pages.analysis.tf_enrich as tf_enrich
-import pages.analysis.browse_loci as browse_loci
+import pages.analysis.epigenome as epigenome
 import pages.analysis.text_mining as text_mining
 
 from collections import OrderedDict
@@ -29,6 +29,6 @@ layout = html.Div(
         text_mining.layout,
         co_expr.layout,
         tf_enrich.layout,
-        browse_loci.layout
+        epigenome.layout
     ]
 )

@@ -2,7 +2,7 @@ from dash import dcc, html
 import dash_bootstrap_components as dbc
 from callbacks.constants import Constants
 
-from callbacks.browse_loci.util import *
+from callbacks.epigenome.util import *
 
 layout = html.Div(
     id={
@@ -19,22 +19,20 @@ layout = html.Div(
 
         html.Div([
             html.I(className='bi bi-chevron-bar-right me-2 non-clickable'),
-            html.Span(id='igv-genomic-intervals-input'),
+            html.Span(id='epigenome-genomic-intervals-input'),
         ], className='analysis-intro p-3'),
 
         html.Br(),
 
         html.Div([
-            dbc.Label('Select an interval: ',
-                      className='mb-2'),
+            dbc.Label('Select an interval', className='mb-2'),
 
             dcc.Dropdown(
-                id='igv-genomic-intervals',
+                id='epigenome-genomic-intervals',
             ),
 
             html.Br(),
-            dbc.Label('Select a tissue: ',
-                      className='mb-2'),
+            dbc.Label('Select a tissue'),
 
             dbc.RadioItems(
                 id='epigenome-tissue',
@@ -45,15 +43,15 @@ layout = html.Div(
             ),
 
             html.Br(),
+            dbc.Label('Select tracks to be displayed '),
 
-            dbc.Label(['Select tracks to be displayed:']),
+            dbc.Checklist(id='epigenome-tracks', inline=True,
+                          className='ms-3 mt-1', value=[]),
 
-            dbc.Checklist(id='igv-tracks', inline=True,
-                          className='ms-3', value=[]),
             html.Br(),
 
             dbc.Button('Submit',
-                       id='igv-submit',
+                       id='epigenome-submit',
                        n_clicks=0,
                        className='page-button'),
         ], className='analysis-intro p-3'),
@@ -61,12 +59,12 @@ layout = html.Div(
         html.Br(),
 
         html.Div(
-            id='igv-results-container',
+            id='epigenome-results-container',
             style={'display': 'none'},
             children=[
                 html.Hr(className='mt-3 mb-4'),
 
-                dcc.Loading(id='igv-display')
+                dcc.Loading(id='epigenome-display')
             ]
         )
     ], className='mt-2'

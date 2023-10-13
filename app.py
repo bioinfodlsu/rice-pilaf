@@ -8,7 +8,7 @@ import pages.navigation.main_nav as main_nav
 import callbacks.homepage.callbacks
 import callbacks.homepage.util
 import callbacks.lift_over.callbacks
-import callbacks.browse_loci.callbacks
+import callbacks.epigenome.callbacks
 import callbacks.coexpression.callbacks
 import callbacks.tf_enrich.callbacks
 import callbacks.text_mining.callbacks
@@ -113,6 +113,11 @@ app.layout = lambda: dbc.Container([
                 storage_type='session'
             ),
 
+            dcc.Store(
+                id='homepage-is-resetted',
+                storage_type='session'
+            ),
+
 
 
             # ==========
@@ -141,38 +146,23 @@ app.layout = lambda: dbc.Container([
             # ============
             # IGV Browser
             # ============
-            # dcc.Store(
-            #    id='igv-saved-genomic-intervals',
-            #    storage_type='session'
-            # ),
-
             dcc.Store(
-                id='igv-submitted-genomic-intervals',
+                id='epigenome-submitted-genomic-intervals',
                 storage_type='session'
             ),
-
-            # dcc.Store(
-            #    id='epigenome-saved-tissue',
-            #    storage_type='session'
-            # ),
 
             dcc.Store(
                 id='epigenome-submitted-tissue',
                 storage_type='session'
             ),
 
-            # dcc.Store(
-            #    id='igv-saved-tracks',
-            #    storage_type='session'
-            # ),
-
             dcc.Store(
-                id='igv-submitted-tracks',
+                id='epigenome-submitted-tracks',
                 storage_type='session'
             ),
 
             dcc.Store(
-                id='igv-is-submitted',
+                id='epigenome-is-submitted',
                 storage_type='session'
             ),
 
@@ -244,6 +234,16 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
+                id='tfbs-valid-addl-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='tfbs-combined-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
                 id='tfbs-submitted-prediction-technique',
                 storage_type='session'
             ),
@@ -272,7 +272,7 @@ app.layout = lambda: dbc.Container([
 callbacks.homepage.callbacks.init_callback(app)
 
 callbacks.lift_over.callbacks.init_callback(app)
-callbacks.browse_loci.callbacks.init_callback(app)
+callbacks.epigenome.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
 callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)

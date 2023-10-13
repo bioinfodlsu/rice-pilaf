@@ -10,3 +10,7 @@
 i[id$="-tooltip"] {
     margin-left: 1em;
 }
+
+.reference i {
+    cursor: text;
+}
