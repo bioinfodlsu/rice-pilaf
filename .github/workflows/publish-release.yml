@@ -1,9 +1,9 @@
-name: Publish minor release 
+name: Publish release 
 
 on: 
   push:
     branches:
-      - minor-release
+      - release
     
 jobs:
   release-on-push:
