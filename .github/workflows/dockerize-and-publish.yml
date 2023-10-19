@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   workflow_run:
-    workflows: [Publish minor release, Publish major release, Publish patch]
+    workflows: [Publish release]
     types: [completed]
     branches: [minor-release, major-release, patch]
   
