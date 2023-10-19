@@ -20,13 +20,13 @@ jobs:
                   release_body: ${{ env.RELEASE_BODY }} 
 
             - uses: memgonzales/release-on-push-action@master
-              if: ${{ github.ref == 'refs/heads/minor-release' }}
+              if: ${{ github.ref == 'refs/heads/major-release' }}
               with:
                   bump_version_scheme: major
                   release_body: ${{ env.RELEASE_BODY }} 
 
             - uses: memgonzales/release-on-push-action@master
-              if: github.ref == 'refs/heads/patch'
+              if: ${{ github.ref == 'refs/heads/patch' }}
               with:
                   bump_version_scheme: patch
                   release_body: ${{ env.RELEASE_BODY }} 
