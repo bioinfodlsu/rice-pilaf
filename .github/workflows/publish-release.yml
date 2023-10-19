@@ -1,9 +1,7 @@
 name: Publish release
 
 on:
-  workflow_run:
-    workflows: [Check for syntax errors]
-    types: [completed]
+  push:
     branches: [minor-release, major-release, patch]
 
 jobs:
@@ -42,4 +40,4 @@ jobs:
         steps:
             - uses: dawidd6/action-delete-branch@v3
               with:
-                  branches: ${GITHUB_REF##*/}
+                  branches: ${{ github.ref_name }}
