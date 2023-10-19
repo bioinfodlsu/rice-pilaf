@@ -1,0 +1,44 @@
+name: Publish release
+
+on:
+  workflow_run:
+    workflows: [Check for syntax errors]
+    types: [completed]
+    branches: [minor-release, major-release, patch]
+
+jobs:
+    release-on-push:
+        runs-on: ubuntu-latest
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            RELEASE_BODY: "Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard. Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients, this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.\n\n ## Installation and Usage \nPlease visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).\n\n ## Dataset \n Download the dataset needed for the app from here.\n\n ## Changelog\n"
+
+        steps:
+            - uses: memgonzales/release-on-push-action@master
+              if: github.ref == 'refs/heads/minor-release'
+              with:
+                  bump_version_scheme: minor
+                  release_body: ${{ env.RELEASE_BODY }} 
+
+            - uses: memgonzales/release-on-push-action@master
+              if: github.ref == 'refs/heads/major-release'
+              with:
+                  bump_version_scheme: major
+                  release_body: ${{ env.RELEASE_BODY }} 
+
+            - uses: memgonzales/release-on-push-action@master
+              if: github.ref == 'refs/heads/patch'
+              with:
+                  bump_version_scheme: patch
+                  release_body: ${{ env.RELEASE_BODY }} 
+
+    delete-release-branch:
+        needs: release-on-push
+        runs-on: ubuntu-latest
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        steps:
+            - uses: dawidd6/action-delete-branch@v3
+              with:
+                  branches: ${GITHUB_REF##*/}
