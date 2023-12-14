@@ -73,6 +73,7 @@ class Constants(object):
     INTRO_COEXPRESSION = 'In this page, you can search for modules (communities or clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases.'
     INTRO_TFBS = 'In this page, you can search for transcription factors whose binding sites overlap significantly with your intervals, the idea being that your intervals might contain variants that affect the binding affinity of transcription factors.'
     INTRO_EPIGENOME = 'In this page, you can genome-browse your loci and overlay epigenomic information such as chromatin accessibility and histone modification marks.'
+    INTRO_SUMMARY = 'In this page, you can find a summary of the results of the different post-GWAS analyses.'
 
     def __init__(self):
         pass

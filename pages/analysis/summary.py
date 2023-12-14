@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 from callbacks.constants import Constants
-from callbacks.tf_enrich.util import *
 
 # ===========================
 # Prediction Technique Modal
@@ -146,5 +145,30 @@ converter_modal = dbc.Modal([
 
 
 layout = html.Div(
+    id={
+        'type': 'analysis-layout',
+        'label': Constants.LABEL_SUMMARY
+    },
+    hidden=True,
+    children=[
+        html.Div([
+            html.P(
+                [
+                    Constants.INTRO_SUMMARY,
+                    # ' Click ',
+                    # dcc.Link(
+                    #     ['here ', html.I(
+                    #         id='demo-link',
+                    #         className='fa-solid fa-up-right-from-square fa-2xs'
+                    #     )],
+                    #     href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.2-Gene-retrieval-by-text-mining',
+                    #     target='_blank',
+                    #     className='top-navbar-item'
+                    # ),
+                    # ' for the user guide.'
+                ]
 
+            ),
+        ], className='analysis-intro p-3'),
+    ]
 )
