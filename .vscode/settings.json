@@ -1,23 +1,23 @@
 {
-	"[python]": {
-		"editor.defaultFormatter": "ms-python.autopep8",
-		"editor.formatOnSave": true
-	},
-	"[r]": {
-		"editor.defaultFormatter": "REditorSupport.r",
-		"editor.formatOnSave": true
-	},
-	"python.formatting.provider": "none",
-	"editor.codeActionsOnSave": {
-		"source.organizeImports": true
-	},
-	"saveAndRunExt": {
-		"commands": [
-			{
-				"match": ".*\\.py",
-				"isShellCommand": true,
-				"cmd": "autoflake -i --remove-all-unused-imports --remove-unused-variables ${file}"
-			}
-		]
-	}
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true
+    },
+    "[r]": {
+        "editor.defaultFormatter": "REditorSupport.r",
+        "editor.formatOnSave": true
+    },
+    "python.formatting.provider": "none",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "saveAndRunExt": {
+        "commands": [
+            {
+                "match": ".*\\.py",
+                "isShellCommand": true,
+                "cmd": "autoflake -i --remove-all-unused-imports --remove-unused-variables ${file}"
+            }
+        ]
+    }
 }

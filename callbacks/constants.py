@@ -5,6 +5,7 @@ class Constants(object):
     LABEL_TFBS = 'tfbs'
     LABEL_IGV = 'browse-loci'
     LABEL_TEXT_MINING = 'text-mining'
+    LABEL_SUMMARY = 'summary'
 
     DATA = 'static'
     APP_DATA = f'{DATA}/app_data'
