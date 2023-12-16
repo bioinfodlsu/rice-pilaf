@@ -12,6 +12,7 @@ import callbacks.epigenome.callbacks
 import callbacks.coexpression.callbacks
 import callbacks.tf_enrich.callbacks
 import callbacks.text_mining.callbacks
+import callbacks.summary.callbacks
 
 from callbacks.branch import *
 from callbacks.constants import *
@@ -276,6 +277,7 @@ callbacks.epigenome.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
 callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)
+callbacks.summary.callbacks.init_callback(app)
 
 # Create database table
 
