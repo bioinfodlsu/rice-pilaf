@@ -2,7 +2,6 @@ from dash import Input, Output, State, dcc, html, ctx
 from dash.exceptions import PreventUpdate
 
 from .util import *
-from ..constants import Constants
 from ..general_util import *
 
 

@@ -1,6 +1,7 @@
 from dash import Input, Output, State, html, ctx
 from dash.exceptions import PreventUpdate
 
+from .util import *
 from ..lift_over import util as lift_over_util
 from ..coexpression import util as coexpression_util
 
@@ -165,25 +166,30 @@ def init_callback(app):
     # Table-related
     # =================
 
-    # @app.callback(
-    #     Output('summary-results-table', 'data'),
-    #     Output('summary-results-table', 'columns'),
+    @app.callback(
+        Output('summary-results-table', 'data'),
+        Output('summary-results-table', 'columns'),
 
-    #     State('homepage-submitted-genomic-intervals', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
 
-    #     Input('summary-combined-genes', 'data'),
-    #     Input('summary-submitted-addl-genes', 'data'),
+        Input('summary-combined-genes', 'data'),
+        Input('summary-submitted-addl-genes', 'data'),
 
-    #     State('homepage-is-submitted', 'data'),
-    #     State('tfbs-is-submitted', 'data')
-    # )
-    # def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
-    #                                homepage_submitted, tfbs_is_submitted):
-    #     # if homepage_submitted and tfbs_is_submitted:
+        State('homepage-is-submitted', 'data'),
+        State('summary-is-submitted', 'data')
+    )
+    def display_summary_results(genomic_intervals, combined_genes, submitted_addl_genes,
+                                homepage_submitted, summary_is_submitted):
+        if homepage_submitted and summary_is_submitted:
+            summary_results_df = make_summary_table(
+                genomic_intervals, combined_genes)
 
-    #     #     return enrichment_results_df.to_dict('records'), columns, stats
+            columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
+                       for x in summary_results_df.columns]
 
-    #     raise PreventUpdate
+            return summary_results_df.to_dict('records'), columns
+
+        raise PreventUpdate
 
     @app.callback(
         Output('summary-results-table', 'filter_query', allow_duplicate=True),

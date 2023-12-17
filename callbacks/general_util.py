@@ -57,6 +57,15 @@ def get_num_entries(table, column):
     return table[column].count()
 
 
+def count_non_empty_vals(array):
+    ctr = 0
+    for elem in array:
+        if elem != NULL_PLACEHOLDER:
+            ctr += 1
+
+    return ctr
+
+
 def purge_html_export_table(table):
     for row in table:
         for key in row.keys():
