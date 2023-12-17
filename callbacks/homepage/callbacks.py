@@ -4,7 +4,6 @@ from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
 from ..epigenome import util as epigenome_util
-from ..constants import Constants
 
 from ..style_util import *
 
