@@ -164,7 +164,8 @@ def init_callback(app):
                     html.B(
                         'Selected TF Binding Site Prediction Technique: '), tfbs_prediction_technique,
                     html.Br(),
-                    html.B('Selected TF Binding Site Regions: '), tfbs_set,
+                    html.B(
+                        'Selected TF Binding Site Regions: '), tfbs_set.capitalize(),
                     html.Br()]
 
         raise PreventUpdate
