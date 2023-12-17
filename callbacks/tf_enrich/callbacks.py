@@ -178,6 +178,9 @@ def init_callback(app):
         Output('tfbs-results-table', 'columns'),
         Output('tfbs-table-stats', 'children'),
 
+        Output('tfbs-results-table', 'filter_query', allow_duplicate=True),
+        Output('tfbs-results-table', 'page_current', allow_duplicate=True),
+
         State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('tfbs-combined-genes', 'data'),
@@ -186,7 +189,9 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-set', 'data'),
         State('tfbs-submitted-prediction-technique', 'data'),
-        State('tfbs-is-submitted', 'data')
+        State('tfbs-is-submitted', 'data'),
+
+        prevent_initial_call=True
     )
     def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
                                    homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
@@ -213,16 +218,16 @@ def init_callback(app):
 
             stats += 'predicted binding sites that overlap with your GWAS/QTL intervals.'
 
-            return enrichment_results_df.to_dict('records'), columns, stats
+            return enrichment_results_df.to_dict('records'), columns, stats, '', 0
 
         raise PreventUpdate
 
     @app.callback(
-        Output('tfbs-results-table', 'filter_query'),
-        Output('tfbs-results-table', 'page_current'),
+        Output('tfbs-results-table', 'filter_query', allow_duplicate=True),
+        Output('tfbs-results-table', 'page_current', allow_duplicate=True),
 
         Input('tfbs-reset-table', 'n_clicks'),
-        Input('tfbs-submit', 'n_clicks')
+        prevent_initial_call=True
     )
     def reset_table_filter_page(*_):
         return '', 0
