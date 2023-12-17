@@ -4,7 +4,7 @@ from ..general_util import *
 from collections import defaultdict
 
 
-def get_liftover_summary(genomic_interval, implicated_genes):
+def get_liftover_summary(genomic_interval):
     all_genes = get_all_genes(other_ref_genomes.keys(),
                               genomic_interval).values.tolist()
 
@@ -30,4 +30,4 @@ def get_liftover_summary(genomic_interval, implicated_genes):
 
 
 def make_summary_table(genomic_interval, implicated_genes):
-    return get_liftover_summary(genomic_interval, implicated_genes)
+    return get_liftover_summary(genomic_interval)
