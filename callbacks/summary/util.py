@@ -19,7 +19,6 @@ def get_liftover_summary(genomic_interval, implicated_genes):
                 if gene != NULL_PLACEHOLDER:
                     gene_to_homologs_map[row[NB_IDX]].add(gene)
 
-    print(gene_to_homologs_map)
     gene_to_count = []
     for gene, homologs in gene_to_homologs_map.items():
         # Subtract 2 to remove OGI and Nipponbare
