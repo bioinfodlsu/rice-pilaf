@@ -266,7 +266,32 @@ app.layout = lambda: dbc.Container([
             dcc.Store(
                 id='text-mining-is-submitted',
                 storage_type='session'
-            )
+            ),
+
+            # ========
+            # Summary
+            # ========
+
+            dcc.Store(
+                id='summary-is-submitted',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='summary-submitted-addl-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='summary-valid-addl-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='summary-combined-genes',
+                storage_type='session'
+            ),
+
         ])
 ], fluid=True)
 
