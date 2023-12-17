@@ -170,13 +170,17 @@ def init_callback(app):
         Output('summary-results-table', 'data'),
         Output('summary-results-table', 'columns'),
 
+        Output('summary-results-table', 'filter_query', allow_duplicate=True),
+        Output('summary-results-table', 'page_current', allow_duplicate=True),
+
         State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('summary-combined-genes', 'data'),
         Input('summary-submitted-addl-genes', 'data'),
 
         State('homepage-is-submitted', 'data'),
-        State('summary-is-submitted', 'data')
+        State('summary-is-submitted', 'data'),
+        prevent_initial_call=True
     )
     def display_summary_results(genomic_intervals, combined_genes, submitted_addl_genes,
                                 homepage_submitted, summary_is_submitted):
@@ -187,7 +191,7 @@ def init_callback(app):
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in summary_results_df.columns]
 
-            return summary_results_df.to_dict('records'), columns
+            return summary_results_df.to_dict('records'), columns, '', 0
 
         raise PreventUpdate
 
