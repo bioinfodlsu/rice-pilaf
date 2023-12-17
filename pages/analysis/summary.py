@@ -1,4 +1,4 @@
-from dash import html
+from dash import dash_table, dcc, html
 from callbacks.constants import Constants
 import dash_bootstrap_components as dbc
 
@@ -89,5 +89,65 @@ layout = html.Div(
                        n_clicks=0,
                        className='page-button'),
         ], className='analysis-intro p-3'),
-    ]
+
+        html.Br(),
+
+        html.Div(
+            id='summary-results-container',
+            style={'display': 'none'},
+            children=[
+                dcc.Loading([
+                    html.Hr(className='mt-3 mb-3'),
+
+                    html.Br(),
+
+                    html.Div(
+                        id='summary-input',
+                        className='analysis-intro p-3',
+                    ),
+
+                    html.Br(),
+
+                    html.P(
+                        html.Div([
+                            html.P(
+                                'The table below summarizes the results of the different post-GWAS analyses.',
+                                className='text-start'
+                            ),
+
+                            dbc.Button([html.I(
+                                className='bi bi-download me-2'),
+                                'Export to CSV'],
+                                id='summary-export-table',
+                                n_clicks=0,
+                                color='light', size='sm', className='table-button'),
+                            dcc.Download(id='tfbs-download-df-to-csv'),
+                            dbc.Button([html.I(
+                                className='bi bi-arrow-clockwise me-2'),
+                                'Reset Table'],
+                                id='summary-reset-table',
+                                color='light', size='sm', className='ms-3 table-button')
+                        ], style={'textAlign': 'right'})
+                    ),
+
+                    html.Br(),
+
+                    dash_table.DataTable(
+                        id='summary-results-table',
+                        style_cell={
+                            'whiteSpace': 'pre-line'
+                        },
+                        markdown_options={'html': True},
+                        sort_action='native',
+                        filter_action='native',
+                        filter_options={'case': 'insensitive',
+                                        'placeholder_text': '🔎︎ Search Column'},
+                        page_action='native',
+                        page_size=15,
+                        cell_selectable=False,
+                        style_table={'overflowX': 'auto'}
+                    )
+                ])
+            ])
+    ], className='mt-2 mb-4'
 )
