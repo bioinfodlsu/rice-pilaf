@@ -65,12 +65,10 @@ layout = html.Div(
 
         html.Br(),
 
-        html.Div([
-            dbc.Button('Generate Summary',
-                       id='summary-submit',
-                       n_clicks=0,
-                       className='page-button'),
-        ], className='analysis-intro p-3'),
+        dbc.Button('Generate Summary',
+                   id='summary-submit',
+                   n_clicks=0,
+                   className='page-button mb-3'),
 
         html.Br(),
 
