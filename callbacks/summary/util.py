@@ -26,8 +26,9 @@ def get_liftover_summary(genomic_interval):
 
     gene_to_count_df = pd.DataFrame(
         gene_to_count, columns=['Gene', '# Orthologs'])
+
     return gene_to_count_df
 
 
-def make_summary_table(genomic_interval, implicated_genes):
+def make_summary_table(genomic_interval):
     return get_liftover_summary(genomic_interval)

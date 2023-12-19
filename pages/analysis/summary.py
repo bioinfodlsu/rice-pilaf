@@ -66,24 +66,6 @@ layout = html.Div(
         html.Br(),
 
         html.Div([
-            dbc.Label(['Include additional genes from the pangenome lift-over or the text mining results',
-                       html.I(
-                           className='bi bi-info-circle', id='summary-converter-tooltip', n_clicks=0)]),
-            html.Br(),
-            dbc.Label(
-                'Enter their MSU accession IDs, separated by a semicolon (e.g., LOC_Os01g03680; LOC_Os01g03690; LOC_Os01g04110)',
-                className='small text-muted'),
-
-            converter_modal,
-            dbc.Alert(
-                id='summary-addl-genes-error',
-                color='danger',
-                style={'display': 'none'}
-            ),
-            dbc.Textarea(id='summary-addl-genes'),
-
-            html.Br(),
-
             dbc.Button('Generate Summary',
                        id='summary-submit',
                        n_clicks=0,

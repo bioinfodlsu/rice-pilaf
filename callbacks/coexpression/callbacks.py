@@ -229,8 +229,6 @@ def init_callback(app):
         Output('coexpression-results-module-tabs-container', 'style'),
         Output('coexpression-module-stats', 'children'),
 
-        Output('summary-is-submitted', 'data'),
-
         State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('coexpression-combined-genes', 'data'),
@@ -274,12 +272,12 @@ def init_callback(app):
                     first_module = enriched_modules[0]
                     module = first_module
                 else:
-                    return enriched_modules, first_module, {'display': 'none'}, stats, False
+                    return enriched_modules, first_module, {'display': 'none'}, stats
 
                 if module:
                     first_module = module
 
-                return enriched_modules, first_module, {'display': 'block'}, stats, False
+                return enriched_modules, first_module, {'display': 'block'}, stats
 
         raise PreventUpdate
 
