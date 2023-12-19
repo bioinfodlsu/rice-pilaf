@@ -50,6 +50,15 @@ def init_callback(app):
             return {'display': 'none'}
 
     @app.callback(
+        Output('summary-submit', 'disabled'),
+
+        Input('summary-submit', 'n_clicks'),
+        Input('summary-results-table', 'data')
+    )
+    def disable_summary_button_upon_run(n_clicks,  *_):
+        return ctx.triggered_id == 'summary-submit' and n_clicks > 0
+
+    @app.callback(
         Output('summary-input', 'children'),
 
         Input('summary-is-submitted', 'data'),
