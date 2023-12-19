@@ -37,11 +37,14 @@ def init_callback(app):
     @app.callback(
         Output('summary-results-container', 'style'),
         Input('summary-is-submitted', 'data'),
+        Input('coexpression-submit', 'n_clicks'),
     )
-    def display_summary_output(summary_is_submitted):
+    def display_summary_output(summary_is_submitted, *_):
+        if ctx.triggered_id == 'coexpression-submit':
+            return {'display': 'none'}
+
         if summary_is_submitted:
             return {'display': 'block'}
-
         else:
             return {'display': 'none'}
 
@@ -53,10 +56,9 @@ def init_callback(app):
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
-        Input('coexpression-submit', 'n_clicks'),
     )
     def display_summary_submitted_input(summary_is_submitted,
-                                        coexpression_is_submitted, network, algo, submitted_parameter_slider, *_):
+                                        coexpression_is_submitted, network, algo, submitted_parameter_slider):
         if coexpression_is_submitted:
             parameters = 0
             if submitted_parameter_slider and algo in submitted_parameter_slider:
