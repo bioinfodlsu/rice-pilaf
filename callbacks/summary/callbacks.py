@@ -40,7 +40,8 @@ def init_callback(app):
         Input('coexpression-submit', 'n_clicks'),
     )
     def display_summary_output(summary_is_submitted, *_):
-        if ctx.triggered_id == 'coexpression-submit':
+        # Hide the summary table if a post-GWAS analysis submit button is clicked
+        if ctx.triggered_id != 'summary-is-submitted':
             return {'display': 'none'}
 
         if summary_is_submitted:
@@ -53,33 +54,44 @@ def init_callback(app):
 
         Input('summary-is-submitted', 'data'),
         State('coexpression-is-submitted', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
     )
     def display_summary_submitted_input(summary_is_submitted,
-                                        coexpression_is_submitted, network, algo, submitted_parameter_slider):
+                                        coexpression_is_submitted, genes, network, algo, submitted_parameter_slider):
         if coexpression_is_submitted:
             parameters = 0
             if submitted_parameter_slider and algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[algo]['value']
+
+            if not genes:
+                genes = 'None'
+            else:
+                genes = '; '.join(set(genes))
 
         else:
             # Assume default coexpression network parameters
             algo = 'clusterone'
             network = 'OS-CX'
             parameters = 30
+            genes = 'None'
 
         if summary_is_submitted:
-            return [html.B('Additional Genes: '), 'hello',
-                    html.Br(),
-                    html.B('Selected Co-Expression Network: '), coexpression_util.get_user_facing_network(
-                        network),
-                    html.Br(),
-                    html.B('Selected Module Detection Algorithm: '), coexpression_util.get_user_facing_algo(
-                        algo),
-                    html.Br(),
-                    html.B('Selected Algorithm Parameter: '), coexpression_util.get_user_facing_parameter(algo, parameters)]
+            return [
+                html.B('Co-Expression Network Analysis'),
+                html.Br(),
+                html.Ul([
+                    html.Li([html.B('Additional Genes: '), genes]),
+                    html.Li([html.B('Selected Co-Expression Network: '), coexpression_util.get_user_facing_network(
+                        network)]),
+                    html.Li([html.B('Selected Module Detection Algorithm: '), coexpression_util.get_user_facing_algo(
+                        algo)]),
+                    html.Li([html.B('Selected Algorithm Parameter: '), coexpression_util.get_user_facing_parameter(
+                        algo, parameters)])
+                ], className='pb-0 mb-1')
+            ]
 
         raise PreventUpdate
 
@@ -100,8 +112,6 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def display_summary_results(genomic_intervals, homepage_submitted, summary_submitted):
-        print(homepage_submitted)
-        print(summary_submitted)
         if homepage_submitted and summary_submitted:
             summary_results_df = make_summary_table(
                 genomic_intervals)
