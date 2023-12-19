@@ -681,8 +681,15 @@ def get_unique_genes_in_other_ref(refs, ref, genomic_intervals):
     with open(f'{Constants.NB_MAPPING}/{ref}_to_Nb.pickle', 'rb') as f:
         nb_ortholog_mapping = pickle.load(f)
 
-        unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
-            lambda x: get_nb_ortholog(x['Name'], nb_ortholog_mapping), axis=1)
+        try:
+            unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
+                lambda x: get_nb_ortholog(x['Name'], nb_ortholog_mapping), axis=1)
+
+        # This error manifests when all cultivars are selected
+        except KeyError:
+            unique_genes = unique_genes.rename(columns={'index': 'Name'})
+            unique_genes['Ortholog in Nipponbare'] = unique_genes.apply(
+                lambda x: get_nb_ortholog(x['Name'], nb_ortholog_mapping), axis=1)
 
     unique_genes = unique_genes[FRONT_FACING_COLUMNS +
                                 ['Ortholog in Nipponbare']]
