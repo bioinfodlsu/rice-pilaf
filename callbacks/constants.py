@@ -47,7 +47,7 @@ class Constants(object):
     TFBS_ANNOTATION = f'{TFBS_BEDS}/annotation'
 
     ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
-    ENRICHMENT_ANALYSIS_MAPPING = 'mapping'
+    ENRICHMENT_ANALYSIS_MAPPING = f'{ENRICHMENT_ANALYSIS}/mapping'
 
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'

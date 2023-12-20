@@ -305,8 +305,8 @@ def get_genes_in_module(module_idx, network, algo, parameters):
                 return set(module.split('\t'))
 
 
-def get_genes_in_pathway(pathway_id, network):
-    with open(f'{Constants.ENRICHMENT_ANALYSIS}/{network}/{Constants.KEGG_DOSA_GENESET}', 'rb') as f:
+def get_genes_in_pathway(pathway_id):
+    with open(Constants.KEGG_DOSA_GENESET, 'rb') as f:
         genes_in_pathway = pickle.load(f)
 
     return genes_in_pathway[pathway_id]
@@ -317,8 +317,8 @@ def get_genes_in_module_and_pathway(pathway_id, module_idx, network, algo, param
         get_genes_in_module(module_idx, network, algo, parameters))))
 
 
-def get_kegg_pathway_name(pathway_id, network):
-    with open(f'{Constants.ENRICHMENT_ANALYSIS}/{network}/{Constants.KEGG_DOSA_PATHWAY_NAMES}') as pathways:
+def get_kegg_pathway_name(pathway_id):
+    with open(Constants.KEGG_DOSA_PATHWAY_NAMES) as pathways:
         for line in pathways:
             line = line.split('\t')
             if line[0].rstrip() == pathway_id:
@@ -439,7 +439,7 @@ def convert_to_df_pe(result, module_idx, network, algo, parameters):
     result['ID'] = result['ID'].str[len('path:'):]
 
     result['KEGG Pathway'] = result.apply(
-        lambda x: get_kegg_pathway_name(x['ID'], network), axis=1)
+        lambda x: get_kegg_pathway_name(x['ID']), axis=1)
     result['KEGG Pathway'] = result['KEGG Pathway'].apply(
         remove_rap_db_info_in_pathway_name)
 
