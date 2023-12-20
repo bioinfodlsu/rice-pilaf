@@ -47,7 +47,7 @@ def construct_options_other_ref_genomes():
 # =====================================================
 
 
-def is_error(genomic_interval):
+def is_error(genomic_intervals):
     """
     Returns True if given genomic interval is malformed; False, otherwise
 
@@ -60,7 +60,7 @@ def is_error(genomic_interval):
     Returns:
     - True if given genomic interval is malformed; False, otherwise
     """
-    return isinstance(genomic_interval[0], int)
+    return isinstance(genomic_intervals[0], int)
 
 
 def get_error_message(error_code):

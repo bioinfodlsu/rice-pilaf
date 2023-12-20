@@ -44,7 +44,7 @@ def convert_text_to_path(text):
         ":", "_").replace(";", "__").replace("-", "_").replace('.', '_').replace(' ', '')
 
 
-def get_path_to_temp(genomic_interval, analysis_type, *args):
+def get_path_to_temp(genomic_intervals, analysis_type, *args):
     """
     Forms the path to temporary (file-cached) results of given post-GWAS analysis
     This function returns only the path name. It does not create the actual file or directory
@@ -58,7 +58,7 @@ def get_path_to_temp(genomic_interval, analysis_type, *args):
     - Path to temporary (file-cached) results of post-GWAS analysis
     """
     genomic_interval_foldername = shorten_name(convert_text_to_path(
-        genomic_interval))
+        genomic_intervals))
 
     analysis_type = convert_text_to_path(analysis_type)
 
