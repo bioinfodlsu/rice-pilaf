@@ -68,9 +68,9 @@ def init_callback(app):
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
     )
-    def display_summary_submitted_input(summary_is_submitted,
-                                        coexpression_is_submitted, genes, network, algo, submitted_parameter_slider):
-        if coexpression_is_submitted:
+    def display_summary_submitted_input(summary_submitted,
+                                        coexpression_submitted, genes, network, algo, submitted_parameter_slider):
+        if coexpression_submitted:
             parameters = 0
             if submitted_parameter_slider and algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[algo]['value']
@@ -87,7 +87,7 @@ def init_callback(app):
             parameters = 30
             genes = 'None'
 
-        if summary_is_submitted:
+        if summary_submitted:
             return [
                 html.B('Co-Expression Network Analysis'),
                 html.Br(),
@@ -116,14 +116,38 @@ def init_callback(app):
         Output('summary-results-table', 'page_current', allow_duplicate=True),
 
         State('homepage-submitted-genomic-intervals', 'data'),
+
+        State('coexpression-combined-genes', 'data'),
+        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-submitted-network', 'data'),
+        State('coexpression-submitted-clustering-algo', 'data'),
+        State('coexpression-submitted-parameter-slider', 'data'),
+
         State('homepage-is-submitted', 'data'),
         Input('summary-is-submitted', 'data'),
+        State('coexpression-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def display_summary_results(genomic_intervals, homepage_submitted, summary_submitted):
+    def display_summary_results(genomic_intervals,
+                                combined_gene_ids, submitted_addl_genes, submitted_network, submitted_algo, submitted_parameter_slider,
+                                homepage_submitted, summary_submitted, coexpression_submitted):
+        if coexpression_submitted:
+            parameters = 0
+            if submitted_parameter_slider and submitted_algo in submitted_parameter_slider:
+                parameters = submitted_parameter_slider[submitted_algo]['value']
+
+        else:
+            # Assume default coexpression network parameters
+            submitted_algo = 'clusterone'
+            submitted_network = 'OS-CX'
+            parameters = 30
+            combined_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                1]
+            submitted_addl_genes = []
+
         if homepage_submitted and summary_submitted:
             summary_results_df = make_summary_table(
-                genomic_intervals)
+                genomic_intervals, combined_gene_ids, submitted_addl_genes, submitted_network, submitted_algo, parameters)
 
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in summary_results_df.columns]
