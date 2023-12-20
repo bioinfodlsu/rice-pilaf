@@ -59,8 +59,6 @@ def get_module_summary(genomic_intervals, combined_gene_ids, submitted_addl_gene
     enriched_modules = do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters)
 
-    print(enriched_modules)
-
     return None
 
 
