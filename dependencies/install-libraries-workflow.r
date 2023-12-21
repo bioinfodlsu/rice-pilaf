@@ -3,6 +3,7 @@ install.packages("ggplot2", repos = "http://cran.us.r-project.org")
 
 install.packages("BiocManager", repos = "http://cran.us.r-project.org")
 library(BiocManager)
+BiocManager::install(version = "3.17", ask = FALSE)
 BiocManager::install("clusterProfiler", version = "3.17", ask = FALSE)
 BiocManager::install("GO.db", version = "3.17", ask = FALSE)
 
