@@ -13,6 +13,7 @@ RUN apt-get clean \
   && apt-get update \
   && apt-get install -y \
   build-essential \
+  cmake \
   bedtools \
   git \
   libcurl4-openssl-dev \
@@ -32,5 +33,23 @@ RUN Rscript --vanilla dependencies/install-libraries-workflow.r
 # Handle dependency problems related to Java installation
 # https://stackoverflow.com/questions/61815233/install-java-runtime-in-debian-based-docker-image
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man2
+
+WORKDIR /app/prepare_data/workflow/scripts/module_detection
+
+# Install ClusterONE
+RUN wget https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar
+
+# Install LazyFox
+RUN git clone https://github.com/TimGarrels/LazyFox \
+  && mv LazyFox lazyfoxdir \
+  && cd lazyfoxdir \
+  && mkdir build \
+  && cd build \
+  && cmake .. \
+  && make \
+  && mv LazyFox ../../LazyFox \
+  && cd ../../ \
+  && rm -r lazyfoxdir \
+  && chmod +x LazyFox
 
 WORKDIR /app/prepare_data/workflow/scripts
