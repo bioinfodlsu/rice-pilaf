@@ -1,6 +1,7 @@
 from ..lift_over.util import *
 from ..general_util import *
 from ..coexpression.util import *
+from ..constants import Constants
 
 from collections import defaultdict
 
@@ -55,11 +56,26 @@ def get_pubmed_summary(genomic_intervals):
     return genes[['Name', '# PubMed Article IDs']]
 
 
-def get_module_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
-    enriched_modules = do_module_enrichment_analysis(
-        combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters)
+def get_module_indices(modules):
+    return [int(module.split(' ')[1]) for module in modules]
 
-    return None
+
+def get_module_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
+    enriched_modules = get_module_indices(do_module_enrichment_analysis(
+        combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
+
+    with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f:
+        genes_to_modules_mapping = pickle.load(f)
+        gene_to_modules = []
+        for gene in combined_gene_ids:
+            modules = genes_to_modules_mapping[gene]
+            gene_to_modules.append([gene, len(modules), len(
+                modules.intersection(enriched_modules))])
+
+        gene_to_modules_df = pd.DataFrame(
+            gene_to_modules, columns=['Name', '# Modules', '# Enriched Modules'])
+
+    return gene_to_modules_df
 
 
 def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
@@ -80,6 +96,12 @@ def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_gene
     summary = summary.merge(pubmed_summary, on='Name',
                             how='left', validate='one_to_one')
 
+    # Use right merge since there may be additional genes included in the co-expression analysis
+    summary = summary.merge(module_summary, on='Name',
+                            how='right', validate='one_to_one')
+
     summary = summary.rename(columns={'Name': 'Gene'})
+    summary = summary.fillna(
+        NULL_PLACEHOLDER).drop_duplicates()
 
     return summary
