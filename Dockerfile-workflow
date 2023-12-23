@@ -43,7 +43,7 @@ RUN wget https://paccanarolab.org/static_content/clusterone/cluster_one-1.0.jar
 RUN git clone https://github.com/TimGarrels/LazyFox \
   && mv LazyFox lazyfoxdir \
   && cd lazyfoxdir \
-  && git reset --hard d08f3c084df19bd2a1726159f181bbe3ad6f5bf4
+  && git reset --hard d08f3c084df19bd2a1726159f181bbe3ad6f5bf4 \
   && mkdir build \
   && cd build \
   && cmake .. \
