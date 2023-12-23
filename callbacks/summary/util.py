@@ -66,11 +66,8 @@ def get_module_summary(genomic_intervals, combined_gene_ids, submitted_addl_gene
 
     with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f:
         genes_to_modules_mapping = pickle.load(f)
-        gene_to_modules = []
-        for gene in combined_gene_ids:
-            modules = genes_to_modules_mapping[gene]
-            gene_to_modules.append([gene, len(modules), len(
-                modules.intersection(enriched_modules))])
+        gene_to_modules = [[gene, len(genes_to_modules_mapping[gene]), len(
+            genes_to_modules_mapping[gene].intersection(enriched_modules))] for gene in combined_gene_ids]
 
         gene_to_modules_df = pd.DataFrame(
             gene_to_modules, columns=['Name', '# Modules', '# Enriched Modules'])
