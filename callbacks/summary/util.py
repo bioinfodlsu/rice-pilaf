@@ -79,6 +79,31 @@ def get_ontology_terms_in_modules(modules, enrichment_type, network, algo, param
     return ontology_terms
 
 
+def get_pathways_in_module(module_idx, tool, network, algo, parameters):
+    file = f'{Constants.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/pathway_enrichment/{tool}/results/{tool}-df-{module_idx}.tsv'
+    with open(file) as f:
+        # Skip header
+        next(f)
+        if tool == 'ora':
+            pathways = [line.strip().split('\t')[0] for line in f]
+        elif tool == 'pe':
+            pathways = [line.strip().split('\t')[0][len('path:'):]
+                        for line in f]
+        elif tool == 'spia':
+            pathways = ['dosa' + line.strip().split('\t')[2] for line in f]
+
+    return set(pathways)
+
+
+def get_pathways_in_modules(modules, tool, network, algo, parameters):
+    pathways = set()
+    for module in modules:
+        pathways = pathways.union(get_pathways_in_module(
+            module, tool, network, algo, parameters))
+
+    return pathways
+
+
 def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
     enriched_modules = get_module_indices(do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
@@ -86,11 +111,13 @@ def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_add
     with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f, \
             open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_go.pickle', 'rb') as f_go, \
             open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_to.pickle', 'rb') as f_to, \
-            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_po.pickle', 'rb') as f_po:
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_po.pickle', 'rb') as f_po, \
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_pathway.pickle', 'rb') as f_pathway:
         genes_to_modules_mapping = pickle.load(f)
         genes_to_go_mapping = pickle.load(f_go)
         genes_to_to_mapping = pickle.load(f_to)
         genes_to_po_mapping = pickle.load(f_po)
+        genes_to_pathway_mapping = pickle.load(f_pathway)
 
         gene_to_coexpression = [[gene, len(genes_to_modules_mapping[gene]), len(
             genes_to_modules_mapping[gene].intersection(enriched_modules)),
@@ -101,7 +128,15 @@ def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_add
             len(genes_to_to_mapping[gene].intersection(get_ontology_terms_in_modules(
                 enriched_modules, 'to', network, algo, parameters))),
             len(genes_to_po_mapping[gene]),
-            len(genes_to_po_mapping[gene].intersection(get_ontology_terms_in_modules(enriched_modules, 'po', network, algo, parameters)))]
+            len(genes_to_po_mapping[gene].intersection(get_ontology_terms_in_modules(
+                enriched_modules, 'po', network, algo, parameters))),
+            len(genes_to_pathway_mapping[gene]),
+            len(genes_to_pathway_mapping[gene].intersection(get_pathways_in_modules(
+                enriched_modules, 'ora', network, algo, parameters))),
+            len(genes_to_pathway_mapping[gene].intersection(get_pathways_in_modules(
+                enriched_modules, 'pe', network, algo, parameters))),
+            len(genes_to_pathway_mapping[gene].intersection(get_pathways_in_modules(
+                enriched_modules, 'spia', network, algo, parameters)))]
             for gene in combined_gene_ids]
 
         gene_to_coexpression_df = pd.DataFrame(
@@ -109,7 +144,11 @@ def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_add
             columns=['Name', '# Modules', '# Enriched Modules',
                      '# Gene Ontology Terms', '# Enriched Gene Ontology Terms',
                      '# Trait Ontology Terms', '# Enriched Trait Ontology Terms',
-                     '# Plant Ontology Terms', '# Enriched Plant Ontology Terms'])
+                     '# Plant Ontology Terms', '# Enriched Plant Ontology Terms',
+                     '# Pathways',
+                     '# Enriched Pathways (Over-Representation)',
+                     '# Enriched Pathways (Pathway-Express)',
+                     '# Enriched Pathways (SPIA)'])
 
     return gene_to_coexpression_df
 
