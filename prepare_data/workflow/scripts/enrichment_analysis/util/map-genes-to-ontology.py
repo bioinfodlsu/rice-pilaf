@@ -32,7 +32,7 @@ if __name__ == '__main__':
         'output_dir', help='output directory for the pickled dictionary mapping genes to their ontology terms'
     )
     parser.add_argument(
-        'option', help='can be "go" (for gene ontology), "po" (for plant ontology), "to" (for term ontology), or "pathway"'
+        'option', help='can be "go" (for gene ontology), "po" (for plant ontology), "to" (for trait ontology), or "pathway"'
     )
     parser.add_argument(
         'ontology_files', help='text files containing the GO annotations', nargs='+')
