@@ -6,6 +6,7 @@
 #lift-over-results-table + div,
 #text-mining-results-table + div,
 #tfbs-results-table + div,
+#summary-results-table + div,
 #coexpression-module-graph + div,
 #coexpression-module-graph-node-data + div {
     display: block !important;
