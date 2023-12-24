@@ -60,20 +60,56 @@ def get_module_indices(modules):
     return [int(module.split(' ')[1]) for module in modules]
 
 
+def get_ontology_terms_in_module(module_idx, enrichment_type, network, algo, parameters):
+    file = f'{Constants.ENRICHMENT_ANALYSIS}/{network}/output/{algo}/{parameters}/ontology_enrichment/{enrichment_type}/results/{enrichment_type}-df-{module_idx}.tsv'
+    with open(file) as f:
+        # Skip header
+        next(f)
+        ontology_terms = [line.strip().split('\t')[0] for line in f]
+
+    return set(ontology_terms)
+
+
+def get_ontology_terms_in_modules(modules, enrichment_type, network, algo, parameters):
+    ontology_terms = set()
+    for module in modules:
+        ontology_terms = ontology_terms.union(get_ontology_terms_in_module(
+            module, enrichment_type, network, algo, parameters))
+
+    return ontology_terms
+
+
 def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
     enriched_modules = get_module_indices(do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
 
     with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f, \
-            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_go.pickle', 'rb') as f_go:
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_go.pickle', 'rb') as f_go, \
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_to.pickle', 'rb') as f_to, \
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_po.pickle', 'rb') as f_po:
         genes_to_modules_mapping = pickle.load(f)
         genes_to_go_mapping = pickle.load(f_go)
+        genes_to_to_mapping = pickle.load(f_to)
+        genes_to_po_mapping = pickle.load(f_po)
 
         gene_to_coexpression = [[gene, len(genes_to_modules_mapping[gene]), len(
-            genes_to_modules_mapping[gene].intersection(enriched_modules)), len(genes_to_go_mapping[gene])] for gene in combined_gene_ids]
+            genes_to_modules_mapping[gene].intersection(enriched_modules)),
+            len(genes_to_go_mapping[gene]),
+            len(genes_to_go_mapping[gene].intersection(get_ontology_terms_in_modules(
+                enriched_modules, 'go', network, algo, parameters))),
+            len(genes_to_to_mapping[gene]),
+            len(genes_to_to_mapping[gene].intersection(get_ontology_terms_in_modules(
+                enriched_modules, 'to', network, algo, parameters))),
+            len(genes_to_po_mapping[gene]),
+            len(genes_to_po_mapping[gene].intersection(get_ontology_terms_in_modules(enriched_modules, 'po', network, algo, parameters)))]
+            for gene in combined_gene_ids]
 
         gene_to_coexpression_df = pd.DataFrame(
-            gene_to_coexpression, columns=['Name', '# Modules', '# Enriched Modules', '# Gene Ontology Terms'])
+            gene_to_coexpression,
+            columns=['Name', '# Modules', '# Enriched Modules',
+                     '# Gene Ontology Terms', '# Enriched Gene Ontology Terms',
+                     '# Trait Ontology Terms', '# Enriched Trait Ontology Terms',
+                     '# Plant Ontology Terms', '# Enriched Plant Ontology Terms'])
 
     return gene_to_coexpression_df
 
