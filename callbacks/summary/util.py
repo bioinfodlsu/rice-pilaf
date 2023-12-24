@@ -105,6 +105,10 @@ def get_pathways_in_modules(modules, tool, network, algo, parameters):
 
 
 def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
+    # Prevent [] from being passed into the filename
+    if not submitted_addl_genes:
+        submitted_addl_genes = ''
+
     enriched_modules = get_module_indices(do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
 
