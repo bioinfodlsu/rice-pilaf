@@ -119,6 +119,7 @@ layout = html.Div(
                         },
                         markdown_options={'html': True},
                         sort_action='native',
+                        sort_mode='multi',
                         filter_action='native',
                         filter_options={'case': 'insensitive',
                                         'placeholder_text': '🔎︎ Search Column'},
