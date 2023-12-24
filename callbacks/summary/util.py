@@ -60,19 +60,22 @@ def get_module_indices(modules):
     return [int(module.split(' ')[1]) for module in modules]
 
 
-def get_module_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
+def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
     enriched_modules = get_module_indices(do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
 
-    with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f:
+    with open(f'{Constants.NETWORK_MODULES}/{network}/MSU_to_modules/{algo}/{parameters}/genes_to_modules.pickle', 'rb') as f, \
+            open(f'{Constants.GENES_TO_ONTOLOGY_PATHWAY}/genes_to_go.pickle', 'rb') as f_go:
         genes_to_modules_mapping = pickle.load(f)
-        gene_to_modules = [[gene, len(genes_to_modules_mapping[gene]), len(
-            genes_to_modules_mapping[gene].intersection(enriched_modules))] for gene in combined_gene_ids]
+        genes_to_go_mapping = pickle.load(f_go)
 
-        gene_to_modules_df = pd.DataFrame(
-            gene_to_modules, columns=['Name', '# Modules', '# Enriched Modules'])
+        gene_to_coexpression = [[gene, len(genes_to_modules_mapping[gene]), len(
+            genes_to_modules_mapping[gene].intersection(enriched_modules)), len(genes_to_go_mapping[gene])] for gene in combined_gene_ids]
 
-    return gene_to_modules_df
+        gene_to_coexpression_df = pd.DataFrame(
+            gene_to_coexpression, columns=['Name', '# Modules', '# Enriched Modules', '# Gene Ontology Terms'])
+
+    return gene_to_coexpression_df
 
 
 def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
@@ -84,7 +87,7 @@ def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_gene
     qtl_summary = get_qtl_summary(genomic_intervals)
     pubmed_summary = get_pubmed_summary(genomic_intervals)
 
-    module_summary = get_module_summary(
+    coexpression_summary = get_coexpression_summary(
         genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters)
 
     # Merge the summaries
@@ -94,7 +97,7 @@ def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_gene
                             how='left', validate='one_to_one')
 
     # Use right merge since there may be additional genes included in the co-expression analysis
-    summary = summary.merge(module_summary, on='Name',
+    summary = summary.merge(coexpression_summary, on='Name',
                             how='right', validate='one_to_one')
 
     summary = summary.rename(columns={'Name': 'Gene'})

@@ -48,6 +48,7 @@ class Constants(object):
 
     ENRICHMENT_ANALYSIS = f'{APP_DATA}/enrichment_analysis'
     ENRICHMENT_ANALYSIS_MAPPING = f'{ENRICHMENT_ANALYSIS}/mapping'
+    GENES_TO_ONTOLOGY_PATHWAY = f'{ENRICHMENT_ANALYSIS}/genes_to_ontology_pathway'
 
     KEGG_DOSA_GENESET = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-geneset.pickle'
     KEGG_DOSA_PATHWAY_NAMES = f'{ENRICHMENT_ANALYSIS_MAPPING}/kegg-dosa-pathway-names.tsv'
