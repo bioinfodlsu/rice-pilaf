@@ -1,5 +1,4 @@
-from dash import dcc, html
-import dash_bootstrap_components as dbc
+from dash import html
 from callbacks.constants import Constants
 
 layout = html.Div(
@@ -26,7 +25,10 @@ layout = html.Div(
                          Constants.INTRO_TFBS],
                         className='pb-3'),
                 html.Li([html.B('Epigenomic Information'), html.Br(),
-                         Constants.INTRO_EPIGENOME])
+                         Constants.INTRO_EPIGENOME],
+                         className='pb-3'),
+                html.Li([html.B('Summary'), html.Br(),
+                         Constants.INTRO_SUMMARY])
             ], className='pb-0 mb-1')
         ], className='analysis-intro p-3'),
     ], className='mt-2 mb-4'
