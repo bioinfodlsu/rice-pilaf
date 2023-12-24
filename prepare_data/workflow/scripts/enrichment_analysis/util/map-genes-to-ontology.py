@@ -35,7 +35,7 @@ if __name__ == '__main__':
         'option', help='can be "go" (for gene ontology), "po" (for plant ontology), "to" (for term ontology), or "pathway"'
     )
     parser.add_argument(
-        'ontology_files', help='text file containing the GO annotations', nargs='+')
+        'ontology_files', help='text files containing the GO annotations', nargs='+')
 
     args = parser.parse_args()
 
