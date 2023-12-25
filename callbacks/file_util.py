@@ -84,6 +84,10 @@ def get_path_to_text_mining_temp(analysis_type, *args):
 
 
 def shorten_name(name):
+    # Prevent duplicated folders (e.g., additional genes)
+    if isinstance(name, list):
+        name.sort()
+
     if not name:
         name = ''
 
