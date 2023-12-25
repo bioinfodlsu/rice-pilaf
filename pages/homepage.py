@@ -166,7 +166,7 @@ layout = html.Div([
                 dbc.Col([
                     html.Div(
                         html.Img(src='assets/images/rice1.png',
-                                 className='img-about-the-app py-auto'),
+                                 className='img-about-the-app'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center')
@@ -175,8 +175,8 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.Div(
-                        html.Img(src='assets/images/table1.png',
-                                 className='img-about-the-app py-auto'),
+                        html.Img(src='assets/images/liftover1.png',
+                                 className='img-about-the-app-enlarge2'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center'),
@@ -199,7 +199,7 @@ layout = html.Div([
                 dbc.Col([
                     html.Div(
                         html.Img(src='assets/images/network1.png',
-                                 className='img-about-the-app py-auto'),
+                                 className='img-about-the-app'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center')
@@ -208,8 +208,8 @@ layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     html.Div(
-                        html.Img(src='assets/images/gene1.png',
-                                 className='img-about-the-app py-auto'),
+                        html.Img(src='assets/images/tf1.png',
+                                 className='img-about-the-app-enlarge1'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center'),
@@ -231,7 +231,7 @@ layout = html.Div([
                 dbc.Col([
                     html.Div(
                         html.Img(src='assets/images/book1.png',
-                                 className='img-about-the-app py-auto'),
+                                 className='img-about-the-app'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center')
@@ -241,7 +241,7 @@ layout = html.Div([
                 dbc.Col([
                     html.Div(
                         html.Img(src='assets/images/beads1.png',
-                                 className='img-about-the-app py-auto'),
+                                 className='img-about-the-app-shrink1'),
                         className='text-center'
                     )
                 ], className='col-sm-3 d-flex flex-wrap align-items-center'),

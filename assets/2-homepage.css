@@ -109,8 +109,23 @@
     margin-left: 3em;
 }
 
+.img-about-the-app-shrink1 {
+    width: 35%;
+    height: auto;
+}
+
 .img-about-the-app {
     width: 45%;
+    height: auto;
+}
+
+.img-about-the-app-enlarge1 {
+    width: 60%;
+    height: auto;
+}
+
+.img-about-the-app-enlarge2 {
+    width: 70%;
     height: auto;
 }
 
