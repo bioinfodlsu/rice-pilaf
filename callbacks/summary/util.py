@@ -163,13 +163,26 @@ def create_summary_results_dir(genomic_intervals, addl_genes, network, algo, par
     return temp_output_folder_dir
 
 
+def create_column_int64_dict(df):
+    column_int64_dict = {}
+
+    # Exclude first column (gene ID)
+    for col in df.columns[1:]:
+        column_int64_dict[col] = 'Int64'
+
+    return column_int64_dict
+
+
 def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
     SUMMARY_RESULTS_DIR = create_summary_results_dir(
         genomic_intervals, submitted_addl_genes, network, algo, parameters)
     SUMMARY_RESULS_PATH = f'{SUMMARY_RESULTS_DIR}/summary.csv'
 
     if path_exists(SUMMARY_RESULS_PATH):
-        return pd.read_csv(SUMMARY_RESULS_PATH)
+        # Prevent trailing .0 from displaying by explicitly casting all columns to integers
+        # except the first column (gene ID)
+        df = pd.read_csv(SUMMARY_RESULS_PATH)
+        return pd.read_csv(SUMMARY_RESULS_PATH, dtype=create_column_int64_dict(df))
 
     implicated_genes = get_all_genes(other_ref_genomes.keys(),
                                      genomic_intervals).values.tolist()
