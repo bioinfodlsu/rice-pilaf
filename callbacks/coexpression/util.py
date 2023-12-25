@@ -256,6 +256,10 @@ def check_if_valid_msu_ids(list_addl_genes):
         else:
             invalid_genes.append(addl_gene)
 
+    # Remove duplicates while preserving order
+    valid_genes = list(dict.fromkeys(valid_genes))
+    invalid_genes = list(dict.fromkeys(invalid_genes))
+
     return valid_genes, invalid_genes
 
 

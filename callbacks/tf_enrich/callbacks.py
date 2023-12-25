@@ -157,7 +157,7 @@ def init_callback(app):
             if not addl_genes:
                 addl_genes = 'None'
             else:
-                addl_genes = '; '.join(set(addl_genes))
+                addl_genes = '; '.join(addl_genes)
 
             return [html.B('Additional Genes: '), addl_genes,
                     html.Br(),
@@ -185,7 +185,7 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('tfbs-combined-genes', 'data'),
-        Input('tfbs-submitted-addl-genes', 'data'),
+        Input('tfbs-valid-addl-genes', 'data'),
 
         State('homepage-is-submitted', 'data'),
         State('tfbs-submitted-set', 'data'),
@@ -194,10 +194,10 @@ def init_callback(app):
 
         prevent_initial_call=True
     )
-    def display_enrichment_results(genomic_intervals, combined_genes, submitted_addl_genes,
+    def display_enrichment_results(genomic_intervals, combined_genes, valid_addl_genes,
                                    homepage_submitted, tfbs_set, tfbs_prediction_technique, tfbs_is_submitted):
         if homepage_submitted and tfbs_is_submitted:
-            enrichment_results_df, num_tf = perform_enrichment_all_tf(combined_genes, submitted_addl_genes,
+            enrichment_results_df, num_tf = perform_enrichment_all_tf(combined_genes, valid_addl_genes,
                                                                       tfbs_set, tfbs_prediction_technique, genomic_intervals)
 
             mask = (
