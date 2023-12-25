@@ -102,6 +102,8 @@ layout = html.Div(
                                 className='text-start'
                             ),
 
+                            html.Br(),
+
                             dbc.Button([html.I(
                                 className='bi bi-download me-2'),
                                 'Export to CSV'],
@@ -116,8 +118,6 @@ layout = html.Div(
                                 color='light', size='sm', className='ms-3 table-button')
                         ], style={'textAlign': 'right'})
                     ),
-
-                    html.Br(),
 
                     dash_table.DataTable(
                         id='summary-results-table',
