@@ -84,6 +84,9 @@ def get_path_to_text_mining_temp(analysis_type, *args):
 
 
 def shorten_name(name):
+    if not name:
+        name = ''
+
     if name and len(name) > 0:
         # Recreate the database
 
