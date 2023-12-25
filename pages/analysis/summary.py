@@ -101,7 +101,7 @@ layout = html.Div(
                                 id='summary-export-table',
                                 n_clicks=0,
                                 color='light', size='sm', className='table-button'),
-                            dcc.Download(id='tfbs-download-df-to-csv'),
+                            dcc.Download(id='summary-download-df-to-csv'),
                             dbc.Button([html.I(
                                 className='bi bi-arrow-clockwise me-2'),
                                 'Reset Table'],

@@ -172,15 +172,15 @@ def init_callback(app):
     def reset_table_filter_page(*_):
         return '', 0
 
-    # @app.callback(
-    #     Output('tfbs-download-df-to-csv', 'data'),
-    #     Input('tfbs-export-table', 'n_clicks'),
-    #     State('tfbs-results-table', 'data'),
-    #     State('homepage-submitted-genomic-intervals', 'data')
-    # )
-    # def download_tfbs_table_to_csv(download_n_clicks, tfbs_df, genomic_intervals):
-    #     if download_n_clicks >= 1:
-    #         df = pd.DataFrame(purge_html_export_table(tfbs_df))
-    #         return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Regulatory Feature Enrichment.csv', index=False)
+    @app.callback(
+        Output('summary-download-df-to-csv', 'data'),
+        Input('summary-export-table', 'n_clicks'),
+        State('summary-results-table', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data')
+    )
+    def download_tfbs_table_to_csv(download_n_clicks, summary_df, genomic_intervals):
+        if download_n_clicks >= 1:
+            df = pd.DataFrame(purge_html_export_table(summary_df))
+            return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Summary.csv', index=False)
 
-    #     raise PreventUpdate
+        raise PreventUpdate
