@@ -95,6 +95,13 @@ layout = html.Div(
                                 className='text-start'
                             ),
 
+                            html.P([
+                                html.B(
+                                    'A value of "null" indicates that the gene was not included in the relevant post-GWAS analysis. '
+                                ), 'Try including it in the list of additional genes for that analysis.'],
+                                className='text-start'
+                            ),
+
                             dbc.Button([html.I(
                                 className='bi bi-download me-2'),
                                 'Export to CSV'],
