@@ -78,7 +78,8 @@ def init_callback(app):
             if not genes:
                 genes = 'None'
             else:
-                genes = '; '.join(set(genes))
+                # Preserve user-entered order while removing duplicates
+                genes = '; '.join(list(dict.fromkeys(genes)))
 
         else:
             # Assume default coexpression network parameters
@@ -118,7 +119,7 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data'),
 
         State('coexpression-combined-genes', 'data'),
-        State('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
@@ -129,7 +130,7 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def display_summary_results(genomic_intervals,
-                                combined_gene_ids, submitted_addl_genes, submitted_network, submitted_algo, submitted_parameter_slider,
+                                combined_gene_ids, valid_addl_genes, submitted_network, submitted_algo, submitted_parameter_slider,
                                 homepage_submitted, summary_submitted, coexpression_submitted):
         if coexpression_submitted:
             parameters = 0
@@ -148,11 +149,11 @@ def init_callback(app):
                     1]
             except:
                 pass
-            submitted_addl_genes = []
+            valid_addl_genes = []
 
         if homepage_submitted and summary_submitted:
             summary_results_df = make_summary_table(
-                genomic_intervals, combined_gene_ids, submitted_addl_genes, submitted_network, submitted_algo, parameters)
+                genomic_intervals, combined_gene_ids, valid_addl_genes, submitted_network, submitted_algo, parameters)
 
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in summary_results_df.columns]
