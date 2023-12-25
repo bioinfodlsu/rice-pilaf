@@ -141,8 +141,13 @@ def init_callback(app):
             submitted_algo = 'clusterone'
             submitted_network = 'OS-CX'
             parameters = 30
-            combined_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
-                1]
+
+            # Will throw exception when cache is cleared and display is reset while summary page is open
+            try:
+                combined_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                    1]
+            except:
+                pass
             submitted_addl_genes = []
 
         if homepage_submitted and summary_submitted:

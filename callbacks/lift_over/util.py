@@ -384,8 +384,10 @@ def get_nb_ortholog(gene, nb_ortholog_mapping):
 # ========================
 
 def get_genes_in_Nb(genomic_intervals):
-    temp_output_dir = get_path_to_temp(
-        genomic_intervals, Constants.TEMP_LIFT_OVER)
+    # Genomic intervals will be empty when cache is cleared while summary table is open
+    if genomic_intervals:
+        temp_output_dir = get_path_to_temp(
+            genomic_intervals, Constants.TEMP_LIFT_OVER)
 
     NB_GENES_FILENAME = f'{temp_output_dir}/nb_genes.csv'
     if path_exists(NB_GENES_FILENAME):
