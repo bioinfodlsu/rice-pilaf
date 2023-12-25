@@ -124,7 +124,7 @@ def create_module_enrichment_results_dir(genomic_intervals, addl_genes, network,
     - Parent directory of the file to which the accessions of the GWAS-implicated genes are written
     """
     temp_output_folder_dir = get_path_to_temp(
-        genomic_intervals, Constants.TEMP_COEXPRESSION, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
+        genomic_intervals, Constants.TEMP_COEXPRESSION, f'{shorten_name(sorted(addl_genes))}/{network}/{algo}/{parameters}')
 
     if not path_exists(temp_output_folder_dir):
         make_dir(temp_output_folder_dir)
