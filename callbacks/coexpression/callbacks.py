@@ -205,7 +205,8 @@ def init_callback(app):
             if not genes:
                 genes = 'None'
             else:
-                genes = '; '.join(set(genes))
+                # Preserve user-entered order while removing duplicates
+                genes = '; '.join(list(dict.fromkeys(genes)))
 
             return [html.B('Additional Genes: '), genes,
                     html.Br(),
