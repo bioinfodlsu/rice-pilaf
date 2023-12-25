@@ -155,6 +155,11 @@ def init_callback(app):
             summary_results_df = make_summary_table(
                 genomic_intervals, combined_gene_ids, valid_addl_genes, submitted_network, submitted_algo, parameters)
 
+            mask = (
+                summary_results_df['Gene'] != NULL_PLACEHOLDER)
+            summary_results_df.loc[mask, 'Gene'] = get_msu_browser_link(
+                summary_results_df, 'Gene')
+
             columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                        for x in summary_results_df.columns]
 
