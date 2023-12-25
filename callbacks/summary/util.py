@@ -163,59 +163,43 @@ def create_summary_results_dir(genomic_intervals, addl_genes, network, algo, par
     return temp_output_folder_dir
 
 
-def create_column_int64_dict(df):
-    column_int64_dict = {}
-
-    # Exclude first column (gene ID)
-    for col in df.columns[1:]:
-        column_int64_dict[col] = 'Int64'
-
-    return column_int64_dict
-
-
 def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
     SUMMARY_RESULTS_DIR = create_summary_results_dir(
         genomic_intervals, submitted_addl_genes, network, algo, parameters)
     SUMMARY_RESULS_PATH = f'{SUMMARY_RESULTS_DIR}/summary.csv'
 
-    if path_exists(SUMMARY_RESULS_PATH):
-        # Prevent trailing .0 from displaying by explicitly casting all columns to integers
-        # except the first column (gene ID)
-        df = pd.read_csv(SUMMARY_RESULS_PATH)
-        return pd.read_csv(SUMMARY_RESULS_PATH, dtype=create_column_int64_dict(df))
+    if not path_exists(SUMMARY_RESULS_PATH):
+        implicated_genes = get_all_genes(other_ref_genomes.keys(),
+                                         genomic_intervals).values.tolist()
 
-    implicated_genes = get_all_genes(other_ref_genomes.keys(),
-                                     genomic_intervals).values.tolist()
+        liftover_summary = get_liftover_summary(implicated_genes)
 
-    liftover_summary = get_liftover_summary(implicated_genes)
+        qtl_summary = get_qtl_summary(genomic_intervals)
+        pubmed_summary = get_pubmed_summary(genomic_intervals)
 
-    qtl_summary = get_qtl_summary(genomic_intervals)
-    pubmed_summary = get_pubmed_summary(genomic_intervals)
+        coexpression_summary = get_coexpression_summary(
+            genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters)
 
-    coexpression_summary = get_coexpression_summary(
-        genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters)
+        # Merge the summaries
+        summary = liftover_summary.merge(
+            qtl_summary, on='Name', how='left', validate='one_to_one')
+        summary = summary.merge(pubmed_summary, on='Name',
+                                how='left', validate='one_to_one')
 
-    # Merge the summaries
-    summary = liftover_summary.merge(
-        qtl_summary, on='Name', how='left', validate='one_to_one')
-    summary = summary.merge(pubmed_summary, on='Name',
-                            how='left', validate='one_to_one')
+        # Use right merge since there may be additional genes included in the co-expression analysis
+        summary = summary.merge(coexpression_summary, on='Name',
+                                how='right', validate='one_to_one')
 
-    # Use right merge since there may be additional genes included in the co-expression analysis
-    summary = summary.merge(coexpression_summary, on='Name',
-                            how='right', validate='one_to_one')
+        summary = summary.rename(columns={'Name': 'Gene'})
 
-    summary = summary.rename(columns={'Name': 'Gene'})
-    summary = summary.fillna(
-        NULL_PLACEHOLDER).drop_duplicates()
+        SUMMARY_RESULTS_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
+            SUMMARY_RESULS_PATH)
+        summary.to_csv(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, index=False)
 
-    SUMMARY_RESULTS_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
-        SUMMARY_RESULS_PATH)
-    summary.to_csv(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, index=False)
+        try:
+            os.replace(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP,
+                       SUMMARY_RESULS_PATH)
+        except:
+            pass
 
-    try:
-        os.replace(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, SUMMARY_RESULS_PATH)
-    except:
-        pass
-
-    return summary
+    return pd.read_csv(SUMMARY_RESULS_PATH)
