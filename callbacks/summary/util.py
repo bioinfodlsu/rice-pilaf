@@ -157,7 +157,28 @@ def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_add
     return gene_to_coexpression_df
 
 
+def create_summary_results_dir(genomic_intervals, addl_genes, network, algo, parameters):
+    # Prevent [] from being passed into the filename
+    if not addl_genes:
+        addl_genes = ''
+
+    temp_output_folder_dir = get_path_to_temp(
+        genomic_intervals, Constants.TEMP_SUMMARY, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
+
+    if not path_exists(temp_output_folder_dir):
+        make_dir(temp_output_folder_dir)
+
+    return temp_output_folder_dir
+
+
 def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
+    SUMMARY_RESULTS_DIR = create_summary_results_dir(
+        genomic_intervals, submitted_addl_genes, network, algo, parameters)
+    SUMMARY_RESULS_PATH = f'{SUMMARY_RESULTS_DIR}/summary.csv'
+
+    if path_exists(SUMMARY_RESULS_PATH):
+        return pd.read_csv(SUMMARY_RESULS_PATH)
+
     implicated_genes = get_all_genes(other_ref_genomes.keys(),
                                      genomic_intervals).values.tolist()
 
@@ -182,5 +203,14 @@ def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_gene
     summary = summary.rename(columns={'Name': 'Gene'})
     summary = summary.fillna(
         NULL_PLACEHOLDER).drop_duplicates()
+
+    SUMMARY_RESULTS_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
+        SUMMARY_RESULS_PATH)
+    summary.to_csv(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, index=False)
+
+    try:
+        os.replace(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, SUMMARY_RESULS_PATH)
+    except:
+        pass
 
     return summary

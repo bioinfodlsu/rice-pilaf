@@ -39,6 +39,7 @@ class Constants(object):
     TEMP_IGV = 'igv'
     TEMP_COEXPRESSION = 'co_expression'
     TEMP_TEXT_MINING = 'text_mining'
+    TEMP_SUMMARY = 'summary'
 
     TEMP_TFBS = 'tf_enrichment'
     TFBS_BEDS = f'{APP_DATA}/tf_enrichment'
