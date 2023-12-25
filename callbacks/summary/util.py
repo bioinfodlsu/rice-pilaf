@@ -105,10 +105,6 @@ def get_pathways_in_modules(modules, tool, network, algo, parameters):
 
 
 def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_addl_genes, network, algo, parameters):
-    # Prevent [] from being passed into the filename
-    if not submitted_addl_genes:
-        submitted_addl_genes = ''
-
     enriched_modules = get_module_indices(do_module_enrichment_analysis(
         combined_gene_ids, genomic_intervals, submitted_addl_genes, network, algo, parameters))
 
@@ -158,10 +154,6 @@ def get_coexpression_summary(genomic_intervals, combined_gene_ids, submitted_add
 
 
 def create_summary_results_dir(genomic_intervals, addl_genes, network, algo, parameters):
-    # Prevent [] from being passed into the filename
-    if not addl_genes:
-        addl_genes = ''
-
     temp_output_folder_dir = get_path_to_temp(
         genomic_intervals, Constants.TEMP_SUMMARY, f'{shorten_name(addl_genes)}/{network}/{algo}/{parameters}')
 
