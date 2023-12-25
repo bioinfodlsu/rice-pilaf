@@ -192,6 +192,11 @@ def make_summary_table(genomic_intervals, combined_gene_ids, submitted_addl_gene
 
         summary = summary.rename(columns={'Name': 'Gene'})
 
+        # Sort by sum of columns
+        summary['sum'] = summary.drop('Gene', axis=1).sum(axis=1)
+        summary = summary.sort_values('sum', ascending=False)
+        del summary['sum']
+
         SUMMARY_RESULTS_PATH_WITH_TIMESTAMP = append_timestamp_to_filename(
             SUMMARY_RESULS_PATH)
         summary.to_csv(SUMMARY_RESULTS_PATH_WITH_TIMESTAMP, index=False)
