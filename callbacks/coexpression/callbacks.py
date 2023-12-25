@@ -232,7 +232,7 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data'),
 
         Input('coexpression-combined-genes', 'data'),
-        Input('coexpression-submitted-addl-genes', 'data'),
+        State('coexpression-valid-addl-genes', 'data'),
 
         Input('coexpression-submitted-network', 'data'),
         Input('coexpression-submitted-clustering-algo', 'data'),
@@ -241,14 +241,14 @@ def init_callback(app):
         State('coexpression-submitted-module', 'data'),
         State('coexpression-is-submitted', 'data')
     )
-    def perform_module_enrichment(genomic_intervals, combined_gene_ids, submitted_addl_genes,
+    def perform_module_enrichment(genomic_intervals, combined_gene_ids, valid_addl_genes,
                                   submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider, module, coexpression_is_submitted):
         if homepage_is_submitted and coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
 
                 enriched_modules = do_module_enrichment_analysis(
-                    combined_gene_ids, genomic_intervals, submitted_addl_genes, submitted_network, submitted_algo, parameters)
+                    combined_gene_ids, genomic_intervals, valid_addl_genes, submitted_network, submitted_algo, parameters)
 
                 # Display statistics
                 num_enriched_modules = len(enriched_modules)
