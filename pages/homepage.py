@@ -248,7 +248,7 @@ layout = html.Div([
 
                 dbc.Col([
                     html.H5('Epigenomic Information'),
-                    html.P('For traits that are tissue-specific, it may be desirable to deprioritize genes whose epigenetic markers suggest transcriptional inactivity. Using the embeddable Integrated Genomics Viewer, RicePilaf displays selected BED files obtained from the RiceEncode database, which contains tissue-specific chromatin accessibility, histone modification, and DNA methylation data among others, obtained from high-throughput sequencing experiments.', className='pt-3')
+                    html.P('For traits that are tissue-specific, it may be desirable to deprioritize genes whose epigenetic markers suggest transcriptional inactivity. Using the embeddable Integrated Genomics Viewer, RicePilaf displays selected BED files obtained from the RiceENCODE database, which contains tissue-specific chromatin accessibility, histone modification, and DNA methylation data among others, obtained from high-throughput sequencing experiments.', className='pt-3')
                 ], className='col-sm-9 pe-6 alt-row')
             ], className='gray-container ps-3 pb-4 info-div')
         ]
