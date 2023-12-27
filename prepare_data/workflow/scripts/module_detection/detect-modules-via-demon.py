@@ -27,10 +27,10 @@ if __name__ == '__main__':
     parser.add_argument(
         'module_list_dir', help='output directory for the module list')
     parser.add_argument(
-        '-epsilon', type=float, required=False, default=0.25, help='merging threshold (default = 0.25)'
+        '--epsilon', type=float, required=False, default=0.25, help='merging threshold (default = 0.25)'
     )
     parser.add_argument(
-        '-min_com_size', type=int, required=False, default=3, help='minimum size of a module (default = 3)'
+        '--min_com_size', type=int, required=False, default=3, help='minimum size of a module (default = 3)'
     )
 
     args = parser.parse_args()

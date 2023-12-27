@@ -28,13 +28,13 @@ if __name__ == '__main__':
     parser.add_argument(
         'module_list_dir', help='output directory for the module list')
     parser.add_argument(
-        '-density_threshold', type=float, required=False, default=0.7, help='minimum core density (default = 0.7)'
+        '--density_threshold', type=float, required=False, default=0.7, help='minimum core density (default = 0.7)'
     )
     parser.add_argument(
-        '-affinity_threshold', type=float, required=False, default=0.225, help='maximum core affinity (default = 0.225)'
+        '--affinity_threshold', type=float, required=False, default=0.225, help='maximum core affinity (default = 0.225)'
     )
     parser.add_argument(
-        '-closeness_threshold', type=float, required=False, default=0.5, help='minimum neighbor closeness (default = 0.5)'
+        '--closeness_threshold', type=float, required=False, default=0.5, help='minimum neighbor closeness (default = 0.5)'
     )
 
     args = parser.parse_args()
