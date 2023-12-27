@@ -32,7 +32,7 @@
 #     - Let x be the symbol of interest. It should be excluded if it stands for or refers to y.
 #     - Let S be the set of symbols for that gene. Let S' = S \ {x} .
 #     - If a PubMed article has a match in S', then it is included
-#     - If a PubMed article matches x  but the article also contains y, then it is excluded
+#     - If a PubMed article matches x but the article also contains y, then it is excluded
 #     - If a PubMed article matches x and the article does not contain y, then it is included
 
 from nltk.corpus import words
@@ -177,7 +177,7 @@ def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_dir
             pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
+def get_pubmed_for_all_genes(gene_index, continue_from, annotated_abstracts, output_directory):
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
@@ -211,7 +211,12 @@ def get_pubmed_for_all_genes(gene_index, annotated_abstracts, output_directory):
 
             for accession in accessions:
                 accession = accession.strip()
+
                 if accession:
+                    if accession < continue_from:
+                        print(f'Skipping {accession}')
+                        break
+
                     get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                         annotated_abstracts, output_directory)
 
@@ -445,7 +450,8 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'gene_index_file', help='file containing gene accessions and their common names')
+        'gene_index_file', help='file containing gene accessions and their common names'
+    )
     parser.add_argument(
         'annotated_abstracts_file',
         help='file containing the annotated abstracts')
@@ -458,7 +464,11 @@ if __name__ == '__main__':
         help='file containing the symbols that must be excluded under certain contexts'
     )
     parser.add_argument(
-        'output_dir', help='output directory for the dictionaries with the PubMed IDs of related articles')
+        'output_dir', help='output directory for the dictionaries with the PubMed IDs of related articles'
+    )
+    parser.add_argument(
+        '--continue_from', required=False, help='last gene processed'
+    )
 
     args = parser.parse_args()
 
@@ -478,7 +488,7 @@ if __name__ == '__main__':
             context = line[1].strip().split(',')
             symbols_to_be_excluded[symbol] = context
 
-    get_pubmed_for_all_genes(args.gene_index_file,
+    get_pubmed_for_all_genes(args.gene_index_file, args.continue_from,
                              args.annotated_abstracts_file, args.output_dir)
 
     handle_symbol_after_species(args.gene_index_file,
