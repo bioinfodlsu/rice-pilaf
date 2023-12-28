@@ -13,6 +13,15 @@ example_genomic_intervals = {
 
 
 def clear_cache_folder():
+    """
+    Removes the static/temp cache folder and recreates the database 
+
+    Parameters:
+    - none
+
+    Returns:
+    - none
+    """
     if os.path.exists(Constants.TEMP):
         shutil.rmtree(Constants.TEMP, ignore_errors=True)
 
@@ -35,6 +44,16 @@ def clear_cache_folder():
 
 
 def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *args):
+    """
+    Removes the data in all the dcc.Store variables excluding some variables
+
+    Parameters:
+    - dccStore_children: All of the dcc.Store variables
+    - *args: Variables that will be excluded from being cleared of their data
+
+    Returns:
+    - Sanitized dcc.Store data
+    """
     for i in range(len(dccStore_children)):
         dccStore_ID = dccStore_children[i]['props']['id']
 
@@ -54,17 +73,13 @@ def get_cleared_dccStore_data_excluding_some_data(dccStore_children, *args):
 
 
 def get_example_genomic_interval(description):
+    """
+    Returns the genomic interval of the selected description
+
+    Parameters:
+    - description: selected choice among the example choices of genomic intervals
+
+    Returns:
+    - Genomic interval of the selected description
+    """
     return example_genomic_intervals[description]
-
-
-def set_active_class(display_map, active_class):
-    class_names = []
-    for page, layout_link in display_map.items():
-        if page == active_class:
-            class_name = add_class_name('active', layout_link.link_class)
-        else:
-            class_name = remove_class_name('active', layout_link.link_class)
-
-        class_names.append(class_name)
-
-    return tuple(class_names)
