@@ -18,11 +18,11 @@ def init_callback(app):
 
         Parameters:
         - nb_intervals_str: Submitted genomic interval
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
         - *_: Other input that facilitates displaying of the submitted genomic interval
 
         Returns:
-        - Initial state of the lift-over output
+        - Submitted genomic interval text
         """
         if homepage_is_submitted:
             if nb_intervals_str and not is_error(
@@ -50,12 +50,12 @@ def init_callback(app):
     )
     def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
         """
-        Parses the inputs of the lift-over 
+        Parses the inputs of the lift-over
 
         Parameters:
         - lift_over_submit_n_clicks: Number of clicks pressed for the submit button in the lift-over page
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
         - other_refs: Submitted other references of genome(s) for lift-over
 
         Returns:
@@ -77,7 +77,7 @@ def init_callback(app):
         Displays the lift-over output container
 
         Parameters:
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - The display of the lift-over output
@@ -127,8 +127,8 @@ def init_callback(app):
         Parameters:
         - active_tab: Active tab in the lift-over table
         - children: List of tabs found in the lift-over table
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - The introduction of the genes
@@ -168,8 +168,8 @@ def init_callback(app):
         Parameters:
         - nb_intervals_str: Submitted genomic interval input
         - other_refs: Submitted other references of genome(s) for lift-over
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - The gene statistics
@@ -273,7 +273,7 @@ def init_callback(app):
         - other_refs: Submitted other references of genome(s) for lift-over
         - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
         - active_filter: List of saved selected rice variants found in the common genes table  
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - The selected active tab of the lift-over table and the list of filters in the common genes tab
@@ -333,9 +333,9 @@ def init_callback(app):
         Displays the active tab of the lift-over table
 
         Parameters:
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
         - saved_active_tab: Saved active tab of the lift-over table
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
         - *_: Other input that facilitates displaying of the saved active tab
 
         Returns:
@@ -373,8 +373,8 @@ def init_callback(app):
         - filter_rice_variants: List of selected rice variants found in the common genes table  
         - other_refs: Other references of genome(s) for lift-over
         - children: List of columns (tabs) found in the lift-over table
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - The gene table's columns and their corresponding data
@@ -515,8 +515,8 @@ def init_callback(app):
         Export the lift-over table in csv file format 
 
         Parameters:
-        - download_n_clicks: number of clicks pressed for the export button
-        - lift_over_df: lift-over table in dataframe format
+        - download_n_clicks: Number of clicks pressed for the export button
+        - lift_over_df: Lift-over table in dataframe format
         - genomic_intervals: Saved boolean value of True / False of whether a valid input was submitted or not 
    
         Returns:
@@ -551,8 +551,8 @@ def init_callback(app):
         Parameters:
         - active_tab: Saved latest active tab in the lift-over table
         - filter_rice_variants: List of selected rice variants found in the common genes table
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: [Lift-over] Saved boolean value of True / False of whether a valid input was submitted or not 
 
         Returns:
         - Saved active tab input 

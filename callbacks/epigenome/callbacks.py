@@ -24,6 +24,17 @@ def init_callback(app):
         Input('epigenome-submit', 'n_clicks')
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
+        """
+        Displays the genomic interval input
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - *_: Other input that facilitates displaying of the submitted genomic interval
+
+        Returns:
+        - Submitted genomic interval text
+        """
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]

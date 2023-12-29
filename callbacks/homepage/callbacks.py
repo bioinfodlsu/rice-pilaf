@@ -27,32 +27,41 @@ def init_callback(app):
         Displays the selected analyis page and hides the unselected analysis pages
 
         Parameters:
-        - nav_className: All of the analysis pages' classnames found in the side bar
-        - analysis_nav_id: All of the analysis page's id found in the side bar  
-        - analysis_layout_id: All of the analysis page's id found in the analysis folder
-        - current_page: selected analysis 
-        - *_: other inputs in facilitating the saved state of the selected analysis page 
+        - nav_className: List of analysis navbar buttons' classnames
+        - analysis_nav_id: List of analysis navbar buttons' ids  
+        - analysis_layout_id: List of analysis page layouts' ids
+        - current_page: Saved selected analysis navbar button 
+        - *_: Other inputs that facilitates the saved state of the selected analysis navbar button and layout page 
 
         Returns:
-        - List of updated classname and hidden attributes of the analysis page buttons in the side bar and analysis pages in the analysis folder respectively
+        - ({'type': 'analysis-nav', 'label': ALL}, 'className'): List of updated classnames for the analysis navbar buttons 
+        - ({'type': 'analysis-layout', 'label': ALL}, 'hidden'): List of updated hidden attributes for the analysis page layouts
         """
         if current_page:
             update_nav_class_name = []
             update_layout_hidden = []
 
-            # add active classname attribute to the selected analysis button in the side bar; and remove the active attribute to the unselected ones
+            # This is to facilitate the feedback state of the navbar buttons depending on the selected navbar button
             for i in range(len(analysis_nav_id)):
+
+                # Add active classname attribute to the selected navbar button
                 if analysis_nav_id[i]['label'] == current_page:
                     nav_classes = add_class_name('active', nav_className[i])
+
+                # Remove active classname attribute to the unselected navbar buttons
                 else:
                     nav_classes = remove_class_name('active', nav_className[i])
 
                 update_nav_class_name.append(nav_classes)
 
-            # change the hidden attribute of the selected layout to True and the unselected ones to False
+            # This is to facilitate the displaying and hiding of analysis page layouts depending on the selected navbar button
             for i in range(len(analysis_layout_id)):
+
+                # Display the selected analysis page layout depending on the selected navbar button
                 if analysis_layout_id[i]['label'] == current_page:
                     hide_layout = False
+
+                # Hide the unselected analysis page layouts
                 else:
                     hide_layout = True
 
@@ -88,24 +97,24 @@ def init_callback(app):
     def parse_input(nb_intervals_str, n_clicks, n_submit, dccStore_children, *_):
         """
         Parses input and outputs depending on the input
-        - if user clicks the "Clear Cache" button, all the data in the cache (temp) folder will be cleared
-        - if user clicks the "Reset All Analyses" button, all the saved data in the dcc.Store variables will be cleared
-        - if user clicks the "Proceed to Analysis Menu" button, the genomic interval will be parsed and an error message or the analysis menu will appear
+        - If user clicks the "Clear Cache" button, all the data in the cache (temp) folder will be cleared
+        - If user clicks the "Reset All Analyses" button, all the saved data in the dcc.Store variables will be cleared
+        - If user clicks the "Proceed to Analysis Menu" button, the genomic interval will be parsed and an error message or the analysis menu will appear
 
         Parameters:
         - nb_intervals_str: Submitted genomic interval input
-        - n_clicks: Number of clicks pressed on the submit button ("Proceed to Analysis Menu" button)  
-        - n_submit: Number of times Enter was pressed while the input (genomic interval input field) had focus
-        - dccStore_children: All of the dcc.Store variables 
+        - n_clicks: Number of clicks pressed on the homepage submit button  
+        - n_submit: Number of times "Enter" was pressed while the genomic interval input field had focus
+        - dccStore_children: List of dcc.Store data 
         - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
-        - Updated dcc.Store variables values
-        - Error Message
-        - Display of Error Message 
-        - Boolean value of True / False of whether the genomic interval input is valid or not 
-        - Submitted genomic interval 
-        - Boolean value of True / False of whether the saved data in the dcc.Store variables should be cleared or not 
+        - ('session-container', 'children'): Updated dcc.Store data
+        - ('input-error', 'children'): Error message 
+        - ('input-error', 'style'): {'display': 'block'} for displaying the error message; otherwise {'display': 'none'}
+        - ('homepage-is-submitted', 'data'): True for submitted valid input; otherwise False
+        - ('homepage-submitted-genomic-intervals', 'data'): Submitted genomic interval 
+        - ('homepage-is-resetted', 'data'): True for clearing data in the dcc.Store variables; otherwise False
         """
 
         # Clears the cache folder
@@ -158,7 +167,7 @@ def init_callback(app):
         - example_genomic_interval_n_clicks: List of number of clicks pressed for each description choice
 
         Returns:
-        - The preset genomic interval depending on the seelcted description choice
+        - ('homepage-genomic-intervals', 'value'): Preset genomic interval depending on the selected description choice
         """
         if ctx.triggered_id and not all(val == 0 for val in example_genomic_interval_n_clicks):
             return get_example_genomic_interval(ctx.triggered_id['description'])
@@ -173,14 +182,15 @@ def init_callback(app):
     )
     def display_homepage_output(homepage_is_submitted, *_):
         """
-        Displays the homepage output 
+        Displays either the homepage results container or about the page container
 
         Parameters:
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
-        - *_: other inputs in facilitating the saved state of the homepage 
+        - homepage_is_submitted: Saved [Homepage] True for submitted valid input; otherwise False 
+        - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
-        - Either the display of analysis pages or about the app page 
+        - ('homepage-results-container', 'style'): {'display': 'block'} for displaying the homepage results container; otherwise {'display': 'none'}
+        - ('about-the-app', 'style'): {'display': 'block'} for displaying the about the page container; otherwise {'display': 'none'}
         """
         if homepage_is_submitted:
             return {'display': 'block'}, {'display': 'none'}
@@ -194,13 +204,13 @@ def init_callback(app):
     )
     def open_modals(tooltip_n_clicks):
         """
-        Displays the genomic interval input tooltip
+        Displays the genomic interval input tooltip modal
 
         Parameters:
         - tooltip_n_clicks: Number of clicks pressed for the tooltip button near the genomic interval input field
 
         Returns:
-        - Boolean value of True / False in showing the tooltip
+        - ('genomic-interval-modal', 'is_open'): True for showing the tooltip; otherwise False
         """
         if tooltip_n_clicks > 0:
             return True
@@ -217,13 +227,13 @@ def init_callback(app):
     )
     def set_input_homepage_session_state(analysis_nav_items_n_clicks):
         """
-        Sets the homepage-related dcc.Store variables data
+        Sets the [Input container] homepage-related input dcc.Store data
 
         Parameters:
-        - analysis_nav_items_n_clicks: List of number of clicks pressed for each analysis page button found in the side bar 
+        - analysis_nav_items_n_clicks: List of number of clicks pressed for each analysis navbar button 
 
         Returns:
-        - Saved analysis page button found in the side bar id 
+        - ('current-analysis-page-nav', 'data'): Selected analysis navbar button's id label 
         """
 
         if ctx.triggered_id:
@@ -241,16 +251,17 @@ def init_callback(app):
     )
     def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
         """
-        Gets the homepage-related dcc.Store variables data in the homepage input container and displays them 
+        Gets the [Input container] homepage-related dcc.Store data and displays them 
 
         Parameters:
         - genomic_intervals: Saved genomic interval value found in the dcc.Store
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: Saved [Homepage] True for submitted valid input; otherwise False  
         - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
-        - Saved genomic interval value found in the dcc.Store
+        - ('homepage-genomic-intervals', 'value'): Saved genomic interval value found in the dcc.Store
         """
+        
         if homepage_is_submitted:
             return genomic_intervals
 
