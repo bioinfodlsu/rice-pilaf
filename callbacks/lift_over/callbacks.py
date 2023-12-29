@@ -13,6 +13,17 @@ def init_callback(app):
         Input('lift-over-submit', 'n_clicks')
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
+        """
+        Displays the genomic interval input
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - *_: Other input that facilitates displaying of the submitted genomic interval
+
+        Returns:
+        - Initial state of the lift-over output
+        """
         if homepage_is_submitted:
             if nb_intervals_str and not is_error(
                     get_genomic_intervals_from_input(nb_intervals_str)):
@@ -38,6 +49,18 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
+        """
+        Parses the inputs of the lift-over 
+
+        Parameters:
+        - lift_over_submit_n_clicks: Number of clicks pressed for the submit button in the lift-over page
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - other_refs: Submitted other references of genome(s) for lift-over
+
+        Returns:
+        - Initial state of the lift-over output
+        """
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
@@ -50,6 +73,15 @@ def init_callback(app):
         Input('lift-over-is-submitted', 'data'),
     )
     def display_lift_over_output(lift_over_is_submitted):
+        """
+        Displays the lift-over output container
+
+        Parameters:
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - The display of the lift-over output
+        """
         if lift_over_is_submitted:
             return {'display': 'block'}
 
@@ -64,6 +96,15 @@ def init_callback(app):
         Input('lift-over-results-statistics', 'children')
     )
     def disable_lift_over_button_upon_run(n_clicks,  *_):
+        """
+        Disables the submit button in the lift-over page until analysis is done computing
+
+        Parameters:
+        - n_clicks: Number of clicks pressed for the submit button in the lift-over page
+
+        Returns:
+        - Boolean value of True / False of the submit button being disabled or not
+        """
         return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
 
     # =================
@@ -80,6 +121,18 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def display_gene_intro(active_tab, children, homepage_is_submitted, lift_over_is_submitted):
+        """
+        Displays the introduction of the genes
+
+        Parameters:
+        - active_tab: Active tab in the lift-over table
+        - children: List of tabs found in the lift-over table
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - The introduction of the genes
+        """
         if homepage_is_submitted and lift_over_is_submitted:
             if active_tab == get_tab_id('All Genes'):
                 return 'The table below lists all the implicated genes.', {'display': 'none'}
@@ -109,6 +162,18 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def display_gene_statistics(nb_intervals_str, other_refs, homepage_is_submitted, lift_over_is_submitted):
+        """
+        Displays the gene statistics
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval input
+        - other_refs: Submitted other references of genome(s) for lift-over
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - The gene statistics
+        """
         if homepage_is_submitted and lift_over_is_submitted:
             genes_from_Nb_raw = get_genes_in_Nb(nb_intervals_str)[0]
 
@@ -200,6 +265,19 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter, lift_over_is_submitted):
+        """
+        Displays the data of the selected active tab 
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval input
+        - other_refs: Submitted other references of genome(s) for lift-over
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - active_filter: List of saved selected rice variants found in the common genes table  
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - The selected active tab of the lift-over table and the list of filters in the common genes tab
+        """
         if homepage_is_submitted and lift_over_is_submitted:
             if nb_intervals_str and not is_error(get_genomic_intervals_from_input(nb_intervals_str)):
                 tabs = get_tabs()
@@ -251,8 +329,21 @@ def init_callback(app):
         Input('lift-over-submitted-other-refs', 'data')
     )
     def display_active_tab(homepage_is_submitted, saved_active_tab, lift_over_is_submitted, *_):
+        """
+        Displays the active tab of the lift-over table
+
+        Parameters:
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - saved_active_tab: Saved active tab of the lift-over table
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - *_: Other input that facilitates displaying of the saved active tab
+
+        Returns:
+        - The selected active tab of the lift-over table
+        """
+
         if homepage_is_submitted and lift_over_is_submitted:
-            if not saved_active_tab:
+            if not saved_active_tab: 
                 return 'tab-0'
 
             return saved_active_tab
@@ -273,6 +364,22 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data')
     )
     def display_gene_tables(nb_intervals_str, active_tab, filter_rice_variants, other_refs, children, homepage_is_submitted, lift_over_is_submitted):
+        """
+        Displays the gene table
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval input
+        - active_tab: Current tab user is in the lift-over table
+        - filter_rice_variants: List of selected rice variants found in the common genes table  
+        - other_refs: Other references of genome(s) for lift-over
+        - children: List of columns (tabs) found in the lift-over table
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - The gene table's columns and their corresponding data
+        """
+
         if homepage_is_submitted and lift_over_is_submitted:
             # The RGI links are added here instead of the util.py file so that the IDs
             # in the dataframe stored in dcc.Store are not polluted with the hyperlinks.
@@ -385,6 +492,16 @@ def init_callback(app):
         Input('lift-over-overlap-table-filter', 'value')
     )
     def reset_table_filter_page(*_):
+        """
+        Resets the lift-over table to its original state
+
+        Parameters:
+        - *_: Other input that facilitates the resetting of the lift-over table 
+
+        Returns:
+        - Original state of the lift-over table and the page number 
+        """
+
         return '', 0
 
     @app.callback(
@@ -394,6 +511,18 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_lift_over_table_to_csv(download_n_clicks, lift_over_df, genomic_intervals):
+        """
+        Export the lift-over table in csv file format 
+
+        Parameters:
+        - download_n_clicks: number of clicks pressed for the export button
+        - lift_over_df: lift-over table in dataframe format
+        - genomic_intervals: Saved boolean value of True / False of whether a valid input was submitted or not 
+   
+        Returns:
+        - Lift-over table in csv file format data
+        """
+
         if download_n_clicks >= 1:
             df = pd.DataFrame(purge_html_export_table(lift_over_df))
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Gene List and Lift-Over.csv', index=False)
@@ -416,6 +545,20 @@ def init_callback(app):
         prevent_initial_call=True,
     )
     def get_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
+        """
+        Gets the lift-over related dcc.Store variables data in the lift-over output container and displays them 
+
+        Parameters:
+        - active_tab: Saved latest active tab in the lift-over table
+        - filter_rice_variants: List of selected rice variants found in the common genes table
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - lift_over_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+
+        Returns:
+        - Saved active tab input 
+        - Saved filtered rice variants input
+        """
+
         if homepage_is_submitted and lift_over_is_submitted:
             return active_tab, filter_rice_variants
 
@@ -428,6 +571,19 @@ def init_callback(app):
         Input('lift-over-is-submitted', 'data')
     )
     def get_input_lift_over_session_state(is_multi_other_refs, other_refs, *_):
+        """
+        Gets the lift-over related dcc.Store variables data in the lift-over input container and displays them 
+
+        Parameters:
+        - is_multi_other_refs: Boolean value of True / False whether the other refs accepts multiple or single value  
+        - other_refs: Saved value of other refs input
+        - *_: other inputs in facilitating the saved state of the lift-over page
+
+        Returns:
+        - Saved other ref input
+        """
+
+        # if the other ref input field only accepts single value
         if not is_multi_other_refs and other_refs:
             other_refs = other_refs[0]
 

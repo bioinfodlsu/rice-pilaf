@@ -93,11 +93,11 @@ def init_callback(app):
         - if user clicks the "Proceed to Analysis Menu" button, the genomic interval will be parsed and an error message or the analysis menu will appear
 
         Parameters:
-        - nb_intervals_str: genomic interval input
-        - n_clicks: number of clicks on the submit button ("Proceed to Analysis Menu" button)  
-        - n_submit: number of times Enter was pressed while the input (genomic interval input field) had focus
-        - dccStore_children: all of the dcc.Store variables 
-        - *_: other inputs in facilitating the saved state of the homepage 
+        - nb_intervals_str: Submitted genomic interval input
+        - n_clicks: Number of clicks pressed on the submit button ("Proceed to Analysis Menu" button)  
+        - n_submit: Number of times Enter was pressed while the input (genomic interval input field) had focus
+        - dccStore_children: All of the dcc.Store variables 
+        - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
         - Updated dcc.Store variables values
@@ -155,7 +155,7 @@ def init_callback(app):
         Displays the preset genomic interval depending on the selected description choice
 
         Parameters:
-        - example_genomic_interval_n_clicks: List of number of clicks for each description choice
+        - example_genomic_interval_n_clicks: List of number of clicks pressed for each description choice
 
         Returns:
         - The preset genomic interval depending on the seelcted description choice
@@ -176,7 +176,7 @@ def init_callback(app):
         Displays the homepage output 
 
         Parameters:
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid genomic interval was submitted or not 
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
         - *_: other inputs in facilitating the saved state of the homepage 
 
         Returns:
@@ -197,7 +197,7 @@ def init_callback(app):
         Displays the genomic interval input tooltip
 
         Parameters:
-        - tooltip_n_clicks: number of clicks for the tooltip button near the genomic interval input field
+        - tooltip_n_clicks: Number of clicks pressed for the tooltip button near the genomic interval input field
 
         Returns:
         - Boolean value of True / False in showing the tooltip
@@ -220,7 +220,7 @@ def init_callback(app):
         Sets the homepage-related dcc.Store variables data
 
         Parameters:
-        - analysis_nav_items_n_clicks: List of number of clicks for each analysis page button found in the side bar 
+        - analysis_nav_items_n_clicks: List of number of clicks pressed for each analysis page button found in the side bar 
 
         Returns:
         - Saved analysis page button found in the side bar id 
@@ -241,12 +241,12 @@ def init_callback(app):
     )
     def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
         """
-        Gets the homepage-related dcc.Store variables data and displays them 
+        Gets the homepage-related dcc.Store variables data in the homepage input container and displays them 
 
         Parameters:
         - genomic_intervals: Saved genomic interval value found in the dcc.Store
-        - homepage_is_submitted: Saved boolean value of True / False of whether a valid genomic interval was submitted or not 
-        - *_: other inputs in facilitating the saved state of the homepage 
+        - homepage_is_submitted: Saved boolean value of True / False of whether a valid input was submitted or not 
+        - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
         - Saved genomic interval value found in the dcc.Store
