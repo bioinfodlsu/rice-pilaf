@@ -110,7 +110,7 @@ def init_callback(app):
         - *_: Other input that facilitates the disabling of the lift-over submit button
 
         Returns:
-        - ('lift-over-submit', 'disabled'): True for disabling the button; otherwise False 
+        - ('lift-over-submit', 'disabled'): True for disabling the submit button; otherwise False 
         """
 
         return ctx.triggered_id == 'lift-over-submit' and n_clicks > 0
@@ -513,10 +513,10 @@ def init_callback(app):
     )
     def reset_table_filter_page(*_):
         """
-        Resets the lift-over table and the current page to its original state
+        Resets the lift-over gene table and the current page to its original state
 
         Parameters:
-        - *_: Other input that facilitates the resetting of the lift-over table 
+        - *_: Other input that facilitates the resetting of the lift-over gene table 
 
         Returns:
         - ('lift-over-results-table', 'filter_query'): '' for removing the filter query

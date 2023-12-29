@@ -64,10 +64,10 @@ def init_callback(app):
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         """
         Parses epigenome input and displays the epigenome result container
-        - If user clicks on the lift-over submit button, the inputs will be parsed and the lift-over results container will appear
+        - If user clicks on the epigenome submit button, the inputs will be parsed and the epigenome results container will appear
 
         Parameters:
-        - igv_submit_n_clicks: Number of clicks pressed on the lift-over submit button 
+        - igv_submit_n_clicks: Number of clicks pressed on the epigenome submit button 
         - selected_nb_interval: Selected epigenome genomic interval
         - selected_tissue: Selected tissue value
         - selected_tracks: Selected list of tracks
