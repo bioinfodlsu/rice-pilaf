@@ -24,7 +24,7 @@ def init_callback(app):
         Returns:
         - ('lift-over-genomic-intervals-input', 'children'): Genomic interval text
         """
-        
+
         if homepage_is_submitted:
             if nb_intervals_str and not is_error(
                     get_genomic_intervals_from_input(nb_intervals_str)):
@@ -51,7 +51,7 @@ def init_callback(app):
     )
     def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
         """
-        Parses lift-over input, displays the lift-over result container, and resets the lift-over
+        Parses lift-over input, displays the lift-over result container, and resets the lift-over active data in the dcc.Store
         - If user clicks on the lift-over submit button, the inputs will be parsed and the lift-over results container will appear
 
         Parameters:
@@ -279,7 +279,7 @@ def init_callback(app):
     def display_gene_tabs(nb_intervals_str, other_refs, homepage_is_submitted, active_filter, lift_over_is_submitted):
         """
         Displays the following:
-        - a short introduction on the chosen lift-over input;
+        - a short introduction on the selected lift-over input;
         - list of tabs available for the gene table; and
         - available filters for the common genes    
 
@@ -291,7 +291,7 @@ def init_callback(app):
         - lift_over_is_submitted: [Lift-over] Saved boolean value of submitted valid input 
 
         Returns:
-        - ('lift-over-results-intro', 'children'): Introduction about the chosen lift-over input
+        - ('lift-over-results-intro', 'children'): Introduction about the selected lift-over input
         - ('lift-over-results-tabs', 'children'): List of tabs available for the gene table 
         - ('lift-over-overlap-table-filter', 'options'): List of available filters (genes + other refs)
         - ('lift-over-overlap-table-filter', 'value'): Selected filters
@@ -593,15 +593,15 @@ def init_callback(app):
     )
     def get_input_lift_over_session_state(is_multi_other_refs, other_refs, *_):
         """
-        Gets the lift-over related dcc.Store variables data in the lift-over input container and displays them 
+        Gets the [Input container] lift-over related dcc.Store data and displays them 
 
         Parameters:
         - is_multi_other_refs: True for multiple values being accepted; otherwise False   
-        - other_refs: Saved value of other refs input
+        - other_refs: Saved value of other references of genome(s) input found in the dcc.Store
         - *_: Other inputs in facilitating the saved state of the lift-over input
 
         Returns:
-        - ('lift-over-other-refs', 'value'): Saved other references of genome(s) 
+        - ('lift-over-other-refs', 'value'): Saved other references of genome(s)
         """
 
         # if the other ref input field only accepts single value

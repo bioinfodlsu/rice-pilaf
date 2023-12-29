@@ -231,7 +231,7 @@ def init_callback(app):
     )
     def set_input_homepage_session_state(analysis_nav_items_n_clicks):
         """
-        Sets the [Input container] homepage-related input dcc.Store data
+        Sets the [Input container] homepage related input dcc.Store data
 
         Parameters:
         - analysis_nav_items_n_clicks: List of number of clicks pressed for each analysis navbar button 
@@ -255,7 +255,7 @@ def init_callback(app):
     )
     def get_input_homepage_session_state(genomic_intervals, homepage_is_submitted, *_):
         """
-        Gets the [Input container] homepage-related dcc.Store data and displays them 
+        Gets the [Input container] homepage related dcc.Store data and displays them 
 
         Parameters:
         - genomic_intervals: Saved genomic interval value found in the dcc.Store

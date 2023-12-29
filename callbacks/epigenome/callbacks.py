@@ -25,16 +25,17 @@ def init_callback(app):
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         """
-        Displays the genomic interval input
+        Displays the genomic interval input in the epigenome page
 
         Parameters:
-        - nb_intervals_str: Submitted genomic interval
-        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - nb_intervals_str: Saved genomic interval value found in the dcc.Store
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
         - *_: Other input that facilitates displaying of the submitted genomic interval
 
         Returns:
-        - Submitted genomic interval text
+        - ('lift-over-genomic-intervals-input', 'children'): Genomic interval text
         """
+
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]
@@ -61,6 +62,24 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
+        """
+        Parses epigenome input and displays the epigenome result container
+        - If user clicks on the lift-over submit button, the inputs will be parsed and the lift-over results container will appear
+
+        Parameters:
+        - igv_submit_n_clicks: Number of clicks pressed on the lift-over submit button 
+        - selected_nb_interval: Selected epigenome genomic interval
+        - selected_tissue: Selected tissue value
+        - selected_tracks: Selected list of tracks
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('epigenome-is-submitted', 'data'): [Epigenome] True for submitted valid input; otherwise False
+        - ('epigenome-submitted-genomic-intervals', 'data'): Submitted selected epigenome genomic interval
+        - ('epigenome-submitted-tissue', 'data'): Submitted tissue
+        - ('epigenome-submitted-tracks', 'data): Submitted list of tracks for the selected tissue
+        """
+
         if homepage_is_submitted and igv_submit_n_clicks >= 1:
             tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
             submitted_tissue_tracks = {
@@ -75,6 +94,16 @@ def init_callback(app):
         Input('epigenome-is-submitted', 'data')
     )
     def display_igv_output(igv_is_submitted):
+        """
+        Displays the epigenome results container
+
+        Parameters:
+        - igv_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('epigenome-results-container', 'style'): {'display': 'block'} for displaying the epigenome results container; otherwise {'display': 'none'}
+        """
+
         if igv_is_submitted:
             return {'display': 'block'}
         else:
@@ -90,6 +119,20 @@ def init_callback(app):
         Input('epigenome-is-submitted', 'data')
     )
     def display_selected_genomic_intervals(nb_intervals_str, homepage_is_submitted, selected_nb_interval, *_):
+        """
+        Sets the genomic interval dropdown choices and value
+
+        Parameters:
+        - nb_intervals_str: Saved genomic interval found in the dcc.Store
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input  
+        - selected_nb_interval: Saved selected epigenome genomic interval found in the dcc.Store
+        - *_: Other inputs that facilitates the saved state of the epigenome genomic interval input
+
+        Returns:
+        - ('epigenome-genomic-intervals', 'options'): List of available tracks for the selected tissue
+        - ('epigenome-genomic-intervals', 'value'): List of selected tracks 
+        """
+
         if homepage_is_submitted:
             # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
             igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
@@ -110,7 +153,20 @@ def init_callback(app):
         State('epigenome-submitted-tracks', 'data'),
     )
     def set_track_options(selected_tissue, submitted_selected_tracks):
+        """
+        Sets the list of tracks available depending on the selected tissue
+
+        Parameters:
+        - selected_tissue: Selected tissue option
+        - submitted_selected_tracks: Saved tissue tracks found in the dcc.Store
+
+        Returns:
+        - ('epigenome-tracks', 'options'): List of available tracks for the selected tissue
+        - ('epigenome-tracks', 'value'): List of selected tracks 
+        """
+
         selected_tracks = []
+        # If there was a submitted tracks before for this specific tissue, display that list of selected tracks
         if submitted_selected_tracks and selected_tissue in submitted_selected_tracks:
             selected_tracks = submitted_selected_tracks[selected_tissue]['tracks']
 
@@ -142,6 +198,16 @@ def init_callback(app):
     """
     @app.server.route('/genomes_nipponbare/<path:filename>')
     def send_genomes_nipponbare_url(filename):
+        """
+        Serves a file through Flask
+
+        Parameters:
+        - filename: Name of the file 
+
+        Returns:
+        - File
+        """
+
         try:
             # serves / retrieves the file using Flask
             return send_from_directory(Constants.GENOMES_NIPPONBARE, filename)
@@ -153,6 +219,19 @@ def init_callback(app):
     """
     @app.server.route('/annotations_nb/<nb_intervals_str>/<path:foldername>/<selected_interval_str>/<file_format>')
     def send_annotations_nb_url(nb_intervals_str, foldername, selected_interval_str, file_format):
+        """
+        Serves a file through Flask
+
+        Parameters:
+        - nb_intervals_str: Selected tissue
+        - foldername: Name of the folder
+        - selected_interval_str: Selected epigenome genomic interval
+        - file_format: extension format of the file (e.g. gff) 
+
+        Returns:
+        - File
+        """
+
         try:
             # gets the path to the temp igv folder
             temp_output_folder_dir = get_path_to_temp(
@@ -172,6 +251,17 @@ def init_callback(app):
 
     @app.server.route('/<tissue>/<path:filename>')
     def send_track_url(tissue, filename):
+        """
+        Serves a file through Flask
+
+        Parameters:
+        - tissue: Selected tissue
+        - filename: Name of the file
+
+        Returns:
+        - File
+        """
+
         try:
             return send_from_directory(f'{Constants.EPIGENOME}/{tissue}', filename)
 
@@ -188,6 +278,21 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
+        """
+        Displays the dash-bio visualization graph according to the selected inputs
+
+        Parameters:
+        - selected_nb_intervals_str: Saved selected epigenome genomic interval found in the dcc.Store
+        - selected_tissue: Saved tissue value found in the dcc.Store
+        - selected_tracks: Saved list of selected tracks found in the dcc.Store
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - igv_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
+        - nb_intervals_str: Saved genomic interval found in the dcc.Store
+
+        Returns:
+        - ('epigenome-display', 'children'): Dash-bio visualization graph according to the selected inputs
+        """
+
         if homepage_is_submitted and igv_is_submitted:
             # list of tracks info
             gene_annotation_track = {
@@ -237,6 +342,17 @@ def init_callback(app):
         Input('epigenome-is-submitted', 'data')
     )
     def get_input_igv_session_state(selected_tissue, *_):
+        """
+        Gets the epigenome related dcc.Store variables data in the epigenome input container and displays them 
+
+        Parameters:
+        - selected_tissue: Saved tissue value found in the dcc.Store
+        - *_: Other inputs in facilitating the saved state of the epigenome input
+
+        Returns:
+        - ('epigenome-tissue', 'value'): Saved tissue value found in the dcc.Store; otherwise 'Leaf' for default value
+        """
+
         if not selected_tissue:
             selected_tissue = 'Leaf'
 
