@@ -164,6 +164,13 @@ def to_genomic_interval(genomic_interval_str):
 
     return Genomic_interval(chrom, start, stop)
 
+def to_genomic_interval_str(genomic_interval_str):
+    genomic_interval_tuple = to_genomic_interval(genomic_interval_str)
+    
+    genomic_interval_str = str(genomic_interval_tuple.chrom) + ':' + str(
+                genomic_interval_tuple.start) + '-' + str(genomic_interval_tuple.stop)
+
+    return genomic_interval_str
 
 def sanitize_nb_intervals_str(nb_intervals_str):
     """

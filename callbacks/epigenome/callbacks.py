@@ -199,10 +199,7 @@ def init_callback(app):
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the igv will be only displayed if the input follows the format of "Chr01"
-            selected_nb_intervals_str = lift_over_util.to_genomic_interval(
-                selected_nb_intervals_str)
-            selected_nb_intervals_str = str(selected_nb_intervals_str.chrom) + ':' + str(
-                selected_nb_intervals_str.start) + '-' + str(selected_nb_intervals_str.stop)
+            selected_nb_intervals_str = lift_over_util.to_genomic_interval_str(selected_nb_intervals_str)
 
             return html.Div([
                 dashbio.Igv(
