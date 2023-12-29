@@ -544,9 +544,9 @@ def init_callback(app):
         State('lift-over-is-submitted', 'data'),
         prevent_initial_call=True,
     )
-    def get_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
+    def set_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
         """
-        Gets the lift-over related dcc.Store variables data in the lift-over output container and displays them 
+        Sets the lift-over related dcc.Store variables data 
 
         Parameters:
         - active_tab: Saved latest active tab in the lift-over table
