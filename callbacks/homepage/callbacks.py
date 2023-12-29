@@ -207,13 +207,13 @@ def init_callback(app):
     )
     def open_modals(tooltip_n_clicks):
         """
-        Displays the genomic interval input tooltip modal
+        Displays the tooltip modals
 
         Parameters:
         - tooltip_n_clicks: Number of clicks pressed for the tooltip button near the genomic interval input field
 
         Returns:
-        - ('genomic-interval-modal', 'is_open'): True for showing the tooltip; otherwise False
+        - ('genomic-interval-modal', 'is_open'): True for showing the genomic interval tooltip; otherwise False
         """
 
         if tooltip_n_clicks > 0:
