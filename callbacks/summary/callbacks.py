@@ -194,9 +194,9 @@ def init_callback(app):
         Displays the summary results
 
         Parameters:
-        - genomic_intervals: Saved genomic intervals in the dcc.Store
-        - combined_gene_ids: [Coexpression] Saved combined gene ids in the dcc.Store
-        - valid_addl_genes: [Coexpression] Saved valid additional genes in the dcc.Store
+        - genomic_intervals: Saved genomic intervals found in the dcc.Store
+        - combined_gene_ids: [Coexpression] Saved combined gene ids found in the dcc.Store
+        - valid_addl_genes: [Coexpression] Saved valid additional genes found in the dcc.Store
         - submitted_network: [Coexpression] Saved network found in the dcc.Store
         - submitted_algo: [Coexpression] Saved clustering algorithm found in the dcc.Store 
         - submitted_parameter_slider: [Coexpression] Saved parameter slider tuple found in the dcc.Store
