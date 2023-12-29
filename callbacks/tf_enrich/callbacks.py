@@ -19,7 +19,7 @@ def init_callback(app):
 
         Parameters:
         - nb_intervals_str: Submitted genomic interval
-        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
         - *_: Other input that facilitates displaying of the submitted genomic interval
 
         Returns:
