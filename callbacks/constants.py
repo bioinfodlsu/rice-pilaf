@@ -4,6 +4,7 @@ class Constants(object):
     LABEL_COEXPRESSION = 'co-expression'
     LABEL_TFBS = 'tfbs'
     LABEL_IGV = 'browse-loci'
+    LABEL_EPIGENOME = 'epigenome'
     LABEL_TEXT_MINING = 'text-mining'
     LABEL_SUMMARY = 'summary'
 
@@ -37,6 +38,7 @@ class Constants(object):
     TEMP = f'{DATA}/temp'
     TEMP_LIFT_OVER = 'lift_over'
     TEMP_IGV = 'igv'
+    TEMP_EPIGENOME = 'epigenome'
     TEMP_COEXPRESSION = 'co_expression'
     TEMP_TEXT_MINING = 'text_mining'
     TEMP_SUMMARY = 'summary'

@@ -61,13 +61,13 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         prevent_initial_call=True
     )
-    def submit_igv_input(igv_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
+    def submit_epigenome_input(epigenome_submit_n_clicks, selected_nb_interval, selected_tissue, selected_tracks, homepage_is_submitted):
         """
         Parses epigenome input and displays the epigenome result container
         - If user clicks on the epigenome submit button, the inputs will be parsed and the epigenome results container will appear
 
         Parameters:
-        - igv_submit_n_clicks: Number of clicks pressed on the epigenome submit button 
+        - epigenome_submit_n_clicks: Number of clicks pressed on the epigenome submit button 
         - selected_nb_interval: Selected epigenome genomic interval
         - selected_tissue: Selected tissue value
         - selected_tracks: Selected list of tracks
@@ -80,7 +80,7 @@ def init_callback(app):
         - ('epigenome-submitted-tracks', 'data): Submitted list of tracks for the selected tissue
         """
 
-        if homepage_is_submitted and igv_submit_n_clicks >= 1:
+        if homepage_is_submitted and epigenome_submit_n_clicks >= 1:
             tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
             submitted_tissue_tracks = {
                 selected_tissue: tissue_tracks_value}
@@ -93,18 +93,18 @@ def init_callback(app):
         Output('epigenome-results-container', 'style'),
         Input('epigenome-is-submitted', 'data')
     )
-    def display_igv_output(igv_is_submitted):
+    def display_epigenome_output(epigenome_is_submitted):
         """
         Displays the epigenome results container
 
         Parameters:
-        - igv_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
+        - epigenome_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
 
         Returns:
         - ('epigenome-results-container', 'style'): {'display': 'block'} for displaying the epigenome results container; otherwise {'display': 'none'}
         """
 
-        if igv_is_submitted:
+        if epigenome_is_submitted:
             return {'display': 'block'}
         else:
             return {'display': 'none'}
@@ -135,14 +135,14 @@ def init_callback(app):
 
         if homepage_is_submitted:
             # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
-            igv_options = util.sanitize_nb_intervals_str(nb_intervals_str)
-            igv_options = igv_options.split(';')
+            epigenome_options = util.sanitize_nb_intervals_str(nb_intervals_str)
+            epigenome_options = epigenome_options.split(';')
 
             # if no genomic intervals are selected, use the first option
             if not selected_nb_interval:
-                selected_nb_interval = igv_options[0]
+                selected_nb_interval = epigenome_options[0]
 
-            return igv_options, selected_nb_interval
+            return epigenome_options, selected_nb_interval
 
         raise PreventUpdate
 
@@ -233,9 +233,9 @@ def init_callback(app):
         """
 
         try:
-            # gets the path to the temp igv folder
+            # gets the path to the temp epigenome folder
             temp_output_folder_dir = get_path_to_temp(
-                nb_intervals_str, Constants.TEMP_IGV, foldername)
+                nb_intervals_str, Constants.TEMP_EPIGENOME, foldername)
 
             # sanitizes the filename for the nb_interval
             selected_interval_str_filename = convert_text_to_path(
@@ -277,7 +277,7 @@ def init_callback(app):
         Input('epigenome-is-submitted', 'data'),
         State('homepage-submitted-genomic-intervals', 'data')
     )
-    def display_igv(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, igv_is_submitted, nb_intervals_str):
+    def display_epigenome(selected_nb_intervals_str, selected_tissue, selected_tracks, homepage_is_submitted, epigenome_is_submitted, nb_intervals_str):
         """
         Displays the dash-bio visualization graph according to the selected inputs
 
@@ -286,14 +286,14 @@ def init_callback(app):
         - selected_tissue: Saved tissue value found in the dcc.Store
         - selected_tracks: Saved list of selected tracks found in the dcc.Store
         - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
-        - igv_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
+        - epigenome_is_submitted: [Epigenome] Saved boolean value of submitted valid input 
         - nb_intervals_str: Saved genomic interval found in the dcc.Store
 
         Returns:
         - ('epigenome-display', 'children'): Dash-bio visualization graph according to the selected inputs
         """
 
-        if homepage_is_submitted and igv_is_submitted:
+        if homepage_is_submitted and epigenome_is_submitted:
             # list of tracks info
             gene_annotation_track = {
                 "name": "MSU V7 genes",
@@ -314,7 +314,7 @@ def init_callback(app):
                 generate_tracks(selected_tissue, tracks)
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
-            # the igv will be only displayed if the input follows the format of "Chr01"
+            # the epigenome will be only displayed if the input follows the format of "Chr01"
             selected_nb_intervals_str = lift_over_util.to_genomic_interval_str(selected_nb_intervals_str)
 
             return html.Div([
@@ -341,7 +341,7 @@ def init_callback(app):
         State('epigenome-submitted-tissue', 'data'),
         Input('epigenome-is-submitted', 'data')
     )
-    def get_input_igv_session_state(selected_tissue, *_):
+    def get_input_epigenome_session_state(selected_tissue, *_):
         """
         Gets the epigenome related dcc.Store variables data in the epigenome input container and displays them 
 

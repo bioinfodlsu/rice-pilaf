@@ -89,7 +89,7 @@ def init_callback(app):
         Input('summary-results-table', 'data')
     )
     def disable_summary_button_upon_run(n_clicks,  *_):
-         """
+        """
         Disables the submit button in the summary page until computation is done in the summary page
 
         Parameters:

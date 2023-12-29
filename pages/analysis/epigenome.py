@@ -7,7 +7,7 @@ from callbacks.epigenome.util import *
 layout = html.Div(
     id={
         'type': 'analysis-layout',
-        'label': Constants.LABEL_IGV
+        'label': Constants.LABEL_EPIGENOME
     },
     hidden=True,
     children=[
