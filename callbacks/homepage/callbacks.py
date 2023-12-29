@@ -37,6 +37,7 @@ def init_callback(app):
         - ({'type': 'analysis-nav', 'label': ALL}, 'className'): List of updated classnames for the analysis navbar buttons 
         - ({'type': 'analysis-layout', 'label': ALL}, 'hidden'): List of updated hidden attributes for the analysis page layouts
         """
+        
         if current_page:
             update_nav_class_name = []
             update_layout_hidden = []
@@ -96,10 +97,10 @@ def init_callback(app):
     )
     def parse_input(nb_intervals_str, n_clicks, n_submit, dccStore_children, *_):
         """
-        Parses input and outputs depending on the input
+        Parses homepage input and outputs depending on the input
         - If user clicks the "Clear Cache" button, all the data in the cache (temp) folder will be cleared
         - If user clicks the "Reset All Analyses" button, all the saved data in the dcc.Store variables will be cleared
-        - If user clicks the "Proceed to Analysis Menu" button, the genomic interval will be parsed and an error message or the analysis menu will appear
+        - If user clicks the "Proceed to Analysis Menu" button, the genomic interval will be parsed and an error message or the homepage results container will appear
 
         Parameters:
         - nb_intervals_str: Submitted genomic interval input
@@ -112,7 +113,7 @@ def init_callback(app):
         - ('session-container', 'children'): Updated dcc.Store data
         - ('input-error', 'children'): Error message 
         - ('input-error', 'style'): {'display': 'block'} for displaying the error message; otherwise {'display': 'none'}
-        - ('homepage-is-submitted', 'data'): True for submitted valid input; otherwise False
+        - ('homepage-is-submitted', 'data'): [Homepage] True for submitted valid input; otherwise False
         - ('homepage-submitted-genomic-intervals', 'data'): Submitted genomic interval 
         - ('homepage-is-resetted', 'data'): True for clearing data in the dcc.Store variables; otherwise False
         """
@@ -169,6 +170,7 @@ def init_callback(app):
         Returns:
         - ('homepage-genomic-intervals', 'value'): Preset genomic interval depending on the selected description choice
         """
+
         if ctx.triggered_id and not all(val == 0 for val in example_genomic_interval_n_clicks):
             return get_example_genomic_interval(ctx.triggered_id['description'])
 
@@ -185,13 +187,14 @@ def init_callback(app):
         Displays either the homepage results container or about the page container
 
         Parameters:
-        - homepage_is_submitted: Saved [Homepage] True for submitted valid input; otherwise False 
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input
         - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
         - ('homepage-results-container', 'style'): {'display': 'block'} for displaying the homepage results container; otherwise {'display': 'none'}
         - ('about-the-app', 'style'): {'display': 'block'} for displaying the about the page container; otherwise {'display': 'none'}
         """
+
         if homepage_is_submitted:
             return {'display': 'block'}, {'display': 'none'}
 
@@ -212,6 +215,7 @@ def init_callback(app):
         Returns:
         - ('genomic-interval-modal', 'is_open'): True for showing the tooltip; otherwise False
         """
+
         if tooltip_n_clicks > 0:
             return True
 
@@ -255,13 +259,13 @@ def init_callback(app):
 
         Parameters:
         - genomic_intervals: Saved genomic interval value found in the dcc.Store
-        - homepage_is_submitted: Saved [Homepage] True for submitted valid input; otherwise False  
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
         - *_: Other inputs in facilitating the saved state of the homepage 
 
         Returns:
         - ('homepage-genomic-intervals', 'value'): Saved genomic interval value found in the dcc.Store
         """
-        
+
         if homepage_is_submitted:
             return genomic_intervals
 
