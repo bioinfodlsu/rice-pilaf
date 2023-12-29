@@ -18,7 +18,7 @@ def init_callback(app):
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         """
-        Displays the genomic interval input
+        Displays the genomic interval input in the coexpression page
 
         Parameters:
         - nb_intervals_str: Submitted genomic interval
@@ -28,6 +28,7 @@ def init_callback(app):
         Returns:
         - Submitted genomic interval text
         """
+        
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]
@@ -74,6 +75,32 @@ def init_callback(app):
     def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted,
                                   genomic_intervals, submitted_addl_genes,
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
+        """
+        Parses coexpression input, displays the coexpression result container
+        - If user clicks on the coexpression submit button, the inputs will be parsed and either an error message or the coexpression results container will appear
+
+        Parameters:
+        - coexpression_submit_n_clicks: Number of clicks pressed on the tfbs submit button 
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - genomic_intervals: Saved genomic intervals found in the dcc.Store
+        - submitted_addl_genes: Submitted coexpression additional genes
+        - submitted_network: Submitted coexpression network
+        - submitted_algo: Submitted coexpression clustering algorithm
+        - submitted_slider_marks: Submitted parameter slider marks
+        - submitted_slider_value: Submitted parameter slider value
+
+        Returns:
+        - ('coexpression-is-submitted', 'data'): [Coexpression] True for submitted valid input; otherwise False
+        - ('coexpression-submitted-addl-genes', 'data'): Submitted coexpression additional genes
+        - ('coexpression-valid-addl-genes', 'data'): Submitted coexpression valid additional genes
+        - ('coexpression-combined-genes', 'data'): Coexpression combined genes 
+        - ('coexpression-submitted-network', 'data'): Submitted coexpression network
+        - ('coexpression-submitted-clustering-algo', 'data'): Submitted coexpression clustering algorithm
+        - ('coexpression-submitted-parameter-slider', 'data): Submitted coexpression parameter slider tuple
+        - ('coexpression-addl-genes-error', 'style'): {'display': 'block'} for displaying the error message; otherwise {'display': 'none'}
+        - ('coexpression-addl-genes-error', 'children'): Error message
+        """
+        
         if homepage_is_submitted and coexpression_submit_n_clicks >= 1:
             parameter_slider_value = Parameter_slider(
                 submitted_slider_marks, submitted_slider_value)._asdict()
@@ -133,6 +160,16 @@ def init_callback(app):
         Input('coexpression-is-submitted', 'data'),
     )
     def display_coexpression_output(coexpression_is_submitted):
+        """
+        Displays the coexpression results container
+
+        Parameters:
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('coexpression-results-container', 'style'): {'display': 'block'} for displaying the coexpression results container; otherwise {'display': 'none'}
+        """
+
         if coexpression_is_submitted:
             return {'display': 'block'}
 
@@ -145,6 +182,17 @@ def init_callback(app):
         Input('homepage-is-resetted', 'data')
     )
     def clear_coexpression_error_messages(homepage_is_resetted):
+        """
+        Clears coexpression input error 
+
+        Parameters:
+        - homepage_is_resetted: Saved boolean value of resetted analysis 
+
+        Returns:
+        - ('coexpression-addl-genes-error', 'style'): {'display': 'block'} for displaying the coexpression error container; otherwise {'display': 'none'}
+        - ('coexpression-addl-genes-error', 'children'): None for no error message
+        """
+
         if homepage_is_resetted:
             return {'display': 'none'}, None
 
@@ -159,6 +207,17 @@ def init_callback(app):
         Input('coexpression-module-stats', 'children')
     )
     def disable_coexpression_button_upon_run(n_clicks,  *_):
+        """
+        Disables the submit button in the coexpression page until computation is done in the coexpression page
+
+        Parameters:
+        - n_clicks: Number of clicks pressed on the coexpression submit button
+        - *_: Other input that facilitates the disabling of the coexpressino submit button
+
+        Returns:
+        - ('coexpression-submit', 'disabled'): True for disabling the submit button; otherwise False 
+        """
+
         return ctx.triggered_id == 'coexpression-submit' and n_clicks > 0
 
     @app.callback(
@@ -173,6 +232,22 @@ def init_callback(app):
         Input('coexpression-converter-tooltip', 'n_clicks')
     )
     def open_modals(algo_tooltip_n_clicks, network_tooltip_n_clicks, parameter_tooltip_n_clicks, converter_tooltip_n_clicks):
+        """
+        Displays the coexpression tooltip modals
+
+        Parameters:
+        - algo_tooltip_n_clicks: Number of clicks pressed for the tooltip button near the coexpression clustering algorithm input field
+        - network_tooltip_n_clicks: Number of clicks pressed for the tooltip button near the coexpression network input field
+        - parameter_tooltip_n_clicks: Number of clicks pressed for the tooltip button near the coexpression parameter slider input field
+        - converter_tooltip_n_clicks:Number of clicks pressed for the tooltip button near the coexpression additional genes input field
+
+        Returns:
+        - ('coexpression-clustering-algo-modal', 'is_open'): True for showing the coexpression clustering algorithm tooltip; otherwise False
+        - ('coexpression-network-modal', 'is_open'): True for showing the coexpression network tooltip; otherwise False
+        - ('coexpression-parameter-modal', 'is_open'): True for showing the coexpression parameter slider tooltip; otherwise False
+        - ('coexpression-converter-modal', 'is_open'): True for showing the tfbs additional genes tooltip; otherwise False
+        """
+
         if ctx.triggered_id == 'coexpression-clustering-algo-tooltip' and algo_tooltip_n_clicks > 0:
             return True, False, False, False
 
@@ -194,6 +269,18 @@ def init_callback(app):
         State('coexpression-submitted-parameter-slider', 'data')
     )
     def set_parameter_slider(algo, parameter_slider):
+        """
+        Sets the parameter slider data
+
+        Parameters:
+        - algo: Selected clustering algorithm
+        - parameter_slider: Selected value of the parameter slider
+
+        Returns:
+        - ('coexpression-parameter-slider', 'marks'): Parameter slider marks
+        - ('coexpression-parameter-slider', 'value'): Parameter slider value
+        """
+
         if parameter_slider and algo in parameter_slider:
             return parameter_slider[algo]['marks'], parameter_slider[algo]['value']
 
@@ -208,6 +295,19 @@ def init_callback(app):
         State('coexpression-submitted-parameter-slider', 'data')
     )
     def display_coexpression_submitted_input(coexpression_is_submitted, genes, network, algo, submitted_parameter_slider):
+        """
+        Displays the coexpression submitted input
+
+        Parameters:
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+        - genes: Saved coexpression valid additional genes found in the dcc.Store
+        - network: Saved coexpression network found in the dcc.Store
+        - submitted_parameter_slider: Saved coexpression parameter slider tuple found in the dcc.Store
+        
+        Returns:
+        - ('coexpression-input', 'children'): Submitted coexpression inputs text
+        """
+
         if coexpression_is_submitted:
             parameters = 0
             if submitted_parameter_slider and algo in submitted_parameter_slider:
@@ -254,6 +354,27 @@ def init_callback(app):
     )
     def perform_module_enrichment(genomic_intervals, combined_gene_ids, valid_addl_genes,
                                   submitted_network, submitted_algo, homepage_is_submitted, submitted_parameter_slider, module, coexpression_is_submitted):
+        """
+        Displays the coexpression pathways table
+
+        Parameters:
+        - genomic_intervals: Saved genomic intervals found in the dcc.Store
+        - combined_gene_ids: Saved combined gene ids found in the dcc.Store
+        - valid_addl_genes: Saved coexpression valid additional genes found in the dcc.Store
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved coexpression clustering algorithm found in the dcc.Store
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - submitted_parameter_slider: Saved parameters slider tuple found in the dcc.Store
+        - module: Saved selected coexpression module found in the dcc.Store
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('coexpression-modules', 'options'): List of available modules
+        - ('coexpression-modules', 'value'): Selected module value
+        - ('coexpression-results-module-tabs-container', 'style'): {'display': 'block'} for displaying the module tabs container; otherwise {'display': 'none'}
+        - ('coexpression-module-stats', 'children'): Stats for the coexpression module
+        """
+
         if homepage_is_submitted and coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -314,6 +435,26 @@ def init_callback(app):
     )
     def display_pathways(combined_gene_ids,
                          submitted_network, submitted_algo, active_tab, module, submitted_parameter_slider, coexpression_is_submitted):
+        """
+        Displays the coexpression pathways table
+
+        Parameters:
+        - combined_gene_ids: Saved combined gene ids found in the dcc.Store
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved coexpression clustering algorithm found in the dcc.Store
+        - active_tab: Active tab for a specific coexpression table
+        - module: Selected coexpression module 
+        - submitted_parameter_slider: Saved parameters slider tuple found in the dcc.Store
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('coexpression-pathways', 'data'): Data for the coexpression table depending on the active tab
+        - ('coexpression-pathways', 'columns'): List of columns for a specific coexpression table
+        - ('coexpression-graph-stats', 'children'): Stats for the coexpression graph
+        - ('coexpression-table-stats', 'children'): Stats for the coexpression table
+        - ('coexpression-table-container', 'style'): {'visibility': 'visible'} for displaying the table container; otherwise {'display': 'none'}
+        """
+
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -374,6 +515,17 @@ def init_callback(app):
         Input('coexpression-modules', 'value')
     )
     def reset_table_filter_page(*_):
+        """
+        Resets the coexpression table and the current page to its original state
+
+        Parameters:
+        - *_: Other input that facilitates the resetting of the coexpression table 
+
+        Returns:
+        - ('coexpression-pathways', 'filter_query'): '' for removing the filter query
+        - ('coexpression-pathways', 'page_current'): 0
+        """
+
         return '', 0
 
     @app.callback(
@@ -383,6 +535,16 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def hide_table(*_):
+        """
+        Hides the coexpression table
+
+        Parameters:
+        - *_: Other inputs to facilitate the hiding of the coexpression table
+        
+        Returns:
+        - ('coexpression-table-container', 'style'): {'visibility': 'hidden'} for hiding the coexpression table
+        """
+
         return {'visibility': 'hidden'}
 
     @app.callback(
@@ -392,6 +554,18 @@ def init_callback(app):
         State('coexpression-modules', 'value')
     )
     def download_coexpression_table_to_csv(download_n_clicks, coexpression_df, module):
+        """
+        Export the coexpression table in csv file format 
+
+        Parameters:
+        - download_n_clicks: Number of clicks pressed on the export coexpression table button
+        - coexpression_df: coexpression table data in dataframe format
+        - module: Selected coexpression module
+   
+        Returns:
+        - ('coexpression-download-df-to-csv', 'data'): Coexpression table in csv file format data
+        """
+
         if download_n_clicks >= 1:
             df = pd.DataFrame(purge_html_export_table(coexpression_df))
             return dcc.send_data_frame(df.to_csv, f'[{module}] Co-Expression Network Analysis Table.csv', index=False)
@@ -430,6 +604,29 @@ def init_callback(app):
     )
     def display_graph(combined_gene_ids, module, submitted_network, submitted_algo, submitted_parameter_slider,
                       layout, coexpression_is_submitted, modules, *_):
+        """
+        Displays the coexpression graph 
+
+        Parameters:
+        - combined_gene_ids: Saved coexpression combined genes found in the dcc.Store
+        - module: Selected coexpression module
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved coexpression clustering algorithm in the dcc.Store
+        - submitted_parameter_slider: Saved parameter slider tuple found in the dcc.Store
+        - layout: Selected coexpression graph layout
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+        - modules: List of available modules
+        - *_: Other inputs that facilitates the state of the coexpression graph
+        
+        Returns:
+        - ('coexpression-module-graph', 'elements'): List of elements of the coexpression graph
+        - ('coexpression-module-graph', 'layout'): Selected coexpression graph layout
+        - ('coexpression-module-graph', 'style'): {'visibility': 'visible'} for displaying the coexpression graph; otherwise {'display': 'none'}
+        - ('coexpression-graph-container', 'style'): {'visibility': 'visible'} for displaying the coexpression graph container; otherwise {'display': 'none'}
+        - ('coexpression-module-graph-node-data', 'children'): Short instruction on how to display the selected node data
+        - ('coexpression-module-graph-node-data-container', 'style'): {'display': 'block'} for displaying the selected node data; otherwise {'display': 'none'}
+        """
+
         if coexpression_is_submitted:
             if submitted_network and submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -454,6 +651,16 @@ def init_callback(app):
         Input('coexpression-module-graph', 'tapNodeData')
     )
     def display_node_data(node_data):
+        """
+        Displays the selected coexpression graph's node's data
+
+        Parameters:
+        - node_data: Selected coexpression graph's node's data
+        
+        Returns:
+        - ('coexpression-module-graph-node-data', 'children'): Selected node data
+        """
+
         if node_data:
             with open(f'{Constants.OGI_MAPPING}/Nb_to_ogi.pickle', 'rb') as ogi_file, open(Constants.QTARO_DICTIONARY, 'rb') as qtaro_file,  open(f'{Constants.IRIC}/interpro.pickle', 'rb') as interpro_file, open(f'{Constants.IRIC}/pfam.pickle', 'rb') as pfam_file,  open(f'{Constants.IRIC_MAPPING}/msu_to_iric.pickle', 'rb') as iric_mapping_file, open(f'{Constants.TEXT_MINING_PUBMED}', 'rb') as pubmed_file, open(f'{Constants.MSU_MAPPING}/msu_to_rap.pickle', 'rb') as rapdb_file, open(f'{Constants.GENE_DESCRIPTIONS}/Nb/Nb_gene_descriptions.pickle', 'rb') as gene_descriptions_file:
                 ogi_mapping = pickle.load(ogi_file)
@@ -501,6 +708,16 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def hide_graph(*_):
+        """
+        Hides the coexpression graph 
+
+        Parameters:
+        - *_: Other inputs to facilitate the hiding of the coexpression graph
+        
+        Returns:
+        - ('coexpression-module-graph', 'style'): {'visibility': 'hidden'} for hiding the coexpression graph 
+        """
+
         return {'visibility': 'hidden'}
 
     @app.callback(
@@ -520,6 +737,24 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def hide_table_graph(combined_gene_ids, submitted_network, submitted_algo, coexpression_is_submitted, submitted_parameter_slider, layout):
+        """
+        Hides the coexpression graph 
+
+        Parameters:
+        - combined_gene_ids: Saved coexpression combined genes found in the dcc.Store
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved coexpression clustering algorithm in the dcc.Store
+        - coexpression_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+        - submitted_parameter_slider: Saved parameter slider tuple found in the dcc.Store
+        - layout: Saved coexpression graph layout in the dcc.Store
+        
+        Returns:
+        - ('coexpression-module-graph', 'elements'): List of elements of the coexpression graph
+        - ('coexpression-module-graph', 'layout'): Saved coexpression graph layout; otherwise 'circle' for default value
+        - ('coexpression-module-graph', 'style'): {'visibility': 'hidden'} for hiding the coexpression graph 
+        - ('coexpression-graph-container', 'style'): {'visibility': 'hidden'} for hiding the coexpression graph container
+        """
+
         if coexpression_is_submitted:
             if submitted_algo and submitted_algo in submitted_parameter_slider:
                 parameters = submitted_parameter_slider[submitted_algo]['value']
@@ -540,6 +775,20 @@ def init_callback(app):
         State('coexpression-modules', 'value')
     )
     def download_coexpression_graph_to_tsv(download_n_clicks, submitted_network, submitted_algo, submitted_parameter_slider, module):
+        """
+        Export the coexpression graph in csv / tsv file format 
+
+        Parameters:
+        - download_n_clicks: Number of clicks pressed on the export coexpression table button
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved coexpression clustering algorithm found in the dcc.Store
+        - submitted_parameter_slider: Saved parameter slider tuple found in the dcc.Store
+        - module: Selected coexpression module
+   
+        Returns:
+        - ('coexpression-download-graph-to-json', 'data'): Coexpression graph in csv / tsv file format data
+        """
+
         if download_n_clicks >= 1:
             parameters = submitted_parameter_slider[submitted_algo]['value']
             module_idx = int(module.split(' ')[1])
@@ -567,6 +816,21 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def set_submitted_coexpression_session_state(module, layout, active_tab, homepage_is_submitted):
+        """
+        Sets the submitted coexpression related dcc.Store variables data 
+
+        Parameters:
+        - module: Selected coexpression module
+        - layout: Selected coexpression graph layout
+        - active_tab: Selected tab for coexpression table
+        - homepage_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('coexpression-submitted-layout', 'data'): Selected graph layout
+        - ('coexpression-pathway-active-tab', 'data'): Selected active tab for coexpression table
+        - ('coexpression-submitted-module', 'data'): Selected coexpression module
+        """
+
         if homepage_is_submitted:
             return layout, active_tab, module
 
@@ -584,6 +848,20 @@ def init_callback(app):
         State('coexpression-pathway-active-tab', 'data')
     )
     def get_submitted_coexpression_session_state(submitted_network, submitted_algo, coexpression_is_submitted, layout, active_tab):
+        """
+        Gets the [Results container] coexpression related dcc.Store data and displays them 
+
+        Parameters:
+        - submitted_network: Saved coexpression network found in the dcc.Store
+        - submitted_algo: Saved clustering algorithm found in the dcc.Store
+        - layout: Saved coexpression graph layout found in the dcc.Store
+        - active_tab: Saved coexpression active tab for the coexpression table found in the dcc.Store
+
+        Returns:
+        - ('coexpression-graph-layout', 'value'): Saved layout found in the dcc.Store; otherwise 'circle' for default value
+        - ('coexpression-modules-pathway', 'value'): Saved coexpression module pathway found in the dcc.Store; otherwise 'tab-0' for default value
+        """
+
         if coexpression_is_submitted:
             if not layout:
                 layout = 'circle'
@@ -605,6 +883,21 @@ def init_callback(app):
         Input('coexpression-is-submitted', 'data')
     )
     def get_input_coexpression_session_state(algo, genes, network, *_):
+        """
+        Gets the [Input container] coexpression related dcc.Store data and displays them 
+
+        Parameters:
+        - algo: Saved clustering algorithm found in the dcc.Store
+        - genes: Saved coexpression genes found in the dcc.Store
+        - network: Saved coexpression network found in the dcc.Store
+        - *_: Other inputs in facilitating the saved state of the coexpression input
+
+        Returns:
+        - ('coexpression-clustering-algo', 'value'): Saved clustering algorithm found in the dcc.Store; otherwise 'clusterone' for default value
+        - ('coexpression-addl-genes', 'value'): Saved coexpression additional genes found in the dcc.Store; otherwise '' for default value
+        - ('coexpression-network', 'value'): Saved coexpression network found in the dcc.Store; otherwise 'OS-CX' for default value
+        """
+
         if not algo:
             algo = 'clusterone'
 

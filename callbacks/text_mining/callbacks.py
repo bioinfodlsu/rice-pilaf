@@ -129,7 +129,7 @@ def init_callback(app):
     )
     def clear_text_mining_error_messages(homepage_is_resetted):
         """
-        Clears text mining error 
+        Clears text mining input error 
 
         Parameters:
         - homepage_is_resetted: Saved boolean value of resetted analysis 

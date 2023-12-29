@@ -567,7 +567,7 @@ def init_callback(app):
     )
     def set_submitted_lift_over_session_state(active_tab, filter_rice_variants, homepage_is_submitted, lift_over_is_submitted):
         """
-        Sets the lift-over related dcc.Store variables data 
+        Sets the submitted lift-over related dcc.Store variables data 
 
         Parameters:
         - active_tab: Selected tab for a specific gene table
@@ -576,8 +576,8 @@ def init_callback(app):
         - lift_over_is_submitted: [Lift-over] Saved boolean value of submitted valid input 
 
         Returns:
-        - ('lift-over-active-tab', 'data'): active tab input
-        - ('lift-over-active-filter', 'data'): filtered rice variants input
+        - ('lift-over-active-tab', 'data'): Active tab input
+        - ('lift-over-active-filter', 'data'): Filtered rice variants input
         """
 
         if homepage_is_submitted and lift_over_is_submitted:
