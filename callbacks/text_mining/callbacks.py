@@ -212,7 +212,7 @@ def init_callback(app):
                 num_unique_entries = get_num_unique_entries(
                     text_mining_results_df, "PMID")
 
-                stats = 'Found matches across '
+                stats = f'"{text_mining_query_submitted_input}" found matches across '
                 if num_unique_entries == 1:
                     stats += f'{num_unique_entries} publication'
                 elif num_unique_entries == MAX_NUM_RESULTS:
