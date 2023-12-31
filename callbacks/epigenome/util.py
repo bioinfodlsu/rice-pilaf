@@ -36,7 +36,7 @@ def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
             nb_intervals_str)
 
         temp_folder = get_path_to_temp(
-            nb_intervals_str, Constants.TEMP_IGV, source_file)
+            nb_intervals_str, Constants.TEMP_EPIGENOME, source_file)
         make_dir(temp_folder)
 
         for i in range(len(loci_list)):

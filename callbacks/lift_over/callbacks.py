@@ -3,7 +3,7 @@ from dash.exceptions import PreventUpdate
 
 from .util import *
 from ..general_util import *
-
+from ..homepage import util as homepage_util
 
 def init_callback(app):
     @app.callback(
@@ -39,17 +39,18 @@ def init_callback(app):
     # =================
 
     @app.callback(
+        Output('session-container', 'children', allow_duplicate=True),
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-submitted-other-refs',
                'data', allow_duplicate=True),
-        Output('lift-over-active-tab', 'data', allow_duplicate=True),
-        Output('lift-over-active-filter', 'data', allow_duplicate=True),
+               
         Input('lift-over-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
+        State('session-container', 'children'),
         State('lift-over-other-refs', 'value'),
         prevent_initial_call=True
     )
-    def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, other_refs):
+    def submit_lift_over_input(lift_over_submit_n_clicks, homepage_is_submitted, dccStore_children, other_refs):
         """
         Parses lift-over input, displays the lift-over result container, and resets the lift-over active data in the dcc.Store
         - If user clicks on the lift-over submit button, the inputs will be parsed and the lift-over results container will appear
@@ -57,6 +58,7 @@ def init_callback(app):
         Parameters:
         - lift_over_submit_n_clicks: Number of clicks pressed on the lift-over submit button 
         - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - dccStore_children: List of dcc.Store data 
         - other_refs: Submitted other references of genome(s) 
 
         Returns:
@@ -69,7 +71,9 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
-            return True, other_refs, None, None
+            dccStore_children = homepage_util.clear_specific_dccStore_data(dccStore_children, 'lift-over-active')
+
+            return dccStore_children, True, other_refs
 
         raise PreventUpdate
 

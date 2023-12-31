@@ -77,7 +77,7 @@ def init_callback(app):
     # =================
 
     @app.callback(
-        Output('session-container', 'children'),
+        Output('session-container', 'children', allow_duplicate=True),
         Output('input-error', 'children'),
         Output('input-error', 'style'),
         Output('homepage-is-submitted', 'data'),
@@ -125,8 +125,7 @@ def init_callback(app):
         # Clears all the data 
         if 'homepage-reset' == ctx.triggered_id:
             # clear data for items in dcc.Store found in session-container
-            dccStore_children = get_cleared_dccStore_data_excluding_some_data(
-                dccStore_children)
+            dccStore_children = clear_specific_dccStore_data(dccStore_children, '')
 
             return dccStore_children, None, {'display': 'none'}, False, '', True
 
@@ -141,8 +140,7 @@ def init_callback(app):
                         {'display': 'block'}, False, nb_intervals_str, True
                 else:
                     # clear data for items in dcc.Store found in session-container
-                    dccStore_children = get_cleared_dccStore_data_excluding_some_data(
-                        dccStore_children)
+                    dccStore_children = clear_specific_dccStore_data(dccStore_children, '')
 
                     epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
 
