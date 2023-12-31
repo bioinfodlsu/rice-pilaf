@@ -5,6 +5,7 @@ from collections import namedtuple
 from .util import *
 from ..lift_over import util as lift_over_util
 from ..branch import *
+from ..homepage import util as homepage_util
 
 Parameter_slider = namedtuple('Parameter_slider', ['marks', 'value'])
 
@@ -41,6 +42,7 @@ def init_callback(app):
     # Input-related
     # =================
     @app.callback(
+        Output('session-container', 'children', allow_duplicate=True),
         Output('coexpression-is-submitted', 'data', allow_duplicate=True),
         Output('coexpression-submitted-addl-genes',
                'data', allow_duplicate=True),
@@ -62,6 +64,7 @@ def init_callback(app):
 
         Input('coexpression-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
+        State('session-container', 'children'),
 
         State('homepage-submitted-genomic-intervals', 'data'),
         State('coexpression-addl-genes', 'value'),
@@ -72,7 +75,7 @@ def init_callback(app):
         State('coexpression-parameter-slider', 'value'),
         prevent_initial_call=True
     )
-    def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted,
+    def submit_coexpression_input(coexpression_submit_n_clicks, homepage_is_submitted, dccStore_children,
                                   genomic_intervals, submitted_addl_genes,
                                   submitted_network, submitted_algo, submitted_slider_marks, submitted_slider_value):
         """
@@ -82,6 +85,7 @@ def init_callback(app):
         Parameters:
         - coexpression_submit_n_clicks: Number of clicks pressed on the tfbs submit button 
         - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - dccStore_children: List of dcc.Store data 
         - genomic_intervals: Saved genomic intervals found in the dcc.Store
         - submitted_addl_genes: Submitted coexpression additional genes
         - submitted_network: Submitted coexpression network
@@ -90,6 +94,7 @@ def init_callback(app):
         - submitted_slider_value: Submitted parameter slider value
 
         Returns:
+        - ('session-container', 'children'): Updated dcc.Store data
         - ('coexpression-is-submitted', 'data'): [Coexpression] True for submitted valid input; otherwise False
         - ('coexpression-submitted-addl-genes', 'data'): Submitted coexpression additional genes
         - ('coexpression-valid-addl-genes', 'data'): Submitted coexpression valid additional genes
@@ -151,7 +156,9 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            return True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider, error_display, error
+            dccStore_children = homepage_util.clear_specific_dccStore_data(dccStore_children, 'coexpression-pathway-active')
+
+            return dccStore_children, True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider, error_display, error
 
         raise PreventUpdate
 

@@ -43,7 +43,7 @@ def init_callback(app):
         Output('lift-over-is-submitted', 'data', allow_duplicate=True),
         Output('lift-over-submitted-other-refs',
                'data', allow_duplicate=True),
-               
+
         Input('lift-over-submit', 'n_clicks'),
         State('homepage-is-submitted', 'data'),
         State('session-container', 'children'),
@@ -62,6 +62,7 @@ def init_callback(app):
         - other_refs: Submitted other references of genome(s) 
 
         Returns:
+        - ('session-container', 'children'): Updated dcc.Store data
         - ('lift-over-is-submitted', 'data'): [Lift-over] True for submitted valid input; otherwise False
         - ('lift-over-submitted-other-refs', 'data'): Submitted other references of genome(s)
         - ('lift-over-active-tab', 'data'): None for clearing data for the saved active tab for the lift-over gene table; otherwise 'tab-#' where # pertains to specific tab number
