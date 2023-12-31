@@ -156,7 +156,7 @@ def init_callback(app):
             gene_ids = list(set.union(
                 set(implicated_gene_ids), set(list_addl_genes)))
 
-            dccStore_children = homepage_util.clear_specific_dccStore_data(dccStore_children, 'coexpression-pathway-active')
+            dccStore_children = homepage_util.clear_specific_dccStore_data(dccStore_children, 'coexpression-pathway-active', 'coexpression-graph-active')
 
             return dccStore_children, True, submitted_addl_genes, list_addl_genes, gene_ids, submitted_network, submitted_algo, submitted_parameter_slider, error_display, error
 
@@ -739,7 +739,7 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
         State('coexpression-submitted-parameter-slider', 'data'),
-        State('coexpression-submitted-layout', 'data'),
+        State('coexpression-graph-active-layout', 'data'),
 
         prevent_initial_call=True
     )
@@ -810,7 +810,7 @@ def init_callback(app):
     # =================
 
     @app.callback(
-        Output('coexpression-submitted-layout', 'data', allow_duplicate=True),
+        Output('coexpression-graph-active-layout', 'data', allow_duplicate=True),
         Output('coexpression-pathway-active-tab',
                'data', allow_duplicate=True),
         Output('coexpression-submitted-module', 'data', allow_duplicate=True),
@@ -833,7 +833,7 @@ def init_callback(app):
         - homepage_is_submitted: [Coexpression] Saved boolean value of submitted valid input 
 
         Returns:
-        - ('coexpression-submitted-layout', 'data'): Selected graph layout
+        - ('coexpression-graph-active-layout', 'data'): Selected graph layout
         - ('coexpression-pathway-active-tab', 'data'): Selected active tab for coexpression table
         - ('coexpression-submitted-module', 'data'): Selected coexpression module
         """
@@ -851,7 +851,7 @@ def init_callback(app):
         Input('coexpression-submitted-clustering-algo', 'data'),
         State('coexpression-is-submitted', 'data'),
 
-        State('coexpression-submitted-layout', 'data'),
+        State('coexpression-graph-active-layout', 'data'),
         State('coexpression-pathway-active-tab', 'data')
     )
     def get_submitted_coexpression_session_state(submitted_network, submitted_algo, coexpression_is_submitted, layout, active_tab):
