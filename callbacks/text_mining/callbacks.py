@@ -212,7 +212,7 @@ def init_callback(app):
                 num_unique_entries = get_num_unique_entries(
                     text_mining_results_df, "PMID")
 
-                stats = f'"{text_mining_query_submitted_input}" has found matches across '
+                stats = f'Found matches for "{text_mining_query_submitted_input}" across '
                 if num_unique_entries == 1:
                     stats += f'{num_unique_entries} publication'
                 elif num_unique_entries == MAX_NUM_RESULTS:
@@ -260,7 +260,7 @@ def init_callback(app):
         - download_n_clicks: Number of clicks pressed on the export gene table button
         - text_mining_df: Text mining table data in dataframe format
         - submitted_query: Saved text mining query found in the dcc.Store
-   
+
         Returns:
         - ('text-mining-download-df-to-csv', 'data'): Text mining table in csv file format data
         """
