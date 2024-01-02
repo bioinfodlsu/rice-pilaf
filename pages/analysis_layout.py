@@ -19,7 +19,7 @@ def get_analaysis_layout_dictionary():
         Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
         Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',
         Constants.LABEL_TFBS: 'Regulatory Feature Enrichment',
-        Constants.LABEL_IGV: 'Epigenomic Information',
+        Constants.LABEL_EPIGENOME: 'Epigenomic Information',
         Constants.LABEL_SUMMARY: 'Summary'
     })
 

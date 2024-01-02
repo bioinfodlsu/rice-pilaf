@@ -186,7 +186,7 @@ app.layout = lambda: dbc.Container([
             ),
 
             dcc.Store(
-                id='coexpression-submitted-layout',
+                id='coexpression-graph-active-layout',
                 storage_type='session'
             ),
 

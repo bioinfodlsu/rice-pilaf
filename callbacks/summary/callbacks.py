@@ -14,6 +14,18 @@ def init_callback(app):
         Input('summary-submit', 'n_clicks')
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
+        """
+        Displays the genomic interval input in the summary page
+
+        Parameters:
+        - nb_intervals_str: Submitted genomic interval
+        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not 
+        - *_: Other input that facilitates displaying of the submitted genomic interval
+
+        Returns:
+        - Submitted genomic interval text
+        """
+
         if homepage_is_submitted:
             if nb_intervals_str and not lift_over_util.is_error(lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)):
                 return [html.B('Your Input Intervals: '), html.Span(nb_intervals_str)]
@@ -29,6 +41,17 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def submit_summary_input(summary_submitted_n_clicks, homepage_is_submitted):
+        """
+        Submits the summary input
+
+        Parameters:
+        - summary_submitted_n_clicks: Number of clicks pressed on the summary submit button 
+        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('summary-is-submitted', 'data'): [Summary] True for submitted valid input; otherwise False
+        """
+        
         if homepage_is_submitted and summary_submitted_n_clicks >= 1:
             return True
 
@@ -40,6 +63,16 @@ def init_callback(app):
         Input('coexpression-submit', 'n_clicks'),
     )
     def display_summary_output(summary_is_submitted, *_):
+        """
+        Displays the summary results container
+
+        Parameters:
+        - summary_is_submitted: [Summary] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('summary-results-container', 'style'): {'display': 'block'} for displaying the summary results container; otherwise {'display': 'none'}
+        """
+
         # Hide the summary table if a post-GWAS analysis submit button is clicked
         if ctx.triggered_id != 'summary-is-submitted':
             return {'display': 'none'}
@@ -56,6 +89,17 @@ def init_callback(app):
         Input('summary-results-table', 'data')
     )
     def disable_summary_button_upon_run(n_clicks,  *_):
+        """
+        Disables the submit button in the summary page until computation is done in the summary page
+
+        Parameters:
+        - n_clicks: Number of clicks pressed on the summary submit button
+        - *_: Other input that facilitates the disabling of the summary submit button
+
+        Returns:
+        - ('summary-submit', 'disabled'): True for disabling the submit button; otherwise False 
+        """
+
         return ctx.triggered_id == 'summary-submit' and n_clicks > 0
 
     @app.callback(
@@ -70,6 +114,21 @@ def init_callback(app):
     )
     def display_summary_submitted_input(summary_submitted,
                                         coexpression_submitted, genes, network, algo, submitted_parameter_slider):
+        """
+        Displays the submitted inputs
+
+        Parameters:
+        - summary_submitted: [Summary] Saved boolean value of submitted valid input 
+        - coexpression_submitted: [Coexpression] Saved boolean value of submitted valid input 
+        - genes: [Coexpression] Saved valid additional genes in the dcc.Store
+        - network: [Coexpression] Saved network found in the dcc.Store
+        - algo: [Coexpression] Saved clustering algorithm found in the dcc.Store 
+        - submitted_parameter_slider: [Coexpression] Saved parameter slider tuple found in the dcc.Store
+
+        Returns:
+        - ('summary-input', 'children'): Submitted inputs text
+        """
+
         if coexpression_submitted:
             parameters = 0
             if submitted_parameter_slider and algo in submitted_parameter_slider:
@@ -131,6 +190,27 @@ def init_callback(app):
     def display_summary_results(genomic_intervals,
                                 combined_gene_ids, valid_addl_genes, submitted_network, submitted_algo, submitted_parameter_slider,
                                 homepage_submitted, summary_submitted, coexpression_submitted):
+        """
+        Displays the summary results
+
+        Parameters:
+        - genomic_intervals: Saved genomic intervals found in the dcc.Store
+        - combined_gene_ids: [Coexpression] Saved combined gene ids found in the dcc.Store
+        - valid_addl_genes: [Coexpression] Saved valid additional genes found in the dcc.Store
+        - submitted_network: [Coexpression] Saved network found in the dcc.Store
+        - submitted_algo: [Coexpression] Saved clustering algorithm found in the dcc.Store 
+        - submitted_parameter_slider: [Coexpression] Saved parameter slider tuple found in the dcc.Store
+        - homepage_submitted: [Homepage] Saved boolean value of submitted valid input 
+        - summary_submitted: [Summary] Saved boolean value of submitted valid input 
+        - coexpression_submitted: [Coexpression] Saved boolean value of submitted valid input 
+
+        Returns:
+        - ('summary-results-table', 'data'): Data for the summary table
+        - ('summary-results-table', 'columns'): List of columns for the summary table
+        - ('summary-results-table', 'filter_query'): '' for default value
+        - ('summary-results-table', 'page_current'): 0 for default value 
+        """
+        
         if coexpression_submitted:
             parameters = 0
             if submitted_parameter_slider and submitted_algo in submitted_parameter_slider:
@@ -174,6 +254,17 @@ def init_callback(app):
         prevent_initial_call=True
     )
     def reset_table_filter_page(*_):
+        """
+        Resets the summary table and the current page to its original state
+
+        Parameters:
+        - *_: Other input that facilitates the resetting of the summary table 
+
+        Returns:
+        - ('summary-results-table', 'filter_query'): '' for removing the filter query
+        - ('summary-results-table', 'page_current'): 0
+        """
+
         return '', 0
 
     @app.callback(
@@ -183,6 +274,18 @@ def init_callback(app):
         State('homepage-submitted-genomic-intervals', 'data')
     )
     def download_tfbs_table_to_csv(download_n_clicks, summary_df, genomic_intervals):
+        """
+        Export the summary table in csv file format 
+
+        Parameters:
+        - download_n_clicks: Number of clicks pressed on the export gene table button
+        - summary_df: Summary table data in dataframe format
+        - genomic_intervals: Saved genomic intervals found in the dcc.Store
+   
+        Returns:
+        - ('summary-download-df-to-csv', 'data'): Summary table in csv file format data
+        """
+
         if download_n_clicks >= 1:
             df = pd.DataFrame(purge_html_export_table(summary_df))
             return dcc.send_data_frame(df.to_csv, f'[{genomic_intervals}] Summary.csv', index=False)
