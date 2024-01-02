@@ -177,7 +177,7 @@ def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_dir
             pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def get_pubmed_for_all_genes(gene_index, continue_from, annotated_abstracts, output_directory):
+def get_pubmed_for_all_genes(gene_index, continue_from, end_at, annotated_abstracts, output_directory):
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
@@ -217,6 +217,10 @@ def get_pubmed_for_all_genes(gene_index, continue_from, annotated_abstracts, out
                         print(f'Skipping {accession}')
                         break
 
+                    if accession > end_at:
+                        print(f'Ending before {accession}')
+                        return
+
                     get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                         annotated_abstracts, output_directory)
 
@@ -229,7 +233,7 @@ def get_pubmed_for_all_genes(gene_index, continue_from, annotated_abstracts, out
 # ================
 
 
-def handle_english_symbols(gene_index, annotated_abstracts, output_directory):
+def handle_english_symbols(gene_index, continue_from, end_at, annotated_abstracts, output_directory):
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         next(csv_reader)
@@ -266,6 +270,14 @@ def handle_english_symbols(gene_index, annotated_abstracts, output_directory):
                 for accession in accessions:
                     accession = accession.strip()
                     if accession:
+                        if accession < continue_from:
+                            print(f'Skipping {accession}')
+                            break
+
+                        if accession > end_at:
+                            print(f'Ending before {accession}')
+                            return
+
                         get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                             annotated_abstracts, output_directory)
 
@@ -274,7 +286,7 @@ def handle_english_symbols(gene_index, annotated_abstracts, output_directory):
     print(f'Finished post-processing handling English gene symbols')
 
 
-def handle_symbol_replacement(gene_index, annotated_abstracts, output_directory):
+def handle_symbol_replacement(gene_index, continue_from, end_at, annotated_abstracts, output_directory):
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         next(csv_reader)
@@ -311,6 +323,14 @@ def handle_symbol_replacement(gene_index, annotated_abstracts, output_directory)
                 for accession in accessions:
                     accession = accession.strip()
                     if accession:
+                        if accession < continue_from:
+                            print(f'Skipping {accession}')
+                            break
+
+                        if accession > end_at:
+                            print(f'Ending before {accession}')
+                            return
+
                         get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                             annotated_abstracts, output_directory)
 
@@ -319,7 +339,7 @@ def handle_symbol_replacement(gene_index, annotated_abstracts, output_directory)
     print(f'Finished post-processing handling gene symbols to be replaced')
 
 
-def handle_symbol_exclusion(gene_index, annotated_abstracts, output_directory):
+def handle_symbol_exclusion(gene_index, continue_from, end_at, annotated_abstracts, output_directory):
     # Iterate to see which genes have excluded symbols
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
@@ -357,6 +377,14 @@ def handle_symbol_exclusion(gene_index, annotated_abstracts, output_directory):
                 for accession in accessions:
                     accession = accession.strip()
                     if accession:
+                        if accession < continue_from:
+                            print(f'Skipping {accession}')
+                            break
+
+                        if accession > end_at:
+                            print(f'Ending before {accession}')
+                            return
+
                         get_pubmed_per_gene_with_excluded_symbols(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                                                   annotated_abstracts, output_directory)
 
@@ -401,7 +429,7 @@ def get_pubmed_per_gene_with_excluded_symbols(accession, gene_symbols, annotated
             pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def handle_symbol_after_species(gene_index, annotated_abstracts, output_directory):
+def handle_symbol_after_species(gene_index, continue_from, end_at, annotated_abstracts, output_directory):
     with open(gene_index, encoding='utf8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         next(csv_reader)
@@ -438,6 +466,14 @@ def handle_symbol_after_species(gene_index, annotated_abstracts, output_director
                 for accession in accessions:
                     accession = accession.strip()
                     if accession:
+                        if accession < continue_from:
+                            print(f'Skipping {accession}')
+                            break
+
+                        if accession > end_at:
+                            print(f'Ending before {accession}')
+                            return
+
                         get_pubmed_per_gene(accession, gene_symbols + [accession] + iricname + raprepname + rappredname,
                                             annotated_abstracts, output_directory)
 
@@ -467,7 +503,10 @@ if __name__ == '__main__':
         'output_dir', help='output directory for the dictionaries with the PubMed IDs of related articles'
     )
     parser.add_argument(
-        '--continue_from', required=False, help='last gene processed'
+        '--continue_from', required=False, help='first gene to be processed'
+    )
+    parser.add_argument(
+        '--end_at', required=False, help='last gene to be processed'
     )
 
     args = parser.parse_args()
@@ -488,17 +527,17 @@ if __name__ == '__main__':
             context = line[1].strip().split(',')
             symbols_to_be_excluded[symbol] = context
 
-    get_pubmed_for_all_genes(args.gene_index_file, args.continue_from,
+    get_pubmed_for_all_genes(args.gene_index_file, args.continue_from, args.end_at,
                              args.annotated_abstracts_file, args.output_dir)
 
-    handle_symbol_after_species(args.gene_index_file,
+    handle_symbol_after_species(args.gene_index_file, args.continue_from, args.end_at,
                                 args.annotated_abstracts_file, args.output_dir)
 
-    handle_english_symbols(args.gene_index_file,
+    handle_english_symbols(args.gene_index_file, args.continue_from, args.end_at,
                            args.annotated_abstracts_file, args.output_dir)
 
-    handle_symbol_replacement(args.gene_index_file,
+    handle_symbol_replacement(args.gene_index_file, args.continue_from, args.end_at,
                               args.annotated_abstracts_file, args.output_dir)
 
-    handle_symbol_exclusion(args.gene_index_file,
+    handle_symbol_exclusion(args.gene_index_file, args.continue_from, args.end_at,
                             args.annotated_abstracts_file, args.output_dir)

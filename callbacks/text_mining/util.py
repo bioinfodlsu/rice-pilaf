@@ -113,6 +113,9 @@ def text_mining_query_search(query_string):
 
     with open(Constants.TEXT_MINING_ANNOTATED_ABSTRACTS, 'r', encoding='utf8') as f, open(f'{Constants.MSU_MAPPING}/genesymbol_to_msu.pickle', 'rb') as g:
         genesymbol_mapping = pickle.load(g)
+
+        # Skip header row
+        next(f)
         for line in f:
             similarity = rapidfuzz.fuzz.partial_ratio_alignment(
                 query_string, line.lower(), score_cutoff=SIMILARITY_CUTOFF)
