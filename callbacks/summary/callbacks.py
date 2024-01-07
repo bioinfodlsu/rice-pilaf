@@ -51,7 +51,7 @@ def init_callback(app):
         Returns:
         - ('summary-is-submitted', 'data'): [Summary] True for submitted valid input; otherwise False
         """
-        
+
         if homepage_is_submitted and summary_submitted_n_clicks >= 1:
             return True
 
@@ -60,35 +60,20 @@ def init_callback(app):
     @app.callback(
         Output('summary-results-container', 'style'),
         Input('summary-is-submitted', 'data'),
-        Input('coexpression-submit', 'n_clicks'),
+        Input('coexpression-is-submitted', 'data')
     )
-    def display_summary_output(summary_is_submitted, *_):
-        """
-        Displays the summary results container
-
-        Parameters:
-        - summary_is_submitted: [Summary] Saved boolean value of submitted valid input 
-
-        Returns:
-        - ('summary-results-container', 'style'): {'display': 'block'} for displaying the summary results container; otherwise {'display': 'none'}
-        """
-
-        # Hide the summary table if a post-GWAS analysis submit button is clicked
+    def display_summary_output(*_):
         if ctx.triggered_id != 'summary-is-submitted':
             return {'display': 'none'}
 
-        if summary_is_submitted:
-            return {'display': 'block'}
-        else:
-            return {'display': 'none'}
+        return {'display': 'block'}
 
     @app.callback(
-        Output('summary-submit', 'disabled'),
-
+        Output('summary-submit', 'disabled', allow_duplicate=True),
         Input('summary-submit', 'n_clicks'),
-        Input('summary-results-table', 'data')
+        prevent_initial_call=True
     )
-    def disable_summary_button_upon_run(n_clicks,  *_):
+    def disable_summary_button_upon_run(n_clicks):
         """
         Disables the submit button in the summary page until computation is done in the summary page
 
@@ -100,7 +85,15 @@ def init_callback(app):
         - ('summary-submit', 'disabled'): True for disabling the submit button; otherwise False 
         """
 
-        return ctx.triggered_id == 'summary-submit' and n_clicks > 0
+        return n_clicks > 0
+
+    @app.callback(
+        Output('summary-submit', 'disabled', allow_duplicate=True),
+        Input('summary-results-table', 'data'),
+        prevent_initial_call=True
+    )
+    def enable_summary_button_once_finished(*_):
+        return False
 
     @app.callback(
         Output('summary-input', 'children'),
@@ -110,7 +103,7 @@ def init_callback(app):
         State('coexpression-valid-addl-genes', 'data'),
         State('coexpression-submitted-network', 'data'),
         State('coexpression-submitted-clustering-algo', 'data'),
-        State('coexpression-submitted-parameter-slider', 'data'),
+        State('coexpression-submitted-parameter-slider', 'data')
     )
     def display_summary_submitted_input(summary_submitted,
                                         coexpression_submitted, genes, network, algo, submitted_parameter_slider):
@@ -185,6 +178,7 @@ def init_callback(app):
         State('homepage-is-submitted', 'data'),
         Input('summary-is-submitted', 'data'),
         State('coexpression-is-submitted', 'data'),
+
         prevent_initial_call=True
     )
     def display_summary_results(genomic_intervals,
@@ -210,7 +204,7 @@ def init_callback(app):
         - ('summary-results-table', 'filter_query'): '' for default value
         - ('summary-results-table', 'page_current'): 0 for default value 
         """
-        
+
         if coexpression_submitted:
             parameters = 0
             if submitted_parameter_slider and submitted_algo in submitted_parameter_slider:
@@ -281,7 +275,7 @@ def init_callback(app):
         - download_n_clicks: Number of clicks pressed on the export gene table button
         - summary_df: Summary table data in dataframe format
         - genomic_intervals: Saved genomic intervals found in the dcc.Store
-   
+
         Returns:
         - ('summary-download-df-to-csv', 'data'): Summary table in csv file format data
         """
