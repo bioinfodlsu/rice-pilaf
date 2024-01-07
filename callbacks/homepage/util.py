@@ -42,6 +42,7 @@ def clear_cache_folder():
     except sqlite3.Error as error:
         pass
 
+
 def clear_specific_dccStore_data(dccStore_children, *args):
     """
     Removes the data in all the dcc.Store variables excluding some variables
@@ -68,8 +69,9 @@ def clear_specific_dccStore_data(dccStore_children, *args):
 
         else:
             dccStore_children[i]['props']['data'] = ''
-    
+
     return dccStore_children
+
 
 def get_example_genomic_interval(description):
     """
