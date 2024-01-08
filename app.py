@@ -93,6 +93,7 @@ app.layout = lambda: dbc.Container([
     ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
 
     # Session storage
+    # Insert your session variables inside the session-container div
     html.Div(
         id='session-container',
         children=[
