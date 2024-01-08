@@ -5,6 +5,9 @@ import dash_bootstrap_components as dbc
 def navbar():
     return dbc.NavbarSimple(
         children=[
+
+            # Insert your navigation item in the main navbar here in the order you want it to be seen
+
             # dbc.NavItem(dbc.NavLink('Home', active='exact',
             #             href='/', className='top-navbar-item')),
             dbc.NavItem(dbc.NavLink('User Guide', href='https://github.com/bioinfodlsu/rice-pilaf/wiki/2.-User-Guide',
