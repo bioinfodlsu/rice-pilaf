@@ -7,6 +7,7 @@ import pages.analysis.tf_enrich as tf_enrich
 import pages.analysis.epigenome as epigenome
 import pages.analysis.text_mining as text_mining
 import pages.analysis.summary as summary
+import pages.analysis.template as template
 
 from collections import OrderedDict
 
@@ -15,6 +16,9 @@ from callbacks.constants import Constants
 
 def get_analaysis_layout_dictionary():
     return OrderedDict({
+
+        # Insert your analysis option in the analysis navbar here in the order you would like it be seen 
+        # Constants.LABEL_TEMPLATE: 'template',
         Constants.LABEL_LIFT_OVER: 'Gene List and Lift-Over',
         Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
         Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',
@@ -26,6 +30,9 @@ def get_analaysis_layout_dictionary():
 
 layout = html.Div(
     children=[
+
+        # Insert your analysis page's layout
+        # template.layout,
         intro.layout,
         lift_over.layout,
         text_mining.layout,

@@ -1,4 +1,5 @@
 class Constants(object):
+    # Insert your LABEL for your analysis page here
     LABEL_INTRO = 'intro'
     LABEL_LIFT_OVER = 'lift-over'
     LABEL_COEXPRESSION = 'co-expression'
@@ -7,6 +8,8 @@ class Constants(object):
     LABEL_EPIGENOME = 'epigenome'
     LABEL_TEXT_MINING = 'text-mining'
     LABEL_SUMMARY = 'summary'
+
+    LABEL_TEMPLATE = 'template'
 
     DATA = 'static'
     APP_DATA = f'{DATA}/app_data'
