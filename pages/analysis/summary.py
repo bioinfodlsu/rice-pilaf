@@ -7,22 +7,21 @@ import dash_bootstrap_components as dbc
 # Miscellaneous Modals
 # =====================
 
-converter_modal = dbc.Modal([
+columns_modal = dbc.Modal([
     dbc.ModalHeader(
-        dbc.ModalTitle('Rice ID Converter')
+        dbc.ModalTitle('Summary Table')
     ),
     dbc.ModalBody([
         html.P(
-            'RicePilaf requires MSU accession IDs (i.e., IDs prefixed by "LOC_Os"). '),
-        html.P([
-            'To convert across different rice IDs, you may use this ',
-            html.A(
-                'tool', href='https://rapdb.dna.affrc.go.jp/converter/', target='_blank'
-            ),
-            ' from The Rice Annotation Project Database.'
-        ])
+            'RicePilaf summarizes the results of the different post-GWAS analyses as follows: '),
+        html.Ul([
+            html.Li([html.B('# QTL Analyses'),
+                    ' refers to the number of QTL analyses featuring the gene based on QTARO']),
+            html.Li([html.B('# PubMed Article IDs'),
+                    ' refers to the number of PubMed articles featuring the gene based on our in-house text-mined dataset'])
+        ]),
     ])],
-    id='summary-converter-modal',
+    id='summary-columns-modal',
     is_open=False,
     size='lg',
     scrollable=True
@@ -76,6 +75,10 @@ layout = html.Div(
             id='summary-results-container',
             style={'display': 'none'},
             children=[
+                # Do not place it inside dcc.Loading
+                # Otherwise, opening the modal will cause the whole dcc.Loading to load
+                columns_modal,
+
                 dcc.Loading([
                     html.Hr(className='mt-3 mb-3'),
 
@@ -94,6 +97,16 @@ layout = html.Div(
                                 'The table below summarizes the results of the different post-GWAS analyses.',
                                 className='text-start'
                             ),
+
+                            html.P([
+                                'Click on this tooltip ',
+                                html.I(
+                                    className='bi bi-info-circle infix-tooltip',
+                                    id='summary-columns-tooltip-no-margin',
+                                    n_clicks=0
+                                ),
+                                ' to view more information about the columns.'
+                            ], className='text-start'),
 
                             html.P([
                                 html.B(

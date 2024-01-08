@@ -96,6 +96,16 @@ def init_callback(app):
         return False
 
     @app.callback(
+        Output('summary-columns-modal', 'is_open'),
+        Input('summary-columns-tooltip-no-margin', 'n_clicks'),
+    )
+    def open_modals(summary_columns_tooltip_n_clicks):
+        if ctx.triggered_id == 'summary-columns-tooltip-no-margin' and summary_columns_tooltip_n_clicks > 0:
+            return True
+
+        raise PreventUpdate
+
+    @app.callback(
         Output('summary-input', 'children'),
 
         Input('summary-is-submitted', 'data'),
