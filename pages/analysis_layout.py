@@ -18,7 +18,7 @@ def get_analaysis_layout_dictionary():
     return OrderedDict({
 
         # Insert your analysis option in the analysis navbar here in the order you would like it be seen 
-        # Constants.LABEL_TEMPLATE: 'template',
+        # Constants.LABEL_TEMPLATE: 'Template',
         Constants.LABEL_LIFT_OVER: 'Gene List and Lift-Over',
         Constants.LABEL_TEXT_MINING: 'Gene Retrieval by Text Mining',
         Constants.LABEL_COEXPRESSION: 'Co-Expression Network Analysis',

@@ -16,12 +16,12 @@
     background-color: var(--green-lighter) !important;
 }
 
-#coexpression-parameter-slider-container {
+#coexpression-parameter-slider-container, #template-parameter-slider-container {
     display: flex;
     justify-content: center;
 }
 
-#coexpression-parameter-slider {
+#coexpression-parameter-slider, #template-parameter-slider {
     width: 95%;
 }
 
