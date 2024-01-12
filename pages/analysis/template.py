@@ -94,5 +94,21 @@ layout = html.Div(
                        n_clicks=0),
         ], className='analysis-intro p-3'),
 
+        html.Br(),
+
+        html.Div(
+            id='template-results-container',
+            style={'display': 'none'},
+            children=[
+                html.Hr(className='mt-3 mb-4'),
+                dcc.Loading([
+                    html.Div(
+                        id='template-input',
+                        className='analysis-intro p-3'
+                    ),
+                ])
+            ]
+        )
+
     ], className='mt-2 mb-4'
 )
