@@ -96,16 +96,6 @@ def init_callback(app):
         return False
 
     @app.callback(
-        Output('summary-columns-modal', 'is_open'),
-        Input('summary-columns-tooltip-no-margin', 'n_clicks'),
-    )
-    def open_modals(summary_columns_tooltip_n_clicks):
-        if ctx.triggered_id == 'summary-columns-tooltip-no-margin' and summary_columns_tooltip_n_clicks > 0:
-            return True
-
-        raise PreventUpdate
-
-    @app.callback(
         Output('summary-input', 'children'),
 
         Input('summary-is-submitted', 'data'),
@@ -237,6 +227,10 @@ def init_callback(app):
         if homepage_submitted and summary_submitted:
             summary_results_df = make_summary_table(
                 genomic_intervals, combined_gene_ids, valid_addl_genes, submitted_network, submitted_algo, parameters)
+
+            # Changing null values should be done here after loading the summary table
+            # in order to avoid having .0 in the columns with null values
+            summary_results_df = summary_results_df.fillna(NULL_PLACEHOLDER)
 
             mask = (
                 summary_results_df['Gene'] != NULL_PLACEHOLDER)
