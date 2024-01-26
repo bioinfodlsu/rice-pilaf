@@ -7,6 +7,7 @@ import pages.navigation.main_nav as main_nav
 
 import callbacks.homepage.callbacks
 import callbacks.homepage.util
+import callbacks.template.callbacks
 import callbacks.lift_over.callbacks
 import callbacks.epigenome.callbacks
 import callbacks.coexpression.callbacks
@@ -97,6 +98,34 @@ app.layout = lambda: dbc.Container([
     html.Div(
         id='session-container',
         children=[
+            # =========
+            # Template
+            # =========
+            dcc.Store(
+                id='template-is-submitted',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='template-submitted-addl-genes',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='template-submitted-radio-buttons',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='template-submitted-checkbox-buttons',
+                storage_type='session'
+            ),
+
+            dcc.Store(
+                id='template-submitted-parameter-slider',
+                storage_type='session'
+            ),
+
             # =========
             # Homepage
             # =========
@@ -281,6 +310,8 @@ app.layout = lambda: dbc.Container([
 ], fluid=True)
 
 callbacks.homepage.callbacks.init_callback(app)
+
+callbacks.template.callbacks.init_callback(app)
 
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.epigenome.callbacks.init_callback(app)
