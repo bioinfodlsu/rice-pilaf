@@ -7,26 +7,7 @@ import dash_bootstrap_components as dbc
 # Miscellaneous Modals
 # =====================
 
-columns_modal = dbc.Modal([
-    dbc.ModalHeader(
-        dbc.ModalTitle('Summary Table')
-    ),
-    dbc.ModalBody([
-        html.P(
-            'RicePilaf summarizes the results of the different post-GWAS analyses as follows: '),
-        html.Ul([
-            html.Li([html.B('# QTL Analyses'),
-                    ' refers to the number of QTL analyses featuring the gene based on QTARO']),
-            html.Li([html.B('# PubMed Article IDs'),
-                    ' refers to the number of PubMed articles featuring the gene based on our in-house text-mined dataset'])
-        ]),
-    ])],
-    id='summary-columns-modal',
-    is_open=False,
-    size='lg',
-    scrollable=True
-)
-
+NULL_PLACEHOLDER = '–'
 
 layout = html.Div(
     id={
@@ -75,10 +56,6 @@ layout = html.Div(
             id='summary-results-container',
             style={'display': 'none'},
             children=[
-                # Do not place it inside dcc.Loading
-                # Otherwise, opening the modal will cause the whole dcc.Loading to load
-                columns_modal,
-
                 dcc.Loading([
                     html.Hr(className='mt-3 mb-3'),
 
@@ -97,16 +74,6 @@ layout = html.Div(
                                 'The table below summarizes the results of the different post-GWAS analyses.',
                                 className='text-start'
                             ),
-
-                            html.P([
-                                'Click on this tooltip ',
-                                html.I(
-                                    className='bi bi-info-circle infix-tooltip',
-                                    id='summary-columns-tooltip-no-margin',
-                                    n_clicks=0
-                                ),
-                                ' to view more information about the columns.'
-                            ], className='text-start'),
 
                             html.P([
                                 html.B(
@@ -138,6 +105,7 @@ layout = html.Div(
                             'whiteSpace': 'pre-line'
                         },
                         markdown_options={'html': True},
+                        sort_as_null=[NULL_PLACEHOLDER],
                         sort_action='native',
                         sort_mode='multi',
                         filter_action='native',
@@ -146,7 +114,14 @@ layout = html.Div(
                         page_action='native',
                         page_size=15,
                         cell_selectable=False,
-                        style_table={'overflowX': 'auto'}
+                        style_table={'overflowX': 'auto'},
+                        style_header={
+                            'textDecoration': 'underline',
+                            'textDecorationStyle': 'dotted',
+                        },
+                        tooltip_header={
+                            '# QTL Analyses': 'Number of QTL analyses featuring the gene based on QTARO'
+                        }
                     )
                 ])
             ])
