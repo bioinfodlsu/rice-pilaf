@@ -25,7 +25,7 @@ layout = html.Div(
                          id='demo-link',
                          className='fa-solid fa-up-right-from-square fa-2xs'
                      )],
-                     href='https://github.com/bioinfodlsu/rice-pilaf/wiki/3.5.2-Creating-an-analysis-page',
+                     href='https://github.com/bioinfodlsu/rice-pilaf/wiki/3.5.-Adding-a-Feature',
                      target='_blank',
                      className='top-navbar-item'
                  ),
