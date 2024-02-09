@@ -75,8 +75,6 @@ layout = html.Div(
                                 className='text-start'
                             ),
 
-                            html.Br(),
-
                             dbc.Button([html.I(
                                 className='bi bi-download me-2'),
                                 'Export to CSV'],
