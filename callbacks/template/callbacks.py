@@ -20,7 +20,7 @@ def init_callback(app):
         - *_: Other input that facilitates displaying of the submitted genomic interval
 
         Returns:
-        - ('lift-over-genomic-intervals-input', 'children'): Genomic interval text
+        - ('template-genomic-intervals-input', 'children'): Genomic interval text
         """
 
         if homepage_is_submitted:
