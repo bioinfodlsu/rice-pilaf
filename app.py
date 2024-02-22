@@ -311,7 +311,7 @@ app.layout = lambda: dbc.Container([
 
 callbacks.homepage.callbacks.init_callback(app)
 
-callbacks.template.callbacks.init_callback(app)
+# callbacks.template.callbacks.init_callback(app)
 
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.epigenome.callbacks.init_callback(app)

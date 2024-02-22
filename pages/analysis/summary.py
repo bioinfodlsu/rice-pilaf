@@ -8,6 +8,24 @@ import dash_bootstrap_components as dbc
 # =====================
 
 NULL_PLACEHOLDER = '–'
+COLUMN_TOOLTIPS = {
+    'Gene': 'Gene of interest',
+    '# Orthologs': 'Number of orthologs across Nipponbare, N22, MH63, Azu, ARC, IR64, and CMeo',
+    '# QTL Analyses': 'Number of QTL analyses featuring the gene based on QTARO',
+    '# PubMed Article IDs': 'Number of PubMed articles featuring the gene based on our in-house text-mined dataset',
+    '# Modules': 'Total number of modules that include the gene',
+    '# Enriched Modules': 'Number of enriched modules that include the gene',
+    '# Gene Ontology Terms': 'Total number of gene ontology terms related to the gene',
+    '# Enriched Gene Ontology Terms': 'Number of gene ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Trait Ontology Terms': 'Total number of trait ontology terms related to the gene',
+    '# Enriched Trait Ontology Terms': 'Number of trait ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Plant Ontology Terms': 'Total number of plant ontology terms related to the gene',
+    '# Enriched Plant Ontology Terms': 'Number of plant ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Pathways': 'Total number of pathways related to the gene',
+    '# Enriched Pathways (Over-Representation)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via over-representation analysis)',
+    '# Enriched Pathways (Pathway-Express)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via the topology-aware method Pathway-Express)',
+    '# Enriched Pathways (SPIA)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via topology-aware method SPIA)',
+}
 
 layout = html.Div(
     id={
@@ -61,12 +79,15 @@ layout = html.Div(
 
                     html.Br(),
 
+                    # Remove hidden = True to display the input summary
                     html.Div(
                         id='summary-input',
                         className='analysis-intro p-3',
+                        hidden=True
                     ),
 
-                    html.Br(),
+                    # Remove hidden = True to display the input summary
+                    html.Br(hidden=True),
 
                     html.P(
                         html.Div([
@@ -110,24 +131,7 @@ layout = html.Div(
                             'textDecoration': 'underline',
                             'textDecorationStyle': 'dotted',
                         },
-                        tooltip_header={
-                            'Gene': 'Gene of interest',
-                            '# Orthologs': 'Number of orthologs across Nipponbare, N22, MH63, Azu, ARC, IR64, and CMeo',
-                            '# QTL Analyses': 'Number of QTL analyses featuring the gene based on QTARO',
-                            '# PubMed Article IDs': 'Number of PubMed articles featuring the gene based on our in-house text-mined dataset',
-                            '# Modules': 'Total number of modules that include the gene',
-                            '# Enriched Modules': 'Number of enriched modules that include the gene',
-                            '# Gene Ontology Terms': 'Total number of gene ontology terms related to the gene',
-                            '# Enriched Gene Ontology Terms': 'Number of gene ontology terms that are overrepresented in the enriched modules containing the gene',
-                            '# Trait Ontology Terms': 'Total number of trait ontology terms related to the gene',
-                            '# Enriched Trait Ontology Terms': 'Number of trait ontology terms that are overrepresented in the enriched modules containing the gene',
-                            '# Plant Ontology Terms': 'Total number of plant ontology terms related to the gene',
-                            '# Enriched Plant Ontology Terms': 'Number of plant ontology terms that are overrepresented in the enriched modules containing the gene',
-                            '# Pathways': 'Total number of pathways related to the gene',
-                            '# Enriched Pathways (Over-Representation)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via over-representation analysis)',
-                            '# Enriched Pathways (Pathway-Express)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via the topology-aware method Pathway-Express)',
-                            '# Enriched Pathways (SPIA)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via topology-aware method SPIA)',
-                        }
+                        tooltip_header=COLUMN_TOOLTIPS
                     )
                 ])
             ])
