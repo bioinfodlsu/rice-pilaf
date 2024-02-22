@@ -75,41 +75,46 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 dcc.Loading([
-                    html.Hr(className='mt-3 mb-3'),
+                    # If you want to display the input summary box, the className should be 'mt-3 mb-3'
+                    # Otherwise, the className should be 'mt-3 mb-4'
+                    # This distinction is to ensure consistent spacing
+                    html.Hr(className='mt-3 mb-4'),
 
-                    html.Br(),
+                    # If you want to display the input summary box, remove hidden=True
+                    html.Br(hidden=True),
 
-                    # Remove hidden = True to display the input summary
+                    # If you want to display the input summary box, remove hidden=True
                     html.Div(
                         id='summary-input',
                         className='analysis-intro p-3',
                         hidden=True
                     ),
 
-                    # Remove hidden = True to display the input summary
+                    # If you want to display the input summary box, remove hidden=True
                     html.Br(hidden=True),
 
-                    html.P(
-                        html.Div([
-                            html.P(
-                                'The table below summarizes the results of the different post-GWAS analyses.',
-                                className='text-start'
-                            ),
+                    # If you want to display the input summary box, wrap the code block below inside html.P()
+                    html.Div([
+                        html.P(
+                            'The table below summarizes the results of the different post-GWAS analyses.',
+                            className='text-start'
+                        ),
 
-                            dbc.Button([html.I(
-                                className='bi bi-download me-2'),
-                                'Export to CSV'],
-                                id='summary-export-table',
-                                n_clicks=0,
-                                color='light', size='sm', className='table-button'),
-                            dcc.Download(id='summary-download-df-to-csv'),
-                            dbc.Button([html.I(
-                                className='bi bi-arrow-clockwise me-2'),
-                                'Reset Table'],
-                                id='summary-reset-table',
-                                color='light', size='sm', className='ms-3 table-button')
-                        ], style={'textAlign': 'right'})
-                    ),
+                        dbc.Button([html.I(
+                            className='bi bi-download me-2'),
+                            'Export to CSV'],
+                            id='summary-export-table',
+                            n_clicks=0,
+                            color='light', size='sm', className='table-button'),
+                        dcc.Download(id='summary-download-df-to-csv'),
+                        dbc.Button([html.I(
+                            className='bi bi-arrow-clockwise me-2'),
+                            'Reset Table'],
+                            id='summary-reset-table',
+                            color='light', size='sm', className='ms-3 table-button')
+                    ], style={'textAlign': 'right'}),
+
+                    html.Br(),
 
                     dash_table.DataTable(
                         id='summary-results-table',
