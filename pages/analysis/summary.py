@@ -79,12 +79,15 @@ layout = html.Div(
 
                     html.Br(),
 
+                    # Remove hidden = True to display the input summary
                     html.Div(
                         id='summary-input',
                         className='analysis-intro p-3',
+                        hidden=True
                     ),
 
-                    html.Br(),
+                    # Remove hidden = True to display the input summary
+                    html.Br(hidden=True),
 
                     html.P(
                         html.Div([
