@@ -95,7 +95,7 @@ def display_aligned_substring_in_bold(text, similarity):
     return text
 
 
-def text_mining_query_search(query_string):
+def text_mining_query_search(query_string, filter):
     # Make case-insensitive and remove starting and trailing spaces
     query_string = query_string.lower().strip()
 

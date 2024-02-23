@@ -71,6 +71,20 @@ layout = html.Div(
                      className='pt-3'),
             html.Br(),
 
+            dbc.Label(
+                'Do you want to filter the results to display only genes overlapping your input intervals?',
+            ),
+
+            dbc.RadioItems(
+                id='text-mining-filter',
+                options=['Yes', 'No'],
+                value='No',
+                inline=True,
+                className='ms-3 mt-1'
+            ),
+
+            html.Br(),
+
             dbc.Button('Search',
                        id='text-mining-submit',
                        className='page-button',
