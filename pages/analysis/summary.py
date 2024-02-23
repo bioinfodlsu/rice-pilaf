@@ -13,18 +13,18 @@ COLUMN_TOOLTIPS = {
     '# Orthologs': 'Number of orthologs across Nipponbare, N22, MH63, Azu, ARC, IR64, and CMeo',
     '# QTL Analyses': 'Number of QTL analyses featuring the gene based on QTARO',
     '# PubMed Article IDs': 'Number of PubMed articles featuring the gene based on our in-house text-mined dataset',
-    '# Modules': 'Total number of modules that include the gene',
-    '# Enriched Modules': 'Number of enriched modules that include the gene',
+    '# Modules': 'Total number of coexpression modules that include the gene',
+    '# Enriched Modules': 'Number of enriched coexpression modules that include the gene',
     '# Gene Ontology Terms': 'Total number of gene ontology terms related to the gene',
-    '# Enriched Gene Ontology Terms': 'Number of gene ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Enriched Gene Ontology Terms': 'Number of gene ontology terms that are overrepresented in the enriched coexpression modules containing the gene',
     '# Trait Ontology Terms': 'Total number of trait ontology terms related to the gene',
-    '# Enriched Trait Ontology Terms': 'Number of trait ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Enriched Trait Ontology Terms': 'Number of trait ontology terms that are overrepresented in the enriched coexpression modules containing the gene',
     '# Plant Ontology Terms': 'Total number of plant ontology terms related to the gene',
-    '# Enriched Plant Ontology Terms': 'Number of plant ontology terms that are overrepresented in the enriched modules containing the gene',
+    '# Enriched Plant Ontology Terms': 'Number of plant ontology terms that are overrepresented in the enriched coexpression modules containing the gene',
     '# Pathways': 'Total number of pathways related to the gene',
-    '# Enriched Pathways (Over-Representation)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via over-representation analysis)',
-    '# Enriched Pathways (Pathway-Express)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via the topology-aware method Pathway-Express)',
-    '# Enriched Pathways (SPIA)': 'Number of pathways that are impacted in the enriched modules containing the gene (determined via topology-aware method SPIA)',
+    '# Enriched Pathways (Over-Representation)': 'Number of pathways that are impacted in the enriched coexpression modules containing the gene (determined via over-representation analysis)',
+    '# Enriched Pathways (Pathway-Express)': 'Number of pathways that are impacted in the enriched coexpression modules containing the gene (determined via the topology-aware method Pathway-Express)',
+    '# Enriched Pathways (SPIA)': 'Number of pathways that are impacted in the enriched coexpression modules containing the gene (determined via topology-aware method SPIA)',
 }
 
 layout = html.Div(
@@ -75,41 +75,46 @@ layout = html.Div(
             style={'display': 'none'},
             children=[
                 dcc.Loading([
-                    html.Hr(className='mt-3 mb-3'),
+                    # If you want to display the input summary box, the className should be 'mt-3 mb-3'
+                    # Otherwise, the className should be 'mt-3 mb-4'
+                    # This distinction is to ensure consistent spacing
+                    html.Hr(className='mt-3 mb-4'),
 
-                    html.Br(),
+                    # If you want to display the input summary box, remove hidden=True
+                    html.Br(hidden=True),
 
-                    # Remove hidden = True to display the input summary
+                    # If you want to display the input summary box, remove hidden=True
                     html.Div(
                         id='summary-input',
                         className='analysis-intro p-3',
                         hidden=True
                     ),
 
-                    # Remove hidden = True to display the input summary
+                    # If you want to display the input summary box, remove hidden=True
                     html.Br(hidden=True),
 
-                    html.P(
-                        html.Div([
-                            html.P(
-                                'The table below summarizes the results of the different post-GWAS analyses.',
-                                className='text-start'
-                            ),
+                    # If you want to display the input summary box, wrap the code block below inside html.P()
+                    html.Div([
+                        html.P(
+                            'The table below summarizes the results of the different post-GWAS analyses.',
+                            className='text-start'
+                        ),
 
-                            dbc.Button([html.I(
-                                className='bi bi-download me-2'),
-                                'Export to CSV'],
-                                id='summary-export-table',
-                                n_clicks=0,
-                                color='light', size='sm', className='table-button'),
-                            dcc.Download(id='summary-download-df-to-csv'),
-                            dbc.Button([html.I(
-                                className='bi bi-arrow-clockwise me-2'),
-                                'Reset Table'],
-                                id='summary-reset-table',
-                                color='light', size='sm', className='ms-3 table-button')
-                        ], style={'textAlign': 'right'})
-                    ),
+                        dbc.Button([html.I(
+                            className='bi bi-download me-2'),
+                            'Export to CSV'],
+                            id='summary-export-table',
+                            n_clicks=0,
+                            color='light', size='sm', className='table-button'),
+                        dcc.Download(id='summary-download-df-to-csv'),
+                        dbc.Button([html.I(
+                            className='bi bi-arrow-clockwise me-2'),
+                            'Reset Table'],
+                            id='summary-reset-table',
+                            color='light', size='sm', className='ms-3 table-button')
+                    ], style={'textAlign': 'right'}),
+
+                    html.Br(),
 
                     dash_table.DataTable(
                         id='summary-results-table',
