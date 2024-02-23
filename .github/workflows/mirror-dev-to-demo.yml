@@ -1,20 +1,20 @@
-name: Mirror main to demo branch
+name: Mirror dev to demo branch
 
 on:
   workflow_run:
     workflows: [Check for syntax errors]
     types: [completed]
-    branches: [main]
+    branches: [dev]
 
 jobs:
   mirror_job:
       runs-on: ubuntu-latest
-      name: Mirror main branch to demo branch
+      name: Mirror dev branch to demo branch
       steps:
       - name: Mirror action step
         id: mirror
         uses: google/mirror-branch-action@v2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          source: 'main'
+          source: 'dev'
           dest: 'demo'
