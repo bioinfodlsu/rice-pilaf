@@ -95,14 +95,18 @@ def display_aligned_substring_in_bold(text, similarity):
     return text
 
 
-def text_mining_query_search(query_string, filter):
+def text_mining_query_search(query_string, genomic_intervals, filter_gene_ids):
     # Make case-insensitive and remove starting and trailing spaces
     query_string = query_string.lower().strip()
 
-    text_mining_path = get_path_to_text_mining_temp(Constants.TEMP_TEXT_MINING)
+    text_mining_path = get_path_to_text_mining_temp(
+        Constants.TEMP_TEXT_MINING, shorten_name(query_string))
     make_dir(text_mining_path)
 
-    text_mining_path = f'{text_mining_path}/{shorten_name(query_string)}.csv'
+    if filter_gene_ids:
+        text_mining_path = f'{text_mining_path}/{shorten_name(convert_text_to_path(genomic_intervals))}.csv'
+    else:
+        text_mining_path = f'{text_mining_path}/unfiltered.csv'
 
     if path_exists(text_mining_path):
         return pd.read_csv(text_mining_path)
@@ -200,6 +204,13 @@ def text_mining_query_search(query_string, filter):
 
             except:
                 pass
+
+    if filter_gene_ids:
+        with open(f'{Constants.MSU_MAPPING}/genesymbol_to_msu.pickle', 'rb') as f:
+            genesymbol_mapping = pickle.load(f)
+            filter_gene_ids = list(
+                map(get_msu_browser_link_single_str, filter_gene_ids))
+            df = df[df['MSU ID'].isin(filter_gene_ids)]
 
     df['PMID'] = get_pubmed_link(df, 'PMID')
     df = df.sort_values('Score', ascending=False)

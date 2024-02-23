@@ -187,10 +187,12 @@ def init_callback(app):
 
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
+        State('homepage-submitted-genomic-intervals', 'data'),
+
         State('text-mining-submitted-query', 'data'),
         State('text-mining-submitted-filter', 'data')
     )
-    def display_text_mining_results(text_mining_is_submitted, homepage_is_submitted,
+    def display_text_mining_results(text_mining_is_submitted, homepage_is_submitted, genomic_intervals,
                                     text_mining_submitted_query, text_mining_submitted_filter):
         """
         Displays the text mining results table 
@@ -208,11 +210,17 @@ def init_callback(app):
 
         if homepage_is_submitted and text_mining_is_submitted:
             query_string = text_mining_submitted_query
-
             is_there_error, _ = is_error(query_string)
+
             if not is_there_error:
+                if text_mining_submitted_filter == 'Yes':
+                    implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                        1]
+                else:
+                    implicated_gene_ids = None
+
                 text_mining_results_df = text_mining_query_search(
-                    query_string, text_mining_submitted_filter)
+                    query_string, genomic_intervals, implicated_gene_ids)
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in text_mining_results_df.columns]
