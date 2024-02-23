@@ -1,4 +1,4 @@
-from dash import Input, Output, State, ctx, ALL, html, no_update, dcc
+from dash import Input, Output, State, ctx, ALL, html, dcc
 from dash.exceptions import PreventUpdate
 
 from .util import *
@@ -67,13 +67,18 @@ def init_callback(app):
         Output('text-mining-is-submitted', 'data', allow_duplicate=True),
         Output('text-mining-submitted-query',
                'data', allow_duplicate=True),
+        Output('text-mining-submitted-filter',
+               'data', allow_duplicate=True),
+
         Input('text-mining-submit', 'n_clicks'),
         Input('text-mining-query', 'n_submit'),
         State('homepage-is-submitted', 'data'),
         State('text-mining-query', 'value'),
+        State('text-mining-filter', 'value'),
         prevent_initial_call=True
     )
-    def submit_text_mining_input(text_mining_submitted_n_clicks, text_mining_query_n_submit, homepage_is_submitted, text_mining_query):
+    def submit_text_mining_input(text_mining_submitted_n_clicks, text_mining_query_n_submit, homepage_is_submitted,
+                                 text_mining_query, text_mining_filter):
         """
         Parses text mining input and displays the text mining result container
         - If user clicks on the text mining submit button, the inputs will be parsed and either an error message or the text mining results container will appear
@@ -95,9 +100,9 @@ def init_callback(app):
             is_there_error, message = is_error(text_mining_query)
 
             if not is_there_error:
-                return {'display': 'none'}, message, True, text_mining_query
+                return {'display': 'none'}, message, True, text_mining_query, text_mining_filter
             else:
-                return {'display': 'block'}, message, False, text_mining_query
+                return {'display': 'block'}, message, False, text_mining_query, text_mining_filter
 
         raise PreventUpdate
 
@@ -182,16 +187,20 @@ def init_callback(app):
 
         Input('text-mining-is-submitted', 'data'),
         State('homepage-is-submitted', 'data'),
-        State('text-mining-submitted-query', 'data')
+        State('homepage-submitted-genomic-intervals', 'data'),
+
+        State('text-mining-submitted-query', 'data'),
+        State('text-mining-submitted-filter', 'data')
     )
-    def display_text_mining_results(text_mining_is_submitted, homepage_is_submitted, text_mining_query_submitted_input):
+    def display_text_mining_results(text_mining_is_submitted, homepage_is_submitted, genomic_intervals,
+                                    text_mining_submitted_query, text_mining_submitted_filter):
         """
         Displays the text mining results table 
 
         Parameters:
         - text_mining_is_submitted: [Text mining] Saved boolean value of submitted valid input 
         - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input 
-        - text_mining_query_submitted_input: Saved text mining query found in the dcc.Store
+        - text_mining_submitted_query: Saved text mining query found in the dcc.Store
 
         Returns:
         - ('text-mining-results-table', 'data'): Data for the text mining table
@@ -200,11 +209,18 @@ def init_callback(app):
         """
 
         if homepage_is_submitted and text_mining_is_submitted:
-            query_string = text_mining_query_submitted_input
-
+            query_string = text_mining_submitted_query
             is_there_error, _ = is_error(query_string)
+
             if not is_there_error:
-                text_mining_results_df = text_mining_query_search(query_string)
+                if text_mining_submitted_filter == 'Yes':
+                    implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[
+                        1]
+                else:
+                    implicated_gene_ids = None
+
+                text_mining_results_df = text_mining_query_search(
+                    query_string, genomic_intervals, implicated_gene_ids)
 
                 columns = [{'id': x, 'name': x, 'presentation': 'markdown'}
                            for x in text_mining_results_df.columns]
@@ -212,7 +228,7 @@ def init_callback(app):
                 num_unique_entries = get_num_unique_entries(
                     text_mining_results_df, "PMID")
 
-                stats = f'Found matches for "{text_mining_query_submitted_input}" across '
+                stats = f'Found matches for "{text_mining_submitted_query}" across '
                 if num_unique_entries == 1:
                     stats += f'{num_unique_entries} publication'
                 elif num_unique_entries == MAX_NUM_RESULTS:
@@ -276,11 +292,13 @@ def init_callback(app):
     # =================
     @app.callback(
         Output('text-mining-query', 'value'),
+        Output('text-mining-filter', 'value'),
         State('text-mining-submitted-query', 'data'),
+        State('text-mining-submitted-filter', 'data'),
 
         Input('text-mining-is-submitted', 'data'),
     )
-    def get_input_homepage_session_state(query,  *_):
+    def get_input_homepage_session_state(query, filter, *_):
         """
         Gets the [Input container] text mining related dcc.Store data and displays them 
 
@@ -291,5 +309,7 @@ def init_callback(app):
         Returns:
         - ('text-mining-query', 'value'): Saved text mining query
         """
+        if not filter:
+            return query, 'No'
 
-        return query
+        return query, filter
