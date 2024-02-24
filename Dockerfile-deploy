@@ -1,0 +1,26 @@
+FROM tiangolo/uwsgi-nginx-flask:python3.10
+
+COPY . /app
+WORKDIR /app
+
+RUN set -ex 
+
+RUN touch .deploy
+
+RUN apt-get update \
+  && apt-get install -y \
+  bedtools \
+  git \
+  python3-dev \
+  python3-pip \
+  && apt-get clean
+
+RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
+
+# Install mcdp2
+RUN cd ../ \
+  && git clone https://github.com/fmfi-compbio/mcdp2 \
+  && cd mcdp2 \
+  && git reset --hard fd7c69f5e97db8c1052df859cb02d86533287e64 \
+  && pip3 install . \
+  && cd ../app
