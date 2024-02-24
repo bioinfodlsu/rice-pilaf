@@ -43,7 +43,7 @@ jobs:
               uses: google/mirror-branch-action@v2.0
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-                  source: ${{ github.ref.name }}
+                  source: "minor-release"
                   dest: "main"
 
     delete-release-branch:
