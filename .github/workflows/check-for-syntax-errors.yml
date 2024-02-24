@@ -1,8 +1,8 @@
 on: [push, pull_request]
 name: Check for syntax errors
 jobs:
-  check-for-syntax-errors:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: cclauss/Find-Python-syntax-errors-action@master
+    check-for-syntax-errors:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: cclauss/Find-Python-syntax-errors-action@master

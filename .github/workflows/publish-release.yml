@@ -1,8 +1,8 @@
 name: Publish release
 
 on:
-  push:
-    branches: [minor-release, major-release, patch]
+    push:
+        branches: [minor-release, major-release, patch]
 
 jobs:
     release-on-push:
@@ -16,19 +16,19 @@ jobs:
               if: ${{ github.ref == 'refs/heads/minor-release' }}
               with:
                   bump_version_scheme: minor
-                  release_body: ${{ env.RELEASE_BODY }} 
+                  release_body: ${{ env.RELEASE_BODY }}
 
             - uses: memgonzales/release-on-push-action@master
               if: ${{ github.ref == 'refs/heads/major-release' }}
               with:
                   bump_version_scheme: major
-                  release_body: ${{ env.RELEASE_BODY }} 
+                  release_body: ${{ env.RELEASE_BODY }}
 
             - uses: memgonzales/release-on-push-action@master
               if: ${{ github.ref == 'refs/heads/patch' }}
               with:
                   bump_version_scheme: patch
-                  release_body: ${{ env.RELEASE_BODY }} 
+                  release_body: ${{ env.RELEASE_BODY }}
 
     delete-release-branch:
         needs: release-on-push
