@@ -1,7 +1,9 @@
 name: Publish release
 
 on:
-    push:
+    workflow_run:
+        workflows: [Check for syntax errors]
+        types: [completed]
         branches: [minor-release, major-release, patch]
 
 jobs:
