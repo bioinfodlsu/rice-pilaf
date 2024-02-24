@@ -37,13 +37,17 @@ jobs:
         needs: release-on-push
         name: Mirror release branch to main branch
         runs-on: ubuntu-latest
+        outputs:
+            branch: ${{ needs.release-on-push.outputs.branch }}
         steps:
+            - name: Print branch to be mirrored
+              run: echo "${{ needs.release-on-push.outputs.branch }}"
             - name: Mirror action step
               id: mirror
               uses: google/mirror-branch-action@v2.0
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-                  source: "minor-release"
+                  source: ${{ needs.release-on-push.outputs.branch }}
                   dest: "main"
 
     delete-release-branch:
@@ -53,6 +57,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
+            - name: Print branch to be deleted
+              run: echo "${{ needs.mirror-release-to-main.outputs.branch }}"
             - uses: dawidd6/action-delete-branch@v3
               with:
-                  branches: ${{ needs.release-on-push.outputs.branch }}
+                  branches: ${{ needs.mirror-release-to-main.outputs.branch }}
