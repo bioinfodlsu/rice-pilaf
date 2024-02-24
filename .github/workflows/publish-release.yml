@@ -7,6 +7,9 @@ on:
         branches: [minor-release, major-release, patch]
 
 jobs:
+    env:
+        RELEASE_BRANCH: ${{ github.ref_name }}
+
     release-on-push:
         runs-on: ubuntu-latest
         env:
@@ -54,4 +57,4 @@ jobs:
         steps:
             - uses: dawidd6/action-delete-branch@v3
               with:
-                  branches: ${{ github.ref_name }}
+                  branches: ${{ env.RELEASE_BRANCH }}
