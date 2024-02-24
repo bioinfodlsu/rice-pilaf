@@ -3,8 +3,9 @@
 ![badge][badge-python]
 ![badge][badge-r]
 ![badge][badge-pandas]
-![badge][badge-scipy] 
+![badge][badge-scipy]
 ![badge][badge-flask]
+![badge][badge-nginx]
 ![badge][badge-docker]<br>
 [![Create and publish a Docker image](https://github.com/bioinfodlsu/rice-pilaf/actions/workflows/dockerize-and-publish.yml/badge.svg)](https://github.com/bioinfodlsu/rice-pilaf/actions/workflows/dockerize-and-publish.yml)
 ![badge][badge-github-actions]
@@ -36,3 +37,4 @@ If you have issues, concerns, or questions, please contact Anish Shrestha (anish
 [badge-flask]: https://img.shields.io/badge/flask-%23000.svg?style=flat&logo=flask&logoColor=white
 [badge-docker]: https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white
 [badge-r]: https://img.shields.io/badge/r-%23276DC3.svg?style=flat&logo=r&logoColor=white
+[badge-nginx]: https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white
