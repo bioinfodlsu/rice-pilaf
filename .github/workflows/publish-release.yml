@@ -6,10 +6,10 @@ on:
         types: [completed]
         branches: [minor-release, major-release, patch]
 
-jobs:
-    env:
-        RELEASE_BRANCH: ${{ github.ref_name }}
+env:
+    RELEASE_BRANCH: ${{ github.ref_name }}
 
+jobs:
     release-on-push:
         runs-on: ubuntu-latest
         env:
