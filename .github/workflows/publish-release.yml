@@ -10,11 +10,7 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             RELEASE_BODY: "Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard. Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients, this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.\n\n ## Installation and Usage \nPlease visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).\n\n ## Changelog\n"
-        outputs:
-            branch: ${{ github.ref.name }}
         steps:
-            - name: Print release branch
-              run: echo "${{ github.ref }}"
             - uses: memgonzales/release-on-push-action@master
               if: ${{ github.ref == 'refs/heads/minor-release' }}
               with:
@@ -37,17 +33,13 @@ jobs:
         needs: release-on-push
         name: Mirror release branch to main branch
         runs-on: ubuntu-latest
-        outputs:
-            branch: ${{ needs.release-on-push.outputs.branch }}
         steps:
-            - name: Print branch to be mirrored
-              run: echo "${{ needs.release-on-push.outputs.branch }}"
             - name: Mirror action step
               id: mirror
               uses: google/mirror-branch-action@v2.0
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-                  source: ${{ needs.release-on-push.outputs.branch }}
+                  source: ${{ github.ref_name }}
                   dest: "main"
 
     delete-release-branch:
@@ -55,10 +47,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         steps:
-            - name: Print branch to be deleted
-              run: echo "${{ needs.mirror-release-to-main.outputs.branch }}"
             - uses: dawidd6/action-delete-branch@v3
               with:
-                  branches: ${{ needs.mirror-release-to-main.outputs.branch }}
+                  branches: ${{ github.ref_name }}
