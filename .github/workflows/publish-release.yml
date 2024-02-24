@@ -35,6 +35,7 @@ jobs:
 
     mirror-release-to-main:
         needs: release-on-push
+        name: Mirror release branch to main branch
         runs-on: ubuntu-latest
         steps:
             - name: Mirror action step
@@ -42,7 +43,7 @@ jobs:
               uses: google/mirror-branch-action@v2.0
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
-                  source: ${{ needs.release-on-push.outputs.branch }}
+                  source: ${{ github.ref.name }}
                   dest: "main"
 
     delete-release-branch:
