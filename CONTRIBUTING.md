@@ -1,24 +1,13 @@
-Welcome!
-## Table of Contents
+Thank you for your interest in contributing to RicePilaf! 
+
 ## Reporting Bugs
+Please use the [Bug report](https://github.com/bioinfodlsu/rice-pilaf/issues/new/choose) template here.
+
 ## Requesting Features
-## Contributing Workflow
-1. Read wiki
-2. Fork repository and clone
-3. Set up the environment
-   - OS
-   - Manual Setup
-   - Docker: https://learn.microsoft.com/en-us/training/modules/use-docker-container-dev-env-vs-code/
-5. Implement the feature
-   - Refer to the wiki
-   - Note on code formatting and linting
-6. Dockerize
-   - Refer to the wiki
-7. Submit pull request
-   - Pull requests with merge conflicts
-   - Have to pass the check for syntax errors
-9. Update documentation
-   - Wiki documentation
+Please use the [Feature request](https://github.com/bioinfodlsu/rice-pilaf/issues/new/choose) template here.
+
+## Contributing
+Please visit the [For Developers](https://github.com/bioinfodlsu/rice-pilaf/wiki/3.-For-Developers) section of our wiki in order to familiarize yourself with our project structure, workflow, and codebase.
 
 ## License
 RicePilaf is released under the [MIT License](https://github.com/bioinfodlsu/rice-pilaf/blob/main/LICENSE).
