@@ -14,8 +14,12 @@ def get_active_branch_name():
             return line.partition("refs/heads/")[2]
 
 
+def is_deployed_version():
+    return Path("./.deploy").exists()
+
+
 def is_in_demo_branch():
-    return get_active_branch_name() == 'demo'
+    return get_active_branch_name() == 'demo' or is_deployed_version()
 
 
 def show_if_in_demo_branch():
