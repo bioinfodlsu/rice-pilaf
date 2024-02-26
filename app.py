@@ -22,21 +22,15 @@ from callbacks.file_util import *
 from flask import Flask
 
 server = Flask(__name__, static_folder='static')
-app = dash.Dash(__name__, use_pages=True,
-                external_stylesheets=[dbc.themes.BOOTSTRAP,
-                                      dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
-                server=server,
-                title='RicePilaf',
-                update_title='Loading...',
-                meta_tags=[{'name': 'viewport',
-                            'content': 'width=1024'}])
-
-welcome = dcc.Markdown(
-    '''
-    Welcome ! Rice Pilaf is short for Rice Post-GWAS/QTL Dashboard.
-    Ok, we are not good at abbreviations, but like a good pilaf, this dashboard combines many ingredients.
-    With this tool, you can do amazing things like ... (write me)
-    '''
+app = dash.Dash(
+    __name__, use_pages=True,
+    external_stylesheets=[dbc.themes.BOOTSTRAP,
+                          dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
+    server=server,
+    title='RicePilaf',
+    update_title='Loading...',
+    meta_tags=[{'name': 'viewport',
+                'content': 'width=1024'}]
 )
 
 
