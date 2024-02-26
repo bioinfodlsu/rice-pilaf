@@ -34,6 +34,8 @@ jobs:
                       image: ghcr.io/bioinfodlsu/rice-pilaf/app
                     - dockerfile: Dockerfile-workflow # Change to Dockerfile of workflow
                       image: ghcr.io/bioinfodlsu/rice-pilaf/workflow
+                    - dockerfile: Dockerfile-deploy # Change to Dockerfile of deploy
+                      image: ghcr.io/bioinfodlsu/rice-pilaf/deploy
         permissions:
             contents: read
             packages: write
