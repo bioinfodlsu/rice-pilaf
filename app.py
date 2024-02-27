@@ -343,4 +343,7 @@ except sqlite3.Error as error:
     pass
 
 if __name__ == '__main__':
-    app.run_server(port='8050', debug=True)
+    if is_in_demo_branch():
+        app.run_server(port='8050', debug=True)
+    else:
+        app.run_server(host='0.0.0.0', port='8050', debug=True)
