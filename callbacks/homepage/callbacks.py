@@ -7,7 +7,8 @@ from ..epigenome import util as epigenome_util
 
 from ..style_util import *
 
-
+from flask import request
+import socket
 def init_callback(app):
     # =================
     # Layout-related
@@ -126,6 +127,9 @@ def init_callback(app):
         if 'homepage-reset' == ctx.triggered_id:
             # clear data for items in dcc.Store found in session-container
             dccStore_children = clear_specific_dccStore_data(dccStore_children, '')
+
+            app.logger.info("1 A user clicked the homepage-reset button %s", request.environ.get('HTTP_X_REAL_IP', request.remote_addr)   )
+            app.logger.info("2 A user clicked the homepage-reset button %s", request.remote_addr)
 
             return dccStore_children, None, {'display': 'none'}, False, '', True
 
