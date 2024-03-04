@@ -128,9 +128,6 @@ def init_callback(app):
             # clear data for items in dcc.Store found in session-container
             dccStore_children = clear_specific_dccStore_data(dccStore_children, '')
 
-            app.logger.info("1 A user clicked the homepage-reset button %s", request.environ.get('HTTP_X_REAL_IP', request.remote_addr)   )
-            app.logger.info("2 A user clicked the homepage-reset button %s", request.remote_addr)
-
             return dccStore_children, None, {'display': 'none'}, False, '', True
 
         # Parses the genomic interval input 
@@ -271,4 +268,28 @@ def init_callback(app):
         if homepage_is_submitted:
             return genomic_intervals
 
+        raise PreventUpdate
+
+
+    # =================
+    # Logging-related
+    # =================
+    
+    @app.callback(
+        Output('homepage-log', 'children'),
+        State('homepage-genomic-intervals', 'value'),
+
+        Input('homepage-submit', 'n_clicks'),
+        Input('homepage-genomic-intervals', 'n_submit'),
+
+        Input({'type': 'analysis-nav', 'label': ALL}, 'n_clicks')
+    )
+    def get_input_homepage_session_state(genomic_intervals, n_clicks, n_submit, analysis_nav_items_n_clicks):
+        if n_submit >= 1 or ('homepage-submit' == ctx.triggered_id and n_clicks >= 1):
+            app.logger.info("%s [homepage] %s", request.remote_addr, genomic_intervals)
+        
+        if ctx.triggered_id and not all(val == 0 for val in analysis_nav_items_n_clicks):
+            analysis_page_id = ctx.triggered_id.label
+            app.logger.info("%s %s", request.remote_addr, analysis_page_id)
+        
         raise PreventUpdate

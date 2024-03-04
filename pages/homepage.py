@@ -275,5 +275,10 @@ layout = html.Div([
                 ]
             )
         ]
+    ),
+
+    # Do not remove; for log purposes
+    html.Div(
+        id='homepage-log'
     )
 ])
