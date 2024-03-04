@@ -22,7 +22,6 @@ from callbacks.file_util import *
 
 from flask import Flask
 
-import logging
 from logging.config import dictConfig
 
 dictConfig(
