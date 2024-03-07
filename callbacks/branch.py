@@ -1,4 +1,5 @@
 from pathlib import Path
+import requests
 
 
 def get_active_branch_name():
@@ -37,6 +38,6 @@ def show_if_not_in_demo_branch():
 
 
 def get_release_version():
-    releases = Path('.git/refs/tags').glob('*')
-    latest_release = max(releases, key=lambda p: p.stat().st_ctime)
-    return str(latest_release).split('/')[-1]
+    latest_release = requests.get(
+        'https://github.com/bioinfodlsu/rice-pilaf/releases/latest')
+    return latest_release.url.split('/')[-1]
