@@ -5,6 +5,19 @@ on:
         branches: [minor-release, major-release, patch]
 
 jobs:
+    mirror-release-to-main:
+        needs: release-on-push
+        name: Mirror release branch to main branch
+        runs-on: ubuntu-latest
+        steps:
+            - name: Mirror action step
+              id: mirror
+              uses: google/mirror-branch-action@main
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  source: ${{ github.ref_name }}
+                  dest: "main"
+
     release-on-push:
         runs-on: ubuntu-latest
         env:
@@ -28,19 +41,6 @@ jobs:
               with:
                   bump_version_scheme: patch
                   release_body: ${{ env.RELEASE_BODY }}
-
-    mirror-release-to-main:
-        needs: release-on-push
-        name: Mirror release branch to main branch
-        runs-on: ubuntu-latest
-        steps:
-            - name: Mirror action step
-              id: mirror
-              uses: google/mirror-branch-action@main
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  source: ${{ github.ref_name }}
-                  dest: "main"
 
     delete-release-branch:
         needs: mirror-release-to-main
