@@ -6,7 +6,6 @@ on:
 
 jobs:
     mirror-release-to-main:
-        needs: release-on-push
         name: Mirror release branch to main branch
         runs-on: ubuntu-latest
         steps:
@@ -19,6 +18,7 @@ jobs:
                   dest: "main"
 
     release-on-push:
+        needs: mirror-release-to-main
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
                   release_body: ${{ env.RELEASE_BODY }}
 
     delete-release-branch:
-        needs: mirror-release-to-main
+        needs: release-on-push
         runs-on: ubuntu-latest
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
