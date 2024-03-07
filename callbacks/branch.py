@@ -34,3 +34,9 @@ def show_if_not_in_demo_branch():
         return {'display': 'block'}
 
     return {'display': 'none'}
+
+
+def get_release_version():
+    releases = Path('.git/refs/tags').glob('*')
+    latest_release = max(releases, key=lambda p: p.stat().st_ctime)
+    return str(latest_release).split('/')[-1]

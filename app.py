@@ -77,7 +77,8 @@ app.layout = lambda: dbc.Container([
             ), className='col-auto text-center'
         ),
         dbc.Col([
-            html.Span('© 2023'),
+            html.Span(f'RicePilaf {get_release_version()}'),
+            html.Span('© 2023', className='ps-3'),
             html.Span('|', className='px-3'),
             html.Span(
                 'Bioinformatics Lab, De La Salle University (DLSU), Manila, Philippines'),
