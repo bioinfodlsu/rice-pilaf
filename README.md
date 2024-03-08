@@ -18,17 +18,24 @@ https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/372f371e-5c19-4276-911
 
 ## Installation and Usage
 
-Please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
+For installation and usage, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
-## Demo
+It is advised to install the app locally. 
 
-A demo version can be accessed at [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)
+Alternatively, you can try RicePilaf at one of the sites below.
 
-It runs on limited computational resources, so installing locally is the way to go.
+## Publicly accessible running instances of RicePilaf 
+
+| URL           | Site          |   Status (Date) |
+| ------------- | ------------- |-------------|
+| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | Running (Mar 8,2024)|
+| [http://rice-pilaf.irri.org](http://rice-pilaf.irri.org) or [http://ricepilaf.irri.org](http://ricepilaf.irri.org) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource  | Coming soon (March 8, 2024) |
+
+
 
 ## Contact
 
-If you have issues, concerns, or questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
+If you have issues, concerns, suggestions, questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
 
 [badge-python]: https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=white
 [badge-pandas]: https://img.shields.io/badge/Pandas-2C2D72?style=flat&logo=pandas&logoColor=white
