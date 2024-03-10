@@ -5,6 +5,7 @@ WORKDIR /app
 
 RUN set -ex 
 
+# Signal that deployed version should be used
 RUN touch .deploy
 
 RUN apt-get update \
@@ -14,6 +15,11 @@ RUN apt-get update \
   python3-dev \
   python3-pip \
   && apt-get clean
+
+# Get latest release version number
+RUN pip3 install --no-cache-dir requests
+RUN (echo "import requests" ; echo "latest_release = requests.get('https://github.com/bioinfodlsu/rice-pilaf/releases/latest')"; echo "print(latest_release.url.split('/')[-1])") | python3 > .version
+RUN pip3 uninstall -y requests
 
 RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
 

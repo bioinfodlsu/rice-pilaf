@@ -199,3 +199,7 @@ app-1.py
 # Binary files
 prepare_data/**/LazyFox
 *.jar
+
+# Version
+.version
+.deploy
