@@ -28,7 +28,7 @@ Alternatively, you can try RicePilaf at one of the sites below.
 
 | URL           | Site          | Version  |   Status (Date) |
 | ------------- | ------------- |----| -------------|
-| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | 0.1.2 | Running (Mar 8,2024)|
+| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | 0.1.2 | Running (Mar 8, 2024)|
 | [https://ricepilaf.irri.org](https://ricepilaf.irri.org) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource  | 0.1.2 | Running (March 12, 2024) |
 
 
