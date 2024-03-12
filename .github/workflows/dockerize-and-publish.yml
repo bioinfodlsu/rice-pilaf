@@ -13,6 +13,7 @@ env:
 jobs:
     get-latest-version:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         outputs:
             latest-version: ${{ steps.get-latest-version-step.outputs.release }}
         steps:
