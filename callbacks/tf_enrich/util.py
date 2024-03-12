@@ -13,32 +13,35 @@ import gffutils
 import pybedtools
 
 
-COLUMNS = ['Transcription Factor', 'Family',
-           'p-value', 'Adj. p-value']  # , 'Significant?']
+COLUMNS = [
+    "Transcription Factor",
+    "Family",
+    "p-value",
+    "Adj. p-value",
+]  # , 'Significant?']
 
 TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL = [
-    {'value': 'FunTFBS', 'label': 'FunTFBS', 'label_id': 'FunTFBS'},
-    {'value': 'CE', 'label': 'Motif Conservation',
-     'label_id': 'motif-conservation'},
-    {'value': 'motif', 'label': 'Motif Scan',
-     'label_id': 'motif-scan'}
+    {"value": "FunTFBS", "label": "FunTFBS", "label_id": "FunTFBS"},
+    {"value": "CE", "label": "Motif Conservation", "label_id": "motif-conservation"},
+    {"value": "motif", "label": "Motif Scan", "label_id": "motif-scan"},
 ]
 
 TFBS_SET_VALUE_LABEL = [
-    {'value': 'promoters', 'label': 'Promoters',
-     'label_id': 'promoters'},
-    {'value': 'genome', 'label': 'Genome',
-     'label_id': 'genome'}
+    {"value": "promoters", "label": "Promoters", "label_id": "promoters"},
+    {"value": "genome", "label": "Genome", "label_id": "genome"},
 ]
 
 
 def create_empty_df():
-    return create_empty_df_with_cols(['Transcription Factor', 'p-value', 'adj. p-value'])
+    return create_empty_df_with_cols(
+        ["Transcription Factor", "p-value", "adj. p-value"]
+    )
 
 
 def get_annotations_addl_gene(addl_genes):
     db = gffutils.FeatureDB(
-        f'{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db', keep_order=True)
+        f"{Constants.ANNOTATIONS}/Nb/IRGSPMSU.gff.db", keep_order=True
+    )
 
     valid_addl_genes = []
     for addl_gene in addl_genes:
@@ -48,39 +51,57 @@ def get_annotations_addl_gene(addl_genes):
         except gffutils.exceptions.FeatureNotFoundError:
             pass
 
-    return [{'ogi': None,
-             'name': addl_gene,
-             'Chromosome': db[addl_gene].chrom,
-             'Start': db[addl_gene].start,
-             'End': db[addl_gene].end,
-             'Strand': db[addl_gene].strand} for addl_gene in valid_addl_genes]
+    return [
+        {
+            "ogi": None,
+            "name": addl_gene,
+            "Chromosome": db[addl_gene].chrom,
+            "Start": db[addl_gene].start,
+            "End": db[addl_gene].end,
+            "Strand": db[addl_gene].strand,
+        }
+        for addl_gene in valid_addl_genes
+    ]
 
 
 # gene_table is a list of dictionaries, each dictionary of this kind: {'ogi': 'OGI:01005230', 'name': 'LOC_Os01g03710', 'chrom': 'Chr01', 'start': 1534135, 'end': 1539627, 'strand': '+'}
 
 
-def write_query_promoter_intervals_to_file(gene_table, nb_interval_str, addl_genes, upstream_win_len=500, downstream_win_len=100):
+def write_query_promoter_intervals_to_file(
+    gene_table,
+    nb_interval_str,
+    addl_genes,
+    upstream_win_len=500,
+    downstream_win_len=100,
+):
     make_dir(get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS))
 
     # addl_genes has already been shortened by the time this function is called
     filepath_without_timestamp = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED)
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.PROMOTER_BED
+    )
     filepath = append_timestamp_to_filename(filepath_without_timestamp)
 
     with open(filepath, "w") as f:
         for gene in gene_table:
-            if gene['Strand'] == '+':
-                promoter_start = gene['Start'] - upstream_win_len
+            if gene["Strand"] == "+":
+                promoter_start = gene["Start"] - upstream_win_len
                 assert promoter_start >= 0
-                promoter_end = gene['Start'] + downstream_win_len - 1
-                f.write("{}\t{}\t{}\n".format(
-                    gene['Chromosome'], promoter_start, promoter_end))
-            elif gene['Strand'] == '-':
-                promoter_start = gene['End'] + upstream_win_len
-                promoter_end = gene['End'] + 1 - downstream_win_len
+                promoter_end = gene["Start"] + downstream_win_len - 1
+                f.write(
+                    "{}\t{}\t{}\n".format(
+                        gene["Chromosome"], promoter_start, promoter_end
+                    )
+                )
+            elif gene["Strand"] == "-":
+                promoter_start = gene["End"] + upstream_win_len
+                promoter_end = gene["End"] + 1 - downstream_win_len
                 assert promoter_end >= 0
-                f.write("{}\t{}\t{}\n".format(
-                    gene['Chromosome'], promoter_end, promoter_start))
+                f.write(
+                    "{}\t{}\t{}\n".format(
+                        gene["Chromosome"], promoter_end, promoter_start
+                    )
+                )
 
     # Renaming will be done once TF enrichment has finished
 
@@ -92,7 +113,8 @@ def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
 
     # addl_genes has already been shortened by the time this function is called
     filepath_without_timestamp = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.GENOME_WIDE_BED)
+        nb_interval_str, Constants.TEMP_TFBS, addl_genes, Constants.GENOME_WIDE_BED
+    )
     filepath = append_timestamp_to_filename(filepath_without_timestamp)
 
     with open(filepath, "w") as f:
@@ -106,20 +128,29 @@ def write_query_genome_intervals_to_file(nb_interval_str, addl_genes):
     return filepath, filepath_without_timestamp
 
 
-def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
-                              tfbs_set, tfbs_prediction_technique,
-                              nb_interval_str):
+def perform_enrichment_all_tf(
+    lift_over_nb_entire_table,
+    addl_genes,
+    tfbs_set,
+    tfbs_prediction_technique,
+    nb_interval_str,
+):
     out_dir_without_timestamp = get_path_to_temp(
-        nb_interval_str, Constants.TEMP_TFBS, shorten_name(addl_genes), tfbs_set, tfbs_prediction_technique)
+        nb_interval_str,
+        Constants.TEMP_TFBS,
+        shorten_name(addl_genes),
+        tfbs_set,
+        tfbs_prediction_technique,
+    )
 
     # if previously computed
-    if path_exists(f'{out_dir_without_timestamp}/BH_corrected.csv'):
+    if path_exists(f"{out_dir_without_timestamp}/BH_corrected.csv"):
         results_df = pd.read_csv(
-            f'{out_dir_without_timestamp}/BH_corrected.csv', dtype=object)
+            f"{out_dir_without_timestamp}/BH_corrected.csv", dtype=object
+        )
 
         try:
-            results_df['Family'] = results_df['Transcription Factor'].apply(
-                get_family)
+            results_df["Family"] = results_df["Transcription Factor"].apply(get_family)
 
             results_df = results_df[COLUMNS]
         except KeyError:
@@ -136,14 +167,16 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
     # construct query BED file
     # out_dir_tf_enrich = get_path_to_temp(nb_interval_str, Constants.TEMP_TFBS, addl_genes)
-    if tfbs_set == 'promoters':
+    if tfbs_set == "promoters":
         query_bed, query_bed_without_timestamp = write_query_promoter_intervals_to_file(
-            lift_over_nb_entire_table, nb_interval_str, shorten_name(addl_genes))
-        sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
-    elif tfbs_set == 'genome':
+            lift_over_nb_entire_table, nb_interval_str, shorten_name(addl_genes)
+        )
+        sizes = f"{Constants.TFBS_BEDS}/sizes/{tfbs_set}"
+    elif tfbs_set == "genome":
         query_bed, query_bed_without_timestamp = write_query_genome_intervals_to_file(
-            nb_interval_str, shorten_name(addl_genes))
-        sizes = f'{Constants.TFBS_BEDS}/sizes/{tfbs_set}'
+            nb_interval_str, shorten_name(addl_genes)
+        )
+        sizes = f"{Constants.TFBS_BEDS}/sizes/{tfbs_set}"
 
     # construct a pybedtool object. we will use pybedtools to compute if there
     # is any overlap. If no, don't test for significance using mcdp2.
@@ -154,41 +187,46 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
     pvalue_list = []
 
     # perform annotation overlap statistical significance tests
-    for tf in os.listdir(os.path.join(Constants.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals")):
+    for tf in os.listdir(
+        os.path.join(
+            Constants.TFBS_BEDS, tfbs_set, tfbs_prediction_technique, "intervals"
+        )
+    ):
         # print("computing overlaps for: {}".format(tf))
-        ref_bed = f'{Constants.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}'
+        ref_bed = f"{Constants.TFBS_BEDS}/{tfbs_set}/{tfbs_prediction_technique}/intervals/{tf}"
         ref_pybed = pybedtools.BedTool(ref_bed)
 
-        out_dir_tf = f'{out_dir}/{tf}'
+        out_dir_tf = f"{out_dir}/{tf}"
         make_dir(out_dir_tf)
 
         if query_pybed.intersect(ref_pybed, nonamecheck=True).count() != 0:
 
-            p_value = perform_enrichment_specific_tf(ref_bed, query_bed,
-                                                     sizes, out_dir_tf)
+            p_value = perform_enrichment_specific_tf(
+                ref_bed, query_bed, sizes, out_dir_tf
+            )
 
             TF_list.append(tf)
             pvalue_list.append(p_value)
 
-    results_no_adj_df = pd.DataFrame(list((zip(TF_list, pvalue_list))), columns=[
-                                     "Transcription Factor", "p-value"])
+    results_no_adj_df = pd.DataFrame(
+        list((zip(TF_list, pvalue_list))), columns=["Transcription Factor", "p-value"]
+    )
     results_no_adj_df.to_csv(
-        f'{out_dir}/results_before_multiple_corrections.csv', index=False)
+        f"{out_dir}/results_before_multiple_corrections.csv", index=False
+    )
 
     results_df = multiple_testing_correction(results_no_adj_df)
 
     if results_df.empty:
         results_df = create_empty_df()
     else:
-        display_cols_in_sci_notation(results_df, ['p-value', 'Adj. p-value'])
+        display_cols_in_sci_notation(results_df, ["p-value", "Adj. p-value"])
 
-        results_df['Family'] = results_df['Transcription Factor'].apply(
-            get_family)
+        results_df["Family"] = results_df["Transcription Factor"].apply(get_family)
 
         results_df = results_df[COLUMNS]
 
-    results_df.to_csv(
-        f'{out_dir}/BH_corrected.csv', index=False)
+    results_df.to_csv(f"{out_dir}/BH_corrected.csv", index=False)
 
     try:
         os.replace(out_dir, out_dir_without_timestamp)
@@ -210,28 +248,32 @@ def perform_enrichment_all_tf(lift_over_nb_entire_table, addl_genes,
 
 
 def perform_enrichment_specific_tf(ref_bed, query_bed, sizes, out_dir):
-    summary_file = f'{out_dir}/summary.txt'
+    summary_file = f"{out_dir}/summary.txt"
 
     if not path_exists(summary_file):
-        subprocess.run(["mcdp2", "single", ref_bed, query_bed, sizes, "-o", out_dir],
-                       shell=False, capture_output=True, text=True)  # TODO exception handling
+        subprocess.run(
+            ["mcdp2", "single", ref_bed, query_bed, sizes, "-o", out_dir],
+            shell=False,
+            capture_output=True,
+            text=True,
+        )  # TODO exception handling
 
-    with open(f'{out_dir}/summary.txt') as f:
+    with open(f"{out_dir}/summary.txt") as f:
         content = f.readlines()
         p_value = float(content[3].rstrip().split(":")[1])
     return p_value
 
 
 def multiple_testing_correction(single_tf_results):
-    pvalues = single_tf_results['p-value'].tolist()
-    adj_pvalue = false_discovery_control(pvalues, method='bh')
-    single_tf_results['Adj. p-value'] = adj_pvalue
-    single_tf_results.sort_values(by=['p-value'], inplace=True)
+    pvalues = single_tf_results["p-value"].tolist()
+    adj_pvalue = false_discovery_control(pvalues, method="bh")
+    single_tf_results["Adj. p-value"] = adj_pvalue
+    single_tf_results.sort_values(by=["p-value"], inplace=True)
     return single_tf_results
 
 
 def get_family(transcription_factor):
-    with open(f'{Constants.TFBS_ANNOTATION}/family_mapping.pickle', 'rb') as f:
+    with open(f"{Constants.TFBS_ANNOTATION}/family_mapping.pickle", "rb") as f:
         mapping = pickle.load(f)
 
-    return ', '.join(mapping[transcription_factor])
+    return ", ".join(mapping[transcription_factor])

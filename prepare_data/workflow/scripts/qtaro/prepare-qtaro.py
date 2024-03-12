@@ -15,8 +15,8 @@ def convert_default_to_vanilla_dict(d):
 
 def prepare_qtaro_mapping(annotation_file):
     mapping = defaultdict(lambda: defaultdict(lambda: defaultdict(set)))
-    with open(annotation_file, encoding='utf8') as qtaro:
-        csv_reader = csv.reader(qtaro, delimiter=',')
+    with open(annotation_file, encoding="utf8") as qtaro:
+        csv_reader = csv.reader(qtaro, delimiter=",")
         for line in csv_reader:
             gene = line[-1]
             character_major = line[3]
@@ -34,18 +34,21 @@ def export_mapping(mapping, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open(f'{output_dir}/qtaro.pickle', 'wb') as handle:
+    with open(f"{output_dir}/qtaro.pickle", "wb") as handle:
         pickle.dump(mapping, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    print(f'Generated {output_dir}/qtaro.pickle')
+    print(f"Generated {output_dir}/qtaro.pickle")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('annotation_file', help='annotation file from QTARO')
+    parser.add_argument("annotation_file", help="annotation file from QTARO")
     parser.add_argument(
-        'output_dir', help='output directory for the dictionary resulting from preprocessing the QTARO annotation file')
+        "output_dir",
+        help="output directory for the dictionary resulting from preprocessing the QTARO annotation file",
+    )
 
     args = parser.parse_args()
 

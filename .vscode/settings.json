@@ -1,13 +1,12 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true
     },
     "[r]": {
         "editor.defaultFormatter": "REditorSupport.r",
         "editor.formatOnSave": true
     },
-    "python.formatting.provider": "none",
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
     },

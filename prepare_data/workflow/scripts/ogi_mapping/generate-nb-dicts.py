@@ -14,11 +14,11 @@ def convert_default_to_vanilla_dict(d):
 
 def create_mapping_dict(input_dir, cultivar):
     # Load the cultivar-to-OGI dictionary
-    with open(f'{input_dir}/{cultivar}_to_ogi.pickle', 'rb') as f:
+    with open(f"{input_dir}/{cultivar}_to_ogi.pickle", "rb") as f:
         cultivar_to_ogi = pickle.load(f)
 
     # Load the Nb-to-OGI dictionary
-    with open(f'{input_dir}/Nb_to_ogi.pickle', 'rb') as f:
+    with open(f"{input_dir}/Nb_to_ogi.pickle", "rb") as f:
         nb_to_ogi = pickle.load(f)
 
     # Construct ogi-to-nb dictionary
@@ -39,25 +39,30 @@ def create_mapping_dicts_for_cultivars(input_dir, output_dir):
         os.makedirs(output_dir)
 
     for file in os.listdir(input_dir):
-        cultivar = file.split('_')[0]
-        if cultivar != 'Nb':
+        cultivar = file.split("_")[0]
+        if cultivar != "Nb":
             mapping = create_mapping_dict(input_dir, cultivar)
 
-            with open(f'{output_dir}/{cultivar}_to_Nb.pickle', 'wb') as f:
+            with open(f"{output_dir}/{cultivar}_to_Nb.pickle", "wb") as f:
                 pickle.dump(mapping, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-            print(f'Generated {output_dir}/{cultivar}_to_Nb.pickle')
+            print(f"Generated {output_dir}/{cultivar}_to_Nb.pickle")
 
-    print(f'Finished generating accession-to-Nb mapping dictionaries')
+    print(f"Finished generating accession-to-Nb mapping dictionaries")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'input_dir', help='directory containing the pickled accesstion-to-OGI mapping dictionaries')
+        "input_dir",
+        help="directory containing the pickled accesstion-to-OGI mapping dictionaries",
+    )
     parser.add_argument(
-        'output_dir', help='directory containing the pickled accesstion-to-Nipponbare mapping dictionaries')
+        "output_dir",
+        help="directory containing the pickled accesstion-to-Nipponbare mapping dictionaries",
+    )
 
     args = parser.parse_args()
 

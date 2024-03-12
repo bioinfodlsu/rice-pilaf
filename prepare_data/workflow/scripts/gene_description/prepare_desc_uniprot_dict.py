@@ -23,18 +23,21 @@ def export_mapping(mapping, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    with open(f'{output_dir}/Nb_gene_descriptions.pickle', 'wb') as handle:
+    with open(f"{output_dir}/Nb_gene_descriptions.pickle", "wb") as handle:
         pickle.dump(mapping, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    print(f'Generated {output_dir}/Nb_gene_descriptions.pickle')
+    print(f"Generated {output_dir}/Nb_gene_descriptions.pickle")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('gene_description_file', help='gene description file')
+    parser.add_argument("gene_description_file", help="gene description file")
     parser.add_argument(
-        'output_dir', help='output directory for the pickled gene description dictionary')
+        "output_dir",
+        help="output directory for the pickled gene description dictionary",
+    )
 
     args = parser.parse_args()
     mapping_dict = generate_dict(args.gene_description_file)

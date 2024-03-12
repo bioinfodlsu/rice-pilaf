@@ -40,8 +40,14 @@ def convert_text_to_path(text):
     Returns:
     - Well-formed path
     """
-    return text.strip().replace(
-        ":", "_").replace(";", "__").replace("-", "_").replace('.', '_').replace(' ', '')
+    return (
+        text.strip()
+        .replace(":", "_")
+        .replace(";", "__")
+        .replace("-", "_")
+        .replace(".", "_")
+        .replace(" ", "")
+    )
 
 
 def get_path_to_temp(genomic_intervals, analysis_type, *args):
@@ -57,16 +63,15 @@ def get_path_to_temp(genomic_intervals, analysis_type, *args):
     Returns:
     - Path to temporary (file-cached) results of post-GWAS analysis
     """
-    genomic_interval_foldername = shorten_name(convert_text_to_path(
-        genomic_intervals))
+    genomic_interval_foldername = shorten_name(convert_text_to_path(genomic_intervals))
 
     analysis_type = convert_text_to_path(analysis_type)
 
-    temp_dir = f'{Constants.TEMP}/{genomic_interval_foldername}/{analysis_type}'
+    temp_dir = f"{Constants.TEMP}/{genomic_interval_foldername}/{analysis_type}"
     for folder in args:
-        temp_dir += f'/{convert_text_to_path(folder)}'
+        temp_dir += f"/{convert_text_to_path(folder)}"
 
-    temp_dir = re.sub(r'/+', '/', temp_dir)
+    temp_dir = re.sub(r"/+", "/", temp_dir)
 
     return temp_dir
 
@@ -74,11 +79,11 @@ def get_path_to_temp(genomic_intervals, analysis_type, *args):
 def get_path_to_text_mining_temp(analysis_type, *args):
     analysis_type = convert_text_to_path(analysis_type)
 
-    temp_dir = f'{Constants.TEMP}/{analysis_type}'
+    temp_dir = f"{Constants.TEMP}/{analysis_type}"
     for folder in args:
-        temp_dir += f'/{convert_text_to_path(folder)}'
+        temp_dir += f"/{convert_text_to_path(folder)}"
 
-    temp_dir = re.sub(r'/+', '/', temp_dir)
+    temp_dir = re.sub(r"/+", "/", temp_dir)
 
     return temp_dir
 
@@ -89,7 +94,7 @@ def shorten_name(name):
         name.sort()
 
     if not name:
-        name = ''
+        name = ""
 
     if name and len(name) > 0:
         # Recreate the database
@@ -107,7 +112,7 @@ def shorten_name(name):
             connection = sqlite3.connect(Constants.FILE_STATUS_DB)
             cursor = connection.cursor()
 
-            query = f'CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+            query = f"CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));"
 
             cursor.execute(query)
             connection.commit()
@@ -137,7 +142,9 @@ def shorten_name(name):
             connection = sqlite3.connect(Constants.FILE_STATUS_DB)
             cursor = connection.cursor()
 
-            query = f'SELECT rowid FROM {Constants.FILE_STATUS_TABLE} WHERE name = "{name}"'
+            query = (
+                f'SELECT rowid FROM {Constants.FILE_STATUS_TABLE} WHERE name = "{name}"'
+            )
             cursor.execute(query)
             row_id = cursor.fetchall()[0][0]
 
@@ -152,4 +159,4 @@ def shorten_name(name):
 
 
 def append_timestamp_to_filename(filename):
-    return f'{filename}.{time.time_ns() // 1000}'
+    return f"{filename}.{time.time_ns() // 1000}"

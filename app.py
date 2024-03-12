@@ -44,16 +44,19 @@ dictConfig(
     }
 )
 
-server = Flask(__name__, static_folder='static')
+server = Flask(__name__, static_folder="static")
 app = dash.Dash(
-    __name__, use_pages=True,
-    external_stylesheets=[dbc.themes.BOOTSTRAP,
-                          dbc.icons.BOOTSTRAP, dbc.icons.FONT_AWESOME],
+    __name__,
+    use_pages=True,
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.BOOTSTRAP,
+        dbc.icons.FONT_AWESOME,
+    ],
     server=server,
-    title='RicePilaf',
-    update_title='Loading...',
-    meta_tags=[{'name': 'viewport',
-                'content': 'width=1024'}]
+    title="RicePilaf",
+    update_title="Loading...",
+    meta_tags=[{"name": "viewport", "content": "width=1024"}],
 )
 
 
@@ -62,280 +65,159 @@ app = dash.Dash(
 # ============
 
 
-app.layout = lambda: dbc.Container([
-    dbc.Row(
-        html.Div(
-            children=[
-                html.P([
-                    'This is a demo version. Click ',
+app.layout = lambda: dbc.Container(
+    [
+        dbc.Row(
+            html.Div(
+                children=[
+                    html.P(
+                        [
+                            "This is a demo version. Click ",
+                            dcc.Link(
+                                [
+                                    "here ",
+                                    html.I(
+                                        id="demo-link",
+                                        className="fa-solid fa-up-right-from-square fa-2xs",
+                                    ),
+                                ],
+                                href="https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation",
+                                target="_blank",
+                                className="top-navbar-item",
+                            ),
+                            " to install.",
+                        ],
+                        className="my-auto",
+                    )
+                ],
+                className="banner d-flex justify-content-center py-1 text-white",
+                id="demo-banner",
+            ),
+            style=show_if_in_demo_branch(),
+        ),
+        dbc.Row(main_nav.navbar()),
+        dash.page_container,
+        dbc.Row(
+            [
+                dbc.Col(
                     dcc.Link(
-                        ['here ', html.I(
-                            id='demo-link',
-                            className='fa-solid fa-up-right-from-square fa-2xs'
-                        )],
-                        href='https://github.com/bioinfodlsu/rice-pilaf/wiki/1.-Installation',
-                        target='_blank',
-                        className='top-navbar-item'
+                        html.Img(src="assets/bioinfo_lab_logo.png", height="45px"),
+                        href="https://bioinfodlsu.com/",
+                        target="_blank",
                     ),
-                    ' to install.'], className='my-auto'
-                )
+                    className="col-auto text-center",
+                ),
+                dbc.Col(
+                    [
+                        html.Span(f"RicePilaf {get_release_version()}"),
+                        html.Span("© 2023", className="ps-3"),
+                        html.Span("|", className="px-3"),
+                        html.Span(
+                            "Bioinformatics Lab, De La Salle University (DLSU), Manila, Philippines"
+                        ),
+                        html.Br(),
+                        html.Span(
+                            "Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project"
+                        ),
+                    ],
+                    className="col-sm-11",
+                ),
             ],
-            className='banner d-flex justify-content-center py-1 text-white',
-            id='demo-banner'
+            className="ps-5 pb-4 pt-4 text-white",
+            id="footer",
         ),
-        style=show_if_in_demo_branch()
-    ),
-
-    dbc.Row(main_nav.navbar()),
-
-    dash.page_container,
-
-    dbc.Row([
-        dbc.Col(
-            dcc.Link(
-                html.Img(src='assets/bioinfo_lab_logo.png',
-                         height='45px'),
-                href='https://bioinfodlsu.com/',
-                target='_blank'
-            ), className='col-auto text-center'
+        # Session storage
+        # Insert your session variables inside the session-container div
+        html.Div(
+            id="session-container",
+            children=[
+                # =========
+                # Template
+                # =========
+                dcc.Store(id="template-is-submitted", storage_type="session"),
+                dcc.Store(id="template-submitted-addl-genes", storage_type="session"),
+                dcc.Store(
+                    id="template-submitted-radio-buttons", storage_type="session"
+                ),
+                dcc.Store(
+                    id="template-submitted-checkbox-buttons", storage_type="session"
+                ),
+                dcc.Store(
+                    id="template-submitted-parameter-slider", storage_type="session"
+                ),
+                # =========
+                # Homepage
+                # =========
+                dcc.Store(id="homepage-is-submitted", storage_type="session"),
+                dcc.Store(
+                    id="homepage-submitted-genomic-intervals", storage_type="session"
+                ),
+                dcc.Store(id="current-analysis-page-nav", storage_type="session"),
+                dcc.Store(id="homepage-is-resetted", storage_type="session"),
+                # ==========
+                # Lift-over
+                # ==========
+                dcc.Store(id="lift-over-is-submitted", storage_type="session"),
+                dcc.Store(id="lift-over-active-tab", storage_type="session"),
+                dcc.Store(id="lift-over-submitted-other-refs", storage_type="session"),
+                dcc.Store(id="lift-over-active-filter", storage_type="session"),
+                # ============
+                # IGV Browser
+                # ============
+                dcc.Store(
+                    id="epigenome-submitted-genomic-intervals", storage_type="session"
+                ),
+                dcc.Store(id="epigenome-submitted-tissue", storage_type="session"),
+                dcc.Store(id="epigenome-submitted-tracks", storage_type="session"),
+                dcc.Store(id="epigenome-is-submitted", storage_type="session"),
+                # ==============
+                # Co-expression
+                # ==============
+                dcc.Store(
+                    id="coexpression-submitted-parameter-slider", storage_type="session"
+                ),
+                dcc.Store(id="coexpression-submitted-module", storage_type="session"),
+                dcc.Store(id="coexpression-pathway-active-tab", storage_type="session"),
+                dcc.Store(
+                    id="coexpression-graph-active-layout", storage_type="session"
+                ),
+                dcc.Store(
+                    id="coexpression-submitted-addl-genes", storage_type="session"
+                ),
+                dcc.Store(id="coexpression-valid-addl-genes", storage_type="session"),
+                dcc.Store(id="coexpression-combined-genes", storage_type="session"),
+                dcc.Store(id="coexpression-submitted-network", storage_type="session"),
+                dcc.Store(
+                    id="coexpression-submitted-clustering-algo", storage_type="session"
+                ),
+                dcc.Store(id="coexpression-is-submitted", storage_type="session"),
+                # ==============================
+                # Regulatory Feature Enrichment
+                # ==============================
+                dcc.Store(id="tfbs-is-submitted", storage_type="session"),
+                dcc.Store(id="tfbs-submitted-addl-genes", storage_type="session"),
+                dcc.Store(id="tfbs-valid-addl-genes", storage_type="session"),
+                dcc.Store(id="tfbs-combined-genes", storage_type="session"),
+                dcc.Store(
+                    id="tfbs-submitted-prediction-technique", storage_type="session"
+                ),
+                dcc.Store(id="tfbs-submitted-set", storage_type="session"),
+                # ============
+                # Text Mining
+                # ============
+                dcc.Store(id="text-mining-submitted-query", storage_type="session"),
+                dcc.Store(id="text-mining-is-submitted", storage_type="session"),
+                dcc.Store(id="text-mining-filter-query", storage_type="session"),
+                dcc.Store(id="text-mining-submitted-filter", storage_type="session"),
+                # ========
+                # Summary
+                # ========
+                dcc.Store(id="summary-is-submitted", storage_type="session"),
+            ],
         ),
-        dbc.Col([
-            html.Span(f'RicePilaf {get_release_version()}'),
-            html.Span('© 2023', className='ps-3'),
-            html.Span('|', className='px-3'),
-            html.Span(
-                'Bioinformatics Lab, De La Salle University (DLSU), Manila, Philippines'),
-            html.Br(),
-            html.Span(
-                'Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project')
-        ], className='col-sm-11')
-    ], className='ps-5 pb-4 pt-4 text-white', id='footer'),
-
-    # Session storage
-    # Insert your session variables inside the session-container div
-    html.Div(
-        id='session-container',
-        children=[
-            # =========
-            # Template
-            # =========
-            dcc.Store(
-                id='template-is-submitted',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='template-submitted-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='template-submitted-radio-buttons',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='template-submitted-checkbox-buttons',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='template-submitted-parameter-slider',
-                storage_type='session'
-            ),
-
-            # =========
-            # Homepage
-            # =========
-            dcc.Store(
-                id='homepage-is-submitted',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='homepage-submitted-genomic-intervals',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='current-analysis-page-nav',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='homepage-is-resetted',
-                storage_type='session'
-            ),
-
-
-
-            # ==========
-            # Lift-over
-            # ==========
-            dcc.Store(
-                id='lift-over-is-submitted',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='lift-over-active-tab',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='lift-over-submitted-other-refs',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='lift-over-active-filter',
-                storage_type='session'
-            ),
-
-            # ============
-            # IGV Browser
-            # ============
-            dcc.Store(
-                id='epigenome-submitted-genomic-intervals',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='epigenome-submitted-tissue',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='epigenome-submitted-tracks',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='epigenome-is-submitted',
-                storage_type='session'
-            ),
-
-            # ==============
-            # Co-expression
-            # ==============
-            dcc.Store(
-                id='coexpression-submitted-parameter-slider',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-submitted-module',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-pathway-active-tab',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-graph-active-layout',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-submitted-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-valid-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-combined-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-submitted-network',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-submitted-clustering-algo',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='coexpression-is-submitted',
-                storage_type='session'
-            ),
-
-            # ==============================
-            # Regulatory Feature Enrichment
-            # ==============================
-
-            dcc.Store(
-                id='tfbs-is-submitted',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-submitted-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-valid-addl-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-combined-genes',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-submitted-prediction-technique',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='tfbs-submitted-set',
-                storage_type='session'
-            ),
-
-            # ============
-            # Text Mining
-            # ============
-
-            dcc.Store(
-                id='text-mining-submitted-query',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='text-mining-is-submitted',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='text-mining-filter-query',
-                storage_type='session'
-            ),
-
-            dcc.Store(
-                id='text-mining-submitted-filter',
-                storage_type='session'
-            ),
-
-            # ========
-            # Summary
-            # ========
-
-            dcc.Store(
-                id='summary-is-submitted',
-                storage_type='session'
-            )
-        ])
-], fluid=True)
+    ],
+    fluid=True,
+)
 
 callbacks.homepage.callbacks.init_callback(app)
 
@@ -356,7 +238,7 @@ try:
     connection = sqlite3.connect(Constants.FILE_STATUS_DB)
     cursor = connection.cursor()
 
-    query = f'CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));'
+    query = f"CREATE TABLE IF NOT EXISTS {Constants.FILE_STATUS_TABLE} (name TEXT, UNIQUE(name));"
 
     cursor.execute(query)
     connection.commit()
@@ -366,8 +248,8 @@ try:
 except sqlite3.Error as error:
     pass
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if is_in_demo_branch():
-        app.run_server(port='8050', debug=True)
+        app.run_server(port="8050", debug=True)
     else:
-        app.run_server(host='0.0.0.0', port='8050', debug=True)
+        app.run_server(host="0.0.0.0", port="8050", debug=True)

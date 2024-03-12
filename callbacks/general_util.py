@@ -1,7 +1,7 @@
 import pandas as pd
 import regex as re
 
-NULL_PLACEHOLDER = '–'
+NULL_PLACEHOLDER = "–"
 
 
 def display_in_sci_notation(number):
@@ -14,11 +14,11 @@ def display_in_sci_notation(number):
     Returns:
     - Number in scientific notation
     """
-    return '{:.6e}'.format(number)
+    return "{:.6e}".format(number)
 
 
 def display_in_fixed_dec_places(number):
-    return '{:.6f}'.format(float(number))
+    return "{:.6f}".format(float(number))
 
 
 def display_cols_in_sci_notation(result, numeric_columns):
@@ -40,7 +40,7 @@ def create_empty_df_with_cols(cols):
 
 
 def get_tab_index(tab_id):
-    return int(tab_id.split('-')[1])
+    return int(tab_id.split("-")[1])
 
 
 def get_num_unique_entries(table, column):
@@ -70,14 +70,14 @@ def purge_html_export_table(table):
     for row in table:
         for key in row.keys():
             try:
-                row[key] = row[key].replace('&nbsp;', '')
-                row[key] = row[key].replace(NULL_PLACEHOLDER, '')
-                row[key] = row[key].replace('<br>', ';')
-                row[key] = row[key].replace('<li>', ';')
-                row[key] = row[key].replace('\n', ';')
-                row[key] = re.sub(r'<.+?>', '', row[key])
-                row[key] = re.sub(r';+', ';', row[key])
-                row[key] = re.sub(r'^;', '', row[key])
+                row[key] = row[key].replace("&nbsp;", "")
+                row[key] = row[key].replace(NULL_PLACEHOLDER, "")
+                row[key] = row[key].replace("<br>", ";")
+                row[key] = row[key].replace("<li>", ";")
+                row[key] = row[key].replace("\n", ";")
+                row[key] = re.sub(r"<.+?>", "", row[key])
+                row[key] = re.sub(r";+", ";", row[key])
+                row[key] = re.sub(r"^;", "", row[key])
             except AttributeError:
                 pass
 
