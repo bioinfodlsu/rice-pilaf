@@ -7,6 +7,7 @@
 ![badge][badge-flask]
 ![badge][badge-nginx]
 ![badge][badge-docker]<br>
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Create and publish a Docker image](https://github.com/bioinfodlsu/rice-pilaf/actions/workflows/dockerize-and-publish.yml/badge.svg)](https://github.com/bioinfodlsu/rice-pilaf/actions/workflows/dockerize-and-publish.yml)
 ![badge][badge-github-actions]
 
