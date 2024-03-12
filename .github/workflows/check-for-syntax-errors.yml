@@ -2,6 +2,7 @@ on:
     workflow_run:
         workflows: [Run Black formatter]
         types: [completed]
+        branches: "*"
 
 name: Check for syntax errors
 
