@@ -93,7 +93,7 @@ app.layout = lambda: dbc.Container(
                 className="banner d-flex justify-content-center py-1 text-white",
                 id="demo-banner",
             ),
-            style=show_if_in_demo_branch(),
+            style=show_if_deployed(),
         ),
         dbc.Row(main_nav.navbar()),
         dash.page_container,
@@ -249,7 +249,7 @@ except sqlite3.Error as error:
     pass
 
 if __name__ == "__main__":
-    if is_in_demo_branch():
+    if is_deployed_version():
         app.run_server(port="8050", debug=True)
     else:
         app.run_server(host="0.0.0.0", port="8050", debug=True)
