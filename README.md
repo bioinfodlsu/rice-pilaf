@@ -21,18 +21,16 @@ https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/372f371e-5c19-4276-911
 
 For installation and usage, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
-It is advised to install the app locally. 
+It is advised to install the app locally.
 
 Alternatively, you can try RicePilaf at one of the sites below.
 
-## Publicly accessible running instances of RicePilaf 
+## Publicly accessible running instances of RicePilaf
 
-| URL           | Site          | Version  |   Status (Date) |
-| ------------- | ------------- |----| -------------|
-| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | 0.1.2 | Running (Mar 8, 2024)|
-| [https://ricepilaf.irri.org](https://ricepilaf.irri.org) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource  | 0.1.2 | Running (March 12, 2024) |
-
-
+| URL                                                                    | Site                                                                                                                                            | Version | Status (Date)            |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
+| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/) | Digital Ocean (Singapore)                                                                                                                       | 0.1.2   | Running (March 8, 2024)  |
+| [https://ricepilaf.irri.org](https://ricepilaf.irri.org)               | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource | 0.1.2   | Running (March 12, 2024) |
 
 ## Contact
 
