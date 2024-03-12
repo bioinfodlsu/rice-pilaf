@@ -30,8 +30,6 @@ class Constants(object):
 
     GENOMES_NIPPONBARE = f"{APP_DATA}/genomes/Nipponbare"
     ANNOTATIONS_NB = f"{ANNOTATIONS}/Nb"
-    # OPEN_CHROMATIN = f'{APP_DATA}/open_chromatin'
-    # OPEN_CHROMATIN_PANICLE = f'{OPEN_CHROMATIN}/panicle'
     EPIGENOME = f"{APP_DATA}/epigenomic"
     QTARO_DICTIONARY = f"{QTARO}/qtaro.pickle"
 
@@ -40,7 +38,6 @@ class Constants(object):
 
     TEMP = f"{DATA}/temp"
     TEMP_LIFT_OVER = "lift_over"
-    # TEMP_IGV = 'igv'
     TEMP_EPIGENOME = "epigenome"
     TEMP_COEXPRESSION = "co_expression"
     TEMP_TEXT_MINING = "text_mining"
