@@ -26,10 +26,10 @@ Alternatively, you can try RicePilaf at one of the sites below.
 
 ## Publicly accessible running instances of RicePilaf 
 
-| URL           | Site          |   Status (Date) |
-| ------------- | ------------- |-------------|
-| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | Running (Mar 8,2024)|
-| [http://ricepilaf.irri.org](http://ricepilaf.irri.org) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource  | Coming soon (March 8, 2024) |
+| URL           | Site          | Version  |   Status (Date) |
+| ------------- | ------------- |----| -------------|
+| [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/)  | Digital Ocean (Singapore)  | 0.1.2 | Running (Mar 8,2024)|
+| [https://ricepilaf.irri.org](https://ricepilaf.irri.org) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource  | 0.1.2 | Running (March 12, 2024) |
 
 
 
