@@ -8,22 +8,14 @@ from ..coexpression import util as coexpression_util
 
 def init_callback(app):
     @app.callback(
-        Output("summary-genomic-intervals-input", "children"),
-        State("homepage-submitted-genomic-intervals", "data"),
-        Input("homepage-is-submitted", "data"),
-        Input("summary-submit", "n_clicks"),
+        Output("summary-genomic-intervals-input", "children"),      # Genomic interval for display
+        State("homepage-submitted-genomic-intervals", "data"),      # Saved genomic interval
+        Input("homepage-is-submitted", "data"),                     # Saved Boolean indicating whether a valid genomic interval was submitted
+        Input("summary-submit", "n_clicks"),                        
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         """
         Displays the genomic interval input in the summary page
-
-        Parameters:
-        - nb_intervals_str: Submitted genomic interval
-        - homepage_is_submitted: [Homepage] Saved boolean value of True / False of whether a valid input was submitted or not
-        - *_: Other input that facilitates displaying of the submitted genomic interval
-
-        Returns:
-        - Submitted genomic interval text
         """
 
         if homepage_is_submitted:
@@ -37,21 +29,14 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output("summary-is-submitted", "data", allow_duplicate=True),
-        Input("summary-submit", "n_clicks"),
-        State("homepage-is-submitted", "data"),
+        Output("summary-is-submitted", "data", allow_duplicate=True),   # True if submitted values are valid; False, otherwise
+        Input("summary-submit", "n_clicks"),                            # Number of times submit button was clicked
+        State("homepage-is-submitted", "data"),                         # Saved Boolean indicating whether a valid genomic interval was submitted
         prevent_initial_call=True,
     )
     def submit_summary_input(summary_submitted_n_clicks, homepage_is_submitted):
         """
         Submits the summary input
-
-        Parameters:
-        - summary_submitted_n_clicks: Number of clicks pressed on the summary submit button
-        - homepage_is_submitted: [Homepage] Saved boolean value of submitted valid input
-
-        Returns:
-        - ('summary-is-submitted', 'data'): [Summary] True for submitted valid input; otherwise False
         """
 
         if homepage_is_submitted and summary_submitted_n_clicks >= 1:
