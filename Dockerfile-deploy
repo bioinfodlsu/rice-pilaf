@@ -21,6 +21,9 @@ RUN pip3 install --no-cache-dir requests
 RUN (echo "import requests"; echo "latest_release = requests.get('https://github.com/bioinfodlsu/rice-pilaf/releases/latest')"; echo "print(latest_release.url.split('/')[-1])") | python3 > .version
 RUN pip3 uninstall -y requests
 
+# Update nginx configuration file to extend timeout
+RUN rm /etc/nginx/nginx.conf && mv nginx.conf /etc/nginx 
+
 RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
 
 # Install mcdp2

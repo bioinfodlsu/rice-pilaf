@@ -1,6 +1,10 @@
+# This workflow is responsible for creating the Docker images
+# and publishing them on the GitHub Container registry
+
 name: Create and publish a Docker image
 
 on:
+    # Trigger workflow when a new release has been published
     workflow_run:
         workflows: [Publish release]
         types: [completed]
@@ -11,6 +15,7 @@ env:
     IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+    # Get the version number of the latest release in order to tag the Docker images
     get-latest-version:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -24,6 +29,8 @@ jobs:
                   repository: ${{ github.repository }}
                   token: ${{ secrets.GITHUB_TOKEN }}
 
+    # Build the images and push them to the GitHub Container registry
+    # This job uses the matrix strategy to build and push the images in parallel
     build-and-push-image:
         runs-on: ubuntu-latest
         needs: get-latest-version
@@ -31,11 +38,11 @@ jobs:
             fail-fast: false
             matrix: # Cannot use env variables inside matrix
                 include:
-                    - dockerfile: Dockerfile-app # Change to Dockerfile of app
+                    - dockerfile: Dockerfile-app
                       image: ghcr.io/bioinfodlsu/rice-pilaf/app
-                    - dockerfile: Dockerfile-workflow # Change to Dockerfile of workflow
+                    - dockerfile: Dockerfile-workflow
                       image: ghcr.io/bioinfodlsu/rice-pilaf/workflow
-                    - dockerfile: Dockerfile-deploy # Change to Dockerfile of deploy
+                    - dockerfile: Dockerfile-deploy
                       image: ghcr.io/bioinfodlsu/rice-pilaf/deploy
         permissions:
             contents: read

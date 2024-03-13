@@ -1,16 +1,27 @@
+"""
+This class contains the constants used throughout the codebase
+"""
+
+
 class Constants(object):
-    # Insert your LABEL for your analysis page here
+    # =====================
+    # Analysis Page Labels
+    # =====================
+
+    # Insert the LABEL for your analysis page here
     LABEL_INTRO = "intro"
     LABEL_LIFT_OVER = "lift-over"
     LABEL_COEXPRESSION = "co-expression"
     LABEL_TFBS = "tfbs"
-    # LABEL_IGV = 'browse-loci'
     LABEL_EPIGENOME = "epigenome"
     LABEL_TEXT_MINING = "text-mining"
     LABEL_SUMMARY = "summary"
 
     LABEL_TEMPLATE = "template"
 
+    # ========
+    # Dataset
+    # ========
     DATA = "static"
     APP_DATA = f"{DATA}/app_data"
     RAW_DATA = f"{DATA}/raw_data"
@@ -30,8 +41,6 @@ class Constants(object):
 
     GENOMES_NIPPONBARE = f"{APP_DATA}/genomes/Nipponbare"
     ANNOTATIONS_NB = f"{ANNOTATIONS}/Nb"
-    # OPEN_CHROMATIN = f'{APP_DATA}/open_chromatin'
-    # OPEN_CHROMATIN_PANICLE = f'{OPEN_CHROMATIN}/panicle'
     EPIGENOME = f"{APP_DATA}/epigenomic"
     QTARO_DICTIONARY = f"{QTARO}/qtaro.pickle"
 
@@ -40,7 +49,6 @@ class Constants(object):
 
     TEMP = f"{DATA}/temp"
     TEMP_LIFT_OVER = "lift_over"
-    # TEMP_IGV = 'igv'
     TEMP_EPIGENOME = "epigenome"
     TEMP_COEXPRESSION = "co_expression"
     TEMP_TEXT_MINING = "text_mining"
@@ -64,19 +72,15 @@ class Constants(object):
     TEXT_MINING_ANNOTATED_ABSTRACTS = f"{TEXT_MINING}/annotated_abstracts.tsv"
     TEXT_MINING_PUBMED = f"{TEXT_MINING}/pubmed_per_gene.pickle"
 
-    P_VALUE_CUTOFF = 0.05
-
     # =========
     # Database
     # =========
-
     FILE_STATUS_DB = f"{TEMP}/file_status.db"
     FILE_STATUS_TABLE = "file_status"
 
     # ==============================
     # INTRO TEXT FOR ANALYSIS PAGES
     # ==============================
-
     INTRO_LIFT_OVER = "In this page, you can obtain the list of genes overlapping your input intervals. Optionally, you can choose genomes to lift-over your Nipponbare coordinates to."
     INTRO_TEXT_MINING = "In this page, you can retrieve gene names associated with traits, diseases, and chemicals, among others, from a database constructed from text-mined PubMed abstracts."
     INTRO_COEXPRESSION = "In this page, you can search for modules (communities or clusters) in rice co-expression networks, which are significantly enriched in the genes implicated by your GWAS. Likely functions of the modules are inferred by enrichment analysis against several ontologies and pathway databases."
@@ -85,6 +89,11 @@ class Constants(object):
     INTRO_SUMMARY = "In this page, you can find a summary of the results of the different post-GWAS analyses."
 
     INTRO_TEMPLATE = "In this page, you can look at the template for an analysis page."
+
+    # ==============
+    # MISCELLANEOUS
+    # ==============
+    P_VALUE_CUTOFF = 0.05
 
     def __init__(self):
         pass

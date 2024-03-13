@@ -1,10 +1,16 @@
+# This workflow is responsible for creating and publishing a release
+
 name: Publish release
 
+# A release is created when a release branch (minor-release, major-release, or patch) is created
+# More information here:
+#    https://github.com/bioinfodlsu/rice-pilaf/wiki/3.2.-Contribution-and-Release-Workflow#2%EF%B8%8F%E2%83%A3-release-workflow
 on:
     push:
         branches: [minor-release, major-release, patch]
 
 jobs:
+    # Push the release to the main branch
     mirror-release-to-main:
         name: Mirror release branch to main branch
         runs-on: ubuntu-latest
@@ -17,6 +23,7 @@ jobs:
                   source: ${{ github.ref_name }}
                   dest: "main"
 
+    # Create and publish the release
     release-on-push:
         needs: mirror-release-to-main
         runs-on: ubuntu-latest
@@ -42,6 +49,7 @@ jobs:
                   bump_version_scheme: patch
                   release_body: ${{ env.RELEASE_BODY }}
 
+    # Delete the release branch
     delete-release-branch:
         needs: release-on-push
         runs-on: ubuntu-latest

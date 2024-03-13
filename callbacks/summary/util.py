@@ -7,14 +7,22 @@ from collections import defaultdict
 
 
 def get_liftover_summary(implicated_genes):
-    # The Nipponbare IDs are in the second column
-    NB_IDX = 1
+    """
+    Returns a summary of results of the lift-over analysis
+
+    Parameters:
+    - implicated_genes: List of implicated genes
+
+    Returns:
+    - Data frame summarizing the results of the lift-over analysis
+    """
+
+    NB_IDX = 1  # The Nipponbare IDs are in the second column
     NB_PREFIX = "LOC_Os"
 
     gene_to_orthologs_map = defaultdict(set)
     for row in implicated_genes:
         if row[NB_IDX].startswith(NB_PREFIX):
-            # Subtract 2 (i.e., subtract OGI)
             for gene in row:
                 if gene != NULL_PLACEHOLDER:
                     gene_to_orthologs_map[row[NB_IDX]].add(gene)
@@ -24,17 +32,29 @@ def get_liftover_summary(implicated_genes):
         # Subtract 2 to remove OGI and Nipponbare
         gene_to_count.append([gene, len(orthologs) - 2])
 
-    gene_to_count_df = pd.DataFrame(gene_to_count, columns=["Name", "# Orthologs"])
-
-    return gene_to_count_df
+    return pd.DataFrame(gene_to_count, columns=["Name", "# Orthologs"])
 
 
 def get_num_qtl_pubs(qtl_str):
+    """
+    Returns the number of QTL-related publications given a string containing DOI links
+
+    Parameters:
+    - qtl_str:
+
+    Returns:
+    -
+    """
+
     # Each QTL study has an associated DOI
     return qtl_str.count("doi.org")
 
 
 def get_num_pubmed_pubs(pubmed_str):
+    """
+    Returns the number of PubMed publications given a string containing PubMed links
+    """
+
     # Each PubMed study has an associated PubMed link
     return pubmed_str.count("pubmed")
 

@@ -1,8 +1,7 @@
 ---
 name: Question
 about: Any questions about RicePilaf?
-title: ''
-labels: 'question'
-assignees: ''
-
+title: ""
+labels: "question"
+assignees: ""
 ---
