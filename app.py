@@ -22,27 +22,27 @@ from callbacks.file_util import *
 
 from flask import Flask
 
-from logging.config import dictConfig
+# from logging.config import dictConfig
 
-dictConfig(
-    {
-        "version": 1,
-        "formatters": {
-            "default": {
-                "format": "[%(asctime)s] [%(levelname)s] %(message)s",
-                "datefmt": "%B %d, %Y %H:%M:%S %Z",
-            },
-        },
-        "handlers": {
-            "file": {
-                "class": "logging.FileHandler",
-                "filename": "log_file.log",
-                "formatter": "default",
-            },
-        },
-        "root": {"level": "DEBUG", "handlers": ["file"]},
-    }
-)
+# dictConfig(
+#     {
+#         "version": 1,
+#         "formatters": {
+#             "default": {
+#                 "format": "[%(asctime)s] [%(levelname)s] %(message)s",
+#                 "datefmt": "%B %d, %Y %H:%M:%S %Z",
+#             },
+#         },
+#         "handlers": {
+#             "file": {
+#                 "class": "logging.FileHandler",
+#                 "filename": "log_file.log",
+#                 "formatter": "default",
+#             },
+#         },
+#         "root": {"level": "DEBUG", "handlers": ["file"]},
+#     }
+# )
 
 server = Flask(__name__, static_folder="static")
 app = dash.Dash(

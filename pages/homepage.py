@@ -436,6 +436,6 @@ layout = html.Div(
             ],
         ),
         # Do not remove; for log purposes
-        html.Div(id="homepage-log"),
+        # html.Div(id="homepage-log"),
     ]
 )
