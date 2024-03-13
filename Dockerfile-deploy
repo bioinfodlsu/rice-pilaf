@@ -18,7 +18,7 @@ RUN apt-get update \
 
 # Get latest release version number
 RUN pip3 install --no-cache-dir requests \
-  && ((echo "import requests"; echo "latest_release = requests.get('https://github.com/bioinfodlsu/rice-pilaf/releases/latest')"; echo "print(latest_release.url.split('/')[-1])") | python3 > .version)
+  && ((echo "import requests"; echo "latest_release = requests.get('https://github.com/bioinfodlsu/rice-pilaf/releases/latest')"; echo "print(latest_release.url.split('/')[-1])") | python3 > .version) \
   && pip3 uninstall -y requests
 
 RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
