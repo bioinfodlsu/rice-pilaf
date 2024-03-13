@@ -2,6 +2,7 @@
 This class contains the constants used throughout the codebase
 """
 
+
 class Constants(object):
     # =====================
     # Analysis Page Labels

@@ -16,8 +16,8 @@ def get_liftover_summary(implicated_genes):
     Returns:
     - Data frame summarizing the results of the lift-over analysis
     """
-    
-    NB_IDX = 1                  # The Nipponbare IDs are in the second column
+
+    NB_IDX = 1  # The Nipponbare IDs are in the second column
     NB_PREFIX = "LOC_Os"
 
     gene_to_orthologs_map = defaultdict(set)
@@ -40,10 +40,10 @@ def get_num_qtl_pubs(qtl_str):
     Returns the number of QTL-related publications given a string containing DOI links
 
     Parameters:
-    - qtl_str: 
+    - qtl_str:
 
     Returns:
-    - 
+    -
     """
 
     # Each QTL study has an associated DOI

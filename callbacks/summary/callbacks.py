@@ -8,10 +8,14 @@ from ..coexpression import util as coexpression_util
 
 def init_callback(app):
     @app.callback(
-        Output("summary-genomic-intervals-input", "children"),      # Genomic interval for display
-        State("homepage-submitted-genomic-intervals", "data"),      # Saved genomic interval
-        Input("homepage-is-submitted", "data"),                     # Saved Boolean indicating whether a valid genomic interval was submitted
-        Input("summary-submit", "n_clicks"),                        
+        Output(
+            "summary-genomic-intervals-input", "children"
+        ),  # Genomic interval for display
+        State("homepage-submitted-genomic-intervals", "data"),  # Saved genomic interval
+        Input(
+            "homepage-is-submitted", "data"
+        ),  # Saved Boolean indicating whether a valid genomic interval was submitted
+        Input("summary-submit", "n_clicks"),
     )
     def display_input(nb_intervals_str, homepage_is_submitted, *_):
         """
@@ -29,9 +33,15 @@ def init_callback(app):
         raise PreventUpdate
 
     @app.callback(
-        Output("summary-is-submitted", "data", allow_duplicate=True),   # True if submitted values are valid; False, otherwise
-        Input("summary-submit", "n_clicks"),                            # Number of times submit button was clicked
-        State("homepage-is-submitted", "data"),                         # Saved Boolean indicating whether a valid genomic interval was submitted
+        Output(
+            "summary-is-submitted", "data", allow_duplicate=True
+        ),  # True if submitted values are valid; False, otherwise
+        Input(
+            "summary-submit", "n_clicks"
+        ),  # Number of times submit button was clicked
+        State(
+            "homepage-is-submitted", "data"
+        ),  # Saved Boolean indicating whether a valid genomic interval was submitted
         prevent_initial_call=True,
     )
     def submit_summary_input(summary_submitted_n_clicks, homepage_is_submitted):
