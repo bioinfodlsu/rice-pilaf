@@ -17,7 +17,7 @@ this RicePilaf combines information from multiple rice databases to provide insi
 
 https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/372f371e-5c19-4276-911d-6bb8aa67dcf3
 
-## Installation and Usage
+## Installation and usage
 
 For installation and usage, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
@@ -30,11 +30,11 @@ Alternatively, you can try RicePilaf at one of the sites below.
 | URL                                                                    | Site                                                                                                                                            | Version | Status (Date)            |
 | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
 | [http://ricepilaf.bioinfodlsu.com/](http://ricepilaf.bioinfodlsu.com/) | Digital Ocean (Singapore)                                                                                                                       | 0.1.3   | Running (March 15, 2024)  |
-| [https://ricepilaf.irri.org](https://ricepilaf.irri.org)               | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource | 0.1.3   | Running (March 15, 2024) |
+| [https://ricepilaf.irri.org](https://ricepilaf.irri.org) <br> [https://rice-pilaf.irri.org](https://rice-pilaf.irri.org)             | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE-Science Cloud resource | 0.1.3   | Running (March 15, 2024) |
 
 ## Contact
 
-If you have issues, concerns, suggestions, questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
+If you have issues, concerns, suggestions, or questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
 
 [badge-python]: https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=white
 [badge-pandas]: https://img.shields.io/badge/Pandas-2C2D72?style=flat&logo=pandas&logoColor=white
