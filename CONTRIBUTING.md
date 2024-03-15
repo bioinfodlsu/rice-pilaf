@@ -22,4 +22,4 @@ We follow the [Contributor Covenant, version 2.1](https://www.contributor-covena
 
 ## Contact
 
-If you have issues, concerns, or questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
+If you have issues, concerns, suggestions, or questions, please contact Anish Shrestha (anish.shrestha --atmark-- dlsu.edu.ph).
