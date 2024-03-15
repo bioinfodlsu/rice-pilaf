@@ -10,7 +10,7 @@ Please use the [Feature request](https://github.com/bioinfodlsu/rice-pilaf/issue
 
 ## Contributing
 
-Please visit the [For Developers](https://github.com/bioinfodlsu/rice-pilaf/wiki/3.-For-Developers) section of our wiki in order to help familiarize yourself with our project structure, workflow, and codebase.
+Please visit the [For Developers](https://github.com/bioinfodlsu/rice-pilaf/wiki/3.-For-Developers) section of our wiki to help familiarize yourself with our project structure, workflow, and codebase.
 
 ## License
 
