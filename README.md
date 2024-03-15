@@ -16,9 +16,7 @@ Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combin
 this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.
 
 
-
-https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/a492789a-bce1-4296-ac72-5000a04e3a22
-
+https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/251da285-b1a8-4a52-8f4f-4ba0c1446cc6
 
 
 ## Installation and usage
