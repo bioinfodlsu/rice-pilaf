@@ -5,9 +5,6 @@ WORKDIR /app
 
 RUN set -ex 
 
-# Signal that deployed version should be used
-RUN touch .deploy
-
 RUN apt-get update \
   && apt-get install -y \
   bedtools \
@@ -16,11 +13,7 @@ RUN apt-get update \
   python3-pip \
   && apt-get clean
 
-# Get latest release version number
-RUN pip3 install --no-cache-dir requests \
-  && ((echo "import requests"; echo "latest_release = requests.get('https://github.com/bioinfodlsu/rice-pilaf/releases/latest')"; echo "print(latest_release.url.split('/')[-1])") | python3 > .version) \
-  && pip3 uninstall -y requests
-
+# Install dependencies
 RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
 
 # Install mcdp2
@@ -30,3 +23,6 @@ RUN cd ../ \
   && git reset --hard fd7c69f5e97db8c1052df859cb02d86533287e64 \
   && pip3 install . \
   && cd ../app
+
+# Write configuration file
+RUN python3 generate_config.py --deployed --latest-version
