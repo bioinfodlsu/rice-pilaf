@@ -139,7 +139,7 @@ submit_clear_buttons = dbc.Row(
                 outline=True,
                 n_clicks=0,
                 className="home-button",
-                style=show_if_not_in_demo_branch(),
+                style=show_if_not_deployed(),
             ),
             xs=4,
             sm=4,
