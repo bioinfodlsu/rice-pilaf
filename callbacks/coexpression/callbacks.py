@@ -4,7 +4,7 @@ from collections import namedtuple
 
 from .util import *
 from ..lift_over import util as lift_over_util
-from ..branch import *
+from ..config import *
 from ..homepage import util as homepage_util
 
 Parameter_slider = namedtuple("Parameter_slider", ["marks", "value"])

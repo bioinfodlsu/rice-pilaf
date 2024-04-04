@@ -15,7 +15,7 @@ import callbacks.tf_enrich.callbacks
 import callbacks.text_mining.callbacks
 import callbacks.summary.callbacks
 
-from callbacks.branch import *
+from callbacks.config import *
 from callbacks.constants import *
 from callbacks.file_util import *
 

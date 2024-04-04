@@ -5,7 +5,7 @@ from dash import html
 import pages.navigation.analysis_nav as analysis_nav
 import pages.analysis_layout as analysis_layout
 
-from callbacks.branch import *
+from callbacks.config import *
 
 dash.register_page(__name__, path="/", name="RicePilaf", location="app-topbar")
 
