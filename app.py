@@ -2,6 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 import sqlite3
+import os
 
 import pages.navigation.main_nav as main_nav
 
@@ -18,9 +19,13 @@ import callbacks.summary.callbacks
 from callbacks.config import *
 from callbacks.constants import *
 from callbacks.file_util import *
-
+from generate_config import *
 
 from flask import Flask
+
+# Create .env file if it does not exist
+if not os.path.exists(".env"):
+    generate_config(debug=True, deployed=False)
 
 # from logging.config import dictConfig
 
@@ -250,6 +255,6 @@ except sqlite3.Error as error:
 
 if __name__ == "__main__":
     if is_deployed_version():
-        app.run_server(port="8050", debug=True)
+        app.run_server(port="8050", debug=is_debug_mode())
     else:
-        app.run_server(host="0.0.0.0", port="8050", debug=True)
+        app.run_server(host="0.0.0.0", port="8050", debug=is_debug_mode())
