@@ -69,7 +69,7 @@ def init_callback(app):
         selected_tissue,
         selected_tracks,
         homepage_is_submitted,
-        nb_intervals_str
+        nb_intervals_str,
     ):
         """
         Parses epigenome input and displays the epigenome result container
@@ -92,7 +92,7 @@ def init_callback(app):
         if homepage_is_submitted and epigenome_submit_n_clicks >= 1:
             tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
             submitted_tissue_tracks = {selected_tissue: tissue_tracks_value}
-            
+
             write_igv_tracks_to_file(nb_intervals_str)
 
             return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
