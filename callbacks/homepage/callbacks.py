@@ -154,7 +154,7 @@ def init_callback(app):
                         dccStore_children, ""
                     )
 
-                    epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
+                    #epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
 
                     return (
                         dccStore_children,
