@@ -2,7 +2,6 @@ from dash import Input, Output, State, html, ctx, ALL
 from dash.exceptions import PreventUpdate
 from .util import *
 from ..lift_over import util as lift_over_util
-from ..epigenome import util as epigenome_util
 
 from ..style_util import *
 
@@ -153,8 +152,6 @@ def init_callback(app):
                     dccStore_children = clear_specific_dccStore_data(
                         dccStore_children, ""
                     )
-
-                    #epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
 
                     return (
                         dccStore_children,
