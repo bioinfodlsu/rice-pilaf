@@ -1,17 +1,16 @@
 import json
-import dash_bio as dashbio
-
-from dash import Input, Output, State, html
-from dash.exceptions import PreventUpdate
-from flask import json, send_from_directory, abort
-from werkzeug.exceptions import HTTPException
 from collections import namedtuple
 
-from .util import *
-from ..lift_over import util as lift_over_util
-from ..file_util import *
+import dash_bio as dashbio
+from dash import Input, Output, State, html
+from dash.exceptions import PreventUpdate
+from flask import abort, json, send_from_directory
+from werkzeug.exceptions import HTTPException
 
 from ..constants import Constants
+from ..file_util import *
+from ..lift_over import util as lift_over_util
+from .util import *
 
 Tissue_tracks = namedtuple("Tissue_tracks", ["tracks"])
 

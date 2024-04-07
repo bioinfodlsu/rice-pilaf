@@ -1,18 +1,17 @@
+import os
+import pickle
+from collections import namedtuple
+
+import networkx as nx
+import pandas as pd
+import regex as re
 from dash import html
+from scipy.stats import false_discovery_control, fisher_exact
+
 from ..constants import Constants
 from ..file_util import *
 from ..general_util import *
 from ..links_util import *
-import os
-import pickle
-import regex as re
-
-import pandas as pd
-import networkx as nx
-from scipy.stats import fisher_exact, false_discovery_control
-
-from collections import namedtuple
-
 
 # Settings for the module detection algorithms:
 # - multiplier: Value multiplied to the parameter to get the name of the directory

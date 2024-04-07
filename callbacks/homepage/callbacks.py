@@ -1,9 +1,9 @@
-from dash import Input, Output, State, html, ctx, ALL
+from dash import ALL, Input, Output, State, ctx, html
 from dash.exceptions import PreventUpdate
-from .util import *
-from ..lift_over import util as lift_over_util
 
+from ..lift_over import util as lift_over_util
 from ..style_util import *
+from .util import *
 
 # from flask import request
 

@@ -1,8 +1,8 @@
-from dash import Input, Output, State, ctx, ALL, html, dcc
+from dash import ALL, Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from .util import *
 from ..lift_over import util as lift_over_util
+from .util import *
 
 
 def init_callback(app):

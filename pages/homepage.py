@@ -2,9 +2,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html
 
-import pages.navigation.analysis_nav as analysis_nav
 import pages.analysis_layout as analysis_layout
-
+import pages.navigation.analysis_nav as analysis_nav
 from callbacks.config import *
 
 dash.register_page(__name__, path="/", name="RicePilaf", location="app-topbar")

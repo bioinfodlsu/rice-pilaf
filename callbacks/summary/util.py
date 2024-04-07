@@ -1,9 +1,9 @@
-from ..lift_over.util import *
-from ..general_util import *
+from collections import defaultdict
+
 from ..coexpression.util import *
 from ..constants import Constants
-
-from collections import defaultdict
+from ..general_util import *
+from ..lift_over.util import *
 
 
 def get_liftover_summary(implicated_genes):

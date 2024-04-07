@@ -1,17 +1,17 @@
-import pandas as pd
 import os
+import pickle
 import shutil
 import subprocess
-from scipy.stats import false_discovery_control
-import pickle
-from ..file_util import *
-from ..constants import Constants
-from ..general_util import *
-from ..links_util import *
 
 import gffutils
+import pandas as pd
 import pybedtools
+from scipy.stats import false_discovery_control
 
+from ..constants import Constants
+from ..file_util import *
+from ..general_util import *
+from ..links_util import *
 
 COLUMNS = [
     "Transcription Factor",
@@ -233,7 +233,6 @@ def perform_enrichment_all_tf(
     except Exception as e:
         # Use shutil.rmtree to delete non-empty directory
         shutil.rmtree(out_dir, ignore_errors=True)
-        pass
 
     try:
         os.replace(query_bed, query_bed_without_timestamp)

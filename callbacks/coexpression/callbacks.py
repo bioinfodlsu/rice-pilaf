@@ -1,11 +1,12 @@
-from dash import Input, Output, State, html, dcc, ctx
-from dash.exceptions import PreventUpdate
 from collections import namedtuple
 
-from .util import *
-from ..lift_over import util as lift_over_util
+from dash import Input, Output, State, ctx, dcc, html
+from dash.exceptions import PreventUpdate
+
 from ..config import *
 from ..homepage import util as homepage_util
+from ..lift_over import util as lift_over_util
+from .util import *
 
 Parameter_slider = namedtuple("Parameter_slider", ["marks", "value"])
 

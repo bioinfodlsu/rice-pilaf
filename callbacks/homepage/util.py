@@ -1,10 +1,9 @@
 import shutil
-from ..style_util import *
-from ..constants import Constants
-from ..file_util import *
-
 import sqlite3
 
+from ..constants import Constants
+from ..file_util import *
+from ..style_util import *
 
 example_genomic_intervals = {
     "pre-harvest": "Chr01:1523625-1770814; Chr04:4662701-4670717",

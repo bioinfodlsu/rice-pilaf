@@ -3,14 +3,12 @@ from collections import namedtuple
 
 import gffutils
 import pandas as pd
-
-from ..constants import Constants
-from ..general_util import *
-from ..links_util import *
-from ..file_util import *
-
 import regex as re
 
+from ..constants import Constants
+from ..file_util import *
+from ..general_util import *
+from ..links_util import *
 
 Genomic_interval = namedtuple("Genomic_interval", ["chrom", "start", "stop"])
 

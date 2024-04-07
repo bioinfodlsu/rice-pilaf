@@ -1,5 +1,6 @@
-import requests
 import argparse
+
+import requests
 
 
 def generate_config(debug, deployed, log, prod_db, version=None):

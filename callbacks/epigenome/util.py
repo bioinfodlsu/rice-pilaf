@@ -1,7 +1,8 @@
-from ..lift_over import util
 import gffutils
-from ..file_util import *
+
 from ..constants import Constants
+from ..file_util import *
+from ..lift_over import util
 
 RICE_ENCODE_SAMPLES = {
     "Leaf": ["ATAC-Seq", "FAIRE-Seq"],

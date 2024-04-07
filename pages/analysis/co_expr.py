@@ -1,8 +1,9 @@
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
-from callbacks.constants import Constants
+
 from callbacks.coexpression.util import *
+from callbacks.constants import Constants
 
 # ============================
 # Module Detection Algorithms
