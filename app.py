@@ -39,7 +39,9 @@ dictConfig(
         },
         "handlers": {
             "file": {
-                "class": "logging.FileHandler",
+                "class": "logging.handlers.RotatingFileHandler",
+                "backupCount": 5,
+                "maxBytes": 1_000_000,
                 "filename": f"logs/{date.today()}.log",
                 "formatter": "default",
             },
