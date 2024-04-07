@@ -727,8 +727,7 @@ def convert_module_to_edge_list(module, network_file, output_dir, filename):
 
 
 def convert_modules_to_edgelist(network_file, module_file, module_index, output_dir):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    make_dir(output_dir)
 
     with open(module_file) as modules:
         for idx, module in enumerate(modules):

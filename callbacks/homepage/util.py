@@ -1,4 +1,3 @@
-import os
 import shutil
 from ..style_util import *
 from ..constants import Constants
@@ -23,7 +22,7 @@ def clear_cache_folder():
     Returns:
     - none
     """
-    if os.path.exists(Constants.TEMP):
+    if path_exists(Constants.TEMP):
         shutil.rmtree(Constants.TEMP, ignore_errors=True)
 
     # Recreate the database
