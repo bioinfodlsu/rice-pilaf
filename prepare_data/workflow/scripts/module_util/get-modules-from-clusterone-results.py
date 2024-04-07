@@ -1,7 +1,7 @@
+import codecs
 import csv
 import os
 import sys
-import codecs
 
 maxInt = sys.maxsize
 

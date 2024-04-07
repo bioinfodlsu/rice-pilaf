@@ -1,8 +1,9 @@
-import pandas as pd
-from collections import defaultdict
 import csv
 import os
 import pickle
+from collections import defaultdict
+
+import pandas as pd
 
 
 def convert_default_to_vanilla_dict(d):

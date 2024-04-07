@@ -1,5 +1,6 @@
-import gffutils
 from collections import defaultdict
+
+import gffutils
 
 
 def main(gff_db, upstream_win_len, downstream_win_len, out_file_path):
