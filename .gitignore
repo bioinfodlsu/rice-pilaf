@@ -203,3 +203,6 @@ prepare_data/**/LazyFox
 # Version
 .version
 .deploy
+
+# Log files
+log/
