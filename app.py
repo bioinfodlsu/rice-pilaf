@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date
 from logging.config import dictConfig
 
 import dash
@@ -25,19 +26,21 @@ from generate_config import *
 if not path_exists(".env"):
     generate_config(debug=True, deployed=False, log=False, prod_db=False)
 
+make_dir("logs")
+
 dictConfig(
     {
         "version": 1,
         "formatters": {
             "default": {
-                "format": "%(asctime)s | %(message)s",
-                "datefmt": "%Y%m%d %H:%M:%S%Z",
+                "format": "%(asctime)s|%(message)s",
+                "datefmt": "%Y%m%d%H%M%S%Z",
             },
         },
         "handlers": {
             "file": {
                 "class": "logging.FileHandler",
-                "filename": "log_file.log",
+                "filename": f"logs/{date.today()}.log",
                 "formatter": "default",
             },
         },

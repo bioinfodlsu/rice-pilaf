@@ -305,12 +305,12 @@ def init_callback(app):
         genomic_intervals, n_clicks, n_submit, analysis_nav_items_n_clicks
     ):
         if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
-            app.logger.info("%s | home %s", request.remote_addr, genomic_intervals)
+            app.logger.info("%s|home %s", request.remote_addr, genomic_intervals)
 
         if ctx.triggered_id and not all(
             val == 0 for val in analysis_nav_items_n_clicks
         ):
             analysis_page_id = ctx.triggered_id.label
-            app.logger.info("%s | %s", request.remote_addr, analysis_page_id)
+            app.logger.info("%s|%s", request.remote_addr, analysis_page_id)
 
         raise PreventUpdate
