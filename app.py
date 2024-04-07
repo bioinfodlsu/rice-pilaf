@@ -30,7 +30,7 @@ dictConfig(
         "version": 1,
         "formatters": {
             "default": {
-                "format": "[%(asctime)s] %(message)s",
+                "format": "%(asctime)s | %(message)s",
                 "datefmt": "%B %d, %Y %H:%M:%S %Z",
             },
         },
