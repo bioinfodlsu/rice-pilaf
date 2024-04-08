@@ -310,7 +310,10 @@ def init_callback(app):
         if ctx.triggered_id and not all(
             val == 0 for val in analysis_nav_items_n_clicks
         ):
-            analysis_page_id = ctx.triggered_id.label
-            app.logger.info("%s|%s", request.remote_addr, analysis_page_id)
-
+            try:
+                analysis_page_id = ctx.triggered_id.label
+                app.logger.info("%s|%s", request.remote_addr, analysis_page_id)
+            except:
+                raise PreventUpdate
+                
         raise PreventUpdate
