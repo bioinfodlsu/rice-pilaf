@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 from datetime import date
 from logging.config import dictConfig
@@ -28,19 +29,25 @@ if not path_exists(".env"):
 
 make_dir("logs")
 
+
+class UTCFormatter(logging.Formatter):
+    converter = time.gmtime
+
+
 dictConfig(
     {
         "version": 1,
         "formatters": {
             "default": {
+                "()": UTCFormatter,
                 "format": "%(asctime)s|%(message)s",
-                "datefmt": "%Y%m%d%H%M%S%Z",
+                "datefmt": "%Y%m%d%H%M%S",
             },
         },
         "handlers": {
             "file": {
                 "class": "logging.handlers.RotatingFileHandler",
-                "backupCount": 5,
+                "backupCount": 1,
                 "maxBytes": 1_000,
                 "filename": f"logs/{date.today()}.log",
                 "formatter": "default",
