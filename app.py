@@ -1,6 +1,5 @@
 import logging
 import sqlite3
-from datetime import date
 from logging.config import dictConfig
 
 import dash
@@ -40,7 +39,7 @@ dictConfig(
         "formatters": {
             "default": {
                 "()": UTCFormatter,
-                "format": "%(asctime)s|%(message)s",
+                "format": "%(asctime)s%(msecs)03d|%(message)s",
                 "datefmt": "%Y%m%d%H%M%S",
             },
         },
@@ -49,7 +48,7 @@ dictConfig(
                 "class": "logging.handlers.RotatingFileHandler",
                 "backupCount": 1,
                 "maxBytes": 1_000,
-                "filename": f"logs/{date.today()}.log",
+                "filename": f"logs/usage.log",
                 "formatter": "default",
             },
         },
