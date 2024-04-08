@@ -168,6 +168,8 @@ layout = html.Div(
             ],
             className="mt-2",
         ),
+        # Do not remove; for log purposes
+        html.Div(id="text-mining-log"),
     ],
     className="mt-2 mb-4",
 )

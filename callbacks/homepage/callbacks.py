@@ -301,7 +301,7 @@ def init_callback(app):
         Input("homepage-genomic-intervals", "n_submit"),
         Input({"type": "analysis-nav", "label": ALL}, "n_clicks"),
     )
-    def get_input_homepage_session_state(
+    def get_homepage_logs(
         genomic_intervals, n_clicks, n_submit, analysis_nav_items_n_clicks
     ):
         if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
