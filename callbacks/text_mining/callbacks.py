@@ -1,5 +1,6 @@
 from dash import ALL, Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
+from flask import request
 
 from ..lift_over import util as lift_over_util
 from .util import *
@@ -342,3 +343,22 @@ def init_callback(app):
             return query, "No"
 
         return query, filter
+
+    # =================
+    # Logging-related
+    # =================
+
+    @app.callback(
+        Output("text-mining-log", "children"),
+        State("homepage-is-submitted", "data"),
+        State("text-mining-query", "value"),
+        Input("text-mining-submit", "n_clicks"),
+        Input("text-mining-query", "n_submit"),
+    )
+    def get_text_mining_logs(
+        homepage_is_submitted, text_mining_submitted_query, n_clicks, n_submit
+    ):
+        if n_submit >= 1 or ("text-mining-submit" == ctx.triggered_id and n_clicks >= 1):
+            app.logger.info("%s|text-mining %s", request.remote_addr, text_mining_submitted_query)
+
+        raise PreventUpdate
