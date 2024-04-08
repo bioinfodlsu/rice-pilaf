@@ -204,5 +204,6 @@ prepare_data/**/LazyFox
 .version
 .deploy
 
-# Log files
-log/
+# Logging
+logs/
+*-key.json
