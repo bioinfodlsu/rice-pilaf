@@ -30,15 +30,13 @@ make_dir("logs")
 
 if is_logging_mode():
     # Suppress writing GET requests to the log
-    log = logging.getLogger('werkzeug')
+    log = logging.getLogger("werkzeug")
     log.setLevel(logging.ERROR)
 
     GB_TO_BYTES = 1e9
 
-
     class UTCFormatter(logging.Formatter):
         converter = time.gmtime
-
 
     dictConfig(
         {

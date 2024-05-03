@@ -48,7 +48,7 @@ if __name__ == "__main__":
         required=False,
         type=float,
         default=1,
-        help="Maximum storage allocation (in GB) for log files"
+        help="Maximum storage allocation (in GB) for log files",
     )
 
     parser.add_argument(
@@ -64,4 +64,6 @@ if __name__ == "__main__":
     if args.latest_version:
         version = "latest"
 
-    generate_config(args.debug, args.deployed, args.logging, args.max_logging_gb, version)
+    generate_config(
+        args.debug, args.deployed, args.logging, args.max_logging_gb, version
+    )
