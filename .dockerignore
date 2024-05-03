@@ -198,6 +198,15 @@ scratch.py
 prepare_data/**/LazyFox
 *.jar
 
+# Version
+.version
+.deploy
+
+# Logging
+logs/
+cron_jobs/keys
+*-key.json
+
 # Directories related to IDE and version control
 .git/
 .github/
@@ -206,7 +215,3 @@ prepare_data/**/LazyFox
 # Docker-related files
 Dockerfile*
 .dockerignore
-
-# Version
-.version
-.deploy
