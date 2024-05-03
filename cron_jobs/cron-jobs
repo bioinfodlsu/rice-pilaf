@@ -1,2 +1,2 @@
-* * * * * root /usr/local/bin/python3 /app/cron_jobs/util/upload_to_drive.py > /proc/1/fd/1 2>/proc/1/fd/2
-* * * * * root /usr/local/bin/python3 /app/cron_jobs/util/clear_cache_folder.py > /proc/1/fd/1 2>/proc/1/fd/2
+0 */6 * * * root /usr/local/bin/python3 /app/cron_jobs/util/upload_to_drive.py > /proc/1/fd/1 2>/proc/1/fd/2
+0 * * * * root /usr/local/bin/python3 /app/cron_jobs/util/clear_cache_folder.py > /proc/1/fd/1 2>/proc/1/fd/2
