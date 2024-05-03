@@ -204,8 +204,7 @@ prepare_data/**/LazyFox
 
 # Logging
 logs/
-cron_jobs/keys
-*-key.json
+cron_jobs/credentials/
 
 # Directories related to IDE and version control
 .git/
