@@ -15,6 +15,7 @@ RUN apt-get update \
 
 # Install dependencies
 RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
+RUN pip3 install --no-cache-dir -r dependencies/requirements-google-api.txt
 
 # Install mcdp2
 RUN cd ../ \
