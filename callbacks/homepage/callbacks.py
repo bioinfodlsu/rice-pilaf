@@ -315,5 +315,5 @@ def init_callback(app):
                 app.logger.info("%s|%s", request.remote_addr, analysis_page_id)
             except:
                 raise PreventUpdate
-                
+
         raise PreventUpdate
