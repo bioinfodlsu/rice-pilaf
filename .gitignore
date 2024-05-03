@@ -206,4 +206,5 @@ prepare_data/**/LazyFox
 
 # Logging
 logs/
+cron_jobs/keys
 *-key.json
