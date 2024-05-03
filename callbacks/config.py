@@ -35,3 +35,7 @@ def get_release_version():
     except:
         # The VERSION key is not a requirement in the .env file
         return ""
+
+def is_logging_mode():
+    config = dotenv_values(".env")
+    return config["LOGGING"].lower() == "true"

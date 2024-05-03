@@ -358,7 +358,11 @@ def init_callback(app):
     def get_text_mining_logs(
         homepage_is_submitted, text_mining_submitted_query, n_clicks, n_submit
     ):
-        if n_submit >= 1 or ("text-mining-submit" == ctx.triggered_id and n_clicks >= 1):
-            app.logger.info("%s|text-mining %s", request.remote_addr, text_mining_submitted_query)
+        if n_submit >= 1 or (
+            "text-mining-submit" == ctx.triggered_id and n_clicks >= 1
+        ):
+            app.logger.info(
+                "%s|text-mining %s", request.remote_addr, text_mining_submitted_query
+            )
 
         raise PreventUpdate

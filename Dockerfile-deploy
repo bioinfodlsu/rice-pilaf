@@ -25,4 +25,4 @@ RUN cd ../ \
   && cd ../app
 
 # Write configuration file
-RUN python3 generate_config.py --deployed --latest-version --log --prod-db
+RUN python3 generate_config.py --deployed --latest-version --logging

@@ -3,12 +3,11 @@ import argparse
 import requests
 
 
-def generate_config(debug, deployed, log, prod_db, version=None):
+def generate_config(debug, deployed, logging, version=None):
     with open(".env", "w") as f:
         f.write(f"DEBUG={debug}\n")
         f.write(f"DEPLOYED={deployed}\n")
-        f.write(f"LOG={log}\n")
-        f.write(f"PROD_DB={prod_db}\n")
+        f.write(f"LOGGING={logging}\n")
 
         if version:
             if version == "latest":
@@ -34,11 +33,7 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--log", action="store_true", help="Enable logging for app usage analytics"
-    )
-
-    parser.add_argument(
-        "--prod-db", action="store_true", help="Use the production database"
+        "--logging", action="store_true", help="Enable logging for app usage analytics"
     )
 
     parser.add_argument(
@@ -60,4 +55,4 @@ if __name__ == "__main__":
     if args.latest_version:
         version = "latest"
 
-    generate_config(args.debug, args.deployed, args.log, args.prod_db, version)
+    generate_config(args.debug, args.deployed, args.logging, version)

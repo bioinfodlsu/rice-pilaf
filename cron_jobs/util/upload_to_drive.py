@@ -1,4 +1,9 @@
 import os
+import time
+
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 
 # RICE_PILAF_PATH = "/app"
 RICE_PILAF_PATH = "D:/Research/rice-pilaf"
@@ -46,40 +51,34 @@ def prepare_log_file_for_upload():
 
 prepare_log_file_for_upload()
 
-# scope = ["https://www.googleapis.com/auth/drive"]
-# service_account_key = (
-#     f"{RICE_PILAF_PATH}/cron_jobs/credentials/ricepilaf-logger-key.json"
-# )
-# credentials = service_account.Credentials.from_service_account_file(
-#     filename=service_account_key, scopes=scope
-# )
-# service = build("drive", "v3", credentials=credentials)
+scope = ["https://www.googleapis.com/auth/drive"]
+service_account_key = (
+    f"{RICE_PILAF_PATH}/cron_jobs/credentials/ricepilaf-logger-key.json"
+)
+credentials = service_account.Credentials.from_service_account_file(
+    filename=service_account_key, scopes=scope
+)
+service = build("drive", "v3", credentials=credentials)
 
 
-# yesterday = datetime.now(timezone.utc).date() - timedelta(1)
-# for file in os.listdir(f"{RICE_PILAF_PATH}/logs"):
-#     if file.startswith(str(yesterday)):
-#         LOG = f"{RICE_PILAF_PATH}/logs/{file}"
-#         media = MediaFileUpload(LOG)
+media = MediaFileUpload(FOR_UPLOAD_LOG_FILE, mimetype="text/plain")
 
-#         uploaded = False
-#         while not uploaded:
-#             try:
-#                 file_metadata = {
-#                     "name": LOG.split("/")[-1],
-#                     "parents": ["1ECnXYVuJOlEC4CX20IggHufAiYTm91hM"],
-#                 }
+uploaded = False
+while not uploaded:
+    try:
+        file_metadata = {
+            "name": f"log.{time.time_ns() // 1000}",
+            "parents": ["1ECnXYVuJOlEC4CX20IggHufAiYTm91hM"],
+        }
 
-#                 file = (
-#                     service.files()
-#                     .create(body=file_metadata, media_body=media, fields="id")
-#                     .execute()
-#                 )
+        file = (
+            service.files()
+            .create(body=file_metadata, media_body=media, fields="id")
+            .execute()
+        )
 
-#                 uploaded = True
-#                 print(LOG)
-#                 os.remove(LOG)
+        uploaded = True
 
-#             except:
-#                 # Try again in 5 minutes
-#                 time.sleep(5 * 60)
+    except:
+        # Try again in 5 minutes
+        time.sleep(5 * 60)
