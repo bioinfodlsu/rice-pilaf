@@ -1,5 +1,6 @@
 import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import dcc, html
+
 from callbacks.constants import Constants
 
 # ============

@@ -1,9 +1,10 @@
-import regex as re
 import os
-from .constants import Constants
-
-import time
 import sqlite3
+import time
+
+import regex as re
+
+from .constants import Constants
 
 
 def path_exists(path):

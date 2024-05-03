@@ -35,16 +35,15 @@
 #     - If a PubMed article matches x but the article also contains y, then it is excluded
 #     - If a PubMed article matches x and the article does not contain y, then it is included
 
-from nltk.corpus import words
-import pandas as pd
-import os
-import regex as re
 import csv
+import os
 import pickle
-
 from collections import defaultdict
 
 import nltk
+import pandas as pd
+import regex as re
+from nltk.corpus import words
 
 nltk.download("words")
 

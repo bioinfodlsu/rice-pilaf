@@ -1,5 +1,7 @@
 from dotenv import dotenv_values
 
+DEFAULT_MAX_LOGGING_GB = 1
+
 
 def is_deployed_version():
     config = dotenv_values(".env")
@@ -35,3 +37,17 @@ def get_release_version():
     except:
         # The VERSION key is not a requirement in the .env file
         return ""
+
+
+def is_logging_mode():
+    config = dotenv_values(".env")
+    return config["LOGGING"].lower() == "true"
+
+
+def get_max_logging_gb():
+    config = dotenv_values(".env")
+    try:
+        max_logging_gb = float(config["MAX_LOGGING_GB"])
+        return max_logging_gb
+    except:
+        return DEFAULT_MAX_LOGGING_GB

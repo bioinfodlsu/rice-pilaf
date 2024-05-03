@@ -8,13 +8,15 @@ RUN set -ex
 RUN apt-get update \
   && apt-get install -y \
   bedtools \
+  cron \
   git \
   python3-dev \
   python3-pip \
   && apt-get clean
 
 # Install dependencies
-RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt
+RUN pip3 install --no-cache-dir -r dependencies/requirements-app.txt \
+  && pip3 install --no-cache-dir -r dependencies/requirements-google-api.txt
 
 # Install mcdp2
 RUN cd ../ \
@@ -24,5 +26,13 @@ RUN cd ../ \
   && pip3 install . \
   && cd ../app
 
+# Run cron jobs
+RUN cp cron_jobs/cron-jobs /etc/cron.d/cron-jobs \
+  && chmod 0644 /etc/cron.d/cron-jobs
+
+# Create empty placeholder file for logging-related credentials
+RUN mkdir -p cron_jobs/credentials \
+  && touch cron_jobs/credentials/ricepilaf-logger-key.json
+
 # Write configuration file
-RUN python3 generate_config.py --deployed --latest-version
+RUN python3 generate_config.py --deployed --latest-version --logging

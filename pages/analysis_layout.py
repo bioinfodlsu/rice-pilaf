@@ -1,16 +1,14 @@
-from dash import html
-
-import pages.analysis.intro as intro
-import pages.analysis.lift_over as lift_over
-import pages.analysis.co_expr as co_expr
-import pages.analysis.tf_enrich as tf_enrich
-import pages.analysis.epigenome as epigenome
-import pages.analysis.text_mining as text_mining
-import pages.analysis.summary as summary
-import pages.analysis.template as template
-
 from collections import OrderedDict
 
+from dash import html
+
+import pages.analysis.co_expr as co_expr
+import pages.analysis.epigenome as epigenome
+import pages.analysis.intro as intro
+import pages.analysis.lift_over as lift_over
+import pages.analysis.summary as summary
+import pages.analysis.text_mining as text_mining
+import pages.analysis.tf_enrich as tf_enrich
 from callbacks.constants import Constants
 
 

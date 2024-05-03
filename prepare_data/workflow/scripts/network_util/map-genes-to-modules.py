@@ -1,6 +1,6 @@
-from collections import defaultdict
 import os
 import pickle
+from collections import defaultdict
 
 
 def map_genes_to_modules(module_file):

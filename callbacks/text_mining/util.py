@@ -1,14 +1,14 @@
-import pandas as pd
-from ..constants import Constants
-from ..general_util import *
-from ..links_util import *
-import regex as re
-import ftfy
-import rapidfuzz
 import pickle
 
-from ..file_util import *
+import ftfy
+import pandas as pd
+import rapidfuzz
+import regex as re
 
+from ..constants import Constants
+from ..file_util import *
+from ..general_util import *
+from ..links_util import *
 
 COLNAMES = ["Gene", "MSU ID", "PMID", "Title", "Sentence", "Score"]
 SIMILARITY_CUTOFF = 85

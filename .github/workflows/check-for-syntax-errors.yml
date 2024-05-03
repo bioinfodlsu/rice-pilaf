@@ -1,6 +1,6 @@
 on:
     workflow_run:
-        workflows: [Run Black formatter]
+        workflows: [Check code formatting quality]
         types: [completed]
 
 name: Check for syntax errors

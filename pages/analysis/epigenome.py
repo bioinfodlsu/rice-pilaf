@@ -1,7 +1,7 @@
-from dash import dcc, html
 import dash_bootstrap_components as dbc
-from callbacks.constants import Constants
+from dash import dcc, html
 
+from callbacks.constants import Constants
 from callbacks.epigenome.util import *
 
 layout = html.Div(

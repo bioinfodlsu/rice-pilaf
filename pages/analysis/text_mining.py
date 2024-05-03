@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
-from callbacks.constants import Constants
 
+from callbacks.constants import Constants
 
 layout = html.Div(
     id={"type": "analysis-layout", "label": Constants.LABEL_TEXT_MINING},
@@ -168,6 +168,8 @@ layout = html.Div(
             ],
             className="mt-2",
         ),
+        # Do not remove; for log purposes
+        html.Div(id="text-mining-log"),
     ],
     className="mt-2 mb-4",
 )

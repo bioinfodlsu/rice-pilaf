@@ -1,4 +1,5 @@
 from dash import html
+
 from callbacks.constants import Constants
 
 layout = html.Div(

@@ -1,12 +1,10 @@
-from dash import Input, Output, State, html, ctx, ALL
+from dash import ALL, Input, Output, State, ctx, html
 from dash.exceptions import PreventUpdate
-from .util import *
+from flask import request
+
 from ..lift_over import util as lift_over_util
-from ..epigenome import util as epigenome_util
-
 from ..style_util import *
-
-# from flask import request
+from .util import *
 
 
 def init_callback(app):
@@ -154,8 +152,6 @@ def init_callback(app):
                         dccStore_children, ""
                     )
 
-                    epigenome_util.write_igv_tracks_to_file(nb_intervals_str)
-
                     return (
                         dccStore_children,
                         None,
@@ -298,23 +294,26 @@ def init_callback(app):
     # Logging-related
     # =================
 
-    # @app.callback(
-    #     Output("homepage-log", "children"),
-    #     State("homepage-genomic-intervals", "value"),
-    #     Input("homepage-submit", "n_clicks"),
-    #     Input("homepage-genomic-intervals", "n_submit"),
-    #     Input({"type": "analysis-nav", "label": ALL}, "n_clicks"),
-    # )
-    # def get_input_homepage_session_state(
-    #     genomic_intervals, n_clicks, n_submit, analysis_nav_items_n_clicks
-    # ):
-    #     if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
-    #         app.logger.info("%s [homepage] %s", request.remote_addr, genomic_intervals)
+    @app.callback(
+        Output("homepage-log", "children"),
+        State("homepage-genomic-intervals", "value"),
+        Input("homepage-submit", "n_clicks"),
+        Input("homepage-genomic-intervals", "n_submit"),
+        Input({"type": "analysis-nav", "label": ALL}, "n_clicks"),
+    )
+    def get_homepage_logs(
+        genomic_intervals, n_clicks, n_submit, analysis_nav_items_n_clicks
+    ):
+        if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
+            app.logger.info("%s|home %s", request.remote_addr, genomic_intervals)
 
-    #     if ctx.triggered_id and not all(
-    #         val == 0 for val in analysis_nav_items_n_clicks
-    #     ):
-    #         analysis_page_id = ctx.triggered_id.label
-    #         app.logger.info("%s %s", request.remote_addr, analysis_page_id)
+        if ctx.triggered_id and not all(
+            val == 0 for val in analysis_nav_items_n_clicks
+        ):
+            try:
+                analysis_page_id = ctx.triggered_id.label
+                app.logger.info("%s|%s", request.remote_addr, analysis_page_id)
+            except:
+                raise PreventUpdate
 
-    #     raise PreventUpdate
+        raise PreventUpdate

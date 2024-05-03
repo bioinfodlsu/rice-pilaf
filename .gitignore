@@ -203,3 +203,7 @@ prepare_data/**/LazyFox
 # Version
 .version
 .deploy
+
+# Logging
+logs/
+cron_jobs/credentials/

@@ -1,5 +1,5 @@
-from collections import defaultdict
 import os
+from collections import defaultdict
 
 chrom_name_map = {
     "Chr1": "Chr01",

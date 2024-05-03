@@ -1,7 +1,7 @@
 import csv
-from collections import defaultdict
 import os
 import pickle
+from collections import defaultdict
 
 
 def convert_default_to_vanilla_dict(d):

@@ -1,17 +1,16 @@
 import json
-import dash_bio as dashbio
-
-from dash import Input, Output, State, html
-from dash.exceptions import PreventUpdate
-from flask import json, send_from_directory, abort
-from werkzeug.exceptions import HTTPException
 from collections import namedtuple
 
-from .util import *
-from ..lift_over import util as lift_over_util
-from ..file_util import *
+import dash_bio as dashbio
+from dash import Input, Output, State, html
+from dash.exceptions import PreventUpdate
+from flask import abort, json, send_from_directory
+from werkzeug.exceptions import HTTPException
 
 from ..constants import Constants
+from ..file_util import *
+from ..lift_over import util as lift_over_util
+from .util import *
 
 Tissue_tracks = namedtuple("Tissue_tracks", ["tracks"])
 
@@ -60,6 +59,7 @@ def init_callback(app):
         State("epigenome-tissue", "value"),
         State("epigenome-tracks", "value"),
         State("homepage-is-submitted", "data"),
+        State("homepage-submitted-genomic-intervals", "data"),
         prevent_initial_call=True,
     )
     def submit_epigenome_input(
@@ -68,6 +68,7 @@ def init_callback(app):
         selected_tissue,
         selected_tracks,
         homepage_is_submitted,
+        nb_intervals_str,
     ):
         """
         Parses epigenome input and displays the epigenome result container
@@ -90,6 +91,8 @@ def init_callback(app):
         if homepage_is_submitted and epigenome_submit_n_clicks >= 1:
             tissue_tracks_value = Tissue_tracks(selected_tracks)._asdict()
             submitted_tissue_tracks = {selected_tissue: tissue_tracks_value}
+
+            write_igv_tracks_to_file(nb_intervals_str)
 
             return True, selected_nb_interval, selected_tissue, submitted_tissue_tracks
 

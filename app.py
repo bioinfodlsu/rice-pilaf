@@ -1,53 +1,65 @@
+import logging
+import sqlite3
+from logging.config import dictConfig
+
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-import sqlite3
-import os
+from flask import Flask
 
-import pages.navigation.main_nav as main_nav
-
+import callbacks.coexpression.callbacks
+import callbacks.epigenome.callbacks
 import callbacks.homepage.callbacks
 import callbacks.homepage.util
-import callbacks.template.callbacks
 import callbacks.lift_over.callbacks
-import callbacks.epigenome.callbacks
-import callbacks.coexpression.callbacks
-import callbacks.tf_enrich.callbacks
-import callbacks.text_mining.callbacks
 import callbacks.summary.callbacks
-
+import callbacks.template.callbacks
+import callbacks.text_mining.callbacks
+import callbacks.tf_enrich.callbacks
+import pages.navigation.main_nav as main_nav
 from callbacks.config import *
 from callbacks.constants import *
 from callbacks.file_util import *
 from generate_config import *
 
-from flask import Flask
-
 # Create .env file if it does not exist
-if not os.path.exists(".env"):
-    generate_config(debug=True, deployed=False)
+if not path_exists(".env"):
+    generate_config(debug=True, deployed=False, logging=False)
 
-# from logging.config import dictConfig
+make_dir("logs")
 
-# dictConfig(
-#     {
-#         "version": 1,
-#         "formatters": {
-#             "default": {
-#                 "format": "[%(asctime)s] [%(levelname)s] %(message)s",
-#                 "datefmt": "%B %d, %Y %H:%M:%S %Z",
-#             },
-#         },
-#         "handlers": {
-#             "file": {
-#                 "class": "logging.FileHandler",
-#                 "filename": "log_file.log",
-#                 "formatter": "default",
-#             },
-#         },
-#         "root": {"level": "DEBUG", "handlers": ["file"]},
-#     }
-# )
+if is_logging_mode():
+    # Suppress writing GET requests to the log
+    log = logging.getLogger("werkzeug")
+    log.setLevel(logging.ERROR)
+
+    GB_TO_BYTES = 1e9
+
+    class UTCFormatter(logging.Formatter):
+        converter = time.gmtime
+
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "default": {
+                    "()": UTCFormatter,
+                    "format": "%(asctime)s%(msecs)03d|%(message)s",
+                    "datefmt": "%Y%m%d%H%M%S",
+                },
+            },
+            "handlers": {
+                "file": {
+                    "class": "logging.handlers.RotatingFileHandler",
+                    "backupCount": 1,
+                    "maxBytes": get_max_logging_gb() * GB_TO_BYTES,
+                    "filename": f"logs/usage.log",
+                    "formatter": "default",
+                },
+            },
+            "root": {"level": "DEBUG", "handlers": ["file"]},
+        }
+    )
 
 server = Flask(__name__, static_folder="static")
 app = dash.Dash(

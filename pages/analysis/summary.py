@@ -1,7 +1,7 @@
-from dash import dash_table, dcc, html
-from callbacks.constants import Constants
 import dash_bootstrap_components as dbc
+from dash import dash_table, dcc, html
 
+from callbacks.constants import Constants
 
 # =====================
 # Miscellaneous Modals

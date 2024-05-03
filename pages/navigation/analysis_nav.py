@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+
 import pages.analysis_layout as analysis_layout
 
 
