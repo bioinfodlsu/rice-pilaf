@@ -11,6 +11,7 @@ services:
       - 443:443
     volumes:
       - /srv/rice-pilaf/static:/app/static
+      - /home/anish/ricepilaf-logger-bioinfodlsu-key.json:/app/cron_jobs/credentials/ricepilaf-logger-key.json
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /tmp/acme-challenge:/tmp/acme-challenge
     restart: unless-stopped
