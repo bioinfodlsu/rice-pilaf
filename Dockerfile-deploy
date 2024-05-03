@@ -28,8 +28,11 @@ RUN cd ../ \
 
 # Run cron jobs
 RUN cp cron_jobs/jobs/upload-logs-to-drive /etc/cron.d/upload-logs-to-drive \
-  && chmod 0644 /etc/cron.d/upload-logs-to-drive \
-  && cron
+  && chmod 0644 /etc/cron.d/upload-logs-to-drive
+
+# Create empty placeholder file for logging-related credentials
+RUN mkdir -p cron_jobs/credentials \
+  && touch cron_jobs/credentials/ricepilaf-logger-key.json
 
 # Write configuration file
 RUN python3 generate_config.py --deployed --latest-version --logging
