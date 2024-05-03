@@ -1,1 +1,1 @@
-* * * * * root python3 /app/cron_jobs/util/upload-logs-to-drive > /proc/1/fd/1 2>/proc/1/fd/2
+* * * * * root python3 /app/cron_jobs/util/upload_to_drive.py > /proc/1/fd/1 2>/proc/1/fd/2
