@@ -3,12 +3,15 @@ import argparse
 import requests
 
 
-def generate_config(debug, deployed, logging, max_logging_gb, version=None):
+def generate_config(
+    debug, deployed, logging, max_logging_gb, max_cache_gb, version=None
+):
     with open(".env", "w") as f:
         f.write(f"DEBUG={debug}\n")
         f.write(f"DEPLOYED={deployed}\n")
         f.write(f"LOGGING={logging}\n")
         f.write(f"MAX_LOGGING_GB={max_logging_gb}\n")
+        f.write(f"MAX_CACHE_GB={max_cache_gb}\n")
 
         if version:
             if version == "latest":
@@ -52,6 +55,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--max-cache-gb",
+        required=False,
+        type=float,
+        default=10,
+        help="Maximum storage allocation (in GB) for the results cache -- the directory that stores results of previously run analyses to avoid repeated computations",
+    )
+
+    parser.add_argument(
         "-v",
         "--version",
         required=False,
@@ -65,5 +76,10 @@ if __name__ == "__main__":
         version = "latest"
 
     generate_config(
-        args.debug, args.deployed, args.logging, args.max_logging_gb, version
+        args.debug,
+        args.deployed,
+        args.logging,
+        args.max_logging_gb,
+        args.max_cache_gb,
+        version,
     )
