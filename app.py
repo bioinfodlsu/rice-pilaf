@@ -24,37 +24,42 @@ from generate_config import *
 
 # Create .env file if it does not exist
 if not path_exists(".env"):
-    generate_config(debug=True, deployed=False, log=False, prod_db=False)
+    generate_config(debug=True, deployed=False, logging=False)
 
 make_dir("logs")
 
+if is_logging_mode():
+    # Suppress writing GET requests to the log
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
 
-class UTCFormatter(logging.Formatter):
-    converter = time.gmtime
+
+    class UTCFormatter(logging.Formatter):
+        converter = time.gmtime
 
 
-dictConfig(
-    {
-        "version": 1,
-        "formatters": {
-            "default": {
-                "()": UTCFormatter,
-                "format": "%(asctime)s%(msecs)03d|%(message)s",
-                "datefmt": "%Y%m%d%H%M%S",
+    dictConfig(
+        {
+            "version": 1,
+            "formatters": {
+                "default": {
+                    "()": UTCFormatter,
+                    "format": "%(asctime)s%(msecs)03d|%(message)s",
+                    "datefmt": "%Y%m%d%H%M%S",
+                },
             },
-        },
-        "handlers": {
-            "file": {
-                "class": "logging.handlers.RotatingFileHandler",
-                "backupCount": 1,
-                "maxBytes": 1_000,
-                "filename": f"logs/usage.log",
-                "formatter": "default",
+            "handlers": {
+                "file": {
+                    "class": "logging.handlers.RotatingFileHandler",
+                    "backupCount": 1,
+                    "maxBytes": 1_000,
+                    "filename": f"logs/usage.log",
+                    "formatter": "default",
+                },
             },
-        },
-        "root": {"level": "DEBUG", "handlers": ["file"]},
-    }
-)
+            "root": {"level": "DEBUG", "handlers": ["file"]},
+        }
+    )
 
 server = Flask(__name__, static_folder="static")
 app = dash.Dash(
