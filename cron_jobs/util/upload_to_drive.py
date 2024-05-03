@@ -21,7 +21,7 @@ LOG_DRIVE_ID = "1ECnXYVuJOlEC4CX20IggHufAiYTm91hM"
 
 def is_logging_mode():
     try:
-        config = dotenv_values(".env")
+        config = dotenv_values(f"{RICE_PILAF_PATH}/.env")
         return config["LOGGING"].lower() == "true"
     except:
         return False
