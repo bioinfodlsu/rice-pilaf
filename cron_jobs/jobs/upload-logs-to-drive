@@ -1,1 +1,1 @@
-* * * * * root python3 /app/cron_jobs/jobs/upload-logs-to-drive
+* * * * * root python3 /app/cron_jobs/util/upload-logs-to-drive
