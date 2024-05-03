@@ -25,5 +25,10 @@ RUN cd ../ \
   && pip3 install . \
   && cd ../app
 
+# Run cron jobs
+COPY /app/cron_jobs/jobs/upload-logs-to-drive /etc/cron.d/upload-logs-to-drive
+RUN chmod 0644 /etc/cron.d/upload-logs-to-drive
+RUN cron
+
 # Write configuration file
 RUN python3 generate_config.py --deployed --latest-version --logging
