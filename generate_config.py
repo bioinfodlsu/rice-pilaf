@@ -3,11 +3,12 @@ import argparse
 import requests
 
 
-def generate_config(debug, deployed, logging, version=None):
+def generate_config(debug, deployed, logging, max_logging_gb, version=None):
     with open(".env", "w") as f:
         f.write(f"DEBUG={debug}\n")
         f.write(f"DEPLOYED={deployed}\n")
         f.write(f"LOGGING={logging}\n")
+        f.write(f"MAX_LOGGING_GB={max_logging_gb}\n")
 
         if version:
             if version == "latest":
@@ -43,6 +44,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--max-logging-gb",
+        required=False,
+        type=float,
+        default=1,
+        help="Maximum storage allocation (in GB) for log files"
+    )
+
+    parser.add_argument(
         "-v",
         "--version",
         required=False,
@@ -55,4 +64,4 @@ if __name__ == "__main__":
     if args.latest_version:
         version = "latest"
 
-    generate_config(args.debug, args.deployed, args.logging, version)
+    generate_config(args.debug, args.deployed, args.logging, args.max_logging_gb, version)

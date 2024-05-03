@@ -33,6 +33,8 @@ if is_logging_mode():
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 
+    GB_TO_BYTES = 1e9
+
 
     class UTCFormatter(logging.Formatter):
         converter = time.gmtime
@@ -52,7 +54,7 @@ if is_logging_mode():
                 "file": {
                     "class": "logging.handlers.RotatingFileHandler",
                     "backupCount": 1,
-                    "maxBytes": 1_000,
+                    "maxBytes": get_max_logging_gb() * GB_TO_BYTES,
                     "filename": f"logs/usage.log",
                     "formatter": "default",
                 },
