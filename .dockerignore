@@ -207,7 +207,7 @@ logs/
 cron_jobs/credentials/
 
 # Bootstrap and Fontawesome fonts and icons
-assets/Bootstrap-*/
+assets/bootstrap-*/
 assets/fontawesome-*/
 
 # Directories related to IDE and version control
