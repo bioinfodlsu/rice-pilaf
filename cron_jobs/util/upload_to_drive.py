@@ -65,15 +65,6 @@ def prepare_log_file_for_upload():
                     if get_timestamp(line) > last_uploaded_timestamp:
                         upload.write(line)
 
-    if os.stat(FOR_UPLOAD_LOG_FILE).st_size > 0:
-        with open(FOR_UPLOAD_LOG_FILE) as upload, open(
-            LAST_UPLOADED_TIMESTAMP_FILE, "w"
-        ) as timestamp:
-            for line in upload:
-                pass
-
-            timestamp.write(f"{get_timestamp(line)}")
-
 
 def upload_log_file():
     scope = ["https://www.googleapis.com/auth/drive"]
@@ -97,6 +88,16 @@ def upload_log_file():
     )
 
 
+def update_last_uploaded_timestamp_file():
+    with open(FOR_UPLOAD_LOG_FILE) as upload, open(
+        LAST_UPLOADED_TIMESTAMP_FILE, "w"
+    ) as timestamp:
+        for line in upload:
+            pass
+
+        timestamp.write(f"{get_timestamp(line)}")
+
+
 if __name__ == "__main__":
     if is_logging_mode():
         MAX_RETRIES = 5
@@ -107,9 +108,10 @@ if __name__ == "__main__":
                 print("Preparing log file to upload...")
                 prepare_log_file_for_upload()
 
-                print("Uploading log file...")
                 if os.stat(FOR_UPLOAD_LOG_FILE).st_size > 0:
+                    print("Uploading log file...")
                     upload_log_file()
+                    update_last_uploaded_timestamp_file()
                     print("Success!")
                 else:
                     print("Nothing to write")
