@@ -1,6 +1,5 @@
 from dotenv import dotenv_values
-
-DEFAULTS = {"release_version": "dev-version", "logging": False, "max_logging_gb": 1}
+from generate_config import *
 
 
 def is_deployed_version():
