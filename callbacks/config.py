@@ -1,6 +1,6 @@
 from dotenv import dotenv_values
 
-DEFAULT_MAX_LOGGING_GB = 1
+DEFAULTS = {"release_version": "dev-version", "logging": False, "max_logging_gb": 1}
 
 
 def is_deployed_version():
@@ -10,9 +10,6 @@ def is_deployed_version():
 
 def is_debug_mode():
     config = dotenv_values(".env")
-    if is_deployed_version():
-        return False
-
     return config["DEBUG"].lower() == "true"
 
 
@@ -34,20 +31,21 @@ def get_release_version():
     try:
         config = dotenv_values(".env")
         return f'v{config["VERSION"]}'
-    except:
-        # The VERSION key is not a requirement in the .env file
-        return ""
+    except KeyError:
+        return DEFAULTS["release_version"]
 
 
 def is_logging_mode():
-    config = dotenv_values(".env")
-    return config["LOGGING"].lower() == "true"
+    try:
+        config = dotenv_values(".env")
+        return config["LOGGING"].lower() == "true"
+    except KeyError:
+        return DEFAULTS["logging"]
 
 
 def get_max_logging_gb():
-    config = dotenv_values(".env")
     try:
-        max_logging_gb = float(config["MAX_LOGGING_GB"])
-        return max_logging_gb
-    except:
-        return DEFAULT_MAX_LOGGING_GB
+        config = dotenv_values(".env")
+        return float(config["MAX_LOGGING_GB"])
+    except KeyError:
+        return DEFAULTS["max_logging_gb"]
