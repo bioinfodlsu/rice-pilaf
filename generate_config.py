@@ -9,9 +9,11 @@ def generate_config(
     with open(".env", "w") as f:
         f.write(f"DEBUG={debug}\n")
         f.write(f"DEPLOYED={deployed}\n")
-        f.write(f"LOGGING={logging}\n")
-        f.write(f"MAX_LOGGING_GB={max_logging_gb}\n")
-        f.write(f"MAX_CACHE_GB={max_cache_gb}\n")
+
+        if deployed:
+            f.write(f"LOGGING={logging}\n")
+            f.write(f"MAX_LOGGING_GB={max_logging_gb}\n")
+            f.write(f"MAX_CACHE_GB={max_cache_gb}\n")
 
         if version:
             if version == "latest":
