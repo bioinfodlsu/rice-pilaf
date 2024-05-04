@@ -6,14 +6,13 @@ WORKDIR /app
 
 RUN set -ex 
 
-RUN echo 'deb [trusted=yes] http://cloud.r-project.org/bin/linux/debian bullseye-cran40/' >> /etc/apt/sources.list
-
 RUN apt-get clean \
   && apt-get update \
   && apt-get install -y \
   build-essential \
   cmake \
   bedtools \
+  gdebi \
   git \
   libcurl4-openssl-dev \
   libffi-dev \
@@ -23,13 +22,20 @@ RUN apt-get clean \
   openjdk-11-jre \
   python3-dev \
   python3-pip \
-  r-base
+
+# Install R 4.3 (for compatibility with Bioconductor 3.17)
+RUN apt-get purge -y r-* \
+  && export R_VERSION=4.3.3 \
+  && curl -O https://cdn.rstudio.com/r/debian-11/pkgs/r-${R_VERSION}_1_amd64.deb \
+  && gdebi r-${R_VERSION}_1_amd64.deb \
+  && ln -s /opt/R/${R_VERSION}/bin/R /usr/local/bin/R \
+  && ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/local/bin/Rscript
 
 RUN pip3 install --no-cache-dir -r dependencies/requirements-workflow.txt
 
 RUN Rscript --vanilla dependencies/install-libraries-workflow.r
 
-# Handle dependency problems related to Java installation
+# Handle dependency problems related to Java installation:
 # https://stackoverflow.com/questions/61815233/install-java-runtime-in-debian-based-docker-image
 RUN mkdir -p /usr/share/man/man1 /usr/share/man/man2
 
