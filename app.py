@@ -17,18 +17,19 @@ import callbacks.template.callbacks
 import callbacks.text_mining.callbacks
 import callbacks.tf_enrich.callbacks
 import pages.navigation.main_nav as main_nav
-from callbacks.config import *
 from callbacks.constants import *
 from callbacks.file_util import *
-from generate_config import *
+from config.generate_config import *
+from config.parse_config import *
 
 # Create .env file if it does not exist
 if not path_exists(".env"):
     generate_config(debug=True, deployed=False, logging=False)
 
-make_dir("logs")
 
 if is_logging_mode():
+    make_dir("logs")
+
     # Suppress writing GET requests to the log
     log = logging.getLogger("werkzeug")
     log.setLevel(logging.ERROR)
@@ -62,20 +63,31 @@ if is_logging_mode():
     )
 
 server = Flask(__name__, static_folder="static")
-app = dash.Dash(
-    __name__,
-    use_pages=True,
-    external_stylesheets=[
-        dbc.themes.BOOTSTRAP,
-        dbc.icons.BOOTSTRAP,
-        dbc.icons.FONT_AWESOME,
-    ],
-    server=server,
-    title="RicePilaf",
-    update_title="Loading...",
-    meta_tags=[{"name": "viewport", "content": "width=1024"}],
-)
 
+if is_deployed_version():
+    app = dash.Dash(
+        __name__,
+        use_pages=True,
+        external_stylesheets=[
+            dbc.themes.BOOTSTRAP,
+            dbc.icons.BOOTSTRAP,
+            dbc.icons.FONT_AWESOME,
+        ],
+        server=server,
+        title="RicePilaf",
+        update_title="Loading...",
+        meta_tags=[{"name": "viewport", "content": "width=1024"}],
+    )
+
+else:
+    app = dash.Dash(
+        __name__,
+        use_pages=True,
+        server=server,
+        title="RicePilaf",
+        update_title="Loading...",
+        meta_tags=[{"name": "viewport", "content": "width=1024"}],
+    )
 
 # ============
 # Main Layout
