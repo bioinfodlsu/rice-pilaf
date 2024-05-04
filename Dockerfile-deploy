@@ -37,5 +37,8 @@ RUN mkdir -p cron_jobs/credentials \
 # Remove Bootstrap and Font Awesome style files since they are loaded via CDN when the app is deployed
 RUN rm -rf assets/0-*.css
 
+# Remove folder related to data preparation
+RUN rm -rf prepare_data
+
 # Write configuration file
 RUN python3 config/generate_config.py --deployed --latest-version --logging

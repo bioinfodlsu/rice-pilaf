@@ -39,8 +39,11 @@ RUN wget https://github.com/twbs/icons/releases/download/v1.11.0/bootstrap-icons
   && unzip fontawesome-free-6.5.2-web.zip \
   && mv bootstrap-icons-1.11.0 assets \
   && mkdir -p assets/fontawesome-free-6.5.2-web \
-  && mv fontawesome-free-6.5.2-web/{svgs,webfonts} assets/fontawesome-free-6.5.2-web \
+  && mv -t assets/fontawesome-free-6.5.2-web fontawesome-free-6.5.2-web/svgs fontawesome-free-6.5.2-web/webfonts \
   && rm -rf bootstrap-* fontawesome-*
+
+# Remove folders related to cron jobs and data preparation
+RUN rm -rf cron_jobs prepare_data
 
 EXPOSE 8050
 CMD ["python3", "app.py"]
