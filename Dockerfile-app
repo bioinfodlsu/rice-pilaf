@@ -11,6 +11,8 @@ RUN apt-get update \
   git \
   python3-dev \
   python3-pip \
+  unzip \
+  wget \
   && apt-get clean
 
 # Remove server-related configuration files
@@ -29,6 +31,16 @@ RUN cd ../ \
 
 # Write configuration file
 RUN python3 config/generate_config.py --latest-version
+
+# Download Bootstrap and Font Awesome to retain front-end styling even when offline
+RUN wget https://github.com/twbs/icons/releases/download/v1.11.0/bootstrap-icons-1.11.0.zip \
+  && wget https://use.fontawesome.com/releases/v6.5.2/fontawesome-free-6.5.2-web.zip \
+  && unzip bootstrap-icons-1.11.0.zip \ 
+  && unzip fontawesome-free-6.5.2-web.zip \
+  && mv bootstrap-icons-1.11.0 assets \
+  && mkdir -p assets/fontawesome-free-6.5.2-web \
+  && mv fontawesome-free-6.5.2-web/{svgs,webfonts} assets/fontawesome-free-6.5.2-web \
+  && rm -rf bootstrap-* fontawesome-*
 
 EXPOSE 8050
 CMD ["python3", "app.py"]
