@@ -15,9 +15,7 @@ Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard.
 Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients,
 this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.
 
-
 https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/251da285-b1a8-4a52-8f4f-4ba0c1446cc6
-
 
 ## Installation and usage
 
@@ -29,10 +27,10 @@ Alternatively, you can try RicePilaf at one of the sites below.
 
 ## Publicly accessible running instances of RicePilaf
 
-| URL                                                                    | Site                                                                                                                                            | Version | Status (Date)            |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
-| [https://ricepilaf.bioinfodlsu.com/](https://ricepilaf.bioinfodlsu.com/) | Digital Ocean (Singapore)                                                                                                                       | 0.1.3   | Running (March 15, 2024)  |
-| [https://ricepilaf.irri.org/](https://ricepilaf.irri.org/) <br> [https://rice-pilaf.irri.org/](https://rice-pilaf.irri.org/)             | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE &ndash; Science Cloud resource | 0.1.3   | Running (March 15, 2024) |
+| URL                                                                                                                          | Site                                                                                                                                                    | Version | Status (Date)            |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
+| [https://ricepilaf.bioinfodlsu.com/](https://ricepilaf.bioinfodlsu.com/)                                                     | Digital Ocean (Singapore)                                                                                                                               | 1.0.0   | Running (May 4, 2024)    |
+| [https://ricepilaf.irri.org/](https://ricepilaf.irri.org/) <br> [https://rice-pilaf.irri.org/](https://rice-pilaf.irri.org/) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE &ndash; Science Cloud resource | 0.1.3   | Running (March 15, 2024) |
 
 ## Contact
 
