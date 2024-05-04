@@ -35,4 +35,4 @@ RUN mkdir -p cron_jobs/credentials \
   && touch cron_jobs/credentials/ricepilaf-logger-key.json
 
 # Write configuration file
-RUN python3 generate_config.py --deployed --latest-version --logging
+RUN python3 config/generate_config.py --deployed --latest-version --logging

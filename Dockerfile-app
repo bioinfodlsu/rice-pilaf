@@ -28,7 +28,7 @@ RUN cd ../ \
   && cd ../app
 
 # Write configuration file
-RUN python3 generate_config.py --latest-version
+RUN python3 config/generate_config.py --latest-version
 
 EXPOSE 8050
 CMD ["python3", "app.py"]
