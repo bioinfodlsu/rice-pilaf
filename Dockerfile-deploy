@@ -34,8 +34,8 @@ RUN cp cron_jobs/cron-jobs /etc/cron.d/cron-jobs \
 RUN mkdir -p cron_jobs/credentials \
   && touch cron_jobs/credentials/ricepilaf-logger-key.json
 
-# Remove assets that are fetched from CDN when app is deployed
-RUN rm -rf assets/bootstrap-* assets/fontawesome-* assets/0-*
+# Remove Bootstrap and Font Awesome style files since they are loaded via CDN when the app is deployed
+RUN rm -rf assets/0-*.css
 
 # Write configuration file
 RUN python3 config/generate_config.py --deployed --latest-version --logging
