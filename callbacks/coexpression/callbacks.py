@@ -3,7 +3,6 @@ from collections import namedtuple
 from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ...config.parse_config import *
 from ..homepage import util as homepage_util
 from ..lift_over import util as lift_over_util
 from .util import *
