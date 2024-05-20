@@ -20,4 +20,5 @@ jobs:
                   python-version: 3.8
             - uses: isort/isort-action@master
               with:
+                  configuration: "--profile black"
                   requirementsFiles: "dependencies/requirements-app.txt dependencies/requirements-workflow.txt dependencies/requirements-google-api.txt"
