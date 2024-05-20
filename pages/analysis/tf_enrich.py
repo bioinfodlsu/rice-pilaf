@@ -2,7 +2,10 @@ import dash_bootstrap_components as dbc
 from dash import dash_table, dcc, html
 
 from callbacks.constants import Constants
-from callbacks.tf_enrich.util import *
+from callbacks.tf_enrich.util import (
+    TFBS_PREDICTION_TECHNIQUE_VALUE_LABEL,
+    TFBS_SET_VALUE_LABEL,
+)
 
 # ===========================
 # Prediction Technique Modal

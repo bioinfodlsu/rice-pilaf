@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import ftfy
@@ -6,9 +7,16 @@ import rapidfuzz
 import regex as re
 
 from ..constants import Constants
-from ..file_util import *
-from ..general_util import *
-from ..links_util import *
+from ..file_util import (
+    append_timestamp_to_filename,
+    convert_text_to_path,
+    get_path_to_text_mining_temp,
+    make_dir,
+    path_exists,
+    shorten_name,
+)
+from ..general_util import NULL_PLACEHOLDER, create_empty_df_with_cols
+from ..links_util import get_msu_browser_link_single_str, get_pubmed_link
 
 COLNAMES = ["Gene", "MSU ID", "PMID", "Title", "Sentence", "Score"]
 SIMILARITY_CUTOFF = 85
@@ -266,7 +274,7 @@ def text_mining_query_search(query_string, genomic_intervals, filter_gene_ids):
     return df
 
 
-def is_error(input):
+def is_query_error(input):
     try:
         if len(input.strip()) == 0:
             return True, "Please enter a query trait/phenotype."

@@ -1,7 +1,7 @@
 from dash import Input, Output, State, html
 from dash.exceptions import PreventUpdate
 
-from .util import *
+from .util import get_genomic_intervals_from_input, is_error
 
 
 def init_callback(app):

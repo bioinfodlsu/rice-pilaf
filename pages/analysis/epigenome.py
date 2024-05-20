@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 from callbacks.constants import Constants
-from callbacks.epigenome.util import *
+from callbacks.epigenome.util import RICE_ENCODE_SAMPLES
 
 layout = html.Div(
     id={"type": "analysis-layout", "label": Constants.LABEL_EPIGENOME},

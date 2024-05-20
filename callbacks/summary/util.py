@@ -1,9 +1,24 @@
+import os
+import pickle
 from collections import defaultdict
 
-from ..coexpression.util import *
+import pandas as pd
+
+from ..coexpression.util import do_module_enrichment_analysis
 from ..constants import Constants
-from ..general_util import *
-from ..lift_over.util import *
+from ..file_util import (
+    append_timestamp_to_filename,
+    make_dir,
+    path_exists,
+    shorten_name,
+)
+from ..general_util import NULL_PLACEHOLDER
+from ..lift_over.util import (
+    get_all_genes,
+    get_genes_in_Nb,
+    get_path_to_temp,
+    other_ref_genomes,
+)
 
 
 def get_liftover_summary(implicated_genes):
