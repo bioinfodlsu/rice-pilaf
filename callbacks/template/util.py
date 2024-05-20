@@ -1,3 +1,4 @@
+import os
 import pickle
 from collections import namedtuple
 
@@ -10,7 +11,6 @@ from ..file_util import (
     append_timestamp_to_filename,
     get_path_to_temp,
     make_dir,
-    os,
     path_exists,
     shorten_name,
 )

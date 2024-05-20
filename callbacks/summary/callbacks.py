@@ -1,9 +1,16 @@
-from dash import Input, Output, State, ctx, html
+import pandas as pd
+from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ..coexpression import util as coexpression_util
-from ..lift_over import util as lift_over_util
-from .util import NULL_PLACEHOLDER, make_summary_table, pd, purge_html_export_table
+from ..coexpression.util import (
+    get_user_facing_algo,
+    get_user_facing_network,
+    get_user_facing_parameter,
+)
+from ..general_util import NULL_PLACEHOLDER, purge_html_export_table
+from ..lift_over.util import get_genes_in_Nb, get_genomic_intervals_from_input, is_error
+from ..links_util import get_msu_browser_link
+from .util import make_summary_table
 
 
 def init_callback(app):
@@ -23,8 +30,8 @@ def init_callback(app):
         """
 
         if homepage_is_submitted:
-            if nb_intervals_str and not lift_over_util.is_error(
-                lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)
+            if nb_intervals_str and not is_error(
+                get_genomic_intervals_from_input(nb_intervals_str)
             ):
                 return [html.B("Your Input Intervals: "), html.Span(nb_intervals_str)]
             else:
@@ -151,21 +158,19 @@ def init_callback(app):
                         html.Li(
                             [
                                 html.B("Selected Co-Expression Network: "),
-                                coexpression_util.get_user_facing_network(network),
+                                get_user_facing_network(network),
                             ]
                         ),
                         html.Li(
                             [
                                 html.B("Selected Module Detection Algorithm: "),
-                                coexpression_util.get_user_facing_algo(algo),
+                                get_user_facing_algo(algo),
                             ]
                         ),
                         html.Li(
                             [
                                 html.B("Selected Algorithm Parameter: "),
-                                coexpression_util.get_user_facing_parameter(
-                                    algo, parameters
-                                ),
+                                get_user_facing_parameter(algo, parameters),
                             ]
                         ),
                     ],
@@ -243,7 +248,7 @@ def init_callback(app):
 
             # Will throw exception when cache is cleared and display is reset while summary page is open
             try:
-                combined_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[1]
+                combined_gene_ids = get_genes_in_Nb(genomic_intervals)[1]
             except:
                 pass
             valid_addl_genes = []

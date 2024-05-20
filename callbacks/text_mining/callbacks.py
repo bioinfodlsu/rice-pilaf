@@ -1,16 +1,11 @@
+import pandas as pd
 from dash import ALL, Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 from flask import request
 
-from ..lift_over import util as lift_over_util
-from .util import (
-    MAX_NUM_RESULTS,
-    get_num_unique_entries,
-    is_error,
-    pd,
-    purge_html_export_table,
-    text_mining_query_search,
-)
+from ..general_util import get_num_unique_entries, purge_html_export_table
+from ..lift_over.util import get_genes_in_Nb, get_genomic_intervals_from_input, is_error
+from .util import MAX_NUM_RESULTS, is_query_error, text_mining_query_search
 
 
 def init_callback(app):
@@ -36,8 +31,8 @@ def init_callback(app):
         """
 
         if homepage_is_submitted:
-            if nb_intervals_str and not lift_over_util.is_error(
-                lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)
+            if nb_intervals_str and not is_error(
+                get_genomic_intervals_from_input(nb_intervals_str)
             ):
                 return [html.B("Your Input Intervals: "), html.Span(nb_intervals_str)]
             else:
@@ -111,7 +106,7 @@ def init_callback(app):
         if homepage_is_submitted and (
             text_mining_submitted_n_clicks >= 1 or text_mining_query_n_submit >= 1
         ):
-            is_there_error, message = is_error(text_mining_query)
+            is_there_error, message = is_query_error(text_mining_query)
 
             if not is_there_error:
                 return (
@@ -194,7 +189,7 @@ def init_callback(app):
         - ('text-mining-submit', 'disabled'): True for disabling the submit button; otherwise False
         """
 
-        is_there_error, _ = is_error(text_mining_query)
+        is_there_error, _ = is_query_error(text_mining_query)
 
         if is_there_error:
             return False
@@ -238,13 +233,11 @@ def init_callback(app):
 
         if homepage_is_submitted and text_mining_is_submitted:
             query_string = text_mining_submitted_query
-            is_there_error, _ = is_error(query_string)
+            is_there_error, _ = is_query_error(query_string)
 
             if not is_there_error:
                 if text_mining_submitted_filter == "Yes":
-                    implicated_gene_ids = lift_over_util.get_genes_in_Nb(
-                        genomic_intervals
-                    )[1]
+                    implicated_gene_ids = get_genes_in_Nb(genomic_intervals)[1]
                 else:
                     implicated_gene_ids = None
 

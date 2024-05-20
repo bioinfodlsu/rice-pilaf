@@ -1,25 +1,29 @@
+import pandas as pd
 from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ..homepage import util as homepage_util
-from .util import (
+from ..general_util import (
     NULL_PLACEHOLDER,
+    get_num_unique_entries,
+    get_tab_index,
+    purge_html_export_table,
+)
+from ..homepage.util import clear_specific_dccStore_data
+from ..links_util import (
+    get_msu_browser_link,
+    get_rgi_genecard_link,
+    get_rgi_orthogroup_link,
+)
+from .util import (
     get_all_genes,
     get_common_genes,
     get_genes_in_Nb,
     get_genomic_intervals_from_input,
-    get_msu_browser_link,
-    get_num_unique_entries,
-    get_rgi_genecard_link,
-    get_rgi_orthogroup_link,
     get_tab_id,
-    get_tab_index,
     get_tabs,
     get_unique_genes_in_other_ref,
     is_error,
     other_ref_genomes,
-    pd,
-    purge_html_export_table,
     sanitize_other_refs,
 )
 
@@ -92,7 +96,7 @@ def init_callback(app):
         if homepage_is_submitted and lift_over_submit_n_clicks >= 1:
             other_refs = sanitize_other_refs(other_refs)
 
-            dccStore_children = homepage_util.clear_specific_dccStore_data(
+            dccStore_children = clear_specific_dccStore_data(
                 dccStore_children, "lift-over-active"
             )
 

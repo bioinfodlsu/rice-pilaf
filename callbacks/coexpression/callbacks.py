@@ -1,12 +1,19 @@
+import pickle
 from collections import namedtuple
 
+import pandas as pd
 from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ..homepage import util as homepage_util
-from ..lift_over import util as lift_over_util
+from ..constants import Constants
+from ..general_util import get_num_unique_entries, purge_html_export_table
+from ..homepage.util import clear_specific_dccStore_data
+from ..lift_over.util import get_genes_in_Nb, get_genomic_intervals_from_input, is_error
+from ..links_util import (
+    get_msu_browser_link_single_str,
+    get_rgi_orthogroup_link_single_str,
+)
 from .util import (
-    Constants,
     check_if_valid_msu_ids,
     convert_to_df,
     count_genes_in_module,
@@ -14,24 +21,18 @@ from .util import (
     do_module_enrichment_analysis,
     get_gene_description_entry,
     get_interpro_entry,
-    get_msu_browser_link_single_str,
     get_noun_for_active_tab,
-    get_num_unique_entries,
     get_parameters_for_algo,
     get_pfam_entry,
     get_pubmed_entry,
     get_qtaro_entry,
     get_rapdb_entry,
-    get_rgi_orthogroup_link_single_str,
     get_uniprot_entry,
     get_user_facing_algo,
     get_user_facing_network,
     get_user_facing_parameter,
     load_module_graph,
     module_detection_algos,
-    pd,
-    pickle,
-    purge_html_export_table,
     sanitize_msu_id,
 )
 
@@ -59,8 +60,8 @@ def init_callback(app):
         """
 
         if homepage_is_submitted:
-            if nb_intervals_str and not lift_over_util.is_error(
-                lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)
+            if nb_intervals_str and not is_error(
+                get_genomic_intervals_from_input(nb_intervals_str)
             ):
                 return [html.B("Your Input Intervals: "), html.Span(nb_intervals_str)]
 
@@ -186,11 +187,11 @@ def init_callback(app):
 
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
-            implicated_gene_ids = lift_over_util.get_genes_in_Nb(genomic_intervals)[1]
+            implicated_gene_ids = get_genes_in_Nb(genomic_intervals)[1]
 
             gene_ids = list(set.union(set(implicated_gene_ids), set(list_addl_genes)))
 
-            dccStore_children = homepage_util.clear_specific_dccStore_data(
+            dccStore_children = clear_specific_dccStore_data(
                 dccStore_children,
                 "coexpression-pathway-active",
                 "coexpression-graph-active",

@@ -1,20 +1,23 @@
+import os
+import pickle
 from collections import defaultdict
+
+import pandas as pd
 
 from ..coexpression.util import do_module_enrichment_analysis
 from ..constants import Constants
-from ..lift_over.util import (
-    NULL_PLACEHOLDER,
+from ..file_util import (
     append_timestamp_to_filename,
+    make_dir,
+    path_exists,
+    shorten_name,
+)
+from ..general_util import NULL_PLACEHOLDER
+from ..lift_over.util import (
     get_all_genes,
     get_genes_in_Nb,
     get_path_to_temp,
-    make_dir,
-    os,
     other_ref_genomes,
-    path_exists,
-    pd,
-    pickle,
-    shorten_name,
 )
 
 

@@ -2,13 +2,16 @@ from dash import ALL, Input, Output, State, ctx, html
 from dash.exceptions import PreventUpdate
 from flask import request
 
-from ..lift_over import util as lift_over_util
+from ..lift_over.util import (
+    get_error_message,
+    get_genomic_intervals_from_input,
+    is_error,
+)
+from ..style_util import add_class_name, remove_class_name
 from .util import (
-    add_class_name,
     clear_cache_folder,
     clear_specific_dccStore_data,
     get_example_genomic_interval,
-    remove_class_name,
 )
 
 
@@ -134,17 +137,15 @@ def init_callback(app):
         # Parses the genomic interval input
         if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
             if nb_intervals_str:
-                intervals = lift_over_util.get_genomic_intervals_from_input(
-                    nb_intervals_str
-                )
+                intervals = get_genomic_intervals_from_input(nb_intervals_str)
 
-                if lift_over_util.is_error(intervals):
+                if is_error(intervals):
                     return (
                         dccStore_children,
                         [
                             f"Error encountered while parsing genomic interval {intervals[1]}",
                             html.Br(),
-                            lift_over_util.get_error_message(intervals[0]),
+                            get_error_message(intervals[0]),
                         ],
                         {"display": "block"},
                         False,

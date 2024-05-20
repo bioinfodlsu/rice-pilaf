@@ -2,7 +2,7 @@ import gffutils
 
 from ..constants import Constants
 from ..file_util import convert_text_to_path, get_path_to_temp, make_dir, path_exists
-from ..lift_over import util
+from ..lift_over.util import get_genomic_intervals_from_input, sanitize_nb_intervals_str
 
 RICE_ENCODE_SAMPLES = {
     "Leaf": ["ATAC-Seq", "FAIRE-Seq"],
@@ -29,10 +29,10 @@ def write_igv_tracks_to_file(nb_intervals_str):
 
 def write_gff_igv_track_to_file(source_dir, source_file, nb_intervals_str):
     if path_exists(source_dir):
-        loci_list = util.sanitize_nb_intervals_str(nb_intervals_str)
+        loci_list = sanitize_nb_intervals_str(nb_intervals_str)
         loci_list = loci_list.split(";")
 
-        genomic_interval_list = util.get_genomic_intervals_from_input(nb_intervals_str)
+        genomic_interval_list = get_genomic_intervals_from_input(nb_intervals_str)
 
         temp_folder = get_path_to_temp(
             nb_intervals_str, Constants.TEMP_EPIGENOME, source_file

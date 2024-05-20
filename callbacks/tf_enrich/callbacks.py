@@ -1,17 +1,16 @@
+import pandas as pd
 from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ..coexpression import util as coexpression_util
-from ..lift_over import util as lift_over_util
-from .util import (
+from ..coexpression.util import check_if_valid_msu_ids
+from ..general_util import (
     NULL_PLACEHOLDER,
-    get_annotations_addl_gene,
-    get_msu_browser_link,
     get_num_unique_entries,
-    pd,
-    perform_enrichment_all_tf,
     purge_html_export_table,
 )
+from ..lift_over.util import get_genes_in_Nb, get_genomic_intervals_from_input, is_error
+from ..links_util import get_msu_browser_link
+from .util import get_annotations_addl_gene, perform_enrichment_all_tf
 
 
 def init_callback(app):
@@ -35,8 +34,8 @@ def init_callback(app):
         """
 
         if homepage_is_submitted:
-            if nb_intervals_str and not lift_over_util.is_error(
-                lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)
+            if nb_intervals_str and not is_error(
+                get_genomic_intervals_from_input(nb_intervals_str)
             ):
                 return [html.B("Your Input Intervals: "), html.Span(nb_intervals_str)]
             else:
@@ -107,9 +106,7 @@ def init_callback(app):
             )
 
             # Check which genes are valid MSU IDs
-            list_addl_genes, invalid_genes = coexpression_util.check_if_valid_msu_ids(
-                list_addl_genes
-            )
+            list_addl_genes, invalid_genes = check_if_valid_msu_ids(list_addl_genes)
 
             if not invalid_genes:
                 error_display = {"display": "none"}
@@ -141,9 +138,9 @@ def init_callback(app):
 
             # Perform lift-over if it has not been performed.
             # Otherwise, just fetch the results from the file
-            lift_over_nb_entire_table = lift_over_util.get_genes_in_Nb(
-                genomic_intervals
-            )[0].to_dict("records")
+            lift_over_nb_entire_table = get_genes_in_Nb(genomic_intervals)[0].to_dict(
+                "records"
+            )
 
             combined_genes = lift_over_nb_entire_table + get_annotations_addl_gene(
                 list_addl_genes

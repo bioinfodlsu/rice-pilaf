@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import ftfy
@@ -11,7 +12,6 @@ from ..file_util import (
     convert_text_to_path,
     get_path_to_text_mining_temp,
     make_dir,
-    os,
     path_exists,
     shorten_name,
 )
@@ -274,7 +274,7 @@ def text_mining_query_search(query_string, genomic_intervals, filter_gene_ids):
     return df
 
 
-def is_error(input):
+def is_query_error(input):
     try:
         if len(input.strip()) == 0:
             return True, "Please enter a query trait/phenotype."

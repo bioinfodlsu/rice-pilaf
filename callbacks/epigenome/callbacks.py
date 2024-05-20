@@ -8,13 +8,17 @@ from flask import abort, json, send_from_directory
 from werkzeug.exceptions import HTTPException
 
 from ..constants import Constants
-from ..lift_over import util as lift_over_util
+from ..file_util import convert_text_to_path, get_path_to_temp
+from ..lift_over.util import (
+    get_genomic_intervals_from_input,
+    is_error,
+    sanitize_nb_intervals_str,
+    to_genomic_interval_str,
+)
 from .util import (
     RICE_ENCODE_SAMPLES,
     convert_text_to_path,
     generate_tracks,
-    get_path_to_temp,
-    util,
     write_igv_tracks_to_file,
 )
 
@@ -42,8 +46,8 @@ def init_callback(app):
         """
 
         if homepage_is_submitted:
-            if nb_intervals_str and not lift_over_util.is_error(
-                lift_over_util.get_genomic_intervals_from_input(nb_intervals_str)
+            if nb_intervals_str and not is_error(
+                get_genomic_intervals_from_input(nb_intervals_str)
             ):
                 return [html.B("Your Input Intervals: "), html.Span(nb_intervals_str)]
             else:
@@ -151,7 +155,7 @@ def init_callback(app):
 
         if homepage_is_submitted:
             # sanitizes the genomic intervals from the homepage and splits the genomic intervals by ';'
-            epigenome_options = util.sanitize_nb_intervals_str(nb_intervals_str)
+            epigenome_options = sanitize_nb_intervals_str(nb_intervals_str)
             epigenome_options = epigenome_options.split(";")
 
             # if no genomic intervals are selected, use the first option
@@ -354,7 +358,7 @@ def init_callback(app):
 
             # sanitize the selected nb interval so that if user inputs a "chr1", the nb interval will become "Chr01" so that it will be valid
             # the epigenome will be only displayed if the input follows the format of "Chr01"
-            selected_nb_intervals_str = lift_over_util.to_genomic_interval_str(
+            selected_nb_intervals_str = to_genomic_interval_str(
                 selected_nb_intervals_str
             )
 
