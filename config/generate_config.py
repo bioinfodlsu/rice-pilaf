@@ -63,7 +63,7 @@ if __name__ == "__main__":
         "--max-logging-gb",
         required=False,
         type=float,
-        default=1,
+        default=DEFAULTS["max_logging_gb"],
         help="Maximum storage allocation (in GB) for log files",
     )
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         "--max-cache-gb",
         required=False,
         type=float,
-        default=10,
+        default=DEFAULTS["max_cache_gb"],
         help="Maximum storage allocation (in GB) for the results cache -- the directory that stores results of previously run analyses to avoid repeated computations",
     )
 
