@@ -3,8 +3,13 @@ from dash.exceptions import PreventUpdate
 from flask import request
 
 from ..lift_over import util as lift_over_util
-from .util import (add_class_name, clear_cache_folder, clear_specific_dccStore_data,
-                   get_example_genomic_interval, remove_class_name)
+from .util import (
+    add_class_name,
+    clear_cache_folder,
+    clear_specific_dccStore_data,
+    get_example_genomic_interval,
+    remove_class_name,
+)
 
 
 def init_callback(app):

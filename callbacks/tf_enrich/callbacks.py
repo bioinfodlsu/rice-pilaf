@@ -3,8 +3,15 @@ from dash.exceptions import PreventUpdate
 
 from ..coexpression import util as coexpression_util
 from ..lift_over import util as lift_over_util
-from .util import (NULL_PLACEHOLDER, get_annotations_addl_gene, get_msu_browser_link,
-                   get_num_unique_entries, pd, perform_enrichment_all_tf, purge_html_export_table)
+from .util import (
+    NULL_PLACEHOLDER,
+    get_annotations_addl_gene,
+    get_msu_browser_link,
+    get_num_unique_entries,
+    pd,
+    perform_enrichment_all_tf,
+    purge_html_export_table,
+)
 
 
 def init_callback(app):

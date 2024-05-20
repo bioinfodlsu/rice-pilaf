@@ -5,14 +5,35 @@ from dash.exceptions import PreventUpdate
 
 from ..homepage import util as homepage_util
 from ..lift_over import util as lift_over_util
-from .util import (Constants, check_if_valid_msu_ids, convert_to_df, count_genes_in_module,
-                   count_modules, do_module_enrichment_analysis, get_gene_description_entry,
-                   get_interpro_entry, get_msu_browser_link_single_str, get_noun_for_active_tab,
-                   get_num_unique_entries, get_parameters_for_algo, get_pfam_entry,
-                   get_pubmed_entry, get_qtaro_entry, get_rapdb_entry,
-                   get_rgi_orthogroup_link_single_str, get_uniprot_entry, get_user_facing_algo,
-                   get_user_facing_network, get_user_facing_parameter, load_module_graph,
-                   module_detection_algos, pd, pickle, purge_html_export_table, sanitize_msu_id)
+from .util import (
+    Constants,
+    check_if_valid_msu_ids,
+    convert_to_df,
+    count_genes_in_module,
+    count_modules,
+    do_module_enrichment_analysis,
+    get_gene_description_entry,
+    get_interpro_entry,
+    get_msu_browser_link_single_str,
+    get_noun_for_active_tab,
+    get_num_unique_entries,
+    get_parameters_for_algo,
+    get_pfam_entry,
+    get_pubmed_entry,
+    get_qtaro_entry,
+    get_rapdb_entry,
+    get_rgi_orthogroup_link_single_str,
+    get_uniprot_entry,
+    get_user_facing_algo,
+    get_user_facing_network,
+    get_user_facing_parameter,
+    load_module_graph,
+    module_detection_algos,
+    pd,
+    pickle,
+    purge_html_export_table,
+    sanitize_msu_id,
+)
 
 Parameter_slider = namedtuple("Parameter_slider", ["marks", "value"])
 

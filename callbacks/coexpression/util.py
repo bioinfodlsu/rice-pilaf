@@ -9,15 +9,34 @@ from dash import html
 from scipy.stats import false_discovery_control, fisher_exact
 
 from ..constants import Constants
-from ..file_util import (append_timestamp_to_filename, get_path_to_temp, make_dir, path_exists,
-                         shorten_name)
-from ..general_util import (NULL_PLACEHOLDER, create_empty_df_with_cols,
-                            display_cols_in_sci_notation, display_in_sci_notation, get_tab_index)
-from ..links_util import (get_doi_link_single_str, get_genes_from_kegg_link, get_go_link,
-                          get_gramene_transcript_single_str, get_interpro_link_single_str,
-                          get_kegg_link, get_msu_browser_link_single_str, get_pfam_link_single_str,
-                          get_pubmed_link_single_str, get_rapdb_single_str, get_to_po_link,
-                          get_uniprot_link_single_str)
+from ..file_util import (
+    append_timestamp_to_filename,
+    get_path_to_temp,
+    make_dir,
+    path_exists,
+    shorten_name,
+)
+from ..general_util import (
+    NULL_PLACEHOLDER,
+    create_empty_df_with_cols,
+    display_cols_in_sci_notation,
+    display_in_sci_notation,
+    get_tab_index,
+)
+from ..links_util import (
+    get_doi_link_single_str,
+    get_genes_from_kegg_link,
+    get_go_link,
+    get_gramene_transcript_single_str,
+    get_interpro_link_single_str,
+    get_kegg_link,
+    get_msu_browser_link_single_str,
+    get_pfam_link_single_str,
+    get_pubmed_link_single_str,
+    get_rapdb_single_str,
+    get_to_po_link,
+    get_uniprot_link_single_str,
+)
 
 # Settings for the module detection algorithms:
 # - multiplier: Value multiplied to the parameter to get the name of the directory

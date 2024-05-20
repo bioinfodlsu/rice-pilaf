@@ -6,8 +6,15 @@ import rapidfuzz
 import regex as re
 
 from ..constants import Constants
-from ..file_util import (append_timestamp_to_filename, convert_text_to_path,
-                         get_path_to_text_mining_temp, make_dir, os, path_exists, shorten_name)
+from ..file_util import (
+    append_timestamp_to_filename,
+    convert_text_to_path,
+    get_path_to_text_mining_temp,
+    make_dir,
+    os,
+    path_exists,
+    shorten_name,
+)
 from ..general_util import NULL_PLACEHOLDER, create_empty_df_with_cols
 from ..links_util import get_msu_browser_link_single_str, get_pubmed_link
 

@@ -3,8 +3,14 @@ from dash.exceptions import PreventUpdate
 from flask import request
 
 from ..lift_over import util as lift_over_util
-from .util import (MAX_NUM_RESULTS, get_num_unique_entries, is_error, pd, purge_html_export_table,
-                   text_mining_query_search)
+from .util import (
+    MAX_NUM_RESULTS,
+    get_num_unique_entries,
+    is_error,
+    pd,
+    purge_html_export_table,
+    text_mining_query_search,
+)
 
 
 def init_callback(app):
