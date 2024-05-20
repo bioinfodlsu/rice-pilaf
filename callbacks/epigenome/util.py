@@ -1,7 +1,7 @@
 import gffutils
 
 from ..constants import Constants
-from ..file_util import *
+from ..file_util import convert_text_to_path, get_path_to_temp, make_dir, path_exists
 from ..lift_over import util
 
 RICE_ENCODE_SAMPLES = {

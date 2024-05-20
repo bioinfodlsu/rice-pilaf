@@ -2,8 +2,7 @@ import shutil
 import sqlite3
 
 from ..constants import Constants
-from ..file_util import *
-from ..style_util import *
+from ..file_util import make_dir, path_exists
 
 example_genomic_intervals = {
     "pre-harvest": "Chr01:1523625-1770814; Chr04:4662701-4670717",

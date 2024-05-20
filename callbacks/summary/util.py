@@ -1,9 +1,10 @@
 from collections import defaultdict
 
-from ..coexpression.util import *
+from ..coexpression.util import do_module_enrichment_analysis
 from ..constants import Constants
-from ..general_util import *
-from ..lift_over.util import *
+from ..lift_over.util import (NULL_PLACEHOLDER, append_timestamp_to_filename, get_all_genes,
+                              get_genes_in_Nb, get_path_to_temp, make_dir, os, other_ref_genomes,
+                              path_exists, pd, pickle, shorten_name)
 
 
 def get_liftover_summary(implicated_genes):

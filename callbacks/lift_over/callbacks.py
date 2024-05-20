@@ -1,9 +1,12 @@
 from dash import Input, Output, State, ctx, dcc, html
 from dash.exceptions import PreventUpdate
 
-from ..general_util import *
 from ..homepage import util as homepage_util
-from .util import *
+from .util import (NULL_PLACEHOLDER, get_all_genes, get_common_genes, get_genes_in_Nb,
+                   get_genomic_intervals_from_input, get_msu_browser_link, get_num_unique_entries,
+                   get_rgi_genecard_link, get_rgi_orthogroup_link, get_tab_id, get_tab_index,
+                   get_tabs, get_unique_genes_in_other_ref, is_error, other_ref_genomes, pd,
+                   purge_html_export_table, sanitize_other_refs)
 
 
 def init_callback(app):

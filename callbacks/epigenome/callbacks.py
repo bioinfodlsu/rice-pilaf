@@ -8,9 +8,9 @@ from flask import abort, json, send_from_directory
 from werkzeug.exceptions import HTTPException
 
 from ..constants import Constants
-from ..file_util import *
 from ..lift_over import util as lift_over_util
-from .util import *
+from .util import (RICE_ENCODE_SAMPLES, convert_text_to_path, generate_tracks, get_path_to_temp,
+                   util, write_igv_tracks_to_file)
 
 Tissue_tracks = namedtuple("Tissue_tracks", ["tracks"])
 

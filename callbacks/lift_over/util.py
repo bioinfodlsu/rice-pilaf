@@ -6,9 +6,12 @@ import pandas as pd
 import regex as re
 
 from ..constants import Constants
-from ..file_util import *
-from ..general_util import *
-from ..links_util import *
+from ..file_util import (append_timestamp_to_filename, get_path_to_temp, make_dir, os, path_exists,
+                         shorten_name)
+from ..general_util import NULL_PLACEHOLDER, create_empty_df_with_cols
+from ..links_util import (get_doi_link_single_str, get_interpro_link_single_str,
+                          get_pfam_link_single_str, get_pubmed_link_single_str,
+                          get_rapdb_single_str, get_rgi_genecard_link_single_str, get_uniprot_link)
 
 Genomic_interval = namedtuple("Genomic_interval", ["chrom", "start", "stop"])
 

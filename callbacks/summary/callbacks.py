@@ -3,7 +3,7 @@ from dash.exceptions import PreventUpdate
 
 from ..coexpression import util as coexpression_util
 from ..lift_over import util as lift_over_util
-from .util import *
+from .util import NULL_PLACEHOLDER, make_summary_table, pd, purge_html_export_table
 
 
 def init_callback(app):

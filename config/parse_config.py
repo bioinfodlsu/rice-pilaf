@@ -1,6 +1,6 @@
 from dotenv import dotenv_values
 
-from config.generate_config import *
+from config.generate_config import DEFAULTS
 
 
 def is_deployed_version():
