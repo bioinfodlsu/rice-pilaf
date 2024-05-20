@@ -4,7 +4,7 @@ from dash import html
 
 import pages.analysis_layout as analysis_layout
 import pages.navigation.analysis_nav as analysis_nav
-from config.parse_config import *
+from config.parse_config import show_if_not_deployed
 
 dash.register_page(__name__, path="/", name="RicePilaf", location="app-topbar")
 

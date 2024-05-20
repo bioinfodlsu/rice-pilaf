@@ -2,7 +2,10 @@ import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dash_table, dcc, html
 
-from callbacks.coexpression.util import *
+from callbacks.coexpression.util import (
+    COEXPRESSION_NETWORKS_VALUE_LABEL,
+    MODULE_DETECTION_ALGOS_VALUE_LABEL,
+)
 from callbacks.constants import Constants
 
 # ============================
