@@ -15,4 +15,4 @@ wget https://bioconductor.org/packages/3.17/bioc/src/contrib/SPIA_2.52.0.tar.gz 
 Rscript --vanilla dependencies/install-libraries-workflow.r
 
 # Delete temporary folder for storing package tarballs
-rm -rf dependencies/temp
+rm -rf "$temp"
