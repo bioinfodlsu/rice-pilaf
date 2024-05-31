@@ -2,7 +2,7 @@ dash==2.9.1
 dash-bootstrap-components==1.4.1
 dash-cytoscape==0.3.0
 gffutils==0.11.1
-networkx>=2.8.7
+networkx==3.3
 pandas==1.5.1
 dash-bio==1.0.2
 pybind11==2.10.4
