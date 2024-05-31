@@ -183,11 +183,11 @@ app.layout = lambda: dbc.Container(
             [
                 dbc.Col(
                     dcc.Link(
-                        html.Img(src="assets/bioinfo_lab_logo.png", height="45px"),
+                        html.Img(src="assets/bioinfo_lab_logo.png", height="65px"),
                         href="https://bioinfodlsu.com/",
                         target="_blank",
                     ),
-                    className="col-auto text-center",
+                    className="col-auto text-center my-auto",
                 ),
                 dbc.Col(
                     [
@@ -199,8 +199,10 @@ app.layout = lambda: dbc.Container(
                         ),
                         html.Br(),
                         html.Span(
-                            "Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) – The French National Research Institute for Sustainable Development (IRD) Cooperative Project"
+                            "Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) – The French National Research Institute for Sustainable Development (IRD)"
                         ),
+                        html.Br(),
+                        html.Span("Cooperative Project"),
                     ],
                     className="col-sm-11",
                 ),

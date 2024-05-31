@@ -30,6 +30,9 @@ def show_if_not_deployed():
 def get_release_version():
     try:
         config = dotenv_values(".env")
+        if config["VERSION"].startswith("dev"):
+            return config["VERSION"]
+
         return f'v{config["VERSION"]}'
     except KeyError:
         return DEFAULTS["release_version"]
