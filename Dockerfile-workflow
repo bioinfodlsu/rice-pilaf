@@ -32,7 +32,7 @@ RUN apt-get purge -y r-* \
 
 RUN pip3 install --no-cache-dir -r dependencies/requirements-workflow.txt
 
-RUN Rscript --vanilla dependencies/install-libraries-workflow.r
+RUN bash dependencies/download-r-libraries.sh
 
 # Handle dependency problems related to Java installation:
 # https://stackoverflow.com/questions/61815233/install-java-runtime-in-debian-based-docker-image
