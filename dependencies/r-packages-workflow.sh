@@ -1,0 +1,1 @@
+R -e 'BiocManager::install(c("clusterProfiler", "GO.db", "graphite", "ROntoTools", "SPIA"))'
