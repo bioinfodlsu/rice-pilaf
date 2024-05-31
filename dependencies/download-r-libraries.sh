@@ -4,7 +4,7 @@
 temp="dependencies/temp"
 mkdir -p "$temp"
 
-# Download tarballs of Bioconductor packages
+# Download tarballs of Bioconductor 3.17 packages
 wget https://bioconductor.org/packages/3.17/bioc/src/contrib/clusterProfiler_4.8.3.tar.gz -P "$temp"
 wget https://www.bioconductor.org/packages/3.17/data/annotation/src/contrib/GO.db_3.17.0.tar.gz -P "$temp"
 wget https://bioconductor.org/packages/3.17/bioc/src/contrib/graphite_1.46.0.tar.gz -P "$temp"
