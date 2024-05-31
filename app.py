@@ -1,4 +1,5 @@
 import logging
+import os
 import sqlite3
 import time
 from logging.config import dictConfig
@@ -30,12 +31,19 @@ from config.parse_config import (
     show_if_deployed,
 )
 
+# ========================================
+# Configuration and Server Initialization
+# ========================================
+
 # Create .env file if it does not exist
+# IMPORTANT: The created .env file loads the app at the default settings for development
+#   Refer to the arguments of the generate_config() call to see these default settings
 if not path_exists(".env"):
     generate_config(debug=True, deployed=False, logging=False)
 
-
+# Configure settings if logging is enabled
 if is_logging_mode():
+    # Log files are saved inside this folder
     make_dir("logs")
 
     # Suppress writing GET requests to the log
@@ -44,6 +52,7 @@ if is_logging_mode():
 
     GB_TO_BYTES = 1e9
 
+    # Use UTC for the log timestamps
     class UTCFormatter(logging.Formatter):
         converter = time.gmtime
 
@@ -70,9 +79,50 @@ if is_logging_mode():
         }
     )
 
+# Initialize the Flask server
 server = Flask(__name__, static_folder="static")
 
-if is_deployed_version():
+# ===================
+# App Initialization
+# ===================
+
+
+# Returns True if the Bootstrap and Font Awesome folders exist inside the assets folder;
+#   False, otherwise
+# If the app was installed via Docker, there are two possible scenarios:
+#   - If the version for local installation was installed, then this function should return True
+#     Rationale: To allow offline usage of the app
+#   - If the version for deployment was installed, then this function should return False
+#     Rationale: Use CDN for deployed version since internet connection is guaranteed anyway
+def detected_locally_hosted_stylesheets():
+    bootstrap = False
+    fontawesome = False
+
+    for file in os.listdir("assets"):
+        if file.startswith("bootstrap-icons"):
+            bootstrap = True
+        if file.startswith("fontawesome"):
+            fontawesome = True
+
+    return bootstrap and fontawesome
+
+
+# If Bootstrap and Font Awesome stylesheets (and sprites) are locally hosted,
+# use the locally hosted stylesheets (and sprites)
+if detected_locally_hosted_stylesheets():
+    app = dash.Dash(
+        __name__,
+        use_pages=True,
+        server=server,
+        title="RicePilaf",
+        update_title="Loading...",
+        meta_tags=[
+            {"name": "viewport", "content": "width=1024"}
+        ],  # Same desktop and mobile views
+    )
+
+# Otherwise, fetch the Bootstrap and Font Awesome stylesheets from a CDN
+else:
     app = dash.Dash(
         __name__,
         use_pages=True,
@@ -84,27 +134,19 @@ if is_deployed_version():
         server=server,
         title="RicePilaf",
         update_title="Loading...",
-        meta_tags=[{"name": "viewport", "content": "width=1024"}],
-    )
-
-else:
-    app = dash.Dash(
-        __name__,
-        use_pages=True,
-        server=server,
-        title="RicePilaf",
-        update_title="Loading...",
-        meta_tags=[{"name": "viewport", "content": "width=1024"}],
+        meta_tags=[
+            {"name": "viewport", "content": "width=1024"}
+        ],  # Same desktop and mobile views
     )
 
 # ============
 # Main Layout
 # ============
 
-
 app.layout = lambda: dbc.Container(
     [
         dbc.Row(
+            # Display the "demo only" banner if configured to deployed version
             html.Div(
                 children=[
                     html.P(
@@ -132,8 +174,11 @@ app.layout = lambda: dbc.Container(
             ),
             style=show_if_deployed(),
         ),
+        # Top navbar (i.e., the section containing the RicePilaf logo and link to the User Guide)
         dbc.Row(main_nav.navbar()),
+        # Body
         dash.page_container,
+        # Footer
         dbc.Row(
             [
                 dbc.Col(
@@ -154,7 +199,7 @@ app.layout = lambda: dbc.Container(
                         ),
                         html.Br(),
                         html.Span(
-                            "Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) Cooperative Project"
+                            "Rural Development Administration (RDA), South Korea – International Rice Research Institute (IRRI) – The French National Research Institute for Sustainable Development (IRD) Cooperative Project"
                         ),
                     ],
                     className="col-sm-11",
@@ -257,9 +302,6 @@ app.layout = lambda: dbc.Container(
 )
 
 callbacks.homepage.callbacks.init_callback(app)
-
-# callbacks.template.callbacks.init_callback(app)
-
 callbacks.lift_over.callbacks.init_callback(app)
 callbacks.epigenome.callbacks.init_callback(app)
 callbacks.coexpression.callbacks.init_callback(app)
@@ -267,10 +309,19 @@ callbacks.tf_enrich.callbacks.init_callback(app)
 callbacks.text_mining.callbacks.init_callback(app)
 callbacks.summary.callbacks.init_callback(app)
 
-# Create database table
+# ====================================
+# TEMPLATE for Initializing Callbacks
+# ====================================
+# callbacks.template.callbacks.init_callback(app)
 
+# ========
+# Caching
+# ========
+
+# Create folder for caching previously run analyses to avoid repeated computations
 make_dir(Constants.TEMP)
 
+# Create database for storing shorthands of cache directory names
 try:
     connection = sqlite3.connect(Constants.FILE_STATUS_DB)
     cursor = connection.cursor()
@@ -284,6 +335,10 @@ try:
     connection.close()
 except sqlite3.Error as error:
     pass
+
+# ===============
+# Run the server
+# ===============
 
 if __name__ == "__main__":
     if is_deployed_version():
