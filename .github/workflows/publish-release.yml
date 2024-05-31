@@ -1,16 +1,17 @@
-# This workflow is responsible for creating and publishing a release
+# This workflow handles creating and publishing a GitHub release
 
 name: Publish release
 
-# A release is created when a release branch (minor-release, major-release, or patch) is created
-# More information here:
-#    https://github.com/bioinfodlsu/rice-pilaf/wiki/3.2.-Contribution-and-Release-Workflow#2%EF%B8%8F%E2%83%A3-release-workflow
 on:
+    # Trigger workflow when a release branch (minor-release, major-release, or patch) has been created
+    # More information on how we handle RicePilaf releases here:
+    # https://github.com/bioinfodlsu/rice-pilaf/wiki/3.2.-Contribution-and-Release-Workflow#2%EF%B8%8F%E2%83%A3-release-workflow
     push:
         branches: [minor-release, major-release, patch]
 
 jobs:
-    # Push the release to the main branch
+    # Push the release to the main branch:
+    # https://github.com/google/mirror-branch-action
     mirror-release-to-main:
         name: Mirror release branch to main branch
         runs-on: ubuntu-latest
@@ -23,7 +24,10 @@ jobs:
                   source: ${{ github.ref_name }}
                   dest: "main"
 
-    # Create and publish the release
+    # Create and publish the release:
+    # This job uses a modified version of this workflow: https://github.com/rymndhng/release-on-push-action
+    # - Modified version here: https://github.com/memgonzales/release-on-push-action
+    # - This modified version removes the commit-based changelog and release version number
     release-on-push:
         needs: mirror-release-to-main
         runs-on: ubuntu-latest
