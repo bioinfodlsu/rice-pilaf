@@ -2,7 +2,6 @@ CMake==3.27.6
 gffutils==0.11.1
 networkx==3.2.1
 pandas==1.5.1
-pybind11==2.10.4
 regex==2023.8.8
 cdlib[all]==0.3.0
 nltk==3.8.1
