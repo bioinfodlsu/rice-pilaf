@@ -1,18 +1,22 @@
 install.packages("devtools", repos = "http://cran.rstudio.com")
+install.packages("BiocManager", repos = "http://cran.rstudio.com")
+
 library(devtools)
+library(BiocManager)
 
 packages <- c(
-    "optparse_1.7.3.tar.gz",
-    "ggplot2_3.4.2.tar.gz",
-    "clusterProfiler_4.8.3.tar.gz",
-    "GO.db_3.17.0.tar.gz",
-    "graphite_1.46.0.tar.gz",
-    "ROntoTools_2.28.0.tar.gz",
-    "SPIA_2.52.0.tar.gz"
+    "optparse",
+    "ggplot2",
+    "clusterProfiler",
+    "GO.db",
+    "graphite",
+    "ROntoTools",
+    "SPIA"
 )
 
-for (i in seq_along(packages)) {
-    packages[i] <- paste0("/app/dependencies/temp/", packages[i])
+for (package in packages) {
+    package_dir <- paste0("/app/dependencies/temp/", package)
+    devtools::install(
+        package_dir, dependencies = TRUE, repos = BiocManager::repositories()
+    )
 }
-
-devtools::install(packages, dependencies = TRUE)

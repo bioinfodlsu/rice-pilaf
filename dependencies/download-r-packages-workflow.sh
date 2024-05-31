@@ -14,6 +14,10 @@ wget https://bioconductor.org/packages/3.17/bioc/src/contrib/graphite_1.46.0.tar
 wget https://bioconductor.org/packages/3.17/bioc/src/contrib/ROntoTools_2.28.0.tar.gz -P "$temp"
 wget https://bioconductor.org/packages/3.17/bioc/src/contrib/SPIA_2.52.0.tar.gz -P "$temp"
 
+for file in "$temp"/*; do
+    tar -xzf "$file" -C "$temp"
+done
+
 # Install R packages from source
 Rscript --vanilla dependencies/install-r-packages-workflow.r
 
