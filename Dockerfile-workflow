@@ -20,6 +20,8 @@ RUN apt-get clean \
   libcurl4-openssl-dev \
   libffi-dev \
   libfontconfig1-dev \
+  libfribidi-dev \
+  libharfbuzz-dev \
   libssl-dev \
   libxml2-dev \
   openjdk-11-jre \
