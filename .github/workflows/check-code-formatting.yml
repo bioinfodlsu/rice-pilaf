@@ -1,8 +1,14 @@
-on: [push, pull_request]
+# This workflow handles checking the code formatting quality
+# Only .py files are covered
 
 name: Check code formatting quality
 
+# Trigger workflow when code has been pushed to a branch or a pull request has been issued
+on: [push, pull_request]
+
 jobs:
+    # Check if code follows Black formatting:
+    # https://black.readthedocs.io/en/stable/
     run-black-formatter:
         runs-on: ubuntu-latest
         steps:
@@ -11,6 +17,8 @@ jobs:
               with:
                   options: "--check --verbose"
 
+    # Check if order of imports follows isort convention:
+    # https://pycqa.github.io/isort/
     run-isort:
         runs-on: ubuntu-latest
         steps:
@@ -21,4 +29,5 @@ jobs:
             - uses: isort/isort-action@master
               with:
                   configuration: "--profile black"
+                  # Declare all the requirements files here
                   requirementsFiles: "dependencies/requirements-app.txt dependencies/requirements-workflow.txt dependencies/requirements-google-api.txt"

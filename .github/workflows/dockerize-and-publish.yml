@@ -1,5 +1,5 @@
-# This workflow is responsible for creating the Docker images
-# and publishing them on the GitHub Container registry
+# This workflow handles creating the Docker images and publishing them
+# on the GitHub Container registry
 
 name: Create and publish Docker image
 
@@ -15,7 +15,8 @@ env:
     IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-    # Get the version number of the latest release in order to tag the Docker images
+    # Get the version number of the latest release in order to tag the Docker images:
+    # https://github.com/pozetroninc/github-action-get-latest-release
     get-latest-version:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -29,8 +30,13 @@ jobs:
                   repository: ${{ github.repository }}
                   token: ${{ secrets.GITHUB_TOKEN }}
 
-    # Build the images and push them to the GitHub Container registry
-    # This job uses the matrix strategy to build and push the images in parallel
+    # Build the images and push them to the GitHub Container registry:
+    # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
+
+    # Since a RicePilaf release involves building multiple images (for local installation,
+    # for deployment, and for the data preparation workflow), this job uses the matrix strategy
+    # to build and push the images in parallel:
+    # https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     build-and-push-image:
         runs-on: ubuntu-latest
         needs: get-latest-version
@@ -82,6 +88,7 @@ jobs:
                   tags: ${{ matrix.image }}:${{ needs.get-latest-version.outputs.latest-version }}
                   labels: ${{ steps.meta.outputs.labels }}
 
+    # Handle case where triggering workflow failed
     on-failure:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}

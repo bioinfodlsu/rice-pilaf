@@ -1,9 +1,13 @@
+# This workflow handles checking for syntax errors
+# Only .py files are covered
+
+name: Check for syntax errors
+
 on:
+    # Trigger workflow when code formatting has been checked
     workflow_run:
         workflows: [Check code formatting quality]
         types: [completed]
-
-name: Check for syntax errors
 
 jobs:
     check-for-syntax-errors:
@@ -13,6 +17,7 @@ jobs:
             - uses: actions/checkout@v3
             - uses: cclauss/Find-Python-syntax-errors-action@master
 
+    # Handle case where triggering workflow failed
     on-failure:
         runs-on: ubuntu-latest
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}
