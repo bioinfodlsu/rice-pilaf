@@ -185,6 +185,7 @@ po/*~
 rsconnect/
 
 # Scratch
+scratch-*/
 scratch/
 scratch.ipynb
 scratch.py
