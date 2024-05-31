@@ -1,3 +1,6 @@
+install.packages("devtools", repos = "http://cran.rstudio.com")
+library(devtools)
+
 packages <- c(
     "optparse_1.7.3.tar.gz",
     "ggplot2_3.4.2.tar.gz",
@@ -12,4 +15,4 @@ for (i in seq_along(packages)) {
     packages[i] <- paste0("/app/dependencies/temp/", packages[i])
 }
 
-install.packages(packages, repos = NULL, type = "source")
+devtools::install(packages, dependencies = TRUE)
