@@ -27,7 +27,7 @@ jobs:
     # Create and publish the release:
     # This job uses a modified version of this workflow: https://github.com/rymndhng/release-on-push-action
     # - Modified version here: https://github.com/memgonzales/release-on-push-action
-    # - This modified version removes the commit-based changelog and release version number
+    # - This modified version removes the commit-based changelog and release version number in the release notes
     release-on-push:
         needs: mirror-release-to-main
         runs-on: ubuntu-latest
