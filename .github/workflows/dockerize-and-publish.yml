@@ -85,7 +85,7 @@ jobs:
                   cache-to: type=gha, mode=max
                   file: ${{ matrix.dockerfile }}
                   push: true
-                  tags: ${{ matrix.image }}:${{ needs.get-latest-version.outputs.latest-version }}, ${{ matrix.image }}:latest
+                  tags: ${{ matrix.image }}:${{ needs.get-latest-version.outputs.latest-version }}
                   labels: ${{ steps.meta.outputs.labels }}
 
     # Handle case where triggering workflow failed
