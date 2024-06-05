@@ -89,6 +89,10 @@ def init_callback(app):
         Output("session-container", "children", allow_duplicate=True),
         Output("input-error", "children"),
         Output("input-error", "style"),
+        Output("coexpression-addl-genes-error", "children", allow_duplicate=True),
+        Output("coexpression-addl-genes-error", "style", allow_duplicate=True),
+        Output("tfbs-addl-genes-error", "children", allow_duplicate=True),
+        Output("tfbs-addl-genes-error", "style", allow_duplicate=True),
         Output("homepage-is-submitted", "data"),
         Output("homepage-submitted-genomic-intervals", "data"),
         Output("homepage-is-resetted", "data"),
@@ -132,7 +136,18 @@ def init_callback(app):
             # clear data for items in dcc.Store found in session-container
             dccStore_children = clear_specific_dccStore_data(dccStore_children, "")
 
-            return dccStore_children, None, {"display": "none"}, False, "", True
+            return (
+                dccStore_children,
+                None,
+                {"display": "none"},
+                None,
+                {"display": "none"},
+                None,
+                {"display": "none"},
+                False,
+                "",
+                True,
+            )
 
         # Parses the genomic interval input
         if n_submit >= 1 or ("homepage-submit" == ctx.triggered_id and n_clicks >= 1):
@@ -148,6 +163,10 @@ def init_callback(app):
                             get_error_message(intervals[0]),
                         ],
                         {"display": "block"},
+                        None,
+                        {"display": "none"},
+                        None,
+                        {"display": "none"},
                         False,
                         nb_intervals_str,
                         True,
@@ -162,6 +181,10 @@ def init_callback(app):
                         dccStore_children,
                         None,
                         {"display": "none"},
+                        None,
+                        {"display": "none"},
+                        None,
+                        {"display": "none"},
                         True,
                         nb_intervals_str,
                         True,
@@ -171,6 +194,10 @@ def init_callback(app):
                     dccStore_children,
                     [f"Error: Input for genomic interval should not be empty."],
                     {"display": "block"},
+                    None,
+                    {"display": "none"},
+                    None,
+                    {"display": "none"},
                     False,
                     nb_intervals_str,
                     True,

@@ -234,28 +234,6 @@ def init_callback(app):
             return {"display": "none"}
 
     @app.callback(
-        Output("coexpression-addl-genes-error", "style"),
-        Output("coexpression-addl-genes-error", "children"),
-        Input("homepage-is-resetted", "data"),
-    )
-    def clear_coexpression_error_messages(homepage_is_resetted):
-        """
-        Clears coexpression input error
-
-        Parameters:
-        - homepage_is_resetted: Saved boolean value of resetted analysis
-
-        Returns:
-        - ('coexpression-addl-genes-error', 'style'): {'display': 'block'} for displaying the coexpression error container; otherwise {'display': 'none'}
-        - ('coexpression-addl-genes-error', 'children'): None for no error message
-        """
-
-        if homepage_is_resetted:
-            return {"display": "none"}, None
-
-        raise PreventUpdate
-
-    @app.callback(
         Output("coexpression-submit", "disabled"),
         Input("coexpression-submit", "n_clicks"),
         Input("coexpression-module-graph", "elements"),
