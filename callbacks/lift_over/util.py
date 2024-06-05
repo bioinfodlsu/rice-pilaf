@@ -32,16 +32,20 @@ Error_message = namedtuple("Error_message", ["code", "message"])
 errors = {
     "NO_CHROM_INTERVAL_SEP": Error_message(
         1,
-        "A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals",
+        "A genomic interval should be entered as chrom:start-end. Use a semicolon (;) to separate multiple intervals.",
     ),
     "NO_START_STOP_SEP": Error_message(
-        2, "Specify a valid start and end for the genomic interval"
+        2, "Specify a valid start and end for the genomic interval."
     ),
     "START_STOP_NOT_INT": Error_message(
-        3, "The start and end of a genomic interval should be integers"
+        3, "The start and end of a genomic interval should be positive integers."
     ),
     "START_GREATER_THAN_STOP": Error_message(
-        4, "The start of a genomic interval should not be past the end"
+        4, "The start of a genomic interval should not be past the end."
+    ),
+    "CHROM_NOT_INT": Error_message(
+        5,
+        'The chromosome should be specified in the form "Chr" (without the quotes) followed by a positive integer.',
     ),
 }
 
@@ -117,14 +121,6 @@ def get_error_message(error_code):
             return code_message.message
 
 
-def trim_leading_zeroes_chromosome(chromosome):
-    return re.sub("Chr0+", "Chr", chromosome)
-
-
-def trim_leading_zeroes_interval(interval):
-    return re.sub("^0+", "", interval)
-
-
 def is_one_digit_chromosome(chromosome):
     """
     Checks if given chromosome only has a single digit (e.g., Chr1, Chr2)
@@ -144,15 +140,16 @@ def pad_one_digit_chromosome(chromosome):
     Prepends a 0 to the chromosome number if it only has a single digit
     For example, if the input is 'Chr1', it returns 'Chr01'
 
-    This function assumes that the given chromosome only has a single digit
-
     Parameters:
     - chromosome: Chromosome to be padded
 
     Returns:
-    - Chromosome with a leading 0 prepended
+    - Chromosome with a leading 0 prepended to the chromosome number
     """
-    return chromosome[:-1] + "0" + chromosome[-1]
+    if is_one_digit_chromosome(chromosome):
+        return chromosome[:-1] + "0" + chromosome[-1]
+
+    return chromosome
 
 
 def to_genomic_interval(genomic_interval_str):
@@ -169,20 +166,31 @@ def to_genomic_interval(genomic_interval_str):
     """
     try:
         chrom, interval = genomic_interval_str.split(":")
-        interval = trim_leading_zeroes_interval(interval)
-        chrom = trim_leading_zeroes_chromosome(chrom)
-        if is_one_digit_chromosome(chrom):
-            chrom = pad_one_digit_chromosome(chrom)
 
         # Change 'chr' to 'Chr'
         chrom = re.sub(r"chr", "Chr", chrom, flags=re.IGNORECASE)
+
+        if (
+            not chrom.startswith("Chr")
+            or len(chrom) == len("Chr")
+            or not chrom[len("Chr")].isdigit()
+        ):
+            return errors["CHROM_NOT_INT"].code, genomic_interval_str
+
+        # Remove leading zeroes in chromosome and interval
+        chrom = re.sub("Chr0+", "Chr", chrom)
+        interval = re.sub("^0+", "", interval)
+
+        # This will be triggered when, for example, the user enters Chr0
+        # because the 0 is interpreted as a leading zero and is thus truncated
+        if len(chrom) == len("Chr"):
+            return errors["CHROM_NOT_INT"].code, genomic_interval_str
 
         # Remove commas in 'Chr1,001:1,234,567'
         chrom = re.sub(",", "", chrom)
         interval = re.sub(",", "", interval)
 
-        if not chrom.startswith("Chr") or not chrom[3].isdigit():
-            return errors["NO_CHROM_INTERVAL_SEP"].code, genomic_interval_str
+        chrom = pad_one_digit_chromosome(chrom)
 
     except ValueError:
         return errors["NO_CHROM_INTERVAL_SEP"].code, genomic_interval_str

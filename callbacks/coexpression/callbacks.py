@@ -234,28 +234,6 @@ def init_callback(app):
             return {"display": "none"}
 
     @app.callback(
-        Output("coexpression-addl-genes-error", "style"),
-        Output("coexpression-addl-genes-error", "children"),
-        Input("homepage-is-resetted", "data"),
-    )
-    def clear_coexpression_error_messages(homepage_is_resetted):
-        """
-        Clears coexpression input error
-
-        Parameters:
-        - homepage_is_resetted: Saved boolean value of resetted analysis
-
-        Returns:
-        - ('coexpression-addl-genes-error', 'style'): {'display': 'block'} for displaying the coexpression error container; otherwise {'display': 'none'}
-        - ('coexpression-addl-genes-error', 'children'): None for no error message
-        """
-
-        if homepage_is_resetted:
-            return {"display": "none"}, None
-
-        raise PreventUpdate
-
-    @app.callback(
         Output("coexpression-submit", "disabled"),
         Input("coexpression-submit", "n_clicks"),
         Input("coexpression-module-graph", "elements"),
@@ -400,7 +378,7 @@ def init_callback(app):
                 html.B("Additional Genes: "),
                 genes,
                 html.Br(),
-                html.B("Selected Co-Expression Network: "),
+                html.B("Selected Coexpression Network: "),
                 get_user_facing_network(network),
                 html.Br(),
                 html.B("Selected Module Detection Algorithm: "),
@@ -696,7 +674,7 @@ def init_callback(app):
             df = pd.DataFrame(purge_html_export_table(coexpression_df))
             return dcc.send_data_frame(
                 df.to_csv,
-                f"[{module}] Co-Expression Network Analysis Table.csv",
+                f"[{module}] Coexpression Network Analysis Table.csv",
                 index=False,
             )
 
@@ -992,7 +970,7 @@ def init_callback(app):
             )
             return dcc.send_data_frame(
                 df.to_csv,
-                f"[{module}] Co-Expression Network Analysis Graph.tsv",
+                f"[{module}] Coexpression Network Analysis Graph.tsv",
                 index=False,
                 sep="\t",
             )

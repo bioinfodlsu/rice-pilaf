@@ -15,11 +15,29 @@ Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard.
 Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients,
 this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.
 
+If you find our work useful, please consider citing:
+
+```
+@article{10.1093/gigascience/giae013,
+    author = {Shrestha, Anish M S and Gonzales, Mark Edward M and Ong, Phoebe Clare L and Larmande, Pierre and Lee, Hyun-Sook and Jeung, Ji-Ung and Kohli, Ajay and Chebotarov, Dmytro and Mauleon, Ramil P and Lee, Jae-Sung and McNally, Kenneth L},
+    title = "{RicePilaf: a post-GWAS/QTL dashboard to integrate pangenomic, coexpression, regulatory, epigenomic, ontology, pathway, and text-mining information to provide functional insights into rice QTLs and GWAS loci}",
+    journal = {GigaScience},
+    volume = {13},
+    pages = {giae013},
+    year = {2024},
+    month = {06},
+    issn = {2047-217X},
+    doi = {10.1093/gigascience/giae013},
+    url = {https://doi.org/10.1093/gigascience/giae013},
+    eprint = {https://academic.oup.com/gigascience/article-pdf/doi/10.1093/gigascience/giae013/58080756/giae013.pdf},
+}
+```
+
 https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/251da285-b1a8-4a52-8f4f-4ba0c1446cc6
 
 ## Installation and usage
 
-For installation and usage, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
+For installation and usage guide, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
 It is advised to install the app locally.
 
@@ -29,8 +47,9 @@ Alternatively, you can try RicePilaf at one of the sites below.
 
 | URL                                                                                                                          | Site                                                                                                                                                    | Version | Status (Date)            |
 | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
-| [https://ricepilaf.bioinfodlsu.com/](https://ricepilaf.bioinfodlsu.com/)                                                     | Digital Ocean (Singapore)                                                                                                                               | 1.0.1   | Running (May 20, 2024)    |
+| [https://ricepilaf.bioinfodlsu.com/](https://ricepilaf.bioinfodlsu.com/)                                                     | Digital Ocean (Singapore)                                                                                                                               | 1.0.3   | Running (June 6, 2024)   |
 | [https://ricepilaf.irri.org/](https://ricepilaf.irri.org/) <br> [https://rice-pilaf.irri.org/](https://rice-pilaf.irri.org/) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE &ndash; Science Cloud resource | 0.1.3   | Running (March 15, 2024) |
+| [http://136.239.215.114:11001/](http://136.239.215.114:11001/)                                                               | Dr. Andrew L. Tan Data Science Institute, De La Salle University                                                                                        | 1.0.3   | Running (June 6, 2024)   |
 
 ## Contact
 
