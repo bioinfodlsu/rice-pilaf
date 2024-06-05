@@ -228,7 +228,7 @@ layout = html.Div(
                                     className="pt-3",
                                 ),
                                 html.P(
-                                    "It integrates (1) pangenomic information from high-quality genome builds of multiple rice varieties, (2) co-expression information from genome-scale co-expression networks, (3) ontology and pathway information, (4) regulatory information from rice transcription factor databases, (5) epigenomic information from multiple high-throughput epigenetic experiments, and (6) text-mining information extracted from scientific abstracts linking genes and traits."
+                                    "It integrates (1) pangenomic information from high-quality genome builds of multiple rice varieties, (2) coexpression information from genome-scale coexpression networks, (3) ontology and pathway information, (4) regulatory information from rice transcription factor databases, (5) epigenomic information from multiple high-throughput epigenetic experiments, and (6) text-mining information extracted from scientific abstracts linking genes and traits."
                                 ),
                             ],
                             className="col-sm-9",
@@ -282,13 +282,13 @@ layout = html.Div(
                     [
                         dbc.Col(
                             [
-                                html.H5("Co-Expression Network Analysis"),
+                                html.H5("Coexpression Network Analysis"),
                                 html.P(
-                                    "Co-expression networks provide a means to identify sets of genes acting together to produce a trait. For genes with poor annotations or unknown functions, their membership in a dense subnetwork containing well-characterized genes might be a way to uncover incomplete functional information.",
+                                    "Coexpression networks provide a means to identify sets of genes acting together to produce a trait. For genes with poor annotations or unknown functions, their membership in a dense subnetwork containing well-characterized genes might be a way to uncover incomplete functional information.",
                                     className="pt-3",
                                 ),
                                 html.P(
-                                    "To identify genes that may be acting collectively to result in a trait, RicePilaf searches rice co-expression networks, RiceNet v2 and RCRN, for communities of genes that are statistically enriched in the genes overlapping the input intervals. Functional characterization of the modules is done via enrichment analysis against several ontology and pathway databases from agriGO, KEGG, and Oryzabase."
+                                    "To identify genes that may be acting collectively to result in a trait, RicePilaf searches rice coexpression networks, RiceNet v2 and RCRN, for communities of genes that are statistically enriched in the genes overlapping the input intervals. Functional characterization of the modules is done via enrichment analysis against several ontology and pathway databases from agriGO, KEGG, and Oryzabase."
                                 ),
                             ],
                             className="col-sm-9",
@@ -344,7 +344,7 @@ layout = html.Div(
                             [
                                 html.H5("Text Mining"),
                                 html.P(
-                                    "The gene list provided to the co-expression and regulatory enrichment analyses can be supplemented by genes retrieved from the pangenome lift-over and from querying our in-house dataset obtained by text mining PubMed abstracts on rice gene-trait associations. Additionally, the same text-mining dataset is used to find scientific literature related to the genes overlapping the input interval.",
+                                    "The gene list provided to the coexpression and regulatory enrichment analyses can be supplemented by genes retrieved from the pangenome lift-over and from querying our in-house dataset obtained by text mining PubMed abstracts on rice gene-trait associations. Additionally, the same text-mining dataset is used to find scientific literature related to the genes overlapping the input interval.",
                                     className="pt-3",
                                 ),
                             ],

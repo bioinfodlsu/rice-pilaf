@@ -150,14 +150,14 @@ def init_callback(app):
 
         if summary_submitted:
             return [
-                html.B("Co-Expression Network Analysis"),
+                html.B("Coexpression Network Analysis"),
                 html.Br(),
                 html.Ul(
                     [
                         html.Li([html.B("Additional Genes: "), genes]),
                         html.Li(
                             [
-                                html.B("Selected Co-Expression Network: "),
+                                html.B("Selected Coexpression Network: "),
                                 get_user_facing_network(network),
                             ]
                         ),

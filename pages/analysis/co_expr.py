@@ -165,7 +165,7 @@ ricenet = html.Li(
         html.Div(
             [
                 html.Span(
-                    "RicePilaf uses the component network derived from the co-expression of "
+                    "RicePilaf uses the component network derived from the coexpression of "
                 ),
                 html.I("Oryza sativa "),
                 html.Span(
@@ -221,7 +221,7 @@ coexpression_network_modal = dbc.Modal(
         dbc.ModalBody(
             [
                 html.P(
-                    "RicePilaf provides the option to choose between two co-expression networks:"
+                    "RicePilaf provides the option to choose between two coexpression networks:"
                 ),
                 html.Ul([ricenet, html.Br(), rcrn]),
             ]
@@ -429,7 +429,7 @@ layout = html.Div(
                 html.Br(),
                 dbc.Label(
                     [
-                        "Select the co-expression network",
+                        "Select the coexpression network",
                         html.I(
                             className="bi bi-info-circle",
                             id="coexpression-network-tooltip",

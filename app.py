@@ -255,7 +255,7 @@ app.layout = lambda: dbc.Container(
                 dcc.Store(id="epigenome-submitted-tracks", storage_type="session"),
                 dcc.Store(id="epigenome-is-submitted", storage_type="session"),
                 # ==============
-                # Co-expression
+                # Coexpression
                 # ==============
                 dcc.Store(
                     id="coexpression-submitted-parameter-slider", storage_type="session"

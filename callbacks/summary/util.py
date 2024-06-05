@@ -314,7 +314,7 @@ def make_summary_table(
             pubmed_summary, on="Name", how="left", validate="one_to_one"
         )
 
-        # Use right merge since there may be additional genes included in the co-expression analysis
+        # Use right merge since there may be additional genes included in the coexpression analysis
         summary = summary.merge(
             coexpression_summary, on="Name", how="right", validate="one_to_one"
         )

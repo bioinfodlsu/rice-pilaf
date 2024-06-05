@@ -29,7 +29,7 @@ layout = html.Div(
                         ),
                         html.Li(
                             [
-                                html.B("Co-Expression Network Analysis"),
+                                html.B("Coexpression Network Analysis"),
                                 html.Br(),
                                 Constants.INTRO_COEXPRESSION,
                             ],

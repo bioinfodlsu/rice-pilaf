@@ -400,7 +400,7 @@ def init_callback(app):
                 html.B("Additional Genes: "),
                 genes,
                 html.Br(),
-                html.B("Selected Co-Expression Network: "),
+                html.B("Selected Coexpression Network: "),
                 get_user_facing_network(network),
                 html.Br(),
                 html.B("Selected Module Detection Algorithm: "),
@@ -696,7 +696,7 @@ def init_callback(app):
             df = pd.DataFrame(purge_html_export_table(coexpression_df))
             return dcc.send_data_frame(
                 df.to_csv,
-                f"[{module}] Co-Expression Network Analysis Table.csv",
+                f"[{module}] Coexpression Network Analysis Table.csv",
                 index=False,
             )
 
@@ -992,7 +992,7 @@ def init_callback(app):
             )
             return dcc.send_data_frame(
                 df.to_csv,
-                f"[{module}] Co-Expression Network Analysis Graph.tsv",
+                f"[{module}] Coexpression Network Analysis Graph.tsv",
                 index=False,
                 sep="\t",
             )
