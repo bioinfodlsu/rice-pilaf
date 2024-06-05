@@ -143,7 +143,7 @@ def init_callback(app):
                     return (
                         dccStore_children,
                         [
-                            f"Error encountered while parsing genomic interval {intervals[1]}",
+                            f"Error encountered while parsing genomic interval {intervals[1]}.",
                             html.Br(),
                             get_error_message(intervals[0]),
                         ],
