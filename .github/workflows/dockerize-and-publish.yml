@@ -77,6 +77,12 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Remove exiting latest tag
+              uses: rafalkk/remove-dockertag-action@v1
+              with:
+                tag_name: ${{ matrix.image }}:latest
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Build and push Docker image
               uses: docker/build-push-action@v3
               with:
@@ -85,7 +91,7 @@ jobs:
                   cache-to: type=gha, mode=max
                   file: ${{ matrix.dockerfile }}
                   push: true
-                  tags: ${{ matrix.image }}:${{ needs.get-latest-version.outputs.latest-version }}
+                  tags: ${{ matrix.image }}:${{ needs.get-latest-version.outputs.latest-version }}, ${{ matrix.image }}:latest
                   labels: ${{ steps.meta.outputs.labels }}
 
     # Handle case where triggering workflow failed
