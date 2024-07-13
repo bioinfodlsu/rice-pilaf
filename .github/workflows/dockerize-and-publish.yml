@@ -80,7 +80,7 @@ jobs:
             - name: Remove exiting latest tag
               uses: rafalkk/remove-dockertag-action@v1
               with:
-                tag_name: ${{ matrix.image }}:latest
+                tag_name: latest
                 github_token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Build and push Docker image
