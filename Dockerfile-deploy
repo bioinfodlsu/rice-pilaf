@@ -28,9 +28,8 @@ RUN cd ../ \
 
 # Run cron jobs
 RUN cp cron_jobs/cron-jobs /etc/cron.d/cron-jobs \
-  && chmod 0644 /etc/cron.d/cron-jobs
-
-RUN chmod +x run-cron.sh
+  && chmod 0644 /etc/cron.d/cron-jobs \
+  && chmod +x run-cron.sh
 
 # Create empty placeholder file for logging-related credentials
 RUN mkdir -p cron_jobs/credentials \
