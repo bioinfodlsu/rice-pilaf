@@ -77,12 +77,6 @@ jobs:
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Remove exiting latest tag
-              uses: rafalkk/remove-dockertag-action@v1
-              with:
-                tag_name: latest
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-
             - name: Build and push Docker image
               uses: docker/build-push-action@v3
               with:
