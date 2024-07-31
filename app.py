@@ -151,7 +151,7 @@ app.layout = lambda: dbc.Container(
                 children=[
                     html.P(
                         [
-                            "This is a demo version. Click ",
+                            "For heavy workloads, consider running RicePilaf locally. Click ",
                             dcc.Link(
                                 [
                                     "here ",
