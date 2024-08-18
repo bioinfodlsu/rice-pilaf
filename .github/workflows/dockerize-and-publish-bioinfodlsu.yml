@@ -1,7 +1,7 @@
 # This workflow handles creating the Docker image for deploying RicePilaf
 # to the server of the Bioinformatics Lab, De La Salle University
 
-name: Create and publish Docker image for Bioinfo DLSU
+name: Create and publish Docker image for Bioinfo DLSU server
 
 on:
     # Trigger workflow when a new release has been published
@@ -54,7 +54,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            - name: Use nginx config file specific to Bioinfo DLSU
+            - name: Use nginx config file specific to Bioinfo DLSU server
               run: cp -f nginx-bioinfodlsu-https.conf nginx.conf
 
             - name: Extract metadata (tags, labels) for Docker
