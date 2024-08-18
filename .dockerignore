@@ -218,3 +218,6 @@ assets/fontawesome-*/
 # Docker-related files
 Dockerfile*
 .dockerignore
+
+# nginx config files specific to Bioinfo DLSU
+nginx-bioinfodlsu-*
