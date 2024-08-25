@@ -15,6 +15,8 @@ Welcome! RicePilaf is short for Rice Post-GWAS/QTL Analysis dashboard.
 Ok, so we are not great at acronyms; but like a flavorful rice pilaf that combines many ingredients,
 this RicePilaf combines information from multiple rice databases to provide insights into your QTL/GWAS loci.
 
+**Paper**: https://doi.org/10.1093/gigascience/giae013
+
 If you find our work useful, please consider citing:
 
 ```
