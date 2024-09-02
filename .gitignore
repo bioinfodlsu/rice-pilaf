@@ -212,3 +212,6 @@ cron_jobs/credentials/
 # Bootstrap and Fontawesome fonts and icons
 assets/bootstrap-*/
 assets/fontawesome-*/
+
+#MCDP2 - a tool used for Regulatory Feature Enrichment Analysis
+/mcdp2
