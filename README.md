@@ -41,18 +41,10 @@ https://github.com/bioinfodlsu/rice-pilaf/assets/44253974/251da285-b1a8-4a52-8f4
 
 For installation and usage guide, please visit the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
-It is advised to install the app locally.
+It is advised to install the app locally, especially for higher computational loads.
 
-Alternatively, you can try RicePilaf at one of the sites below.
+Alternatively, you can try RicePilaf at one of the sites listed in the [wiki](https://github.com/bioinfodlsu/rice-pilaf/wiki).
 
-## Publicly accessible running instances of RicePilaf
-
-| URL                                                                                                                          | Site                                                                                                                                                    | Version | Status (Date)            |
-| ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------ |
-| [https://ricepilaf.bioinfodlsu.com/](https://ricepilaf.bioinfodlsu.com/)                                                     | Contabo (Germany)                                                                                                                               | 1.0.9   | Running (August 27, 2024)   |
-| [https://ricepilaf.irri.org/](https://ricepilaf.irri.org/) <br> [https://rice-pilaf.irri.org/](https://rice-pilaf.irri.org/) | Philippine Government Department of Science and Technology – Advanced Science and Technology Institute (DOST-ASTI) COARE &ndash; Science Cloud resource | 1.0.3   | Running (July 14, 2024) |
-| [http://136.239.215.114:11001/](http://136.239.215.114:11001/)                                                               | Dr. Andrew L. Tan Data Science Institute, De La Salle University                                                                                        | 1.0.6   | Sever maintenance (Sept 5, 2024)   |
-| [https://ricepilaf.ird.fr/](https://ricepilaf.ird.fr/)                                                                       | French National Research Institute for Sustainable Development                                                                                          | 1.0.3   | Running (July 14, 2024)   |
 
 ## Contact
 
