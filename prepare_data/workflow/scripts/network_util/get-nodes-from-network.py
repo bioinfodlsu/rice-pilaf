@@ -31,5 +31,5 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--name", default="all-genes", help="the output filename")
 
     args = parser.parse_args()
-    
+
     get_nodes(args.network_file, args.output_dir, args.name)
