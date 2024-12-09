@@ -1,4 +1,5 @@
 import os
+from common.ppi import search_genes
 
 
 def get_genes(all_proteins_file, gene_desc_file, output_dir):
@@ -28,33 +29,6 @@ def get_genes(all_proteins_file, gene_desc_file, output_dir):
     file.close()
 
     print(f"Wrote {total_genes} genes to {output_dir}/all-genes.txt")
-
-
-def search_genes(protein, gene_desc_file) -> int:
-    """
-    Iterate over the gene_desc_file and find all the genes related to the protein.
-
-    Parameters:
-    protein (string): The protein to be checked
-    gene_desc_file (string): The path to the gene_description file
-
-    Return:
-    The list of genes related to the protein
-    """
-    result = []
-    with open(gene_desc_file) as genes:
-        next(genes)  # skip header
-
-        for gene in genes:
-            gene = gene.rstrip()
-            cols = gene.split(",")
-
-            gene_id, gene_prot = cols[0], cols[-1]
-
-            if protein == gene_prot:
-                result.append(gene_id)
-
-    return result
 
 
 if __name__ == "__main__":
