@@ -17,28 +17,31 @@ def get_genes(all_proteins_file, gene_desc_file, output_dir):
         for protein in proteins:
             protein = protein.rstrip()
 
-            gene_count = search_genes(protein, gene_desc_file, file)
-            total_genes += gene_count
+            genes = search_genes(protein, gene_desc_file)
+
+            # Write Genes to the Output File
+            for gene in genes:
+                file.write(f"{gene}\n")
+
+            total_genes += len(genes)
 
     file.close()
 
     print(f"Wrote {total_genes} genes to {output_dir}/all-genes.txt")
 
 
-def search_genes(protein, gene_desc_file, output_file) -> int:
+def search_genes(protein, gene_desc_file) -> int:
     """
-    Iterate over the gene_desc_file and write the genes of the protein to
-    the output_file.
+    Iterate over the gene_desc_file and find all the genes related to the protein.
 
     Parameters:
     protein (string): The protein to be checked
     gene_desc_file (string): The path to the gene_description file
-    output_file (file): an open file for writing
 
     Return:
-    number of genes of the protein written to the file
+    The list of genes related to the protein
     """
-    gene_count = 0
+    result = []
     with open(gene_desc_file) as genes:
         next(genes)  # skip header
 
@@ -49,10 +52,9 @@ def search_genes(protein, gene_desc_file, output_file) -> int:
             gene_id, gene_prot = cols[0], cols[-1]
 
             if protein == gene_prot:
-                output_file.write(f"{gene_id}\n")
-                gene_count += 1
+                result.append(gene_id)
 
-    return gene_count
+    return result
 
 
 if __name__ == "__main__":
