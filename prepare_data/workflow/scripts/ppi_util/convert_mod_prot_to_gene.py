@@ -1,8 +1,8 @@
 import os
-from common.ppi import search_genes
+import pickle
 
 
-def map_protein_modules(modules_file, gene_desc_file, output_dir):
+def map_protein_modules(modules_file, output_dir):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -14,7 +14,7 @@ def map_protein_modules(modules_file, gene_desc_file, output_dir):
         for module in modules:
             mod = module.strip("\n").split("\t")
 
-            genes = get_genes_of_module(mod, gene_desc_file)
+            genes = get_genes_of_module(mod)
             write_genes_to_file(genes, file)
 
             total_modules += 1
@@ -22,12 +22,20 @@ def map_protein_modules(modules_file, gene_desc_file, output_dir):
     print(f"Converted protein {total_modules} modules to genes in {output_path}")
 
 
-def get_genes_of_module(module, gene_desc_file):
+def get_genes_of_module(module):
     result = []
     for protein in module:
-        genes = search_genes(protein, gene_desc_file)
-        result.extend(genes)
+        if protein in DATA:
+            # genes = search_genes(protein, gene_desc_file)
+            result.extend(DATA[protein])
     return result
+
+
+def get_protein_to_gene_map(mapping_file):
+    with open(mapping_file, "rb") as f:
+        data = pickle.load(f)
+
+    return data
 
 
 def write_genes_to_file(gene_list, file):
@@ -45,12 +53,14 @@ if __name__ == "__main__":
         help="the protein module list file generated after executing module detect algos",
     )
     parser.add_argument(
-        "gene_desc_file",
-        help="the csv file containing the gene descriptions and its protein",
+        "protein_to_gene_mapping",
+        help="the pickled dictionary containing protein to gene mapping",
     )
     parser.add_argument(
         "output_dir", help="output directory for the converted module list"
     )
     args = parser.parse_args()
 
-    map_protein_modules(args.modules_file, args.gene_desc_file, args.output_dir)
+    DATA = get_protein_to_gene_map(args.protein_to_gene_mapping)
+
+    map_protein_modules(args.modules_file, args.output_dir)
