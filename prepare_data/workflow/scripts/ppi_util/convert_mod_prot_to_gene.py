@@ -26,7 +26,6 @@ def get_genes_of_module(module):
     result = []
     for protein in module:
         if protein in DATA:
-            # genes = search_genes(protein, gene_desc_file)
             result.extend(DATA[protein])
     return result
 
