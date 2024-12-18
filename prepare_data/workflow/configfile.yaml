@@ -2,6 +2,10 @@
 input_data_dir: "../../static"
 processed_data_dir: "../../Azu_IR64_ARC_CHAO"
 tfbs_dir: "../../static/tfbs"
+
+network_dir: "../../static/app_data/networks"
+mod_detect_dir: "../../static/raw_data/network_modules"
+
 #Data
 #compute whole-genome alignment vs. Nb, for the following genomes
 other_refs:
@@ -35,3 +39,15 @@ tfbs_links:
     genome_motif: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_genome-wide_Osj.gff"
     genome_motif_CE: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_CE_genome-wide_Osj.gff"
     genome_FunTBFS: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_FunTFBS_genome-wide_Osj.gff"
+
+
+# MODULE DETECTION
+# ClusterOne
+clusterone_jar_path: "scripts/module_detection/cluster_one-1.0.jar"
+clusterone_min_density:
+    30: 0.3
+    40: 0.4
+    # 50: 0.5 # For Testing - Remove in Actual
+    60: 0.6
+    # 70: 0.7 # For Testing - Remove in Actual
+    90: 0.9
