@@ -41,3 +41,22 @@ rule get_mod_clusterone:
     shell:
         "python {params.get_mod_from_clusterone_path} {input} " \
         "{wildcards.network_mod_dir}/{wildcards.network}/MSU/clusterone/{wildcards.density}"
+
+rule module_detect_fox:
+    input:
+        expand(
+            "{mod_detect_dir}/{network}/temp/fox/fox-int-module-list-{wcc}.txt",
+            mod_detect_dir = config['mod_detect_dir'],
+            network = config['networks'].keys(),
+            wcc = config['wcc_threshold'].keys()
+        )
+
+rule execute_fox:
+    input:
+        "{mod_detect_dir}/{network}/mapping/int-edge-list.txt"
+    output:
+        "{mod_detect_dir}/{network}/temp/fox/fox-int-module-list-{wcc}.txt"
+    params:
+        wcc_val = lambda wildcards: config['wcc_threshold'][int(wildcards.wcc)]
+    shell:
+        "scripts/module_detection/execute_lazyfox.sh {input} {params.wcc_val} {output}"
