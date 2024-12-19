@@ -42,6 +42,9 @@ tfbs_links:
 
 
 # MODULE DETECTION
+networks:
+    "STRING-Physical": "{network_dir}/STRING-Physical.txt"
+
 # ClusterOne
 clusterone_jar_path: "scripts/module_detection/cluster_one-1.0.jar"
 clusterone_min_density:
