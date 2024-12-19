@@ -49,6 +49,12 @@ rule module_detect_fox:
             mod_detect_dir = config['mod_detect_dir'],
             network = config['networks'].keys(),
             wcc = config['wcc_threshold'].keys()
+        ),
+        expand(
+            "{network_mod_dir}/{network}/MSU/fox/{wcc}/fox-module-list.tsv",
+            network_mod_dir = config['network_mod_dir'],
+            network = config['networks'].keys(),
+            wcc = config['wcc_threshold'].keys()
         )
 
 rule execute_fox:
@@ -60,3 +66,14 @@ rule execute_fox:
         wcc_val = lambda wildcards: config['wcc_threshold'][int(wildcards.wcc)]
     shell:
         "scripts/module_detection/execute_lazyfox.sh {input} {params.wcc_val} {output}"
+
+rule get_mod_fox:
+    input:
+        fox_result = "{0}/{{network}}/temp/fox/fox-int-module-list-{{wcc}}.txt".format(config['mod_detect_dir']),
+        node_mapping = "{0}/{{network}}/mapping/int-edge-list-node-mapping.pickle".format(config['mod_detect_dir'])
+    output:
+        "{network_mod_dir}/{network}/MSU/fox/{wcc}/fox-module-list.tsv"
+    shell:
+        "python scripts/module_util/restore-node-labels-in-modules.py " \
+        "{input.fox_result} {input.node_mapping} " \
+        "{wildcards.network_mod_dir}/{wildcards.network}/MSU/fox/{wildcards.wcc} fox"
