@@ -21,6 +21,12 @@ rule data_prep_for_enrichment_analysis:
             raw_enrich_dir = config["raw_enrich_dir"],
             network = config["networks"].keys(),
             file_format = "MSU"
+        ),
+        expand(
+            "{raw_enrich_dir}/temp/{network}/{script_outputs}.txt",
+            raw_enrich_dir = config["raw_enrich_dir"],
+            network = config["networks"].keys(),
+            script_outputs = config["ricegeneid_msu_to_transcript_outputs"]
         )
 
 rule get_proteins_from_network:
@@ -53,3 +59,15 @@ rule prepare_uniprot_to_gene:
         "python scripts/ppi_util/prepare_uniprot_to_gene.py " \
         "{input} {wildcards.gene_id_mapping_dir}/msu_mapping " \
         "{wildcards.file_name}"
+
+# PATHWAY ENRICHMENT RULES
+rule ricegeneid_msu_to_transcript_id:
+    input:
+        "{0}/all_genes/{{network}}/MSU/all-genes.txt".format(config["raw_enrich_dir"])
+    output:
+        "{raw_enrich_dir}/temp/{network}/{script_outputs}.txt"
+    shell:
+        "Rscript --vanilla scripts/enrichment_analysis/util/ricegeneid-msu-to-transcript-id.r " \
+        "-g {input} " \
+        "-o {wildcards.raw_enrich_dir}/temp/{wildcards.network}"
+    

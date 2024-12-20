@@ -72,3 +72,7 @@ wcc_threshold:
     40: 0.4
     50: 0.5 # For Testing - Remove in Actual
     60: 0.6
+
+ricegeneid_msu_to_transcript_outputs:
+    - "all-transcript-id"
+    - "all-na-transcript-id"
