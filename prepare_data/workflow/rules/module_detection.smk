@@ -11,10 +11,11 @@ rule module_detect_clusterone:
             network = config["networks"].keys()
             ),
         expand(
-            "{network_mod_dir}/{network}/MSU/clusterone/{density}/clusterone-module-list.tsv",
+            "{network_mod_dir}/{network}/clusterone/{density}/{id_format}/clusterone-module-list.tsv",
             density = config['clusterone_min_density'].keys(),
             network = config['networks'].keys(),
-            network_mod_dir = config['network_mod_dir']
+            network_mod_dir = config['network_mod_dir'],
+            id_format = "uniprot"
         )
 
 rule execute_clusterone:
@@ -35,12 +36,14 @@ rule get_mod_clusterone:
     input:
         "{0}/{{network}}/temp/clusterone/clusterone-results-{{density}}.csv".format(config['mod_detect_dir'])
     output:
-        "{network_mod_dir}/{network}/MSU/clusterone/{density}/clusterone-module-list.tsv"
+        "{network_mod_dir}/{network}/clusterone/{density}/{id_format}/clusterone-module-list.tsv"
     params:
         get_mod_from_clusterone_path = config['get_mod_from_clusterone_path']
     shell:
         "python {params.get_mod_from_clusterone_path} {input} " \
-        "{wildcards.network_mod_dir}/{wildcards.network}/MSU/clusterone/{wildcards.density}"
+        "{wildcards.network_mod_dir}/{wildcards.network}/clusterone/{wildcards.density}/{wildcards.id_format}"
+
+# ruleorder: execute_fox > ricegeneid_msu_to_transcript_id
 
 rule module_detect_fox:
     input:
@@ -51,10 +54,11 @@ rule module_detect_fox:
             wcc = config['wcc_threshold'].keys()
         ),
         expand(
-            "{network_mod_dir}/{network}/MSU/fox/{wcc}/fox-module-list.tsv",
+            "{network_mod_dir}/{network}/fox/{wcc}/{id_format}/fox-module-list.tsv",
             network_mod_dir = config['network_mod_dir'],
             network = config['networks'].keys(),
-            wcc = config['wcc_threshold'].keys()
+            wcc = config['wcc_threshold'].keys(),
+            id_format = "uniprot"
         )
 
 rule execute_fox:
@@ -72,8 +76,8 @@ rule get_mod_fox:
         fox_result = "{0}/{{network}}/temp/fox/fox-int-module-list-{{wcc}}.txt".format(config['mod_detect_dir']),
         node_mapping = "{0}/{{network}}/mapping/int-edge-list-node-mapping.pickle".format(config['mod_detect_dir'])
     output:
-        "{network_mod_dir}/{network}/MSU/fox/{wcc}/fox-module-list.tsv"
+        "{network_mod_dir}/{network}/fox/{wcc}/{id_format}/fox-module-list.tsv"
     shell:
         "python scripts/module_util/restore-node-labels-in-modules.py " \
         "{input.fox_result} {input.node_mapping} " \
-        "{wildcards.network_mod_dir}/{wildcards.network}/MSU/fox/{wildcards.wcc} fox"
+        "{wildcards.network_mod_dir}/{wildcards.network}/fox/{wildcards.wcc}/{wildcards.id_format} fox"

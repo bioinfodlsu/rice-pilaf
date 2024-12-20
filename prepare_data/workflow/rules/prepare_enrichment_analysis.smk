@@ -37,6 +37,26 @@ rule data_prep_for_enrichment_analysis:
             "{gene_id_mapping_dir}/mapping/{network}/transcript-to-msu-id.pickle",
             gene_id_mapping_dir = config["gene_id_mapping_dir"],
             network = config["networks"].keys()
+        ),
+        expand(
+            "{raw_enrich_dir}/all_genes/{network}/rap/all-genes.txt",
+            raw_enrich_dir = config["raw_enrich_dir"],
+            network = config["networks"].keys(),
+            target_file = "all-genes"
+        ),
+        expand(
+            "{network_mod_dir}/{network}/{algo}/{param}/MSU/{algo}-module-list.tsv",
+            network_mod_dir = config["network_mod_dir"],
+            network = config["networks"].keys(),
+            algo = "clusterone",
+            param = config["clusterone_min_density"].keys()
+        ),
+        expand(
+            "{network_mod_dir}/{network}/{algo}/{param}/rap/{algo}-module-list.tsv",
+            network_mod_dir = config["network_mod_dir"],
+            network = config["networks"].keys(),
+            algo = "clusterone",
+            param = config["clusterone_min_density"].keys()
         )
 
 
@@ -104,3 +124,37 @@ rule transcript_to_msu_id:
     shell:
         "python scripts/enrichment_analysis/util/transcript-to-msu-id.py " \
         "{input} {wildcards.gene_id_mapping_dir}/mapping/{wildcards.network}"
+
+rule convert_all_genes_from_msu:
+    input:
+        all_genes = "{raw_enrich_dir}/all_genes/{network}/MSU/all-genes.txt",
+        mapping_file="{0}/msu_mapping/msu_to_{{target_format}}.pickle".format(config["gene_id_mapping_dir"])
+    output:
+        "{raw_enrich_dir}/all_genes/{network}/{target_format}/{target_file}.tsv"
+    shell:
+        "python scripts/enrichment_analysis/util/file-convert-msu.py " \
+        "{input.all_genes} {input.mapping_file} " \
+        "{wildcards.raw_enrich_dir}/all_genes/{wildcards.network} {wildcards.target_format}"
+
+rule convert_modules_from_uniprot:
+    input:
+        module_file = "{network_mod_dir}/{network}/{algo}/{param}/MSU/{algo}-module-list.tsv",
+        mapping_file="{0}/msu_mapping/uniprot_to_msu.pickle".format(config["gene_id_mapping_dir"])
+    output:
+        "{network_mod_dir}/{network}/{algo}/{param}/MSU/{algo}-module-list.tsv"
+    shell:
+        "python scripts/ppi_util/convert_mod_prot_to_gene.py " \
+        "{input.module_file} {input.mapping_file} " \
+        "{wildcards.network_mod_dir}/{wildcards.network}/{wildcards.algo}/{wildcards.param}/MSU "
+
+rule convert_modules_from_msu:
+    input:
+        module_file = "{network_mod_dir}/{network}/{algo}/{param}/MSU/{algo}-module-list.tsv",
+        mapping_file="{0}/msu_mapping/msu_to_rap.pickle".format(config["gene_id_mapping_dir"])
+    output:
+        "{network_mod_dir}/{network}/{algo}/{param}/rap/{algo}-module-list.tsv"
+    shell:
+        "python scripts/enrichment_analysis/util/file-convert-msu.py " \
+        "{input.module_file} {input.mapping_file} " \
+        "{wildcards.network_mod_dir}/{wildcards.network}/{wildcards.algo}/{wildcards.param} " \
+        "rap"
