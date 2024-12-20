@@ -4,6 +4,7 @@ include: "rules/last_whole_genome_alignment.smk"
 include: "rules/prepare_annotation.smk"
 include: "rules/transcription_factor_binding_sites.smk"
 include: "rules/module_detection.smk"
+include: "rules/prepare_enrichment_analysis.smk"
 
 #rule download_ref_genomes:
     #wget and then make symbolic links

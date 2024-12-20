@@ -43,6 +43,12 @@ network_dir: "../../static/app_data/networks"
 mod_detect_dir: "../../static/raw_data/network_modules"
 network_mod_dir: "../../static/app_data/network_modules"
 
+ppi_dir: "../../static/raw_data/ppi"
+raw_enrich_dir: "../../static/raw_data/enrichment_analysis"
+
+gene_id_mapping_dir: "../../static/app_data/gene_id_mapping"
+gene_desc_dir: "../../static/app_data/gene_descriptions"
+
 networks:
     "STRING-Physical": "{network_dir}/STRING-Physical.txt"
 
