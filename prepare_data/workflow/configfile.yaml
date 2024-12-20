@@ -76,3 +76,6 @@ wcc_threshold:
 ricegeneid_msu_to_transcript_outputs:
     - "all-transcript-id"
     - "all-na-transcript-id"
+
+rap_to_msu_file: "RAP-MSU_2023-03-15.txt"
+rap_to_transcript_file: "IRGSP-1.0_representative_annotation_2023-03-15.tsv"
