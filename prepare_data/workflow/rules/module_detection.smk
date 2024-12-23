@@ -11,11 +11,9 @@ rule module_detect_clusterone:
             network = config["networks"].keys()
             ),
         expand(
-            "{network_mod_dir}/{network}/clusterone/{density}/{id_format}/clusterone-module-list.tsv",
+            "{0}/{{network}}/clusterone/{{density}}/{1}/clusterone-module-list.tsv".format(config['network_mod_dir'], "uniprot"),
             density = config['clusterone_min_density'].keys(),
-            network = config['networks'].keys(),
-            network_mod_dir = config['network_mod_dir'],
-            id_format = "uniprot"
+            network = config['networks'].keys()
         )
 
 rule execute_clusterone:
@@ -31,19 +29,17 @@ rule execute_clusterone:
         "--output-format csv " \
         "--min-density {params.value} " \
         "{input} > {output}"
-    
-rule get_mod_clusterone:
+
+# Note: Each different format should have its own rule
+rule get_mod_clusterone_uniprot:
     input:
         "{0}/{{network}}/temp/clusterone/clusterone-results-{{density}}.csv".format(config['mod_detect_dir'])
     output:
-        "{network_mod_dir}/{network}/clusterone/{density}/{id_format}/clusterone-module-list.tsv"
-    params:
-        get_mod_from_clusterone_path = config['get_mod_from_clusterone_path']
+        "{0}/{{network}}/clusterone/{{density}}/{1}/clusterone-module-list.tsv".format(config['network_mod_dir'], "uniprot")
     shell:
-        "python {params.get_mod_from_clusterone_path} {input} " \
-        "{wildcards.network_mod_dir}/{wildcards.network}/clusterone/{wildcards.density}/{wildcards.id_format}"
+        "python scripts/module_util/get-modules-from-clusterone-results.py " \
+        "{{input}} {0}/{{wildcards.network}}/clusterone/{{wildcards.density}}/uniprot".format(config['network_mod_dir'])
 
-# ruleorder: execute_fox > ricegeneid_msu_to_transcript_id
 
 rule module_detect_fox:
     input:
@@ -54,11 +50,9 @@ rule module_detect_fox:
             wcc = config['wcc_threshold'].keys()
         ),
         expand(
-            "{network_mod_dir}/{network}/fox/{wcc}/{id_format}/fox-module-list.tsv",
-            network_mod_dir = config['network_mod_dir'],
+            "{0}/{{network}}/fox/{{wcc}}/{1}/fox-module-list.tsv".format(config['network_mod_dir'], "uniprot"),
             network = config['networks'].keys(),
-            wcc = config['wcc_threshold'].keys(),
-            id_format = "uniprot"
+            wcc = config['wcc_threshold'].keys()
         )
 
 rule execute_fox:
@@ -71,13 +65,13 @@ rule execute_fox:
     shell:
         "scripts/module_detection/execute_lazyfox.sh {input} {params.wcc_val} {output}"
 
-rule get_mod_fox:
+rule get_mod_fox_uniprot:
     input:
         fox_result = "{0}/{{network}}/temp/fox/fox-int-module-list-{{wcc}}.txt".format(config['mod_detect_dir']),
         node_mapping = "{0}/{{network}}/mapping/int-edge-list-node-mapping.pickle".format(config['mod_detect_dir'])
     output:
-        "{network_mod_dir}/{network}/fox/{wcc}/{id_format}/fox-module-list.tsv"
+        "{0}/{{network}}/fox/{{wcc}}/{1}/fox-module-list.tsv".format(config['network_mod_dir'], "uniprot")
     shell:
         "python scripts/module_util/restore-node-labels-in-modules.py " \
-        "{input.fox_result} {input.node_mapping} " \
-        "{wildcards.network_mod_dir}/{wildcards.network}/fox/{wildcards.wcc}/{wildcards.id_format} fox"
+        "{{input.fox_result}} {{input.node_mapping}} " \
+        "{0}/{{wildcards.network}}/fox/{{wildcards.wcc}}/uniprot fox".format(config['network_mod_dir'])

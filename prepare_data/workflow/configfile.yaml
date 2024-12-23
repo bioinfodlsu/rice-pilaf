@@ -45,6 +45,7 @@ network_mod_dir: "../../static/app_data/network_modules"
 
 ppi_dir: "../../static/raw_data/ppi"
 raw_enrich_dir: "../../static/raw_data/enrichment_analysis"
+app_enrich_dir: "../../static/app_data/enrichment_analysis"
 
 gene_id_mapping_dir: "../../static/app_data/gene_id_mapping"
 gene_desc_dir: "../../static/app_data/gene_descriptions"
@@ -66,7 +67,7 @@ clusterone_min_density:
 
 # FOX
 wcc_threshold:
-    # 1: 0.01 # For Testing - Remove in Actual
+    1: 0.01 # For Testing - Remove in Actual
     5: 0.05
     20: 0.2
     40: 0.4
