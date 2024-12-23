@@ -55,6 +55,26 @@ rule data_prep_for_enrichment_analysis:
             network = config["networks"].keys(),
             value = config["wcc_threshold"].keys(),
             id_formats = ["MSU", "rap", "transcript"]
+        ),
+
+        # ONTOLOGY ENRICHMENT PREP
+        expand(
+            "{0}/go/{{network}}/go-annotations.tsv".format(config["raw_enrich_dir"]),
+            network = config["networks"].keys()
+        ),
+        expand(
+            [
+                "{0}/to/{{network}}/to-annotations.tsv".format(config["raw_enrich_dir"]),
+                "{0}/to/{{network}}/to-id-to-name.tsv".format(config["raw_enrich_dir"])
+            ],
+            network = config["networks"].keys()
+        ),
+        expand(
+            [
+                "{0}/po/{{network}}/po-annotations.tsv".format(config["raw_enrich_dir"]),
+                "{0}/po/{{network}}/po-id-to-name.tsv".format(config["raw_enrich_dir"])
+            ],
+            network = config["networks"].keys()
         )
 
 
@@ -183,3 +203,38 @@ rule convert_modules_msu_to_transcript:
         "python scripts/ppi_util/convert_mod_prot_to_gene.py " \
         "{{input.module_file}} {{input.mapping_file}} " \
         "{0}/{{wildcards.network}}/{{wildcards.algo}}/{{wildcards.value}}/transcript ".format(config["network_mod_dir"])
+
+# ONTOLOGY ENRICHMENT RULES
+rule prepare_go_annotations:
+    input:
+        agrigo_file="{0}/go/agrigo.tsv".format(config["raw_enrich_dir"]),
+        oryzabase_file="{0}/go/OryzabaseGeneListAll_20230322010000.txt".format(config["raw_enrich_dir"]),
+        rap_db_file="{0}/rap_db/IRGSP-1.0_representative_annotation_2023-03-15.tsv".format(config["raw_enrich_dir"]),
+        all_genes_file="{0}/all_genes/{{network}}/transcript/all-genes.tsv".format(config["raw_enrich_dir"]),
+        msu_to_transcript="{0}/mapping/{{network}}/msu-to-transcript-id.pickle".format(config["raw_enrich_dir"])
+    output:
+        "{0}/go/{{network}}/go-annotations.tsv".format(config["raw_enrich_dir"])
+    shell:
+        "python scripts/enrichment_analysis/util/aggregate-go-annotations.py " \
+        "{{input.agrigo_file}} {{input.oryzabase_file}} {{input.rap_db_file}} {{input.all_genes_file}} " \
+        "{{input.msu_to_transcript}} {0}/go/{{wildcards.network}}".format(config["raw_enrich_dir"])
+
+rule prepare_to_annotations:
+    input:
+        oryzabase_file="{0}/go/OryzabaseGeneListAll_20230322010000.txt".format(config["raw_enrich_dir"])
+    output:
+        "{0}/to/{{network}}/to-annotations.tsv".format(config["raw_enrich_dir"]),
+        "{0}/to/{{network}}/to-id-to-name.tsv".format(config["raw_enrich_dir"])
+    shell:
+        "python scripts/enrichment_analysis/util/aggregate-to-annotations.py " \
+        "{{input.oryzabase_file}} {0}/to/{{wildcards.network}}".format(config["raw_enrich_dir"])
+
+rule prepare_po_annotations:
+    input:
+        oryzabase_file="{0}/go/OryzabaseGeneListAll_20230322010000.txt".format(config["raw_enrich_dir"])
+    output:
+        "{0}/po/{{network}}/po-annotations.tsv".format(config["raw_enrich_dir"]),
+        "{0}/po/{{network}}/po-id-to-name.tsv".format(config["raw_enrich_dir"])
+    shell:
+        "python scripts/enrichment_analysis/util/aggregate-po-annotations.py " \
+        "{{input.oryzabase_file}} {0}/po/{{wildcards.network}}".format(config["raw_enrich_dir"])
