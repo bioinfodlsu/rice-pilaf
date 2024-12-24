@@ -75,6 +75,18 @@ rule data_prep_for_enrichment_analysis:
                 "{0}/po/{{network}}/po-id-to-name.tsv".format(config["raw_enrich_dir"])
             ],
             network = config["networks"].keys()
+        ),
+
+        # COUNT MODULES
+        expand(
+            "{0}/temp/{{network}}/clusterone/{{value}}/module_count.txt".format(config["raw_enrich_dir"]),
+            network = config["networks"].keys(),
+            value = config["clusterone_min_density"].keys()
+        ),
+        expand(
+            "{0}/temp/{{network}}/fox/{{value}}/module_count.txt".format(config["raw_enrich_dir"]),
+            network = config["networks"].keys(),
+            value = config["wcc_threshold"].keys()
         )
 
 
@@ -238,3 +250,15 @@ rule prepare_po_annotations:
     shell:
         "python scripts/enrichment_analysis/util/aggregate-po-annotations.py " \
         "{{input.oryzabase_file}} {0}/po/{{wildcards.network}}".format(config["raw_enrich_dir"])
+
+# COUNT MODULES
+rule count_modules:
+    input:
+        mod_list="{0}/{{network}}/{{algo}}/{{value}}/MSU/{{algo}}-module-list.tsv".format(config["network_mod_dir"])
+    output:
+        count_file="{0}/temp/{{network}}/{{algo}}/{{value}}/module_count.txt".format(config["raw_enrich_dir"])
+    run:
+        with open(input.mod_list) as f:
+            line_count = sum(1 for line in f)
+        with open(output.count_file, "w") as f:
+            f.write(str(line_count))

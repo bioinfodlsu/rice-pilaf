@@ -74,6 +74,11 @@ wcc_threshold:
     50: 0.5 # For Testing - Remove in Actual
     60: 0.6
 
+# FIRST PARAM (For Counting Modules)
+first_param_list:
+    "clusterone": 30
+    "fox": 5
+
 ricegeneid_msu_to_transcript_outputs:
     - "all-transcript-id"
     - "all-na-transcript-id"
