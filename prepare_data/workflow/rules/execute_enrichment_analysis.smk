@@ -1,5 +1,26 @@
 import os
 
+ENRICHMENT_CODES = {
+    "gene_ontology": "GO",
+    "trait_ontology": "TO",
+    "plant_ontology": "PO",
+    "overrep_pathway": "ORA",
+    "topology_pathway_pe": "PE",
+    "topology_pathway_spia": "SPIA"
+}
+
+ONTOLOGY_ANALYSIS = [
+    ENRICHMENT_CODES["gene_ontology"], 
+    ENRICHMENT_CODES["trait_ontology"],
+    ENRICHMENT_CODES["plant_ontology"]
+]
+
+PATHWAY_ANALYSIS = [
+    ENRICHMENT_CODES["overrep_pathway"], 
+    ENRICHMENT_CODES["topology_pathway_pe"],
+    ENRICHMENT_CODES["topology_pathway_spia"]
+]
+
 # Resolve Network Dependency
 for key, path in config['networks'].items():
     config["networks"][key] = path.format(network_dir=config["network_dir"])
@@ -29,25 +50,40 @@ def get_params_of_algo(algo):
     else:
         return config["wcc_threshold"].keys()
 
-def get_entries(network, algo):
+def get_grouping_label_of_analysis(analysis):
+    if analysis in ONTOLOGY_ANALYSIS:
+        return "ontology_enrichment"
+    else:
+        return "pathway_enrichment"
+
+def get_entries(network, algo, analysis):
+    grouping = get_grouping_label_of_analysis(analysis)
+    analysis_code = analysis.lower()
+
     return expand(
-        "{0}/{1}/output/{2}/{{value}}/ontology_enrichment/go/results/go-df-{{index}}.tsv".format(config["app_enrich_dir"], network, algo),
+        "{dir}/{network}/output/{algo}/{{value}}/{grouping_name}/{analysis_code}/results/{analysis_code}-df-{{index}}.tsv".format(
+            dir=config["app_enrich_dir"], 
+            network=network, 
+            algo=algo,
+            grouping_name=grouping,
+            analysis_code=analysis_code
+            ),
         value = get_params_of_algo(algo),
         index = range(1, get_module_count(network, algo) + 1)
     )
 
-def get_all_GO_results(algo):
+def get_all_results(algo, analysis):
     result = []
     for network in config["networks"].keys():
-        result.extend(get_entries(network, algo))
+        result.extend(get_entries(network, algo, analysis))
     return result
 
 
 # RULES
 rule execute_enrichment:
     input:
-        get_all_GO_results("clusterone"),
-        get_all_GO_results("fox")
+        get_all_results("clusterone", ENRICHMENT_CODES["gene_ontology"]),
+        get_all_results("fox", ENRICHMENT_CODES["gene_ontology"])
 
 rule gene_ontology:
     input:
