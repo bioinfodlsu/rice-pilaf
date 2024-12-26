@@ -85,7 +85,8 @@ rule execute_enrichment:
         get_all_results("clusterone", ENRICHMENT_CODES["gene_ontology"]),
         get_all_results("fox", ENRICHMENT_CODES["gene_ontology"]),
         get_all_results("clusterone", ENRICHMENT_CODES["trait_ontology"]),
-        get_all_results("clusterone", ENRICHMENT_CODES["plant_ontology"])
+        get_all_results("clusterone", ENRICHMENT_CODES["plant_ontology"]),
+        get_all_results("clusterone", ENRICHMENT_CODES["overrep_pathway"])
 
 rule gene_ontology:
     input:
@@ -131,4 +132,17 @@ rule plant_ontology:
         "Rscript --vanilla scripts/enrichment_analysis/ontology_enrichment/po-enrichment.r " \
         "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
         "-m {input.po_annotations} -t {input.po_id_to_name} " \
+        "-o {params.output_dir}"
+
+rule overrep_pathway:
+    input:
+        mod_list="{0}/{{network}}/{{algo}}/{{value}}/rap/{{algo}}-module-list.tsv".format(config["network_mod_dir"]),
+        all_genes="{0}/all_genes/{{network}}/rap/all-genes.tsv".format(config["raw_enrich_dir"])
+    output:
+        "{0}/{{network}}/output/{{algo}}/{{value}}/pathway_enrichment/ora/results/ora-df-{{index}}.tsv".format(config["app_enrich_dir"])
+    params:
+        output_dir="{0}/{{network}}/output/{{algo}}/{{value}}/pathway_enrichment/ora".format(config["app_enrich_dir"])
+    shell:
+        "Rscript --vanilla scripts/enrichment_analysis/pathway_enrichment/ora-enrichment.r " \
+        "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
         "-o {params.output_dir}"
