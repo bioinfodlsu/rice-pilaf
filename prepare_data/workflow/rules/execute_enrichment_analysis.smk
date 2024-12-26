@@ -87,7 +87,8 @@ rule execute_enrichment:
         get_all_results("clusterone", ENRICHMENT_CODES["trait_ontology"]),
         get_all_results("clusterone", ENRICHMENT_CODES["plant_ontology"]),
         get_all_results("clusterone", ENRICHMENT_CODES["overrep_pathway"]),
-        get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_pe"])
+        get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_pe"]),
+        get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_spia"])
 
 rule gene_ontology:
     input:
@@ -160,3 +161,17 @@ rule topology_pathway_pe:
         "Rscript --vanilla scripts/enrichment_analysis/pathway_enrichment/pe-enrichment.r " \
         "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
         "-o {params.output_dir}"
+
+rule topology_pathway_spia:
+    input:
+        mod_list="{0}/{{network}}/{{algo}}/{{value}}/transcript/{{algo}}-module-list.tsv".format(config["network_mod_dir"]),
+        all_genes="{0}/all_genes/{{network}}/transcript/all-genes.tsv".format(config["raw_enrich_dir"])
+    output:
+        "{0}/{{network}}/output/{{algo}}/{{value}}/pathway_enrichment/spia/results/spia-df-{{index}}.tsv".format(config["app_enrich_dir"])
+    params:
+        output_dir="{0}/{{network}}/output/{{algo}}/{{value}}/pathway_enrichment/spia".format(config["app_enrich_dir"]),
+        spia_path="{0}/kegg_dosa/SPIA".format(config["raw_enrich_dir"])
+    shell:
+        "Rscript --vanilla scripts/enrichment_analysis/pathway_enrichment/spia-enrichment.r " \
+        "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
+        "-s {params.spia_path} -o {params.output_dir}"
