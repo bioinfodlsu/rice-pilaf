@@ -84,7 +84,8 @@ rule execute_enrichment:
     input:
         get_all_results("clusterone", ENRICHMENT_CODES["gene_ontology"]),
         get_all_results("fox", ENRICHMENT_CODES["gene_ontology"]),
-        get_all_results("clusterone", ENRICHMENT_CODES["trait_ontology"])
+        get_all_results("clusterone", ENRICHMENT_CODES["trait_ontology"]),
+        get_all_results("clusterone", ENRICHMENT_CODES["plant_ontology"])
 
 rule gene_ontology:
     input:
@@ -114,4 +115,20 @@ rule trait_ontology:
         "Rscript --vanilla scripts/enrichment_analysis/ontology_enrichment/to-enrichment.r " \
         "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
         "-m {input.to_annotations} -t {input.to_id_to_name} " \
+        "-o {params.output_dir}"
+
+rule plant_ontology:
+    input:
+        mod_list="{0}/{{network}}/{{algo}}/{{value}}/MSU/{{algo}}-module-list.tsv".format(config["network_mod_dir"]),
+        all_genes="{0}/all_genes/{{network}}/MSU/all-genes.txt".format(config["raw_enrich_dir"]),
+        po_annotations="{0}/po/{{network}}/po-annotations.tsv".format(config["raw_enrich_dir"]),
+        po_id_to_name="{0}/po/{{network}}/po-id-to-name.tsv".format(config["raw_enrich_dir"])
+    output:
+        "{0}/{{network}}/output/{{algo}}/{{value}}/ontology_enrichment/po/results/po-df-{{index}}.tsv".format(config["app_enrich_dir"])
+    params:
+        output_dir="{0}/{{network}}/output/{{algo}}/{{value}}/ontology_enrichment/po".format(config["app_enrich_dir"])
+    shell:
+        "Rscript --vanilla scripts/enrichment_analysis/ontology_enrichment/po-enrichment.r " \
+        "-g {input.mod_list} -i {wildcards.index} -b {input.all_genes} " \
+        "-m {input.po_annotations} -t {input.po_id_to_name} " \
         "-o {params.output_dir}"
