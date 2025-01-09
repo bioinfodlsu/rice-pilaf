@@ -23,11 +23,24 @@ def map_protein_modules(modules_file, output_dir):
 
 
 def get_genes_of_module(module):
-    result = []
+    result, history = [], []
     for protein in module:
-        if protein in DATA:
-            result.extend(DATA[protein])
+        if not protein in DATA:
+            continue
+
+        unique_genes = retrieve_unique_genes(DATA[protein], history)
+        result.extend(unique_genes)
+        history.extend(unique_genes)
+
     return result
+
+
+def retrieve_unique_genes(genes, history):
+    unique = []
+    for gene in genes:
+        if not gene in history:
+            unique.append(gene)
+    return unique
 
 
 def get_protein_to_gene_map(mapping_file):
