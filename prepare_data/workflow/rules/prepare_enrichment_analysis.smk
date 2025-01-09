@@ -201,9 +201,9 @@ rule convert_modules_msu_to_rap:
     output:
         "{0}/{{network}}/{{algo}}/{{value}}/rap/{{algo}}-module-list.tsv".format(config["network_mod_dir"])
     shell:
-        "python scripts/ppi_util/convert_mod_prot_to_gene.py " \
+        "python scripts/enrichment_analysis/util/file-convert-msu.py " \
         "{{input.module_file}} {{input.mapping_file}} " \
-        "{0}/{{wildcards.network}}/{{wildcards.algo}}/{{wildcards.value}}/rap ".format(config["network_mod_dir"])
+        "{0}/{{wildcards.network}}/{{wildcards.algo}}/{{wildcards.value}} rap ".format(config["network_mod_dir"])
 
 rule convert_modules_msu_to_transcript:
     input:
@@ -212,9 +212,9 @@ rule convert_modules_msu_to_transcript:
     output:
         "{0}/{{network}}/{{algo}}/{{value}}/transcript/{{algo}}-module-list.tsv".format(config["network_mod_dir"])
     shell:
-        "python scripts/ppi_util/convert_mod_prot_to_gene.py " \
+        "python scripts/enrichment_analysis/util/file-convert-msu.py " \
         "{{input.module_file}} {{input.mapping_file}} " \
-        "{0}/{{wildcards.network}}/{{wildcards.algo}}/{{wildcards.value}}/transcript ".format(config["network_mod_dir"])
+        "{0}/{{wildcards.network}}/{{wildcards.algo}}/{{wildcards.value}} transcript ".format(config["network_mod_dir"])
 
 # ONTOLOGY ENRICHMENT RULES
 rule prepare_go_annotations:
