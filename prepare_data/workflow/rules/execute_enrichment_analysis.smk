@@ -82,13 +82,24 @@ def get_all_results(algo, analysis):
 # RULES
 rule execute_enrichment:
     input:
+        #CLUSTERONE
         get_all_results("clusterone", ENRICHMENT_CODES["gene_ontology"]),
-        get_all_results("fox", ENRICHMENT_CODES["gene_ontology"]),
         get_all_results("clusterone", ENRICHMENT_CODES["trait_ontology"]),
         get_all_results("clusterone", ENRICHMENT_CODES["plant_ontology"]),
-        get_all_results("clusterone", ENRICHMENT_CODES["overrep_pathway"]),
         get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_pe"]),
-        get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_spia"])
+        get_all_results("clusterone", ENRICHMENT_CODES["topology_pathway_spia"]),
+        #FOX
+        get_all_results("fox", ENRICHMENT_CODES["gene_ontology"]),
+        get_all_results("fox", ENRICHMENT_CODES["trait_ontology"]),
+        get_all_results("fox", ENRICHMENT_CODES["plant_ontology"]),
+        get_all_results("fox", ENRICHMENT_CODES["topology_pathway_pe"]),
+        get_all_results("fox", ENRICHMENT_CODES["topology_pathway_spia"])
+
+# ORA separated as it requires lower number of cores to avoid spamming the API
+rule execute_ora_enrichment:
+    input:
+        get_all_results("clusterone", ENRICHMENT_CODES["overrep_pathway"]),
+        get_all_results("fox", ENRICHMENT_CODES["overrep_pathway"]),
 
 rule gene_ontology:
     input:
