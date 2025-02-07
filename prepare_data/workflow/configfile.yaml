@@ -60,18 +60,14 @@ clusterone_jar_path: "scripts/module_detection/cluster_one-1.0.jar"
 clusterone_min_density:
     30: 0.3
     40: 0.4
-    # 50: 0.5 # For Testing - Remove in Actual
     60: 0.6
-    # 70: 0.7 # For Testing - Remove in Actual
     90: 0.9
 
 # FOX
 wcc_threshold:
-    1: 0.01 # For Testing - Remove in Actual
     5: 0.05
     20: 0.2
     40: 0.4
-    50: 0.5 # For Testing - Remove in Actual
     60: 0.6
 
 # FIRST PARAM (For Counting Modules)
