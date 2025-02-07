@@ -153,17 +153,17 @@ module_detection_algo_modal = dbc.Modal(
 )
 
 # ======================
-# Coexpression Networks
+# PPI Networks
 # ======================
 
-ricenet = html.Li(
+string = html.Li(
     [
-        html.B("RiceNet v2"),
+        html.B("STRING Network"),
         html.Br(),
         html.Div(
             [
                 html.Span(
-                    "RicePilaf uses the component network derived from the coexpression of "
+                    "RicePilaf uses the component network derived from the ppi of "
                 ),
                 html.I("Oryza sativa "),
                 html.Span(
@@ -175,13 +175,13 @@ ricenet = html.Li(
         html.Div(
             [
                 html.Span(
-                    "Lee, T., Oh, T., Yang, S., Shin, J., Hwang, S., Kim, C. Y., Kim, H., Shim, H., Shim, J. E., Ronald, P. C., & Lee, I. (2015). RiceNet v2: An improved network prioritization server for rice genes. "
+                    "Szklarczyk, D., Kirsch, R., Koutrouli, M., Nastou, K., Mehryary, F., Hachilif, R., Gable, A. L., Fang, T., Doncheva, N. T., Pyysalo, S., Bork, P., Jensen, L. J., & von Mering, C. (2023). The STRING database in 2023: protein-protein association networks and functional enrichment analyses for any sequenced genome of interest. "
                 ),
-                html.I("Nucleic Acids Research, 43"),
-                html.Span("(W1), W122–W127 "),
+                html.I("Nucleic acids research, 51"),
+                html.Span("(D1), D638–D646. "),
                 html.A(
-                    "https://doi.org/10.1093/nar/gkv253",
-                    href="https://doi.org/10.1093/nar/gkv253",
+                    "https://doi.org/10.1093/nar/gkac1000",
+                    href="https://doi.org/10.1093/nar/gkac1000",
                     target="_blank",
                 ),
             ],
@@ -190,42 +190,19 @@ ricenet = html.Li(
     ]
 )
 
-rcrn = html.Li(
+ppi_network_modal = dbc.Modal(
     [
-        html.B("Rice Combined Mutual Ranked Network (RCRN)"),
-        html.Br(),
-        html.Span("RicePilaf uses the integrated RCRN network.", className="algo-desc"),
-        html.Div(
-            [
-                html.Span(
-                    "Zhao, K., Lin, F., Romero-Gamboa, S. P., Saha, P., Goh, H. J., An, G., Jung, K. H., Hazen, S. P., & Bartley, L. E. (2019). Rice genome-scale network integration reveals transcriptional regulators of grass cell wall synthesis. "
-                ),
-                html.I("Frontiers in Plant Science, 10, "),
-                html.Span("1275. "),
-                html.A(
-                    "https://doi.org/10.3389/fpls.2019.01275",
-                    href="https://doi.org/10.3389/fpls.2019.01275",
-                    target="_blank",
-                ),
-            ],
-            className="reference",
-        ),
-    ]
-)
-
-coexpression_network_modal = dbc.Modal(
-    [
-        dbc.ModalHeader(dbc.ModalTitle("Coexpression Networks")),
+        dbc.ModalHeader(dbc.ModalTitle("PPI Networks")),
         dbc.ModalBody(
             [
                 html.P(
-                    "RicePilaf provides the option to choose between two coexpression networks:"
+                    "RicePilaf provides the option to choose between the following PPI Networks:"
                 ),
-                html.Ul([ricenet, html.Br(), rcrn]),
+                html.Ul([string]),
             ]
         ),
     ],
-    id="coexpression-network-modal",
+    id="coexpression_network_modal",
     is_open=False,
     size="xl",
     scrollable=True,
@@ -237,7 +214,7 @@ coexpression_network_modal = dbc.Modal(
 
 parameter_modal = dbc.Modal(
     [
-        dbc.ModalHeader(dbc.ModalTitle("Coexpression Networks")),
+        dbc.ModalHeader(dbc.ModalTitle("PPI Networks")),
         dbc.ModalBody(
             [
                 html.P(
@@ -427,7 +404,7 @@ layout = html.Div(
                 html.Br(),
                 dbc.Label(
                     [
-                        "Select the coexpression network",
+                        "Select the protein-protein interaction network",
                         html.I(
                             className="bi bi-info-circle",
                             id="coexpression-network-tooltip",
@@ -437,7 +414,7 @@ layout = html.Div(
                 ),
                 html.Br(),
                 dbc.RadioItems(
-                    id="ppi-network",
+                    id="coexpression-network",
                     options=PPI_NETWORKS_VALUE_LABEL,
                     value="STRING",
                     inline=True,
@@ -463,7 +440,7 @@ layout = html.Div(
                     inline=True,
                     className="ms-3 mt-1",
                 ),
-                coexpression_network_modal,
+                ppi_network_modal,
                 html.Br(),
                 dbc.Label(
                     [
