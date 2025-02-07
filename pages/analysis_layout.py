@@ -3,6 +3,7 @@ from collections import OrderedDict
 from dash import html
 
 import pages.analysis.co_expr as co_expr
+import pages.analysis.ppi as ppi
 import pages.analysis.epigenome as epigenome
 import pages.analysis.intro as intro
 import pages.analysis.lift_over as lift_over
@@ -36,6 +37,7 @@ layout = html.Div(
         lift_over.layout,
         text_mining.layout,
         co_expr.layout,
+        ppi.layout,
         tf_enrich.layout,
         epigenome.layout,
         summary.layout,
