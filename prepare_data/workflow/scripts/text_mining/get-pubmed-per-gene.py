@@ -396,10 +396,17 @@ def create_pubmed_dict_per_gene(gene_symbols, annotated_abstracts, symbol=None):
 
 def get_pubmed_per_gene(accession, gene_symbols, annotated_abstracts, output_directory):
     pmid_score = create_pubmed_dict_per_gene(gene_symbols, annotated_abstracts)
-
-    if pmid_score:
-        with open(f"{output_directory}/{accession}.pickle", "wb") as f:
+    # Always write a pickle (possibly empty) so downstream batch runner can mark this accession as processed.
+    outpath = f"{output_directory}/{accession}.pickle"
+    try:
+        with open(outpath, "wb") as f:
             pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:
+        # If writing fails, at least create an empty marker file so the runner can detect the attempt.
+        try:
+            open(outpath, 'a').close()
+        except Exception:
+            pass
 
 
 def get_pubmed_for_all_genes(
@@ -688,9 +695,16 @@ def get_pubmed_per_gene_with_excluded_symbols(
             else:
                 pmid_score[pmid] = score
 
-    if pmid_score:
-        with open(f"{output_directory}/{accession}.pickle", "wb") as f:
+    # Always write a pickle (possibly empty) so downstream batch runner can mark this accession as processed.
+    outpath = f"{output_directory}/{accession}.pickle"
+    try:
+        with open(outpath, "wb") as f:
             pickle.dump(pmid_score, f, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:
+        try:
+            open(outpath, 'a').close()
+        except Exception:
+            pass
 
 
 def handle_symbol_after_species(
