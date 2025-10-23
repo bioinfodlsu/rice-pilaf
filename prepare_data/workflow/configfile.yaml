@@ -1,8 +1,8 @@
 #Input and output path
-input_data_dir: "../../../static"
+input_data_dir: "/app/static"
 #processed_data_dir: "../../Azu_IR64_ARC_CHAO"
-processed_data_dir: "../../../Azu_IR64_ARC_CHAO_GoSa_NaBo_KYG"
-tfbs_dir: "../../../static/tfbs"
+processed_data_dir: "/app/Azu_IR64_ARC_CHAO_GoSa_NaBo_KYG"
+tfbs_dir: "/app/static/tfbs"
 #Data
 #compute whole-genome alignment vs. Nb, for the following genomes
 other_refs:
