@@ -1,11 +1,13 @@
 #Input and output path
 input_data_dir: "../../static"
-processed_data_dir: "../../Azu_IR64_ARC_CHAO"
+#processed_data_dir: "../../Azu_IR64_ARC_CHAO"
+processed_data_dir: "../../Azu_IR64_ARC_CHAO_GoSa_NaBo_KYG"
 tfbs_dir: "../../static/tfbs"
 #Data
 #compute whole-genome alignment vs. Nb, for the following genomes
 other_refs:
-    ["Azu","IR64","ARC","CHAO"]
+#    ["Azu","IR64","ARC","CHAO"]
+    ["Azu","IR64","ARC","CHAO","GoSa","NaBo","KYG"]
 threads: 1
 
 #Data URLs
@@ -18,6 +20,9 @@ assembly_links:
     LIU: "https://riceome.hzau.edu.cn/download/125827.fasta"
     MH63: "https://riceome.hzau.edu.cn/download/MH63RS3.fasta"
     N22: "https://riceome.hzau.edu.cn/download/117534.fasta"
+    GoSa: "https://riceome.hzau.edu.cn/download/132424.fasta"
+    NaBo: "https://riceome.hzau.edu.cn/download/127652.fasta"
+    KYG: "https://riceome.hzau.edu.cn/download/127518.fasta"
 annotation_links:
     Nb: "https://riceome.hzau.edu.cn/download/IRGSPMSU.gff"
     ARC: "https://riceome.hzau.edu.cn/download/117425.gff"
@@ -27,6 +32,9 @@ annotation_links:
     LIU: "https://riceome.hzau.edu.cn/download/125827.gff"
     MH63: "https://riceome.hzau.edu.cn/download/MH63RS3.gff"
     N22: "https://riceome.hzau.edu.cn/download/117534.gff"
+    "GoSa": "https://riceome.hzau.edu.cn/download/132424.gff"
+    "NaBo": "https://riceome.hzau.edu.cn/download/127652.gff"
+    "KYG": "https://riceome.hzau.edu.cn/download/127518.gff"
 tfbs_links:
     tf_list: "http://planttfdb.gao-lab.org/download/TF_list/Osj_TF_list.txt.gz"
     promoter_motif: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_inProm_Osj.gff"
