@@ -32,9 +32,9 @@ annotation_links:
     LIU: "https://riceome.hzau.edu.cn/download/125827.gff"
     MH63: "https://riceome.hzau.edu.cn/download/MH63RS3.gff"
     N22: "https://riceome.hzau.edu.cn/download/117534.gff"
-    "GoSa": "https://riceome.hzau.edu.cn/download/132424.gff"
-    "NaBo": "https://riceome.hzau.edu.cn/download/127652.gff"
-    "KYG": "https://riceome.hzau.edu.cn/download/127518.gff"
+    GoSa: "https://riceome.hzau.edu.cn/download/132424.gff"
+    NaBo: "https://riceome.hzau.edu.cn/download/127652.gff"
+    KYG: "https://riceome.hzau.edu.cn/download/127518.gff"
 tfbs_links:
     tf_list: "http://planttfdb.gao-lab.org/download/TF_list/Osj_TF_list.txt.gz"
     promoter_motif: "http://plantregmap.gao-lab.org/download_ftp.php?filepath=08-download/Oryza_sativa_Japonica_Group/binding/TFBS_from_motif_inProm_Osj.gff"
