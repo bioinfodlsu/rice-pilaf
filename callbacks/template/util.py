@@ -52,6 +52,9 @@ other_ref_genomes = {
     "ARC": "basmati ARC",
     "IR64": "indica IR64",
     "CMeo": "japonica CHAO MEO",
+    "GoSa": "indica Gobol Sail",
+    "NaBo": "aus Natel Boro",
+    "KYG": "indica Khao Yai Guang",
 }
 
 NB_COLUMNS = [
