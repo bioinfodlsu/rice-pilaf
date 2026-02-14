@@ -10,6 +10,8 @@ RUN apt-get update \
     && apt-get install -y \
     cmake \
     git \
+    libssl3 \
+    openssl \
     openjdk-11-jre \
     python3-dev \
     python3-pip \
